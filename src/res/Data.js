@@ -1,33 +1,31 @@
-import image from'.//assets.'
+import { View } from "react-native";
+import Images from "../assets/images/images";
 export const Items = [
-    {
-      brand: 'VW',
-      year: 2020,
-      km: '120K',
-      price: '40K',
-      color:'blue' 
-      // img: imgaes.cat(),
-    },
-    {
-      brand: 'subaro',
-      year: 2020,
-      km: '100K',
-      price: '10K',
-      color:'red'
-    },
-    {
-      brand: 'Mazda',
-      year: 2020,
-      km: '100K',
-      price: '6K',
-      // color:'pink'
-    },
-    {
-      brand: 'Skoda',
-      year: 2020,
-      km: '100K',
-      price: '30K',
-      color:'black'
-    },
-  ];
+  {
+    brand: 'monge',
+    taste: 'salmon',
+    img: Images.mongeKitten(),
+    dis: 'this food is for kittens under the age of 1 year you must feed them 100 grams ',
+  },
+  {
+    brand: 'royal canin',
+    taste: 'salmon',
+    img: Images.mongeKitten(),
+    dis: 'yucky yuck yuck ',
+  },
+  {
+    brand: 'bonjor',
+    taste: 'chicken',
+    img: Images.mongeKitten(),
+    dis: 'suiii yes ',
+  },
+  {
+    brand: 'monge',
+    taste: 'salmon',
+    img: Images.mongeKitten(),
+    dis: 'go back hello ',
+  },
+];
+
+
   

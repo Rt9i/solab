@@ -1,35 +1,39 @@
-import {Button, Image, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import { Button, Image, StyleSheet, Text, View } from 'react-native';
+import React, { Component, useEffect } from 'react';
 import ScreenNames from '../../routes/ScreenNames';
 import { screensEnabled } from 'react-native-screens';
-timePassed = false;
+import Images from '../assets/images/images';
+import { TouchableOpacity } from 'react-native';
 
 const Splash = props => {
   console.log('can go back? ', props.navigation.canGoBack());
 
   const navigateHome = () => {
     props.navigation.navigate(ScreenNames.home);
-    console.log("navigating home ")
+    setTimeout(() => {
+      props.navigation.replace(ScreenNames.home);
+    }, 2 * 1000);
   };
- 
+  useEffect(() => {
+    navigateHome();
 
-  
+     
+  }, []) 
 
-
-  
-  
 
   return (
-    <View style={styles.conatiner}>
-      {/* <Button title="go back home" onPress={navigateHome} /> */}
-     
-      <Image
-        source={require('../assets/Images/image')} 
-        style={styles.image}
-      />
 
-      
+    <View style={styles.conatiner}>
+      <TouchableOpacity onPress={navigateHome} >
+
+        <Image
+          source={Images.whiteLogo()}
+          style={styles.image}
+        />
+      </TouchableOpacity>
+
     </View>
+
   );
 };
 
@@ -37,17 +41,18 @@ export default Splash;
 
 const styles = StyleSheet.create({
   conatiner: {
+    flex: 1,
     backgroundColor: 'black',
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 1,
+
   },
-  image:{
-    flex:1,
-    width: '100%',
-    height: '100%',
-    resizeMode: 'contain', 
-    
+  image: {
+    flex: 1,
+    width: 500,
+    resizeMode: 'contain',
+
+
   }
-  
+
 });
