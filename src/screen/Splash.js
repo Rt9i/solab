@@ -5,14 +5,16 @@ import { screensEnabled } from 'react-native-screens';
 import Images from '../assets/images/images';
 import { TouchableOpacity } from 'react-native';
 
+
+
 const Splash = props => {
   console.log('can go back? ', props.navigation.canGoBack());
 
   const navigateHome = () => {
-    props.navigation.navigate(ScreenNames.home);
+    props.navigation.navigate(ScreenNames.splash);
     setTimeout(() => {
       props.navigation.replace(ScreenNames.home);
-    }, 2 * 1000);
+    }, 500);
   };
   useEffect(() => {
     navigateHome();
@@ -25,7 +27,7 @@ const Splash = props => {
 
     <View style={styles.conatiner}>
       <TouchableOpacity onPress={navigateHome} >
-
+     
         <Image
           source={Images.whiteLogo()}
           style={styles.image}

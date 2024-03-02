@@ -2,6 +2,7 @@ import { TouchableOpacity, Button, Image, StyleSheet, Text, View } from 'react-n
 import React from 'react';
 import Images from '../assets/images/images';
 import ScreenNames from '../../routes/ScreenNames';
+import BottomBar from '../Components/BottomBar';
 
 const Home = props => {
   const navigateDogsStore = () => {
@@ -12,23 +13,29 @@ const Home = props => {
 
   }
 
- 
+
   return (
     <View style={styles.container} >
-      <TouchableOpacity onPress={navigateDogsStore} >
-        <View style={styles.dogs}>
-          <Image source={Images.dog()} style={styles.dogImage} />
+    
+    
+
+      <View style={styles.dogs}>
+        <TouchableOpacity onPress={navigateDogsStore} style={styles.cattouch} >
+          <Image source={Images.dog()} style={styles.dogImage}  />
           <Text style={styles.dogsButtonText}>Dog's Store</Text>
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </View>
 
 
-      <TouchableOpacity onPress={navigateCatsStore} >
-        <View style={styles.cats}>
+
+
+      <View style={styles.cats}>
+        <TouchableOpacity onPress={navigateCatsStore} style={styles.cattouch} >
           <Image source={Images.cat()} style={styles.catImage} />
           <Text style={styles.catsButtonText}>Cat's Store</Text>
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </View>
+
     </View>
   );
 };
@@ -36,6 +43,12 @@ const Home = props => {
 export default Home;
 
 const styles = StyleSheet.create({
+  dogtouch:{
+    height:'100%',
+  },
+  cattouch:{
+    height:'100%',
+  },
   container: {
     flex: 1,
     flexDirection: 'row',
@@ -44,44 +57,48 @@ const styles = StyleSheet.create({
 
   dogs: {
     flex: 1,
-    backgroundColor: 'black',
-
+    backgroundColor: '#41384E',
+    width: '100%',
   },
 
   cats: {
     flex: 1,
-    backgroundColor: '#518CFF',
-
-
+    backgroundColor: '#ab9680',
+    width: '100%',
   },
-
 
   dogImage: {
-    height: 500,
-    marginTop: 200,
-    width: '100%',
-
-    resizeMode: 'cover'
-
-  },
-  catImage: {
-    height: 500,
-    marginTop: 200,
+    height: 250,
+    marginTop: 300,
     width: '100%',
     resizeMode: 'cover',
+    marginLeft: 10,
+  },
+  catImage: {
+    height: 250,
+    marginTop: 300,
+    width: 190,
+
+
 
   },
 
   dogsButtonText: {
-    color: 'white',
+    color: '#130007',
     fontWeight: 'bold',
-    fontSize: 40,
+    
+    fontSize: 30,
+    width: '100%',
+    textAlign: 'center',
+    justifyContent: 'center',
+
   },
   catsButtonText: {
     fontWeight: 'bold',
-    color: 'black',
-    fontSize: 40,
-    margin: 10,
-  }
+    color: '#5e4c3e',
+    fontSize: 30,
+    textAlign: 'center',
+    width: '100%',
+  },
 
 });

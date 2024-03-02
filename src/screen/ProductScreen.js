@@ -1,31 +1,46 @@
-import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { useState } from 'react'
+import { FlatList } from 'react-native';
+
 import CatsStoreItems from '../Components/CatsStoreItems';
 import { Items } from '../res/Data';
 import Images from '../assets/images/images';
-
+import { Picker } from '@react-native-picker/picker';
 
 const ProductScreen = props => {
   const product = props.route.params.data;
 
-  const [ammount, setAmmount] = useState(0);
+  const Numbers = () => {
+    const [selectedNumber, setSelectedNumber] = useState(null);
+    const [arrayValues, setArrayValues] = useState(Array.from({ length: 50 }, (_, index) => index + 1));
 
-  const onAddPress = () => {
-    setAmmount(ammount + 1);
-    console.log(ammount)
-  }
-  const onRemovePress = () => {
-    if (ammount > 0) {
 
-      setAmmount(ammount - 1);
+    const renderItem = ({ item }) => (
 
-    } else {
-      Alert.alert('zero is the min')
-    }
+      <TouchableOpacity
+        style={[styles.item, item === selectedNumber && styles.selectedItem]}
+        onPress={() => setSelectedNumber(item)}
+      >
+        <Text style={styles.itemText}>{item}</Text>
 
-    console.log(ammount)
-  }
+      </TouchableOpacity>
 
+    );
+    console.log(selectedNumber);
+    return (
+
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.scroll}>
+        <FlatList
+          data={arrayValues}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.toString()}
+          numColumns={60}
+        />
+      </ScrollView>
+
+
+    );
+  };
 
   console.log("product:", product)
   return (
@@ -36,24 +51,19 @@ const ProductScreen = props => {
 
       <View style={styles.bottomcomp}>
 
-        <View style={styles.addToCart}>
-        <Text style={styles.addToCartTxt}>Add to cart</Text>
-
+        <View style={styles.numcontainer}>
+          <Text style={styles.presstxt}>{"<    "}press{"    >"}</Text>
+          <Numbers />
         </View>
-        <View style={styles.addOrRemove}>
 
-          <TouchableOpacity style={styles.plusTouch} onPress={onAddPress}>
-            <Text style={styles.plus}>+</Text>
+
+        <View style={styles.addToCart}>
+          <TouchableOpacity>
+            <Text style={styles.addToCartTxt}>Add to cart</Text>
           </TouchableOpacity>
-
-          <Text style={styles.theAmmount}>{ammount}</Text>
-
-          <TouchableOpacity style={styles.minusTouch} onPress={onRemovePress}>
-            <Text style={styles.minus}>-</Text>
-          </TouchableOpacity>
-
         </View>
       </View>
+
     </View>
   )
 }
@@ -61,116 +71,105 @@ const ProductScreen = props => {
 export default ProductScreen
 
 const styles = StyleSheet.create({
+  presstxt: {
+    fontSize: 15,
+    color: 'black',
+
+  },
+  selectedItem: {
+    backgroundColor: 'green',
+    borderWidth: 2,
+    justifyContent: 'center',
+    textAlign: 'center',
+    height: 45,
+  },
+
+  scroll: {
+    height: 10,
+    width: 150,
+    borderBottomWidth: 1,
+  },
+  numcontainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+
+  },
+
+
+  itemText: {
+    fontSize: 18,
+    color: 'black',
+    textAlign: 'center',
+  },
+
+  itemText: {
+    fontSize: 18,
+    color: 'black',
+    textAlign: 'center',
+  },
+
+  item: {
+    backgroundColor: 'grey',
+    color: 'black',
+    padding: 10,
+    fontSize: 18,
+    height: 50,
+
+  },
   container: {
     flex: 1,
+    backgroundColor: '#795548',
   },
   image: {
     width: '100%',
     height: 340,
     resizeMode: 'contain',
-    backgroundColor: "black",
+    backgroundColor: "#071e31",
     borderRadius: 100,
   },
   title: {
     color: 'black',
     fontWeight: 'bold',
     textAlign: 'center',
+    marginLeft:50,
     fontSize: 30,
     borderWidth: 2,
-    marginLeft: 50,
+    backgroundColor: '#1e87db',
     borderRadius: 50,
     borderWidth: 3,
-    height: 60,
     width: 300,
   },
   dis: {
     fontSize: 20,
-
-    borderRadius: 10,
+    padding: 5,
+    borderRadius: 25,
     fontWeight: 'bold',
     color: 'black',
     backgroundColor: 'grey',
   },
-  addOrRemove: {
-
-    flexDirection: 'row',
-    borderWidth: 4,
-    width: 200,
-    borderRadius: 20,
-    paddingRight: 15,
-  },
-  plus: {
-    fontSize: 45,
-    color: 'black',
-    fontWeight: 'bold',
-    marginLeft: 15,
-    backgroundColor: 'green',
-    borderRadius: 20,
-    lineHeight: 39,
-    marginTop: 20,
-    width: 25,
-    height: 25,
-  },
-  minus: {
-    fontSize: 50,
-    color: 'black',
-    fontWeight: 'bold',
-    marginLeft: 15,
-    backgroundColor: 'red',
-    borderRadius: 20,
-    lineHeight: 37,
-    marginTop: 25,
-    width: 19,
-    height: 20,
-
-  },
-
-  theAmmount: {
-    fontSize: 45,
-    marginLeft: 15,
-    color: 'black',
-    fontWeight: 'bold',
-  },
-
-  plusTouch: {
-
-    height: 60,
-    marginTop: 10,
-    marginLeft: 10,
-    paddingRight: 50,
-    width: 20,
-    borderRadius: 50,
-  },
-
-  minusTouch: {
-
-    height: 60,
-    marginTop: 10,
-    marginLeft: 10,
-    paddingRight: 50,
-    width: 20,
-    borderRadius: 50,
-  },
   bottomcomp: {
+    marginLeft: '25%',
     flex: 1,
-    
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection:'column-reverse',
+    marginBottom: 165,
+    width: 200,
+
   },
   addToCart: {
-borderRadius:1,
-
+    flex: 1.4,
+    borderRadius: 1,
+    alignItems: 'center',
+    textAlign: 'center',
 
   },
-  addToCartTxt:{
-  fontSize:30,
-  color:'black',
-  fontWeight:'bold',
-  borderWidth:1,
-  borderRadius:10,
-  padding:2,
-  backgroundColor:'grey',
-  margin:5,
+  addToCartTxt: {
+    fontSize: 30,
+    color: 'black',
+    fontWeight: 'bold',
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 2,
+    backgroundColor: 'grey',
+    margin: 5,
   },
 })
