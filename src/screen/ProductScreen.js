@@ -1,11 +1,8 @@
 import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useState } from 'react'
 import { FlatList } from 'react-native';
+import BottomBar from '../Components/BottomBar';
 
-import CatsStoreItems from '../Components/CatsStoreItems';
-import { Items } from '../res/Data';
-import Images from '../assets/images/images';
-import { Picker } from '@react-native-picker/picker';
 
 const ProductScreen = props => {
   const product = props.route.params.data;
@@ -52,8 +49,9 @@ const ProductScreen = props => {
       <View style={styles.bottomcomp}>
 
         <View style={styles.numcontainer}>
-          <Text style={styles.presstxt}>{"<    "}press{"    >"}</Text>
+
           <Numbers />
+
         </View>
 
 
@@ -62,6 +60,7 @@ const ProductScreen = props => {
             <Text style={styles.addToCartTxt}>Add to cart</Text>
           </TouchableOpacity>
         </View>
+
       </View>
 
     </View>
@@ -81,16 +80,20 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     justifyContent: 'center',
     textAlign: 'center',
-    height: 45,
+    height: '100%',
   },
 
   scroll: {
-    height: 10,
+    height: 15,
     width: 150,
-    borderBottomWidth: 1,
+
   },
   numcontainer: {
+    borderBottomWidth: 1,
+    height: '100%',
+    width: '100%',
     flex: 1,
+    marginTop: 10,
     justifyContent: 'center',
     alignItems: 'center',
 
@@ -119,7 +122,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#795548',
+    backgroundColor: '#393939',
   },
   image: {
     width: '100%',
@@ -132,7 +135,7 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: 'bold',
     textAlign: 'center',
-    marginLeft:50,
+    marginLeft: 50,
     fontSize: 30,
     borderWidth: 2,
     backgroundColor: '#1e87db',

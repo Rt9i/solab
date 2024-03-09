@@ -1,6 +1,7 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import ScreenNames from '../../routes/ScreenNames'
+import BottomBar from '../Components/BottomBar'
 
 const DogsStore =  () => {
   return (
@@ -10,6 +11,8 @@ const DogsStore =  () => {
 
 
       <View style={styles.itemsContainer}></View>
+      
+   
     </View>
   )
 }

@@ -5,29 +5,24 @@ import ScreenNames from '../../routes/ScreenNames';
 import BottomBar from '../Components/BottomBar';
 
 const Home = props => {
+
   const navigateDogsStore = () => {
-    props.navigation.navigate(ScreenNames.dogsStore);
+    props.navigation.navigate(ScreenNames.Tabs, { screen: ScreenNames.dogsStore});
   }
   const navigateCatsStore = () => {
-    props.navigation.navigate(ScreenNames.catsStore)
-
+    props.navigation.navigate(ScreenNames.Tabs, { screen: ScreenNames.catsStore })
   }
 
 
   return (
     <View style={styles.container} >
-    
-    
 
       <View style={styles.dogs}>
         <TouchableOpacity onPress={navigateDogsStore} style={styles.cattouch} >
-          <Image source={Images.dog()} style={styles.dogImage}  />
+          <Image source={Images.dog()} style={styles.dogImage} />
           <Text style={styles.dogsButtonText}>Dog's Store</Text>
         </TouchableOpacity>
       </View>
-
-
-
 
       <View style={styles.cats}>
         <TouchableOpacity onPress={navigateCatsStore} style={styles.cattouch} >
@@ -43,11 +38,11 @@ const Home = props => {
 export default Home;
 
 const styles = StyleSheet.create({
-  dogtouch:{
-    height:'100%',
+  dogtouch: {
+    height: '100%',
   },
-  cattouch:{
-    height:'100%',
+  cattouch: {
+    height: '100%',
   },
   container: {
     flex: 1,
@@ -57,13 +52,13 @@ const styles = StyleSheet.create({
 
   dogs: {
     flex: 1,
-    backgroundColor: '#41384E',
+    backgroundColor: 'black',
     width: '100%',
   },
 
   cats: {
     flex: 1,
-    backgroundColor: '#ab9680',
+    backgroundColor: '#6CCAFF',
     width: '100%',
   },
 
@@ -84,9 +79,9 @@ const styles = StyleSheet.create({
   },
 
   dogsButtonText: {
-    color: '#130007',
+    color: 'white',
     fontWeight: 'bold',
-    
+
     fontSize: 30,
     width: '100%',
     textAlign: 'center',
@@ -95,7 +90,7 @@ const styles = StyleSheet.create({
   },
   catsButtonText: {
     fontWeight: 'bold',
-    color: '#5e4c3e',
+    color: 'black',
     fontSize: 30,
     textAlign: 'center',
     width: '100%',

@@ -12,6 +12,7 @@ const Images = {
     catIcon: () =>require('./catIcon.png'),
     cart: () =>require('./cart.png'),
     arrow: () =>require('./arrow.png'),
+    blackLoggo: () =>require('./blackLogo.png'),
 };
 
 export default Images;

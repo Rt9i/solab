@@ -2,6 +2,9 @@ import { TouchableOpacity, Image, ScrollView, StyleSheet, Text, View } from 'rea
 import React from 'react'
 import { useNavigation } from '@react-navigation/native'
 import ScreenNames from '../../routes/ScreenNames'
+import strings from '../res/strings'
+
+strings
 const CatsStoreItems = props => {
   const { brand, name, taste, price, img, hideImage, dis } = props;
 
@@ -19,45 +22,27 @@ const CatsStoreItems = props => {
   };
 
   return (
+    <View style={styles.items}>
+      <View style={styles.photo}>
+        <TouchableOpacity onPress={onCardPress}>
+          {!hideImage && <Image source={img} style={styles.img} />}
+        </TouchableOpacity>
+      </View>
 
+      <View style={styles.bottomcontainer}>
 
-    <View style={styles.itemsContainer}>
-
-      <View style={styles.items}>
-
-        <View style={styles.photo}>
-          <TouchableOpacity onPress={onCardPress}>
-            {!hideImage && <Image source={img} style={styles.img} />}
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.bottomcontainer}>
-
-          <TouchableOpacity onPress={goToShop}>
-            <View style={styles.cart}>
-              <Text style={styles.carttxt}>+</Text>
-            </View>
-          </TouchableOpacity>
-
-          <View style={styles.props}>
-            <Text style={styles.bottomtxt1}>{` ${brand}`}</Text>
-            <Text style={styles.bottomtxt2}>{` ${taste}`}</Text>
+        <TouchableOpacity onPress={goToShop}>
+          <View style={styles.cart}>
+            <Text style={styles.carttxt}>+</Text>
           </View>
+        </TouchableOpacity>
 
+        <View style={styles.props}>
+          <Text style={styles.bottomtxt1}>{` ${brand}`}</Text>
+          <Text style={styles.bottomtxt2}>{` ${price} ${strings.priceTag}`}</Text>
         </View>
-
       </View>
-
-      <View style={styles.disbox}>
-        <ScrollView>
-          <Text style={styles.dis}>{` ${dis}`}</Text>
-        </ScrollView>
-      </View>
-    </View >
-
-
-
-
+    </View>
   )
 }
 
@@ -74,7 +59,7 @@ const styles = StyleSheet.create({
     height: 200,
     fontWeight: 'bold',
     color: '#9e978e',
-    backgroundColor: '#332A23',
+    backgroundColor: '#393939',
     fontSize: 15,
     borderBottomWidth: 2,
     borderColor: 'black',
@@ -82,14 +67,17 @@ const styles = StyleSheet.create({
   itemsContainer: {
     backgroundColor: '#3F3F3F',
     flexDirection: 'row',
+    justifyContent: 'space-between',
     height: 200,
+    flexWrap: 'wrap',
   },
+
   items: {
     flex: 1,
     backgroundColor: 'grey',
     flexDirection: 'column',
     height: 200,
-    width: 125,
+    width: 100,
   },
 
 
@@ -99,6 +87,7 @@ const styles = StyleSheet.create({
 
 
   img: {
+    resizeMode: 'contain',
     width: '100%',
     height: '100%',
     backgroundColor: 'black',
@@ -111,7 +100,10 @@ const styles = StyleSheet.create({
 
   bottomtxt1: {
     flex: 1,
+    paddingBottom: 2,
     backgroundColor: 'grey',
+
+    fontSize: 10,
     textAlignVertical: 'center',
     backgroundColor: 'grey',
     fontWeight: 'bold',
@@ -121,6 +113,7 @@ const styles = StyleSheet.create({
 
   bottomtxt2: {
     flex: 1,
+    fontSize: 12,
     backgroundColor: 'grey',
     textAlignVertical: 'center',
     backgroundColor: 'grey',

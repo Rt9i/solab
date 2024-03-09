@@ -4,7 +4,7 @@ import ScreenNames from '../../routes/ScreenNames';
 import { screensEnabled } from 'react-native-screens';
 import Images from '../assets/images/images';
 import { TouchableOpacity } from 'react-native';
-
+import BottomBar from '../Components/BottomBar';
 
 
 const Splash = props => {
@@ -33,7 +33,7 @@ const Splash = props => {
           style={styles.image}
         />
       </TouchableOpacity>
-
+    
     </View>
 
   );

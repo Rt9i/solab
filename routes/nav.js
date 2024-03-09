@@ -11,40 +11,29 @@ import ProductScreen from '../src/screen/ProductScreen';
 import DogsStore from '../src/screen/DogsStore';
 import CatsStore from '../src/screen/CatsStore';
 import BottomBar from '../src/Components/BottomBar';
+import TabNav from './TabNav';
 
-const checkHideBar = () => {
-  if (BottomBar.hideBar == true) { 
-    return null;
-  } else {
-    return <BottomBar />;
-  }
-};
+
+
+
 
 const MainNavigation = () => {
+
   const Stack = createNativeStackNavigator();
 
   return (
     <NavigationContainer>
-      
-      <Stack.Navigator >
-        <Stack.Screen name={ScreenNames.splash} component={Splash} options={{headerShown:false}} hideBar={true} />
-        <Stack.Screen name={ScreenNames.catsStore} component={CatsStore}     
-        options={{
-          headerShown:false,
-            headerTitle: 'Cats Store',
-            headerStyle: {
-              backgroundColor: '#241916', 
-            },
-            headerTintColor: 'white', 
-          }}  />
-        <Stack.Screen name={ScreenNames.cart} component={Cart} options={{headerShown:false}}/>
-        <Stack.Screen name={ScreenNames.home} component={Home} options={{ headerShown: false }} hideBar={true}  />
-        <Stack.Screen name={ScreenNames.login} component={Login}options={{headerShown:false}} />
-        <Stack.Screen name={ScreenNames.ProductScreen} component={ProductScreen}options={{headerShown:false}} />
-        <Stack.Screen name={ScreenNames.dogsStore} component={DogsStore} options={{headerShown:false}}/>
+      <Stack.Navigator>
+        <Stack.Screen name={ScreenNames.splash} component={Splash} options={{ headerShown: false }} />
+        {/* <Stack.Screen name={ScreenNames.dogsStore} component={DogsStore} /> */}
+        {/* <Stack.Screen name={ScreenNames.cart} component={Cart} /> */}
+        <Stack.Screen name={ScreenNames.home} component={Home} options={{ headerShown: false }} />
+        <Stack.Screen name={ScreenNames.login} component={Login} />
+        <Stack.Screen name={ScreenNames.ProductScreen} component={ProductScreen} />
+        <Stack.Screen name={ScreenNames.Tabs} component={TabNav} options={{headerShown:false}} />
+        {/* <Stack.Screen name={ScreenNames.catsStore} component={CatsStore}  /> */}
+
       </Stack.Navigator>
-      {checkHideBar()}
-      
     </NavigationContainer >
   );
 };

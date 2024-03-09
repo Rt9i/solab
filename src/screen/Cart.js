@@ -1,16 +1,13 @@
 import { TouchableOpacity, Image, ScrollView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native';
-import ScreenNames from '../../routes/ScreenNames';
-import Item from '../Components/CatsStoreItems'
-import { Items } from '../res/Data';
-import CartItems from '../Components/CartItems';
-
+import { FoodItems } from '../res/Data';
+import BottomBar from '../Components/BottomBar';
 
 const Cart = props => {
   const navigation = useNavigation();
   const renderItem = () => {
-    const CatsStoreItems = Items.map(Items => {
+    const CatsStoreItems = FoodItems.map(Items => {
 
       return(null);
 
@@ -29,6 +26,7 @@ const Cart = props => {
       <ScrollView>
         <View style={styles.itemsContainer}>{renderItem()}</View>
       </ScrollView>
+      
     </View>
 
 
