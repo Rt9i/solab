@@ -1,6 +1,7 @@
 const strings = {
-  solab: "Solab Grooming",
   priceTag: "₪",
+  cart: "cart",
+  empty: "Empty",
 };
 
 export default strings;

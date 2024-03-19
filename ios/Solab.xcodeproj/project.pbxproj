@@ -14,6 +14,11 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		7699B88040F8A987B510C191 /* libPods-Solab-SolabTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-Solab-SolabTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		6327B7A3605A440DAB49A773 /* PassionOne-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EA8BF9F8717C4D649E17A6F8 /* PassionOne-Black.ttf */; };
+		E4BD297011434BC8ADCB869B /* PassionOne-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9AE9B83AEA4546FE846E325B /* PassionOne-Bold.ttf */; };
+		69FA5AA8A7874CA380D1FA0C /* PassionOne-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 218BD0EFBE63498E9316EB54 /* PassionOne-Regular.ttf */; };
+		A370958C4F354EDD88F87BBD /* bigFont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 79042E61747D4ADDA54C22BD /* bigFont.ttf */; };
+		CCC15C6D20BF4C258D25C124 /* smallFont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AA9A503228C94C629299E2E0 /* smallFont.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +49,11 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Solab/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-Solab-SolabTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Solab-SolabTests.release.xcconfig"; path = "Target Support Files/Pods-Solab-SolabTests/Pods-Solab-SolabTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		EA8BF9F8717C4D649E17A6F8 /* PassionOne-Black.ttf */ = {isa = PBXFileReference; name = "PassionOne-Black.ttf"; path = "../src/assets/fonts/PassionOne-Black.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		9AE9B83AEA4546FE846E325B /* PassionOne-Bold.ttf */ = {isa = PBXFileReference; name = "PassionOne-Bold.ttf"; path = "../src/assets/fonts/PassionOne-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		218BD0EFBE63498E9316EB54 /* PassionOne-Regular.ttf */ = {isa = PBXFileReference; name = "PassionOne-Regular.ttf"; path = "../src/assets/fonts/PassionOne-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		79042E61747D4ADDA54C22BD /* bigFont.ttf */ = {isa = PBXFileReference; name = "bigFont.ttf"; path = "../src/assets/fonts/bigFont.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		AA9A503228C94C629299E2E0 /* smallFont.ttf */ = {isa = PBXFileReference; name = "smallFont.ttf"; path = "../src/assets/fonts/smallFont.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +132,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				63E4224DDB2B4851A928C304 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -147,6 +158,19 @@
 			);
 			path = Pods;
 			sourceTree = "<group>";
+		};
+		63E4224DDB2B4851A928C304 /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+				EA8BF9F8717C4D649E17A6F8 /* PassionOne-Black.ttf */,
+				9AE9B83AEA4546FE846E325B /* PassionOne-Bold.ttf */,
+				218BD0EFBE63498E9316EB54 /* PassionOne-Regular.ttf */,
+				79042E61747D4ADDA54C22BD /* bigFont.ttf */,
+				AA9A503228C94C629299E2E0 /* smallFont.ttf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+			path = "";
 		};
 /* End PBXGroup section */
 
@@ -243,6 +267,11 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				6327B7A3605A440DAB49A773 /* PassionOne-Black.ttf in Resources */,
+				E4BD297011434BC8ADCB869B /* PassionOne-Bold.ttf in Resources */,
+				69FA5AA8A7874CA380D1FA0C /* PassionOne-Regular.ttf in Resources */,
+				A370958C4F354EDD88F87BBD /* bigFont.ttf in Resources */,
+				CCC15C6D20BF4C258D25C124 /* smallFont.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

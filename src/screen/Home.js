@@ -42,7 +42,8 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   cattouch: {
-    height: '100%',
+    height:'100%',
+
   },
   container: {
     flex: 1,

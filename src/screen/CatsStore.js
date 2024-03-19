@@ -3,11 +3,14 @@ import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList, ScrollView }
 import CatsStoreItems from '../Components/CatsStoreItems';
 import getCategoryItemsData from '../res/Data';
 import Images from '../assets/images/images';
+import Cart from './Cart';
 
 const CatsStore = () => {
   const { getCategoryItems } = getCategoryItemsData();
   const [selectedCategory, setSelectedCategory] = useState('Food');
   const filteredItems = getCategoryItems(selectedCategory);
+
+
 
   const renderBar = () => {
     const categories = [
@@ -59,7 +62,8 @@ const CatsStore = () => {
 
 
         <View style={styles.sale}>
-
+          <Image source={Images.litterSale()} style={styles.saleimg} />
+          <Image source={Images.premioSale()} style={styles.saleimg} />
         </View>
 
         <View style={styles.display}>
@@ -74,6 +78,10 @@ const CatsStore = () => {
                   img={item.img}
                   dis={item.dis}
                   price={item.price}
+                  id={item.id}
+                  quantity={item.quantity}
+
+
                 />
               )}
               keyExtractor={(item) => item.id}
@@ -92,12 +100,24 @@ const CatsStore = () => {
 export default CatsStore
 
 const styles = StyleSheet.create({
+  food: {
+    fontFamily: 'bigFont',
+    fontSize: 40,
+  },
+  saleimg: {
+    height: 130,
+    width: '50%',
+    resizeMode: 'contain',
+  },
   sale: {
+    flex: 1,
+    flexDirection: 'row',
     height: 130,
     marginTop: 10,
     marginLeft: 15,
     marginRight: 15,
-    backgroundColor: 'grey',
+    marginBottom: 10,
+
   },
   itemscontainer: {
     flex: 1,
@@ -154,13 +174,13 @@ const styles = StyleSheet.create({
   },
   solabText: {
     color: '#00B9F4',
-    fontWeight: 'bold',
-    fontSize: 35,
+    fontFamily: 'bigFont',
+    fontSize: 30,
   },
   groomingText: {
     color: 'black',
-    fontWeight: 'bold',
-    fontSize: 35,
+    fontFamily: 'bigFont',
+    fontSize: 30,
   },
   topBar: {
     height: 50,
@@ -186,7 +206,8 @@ const styles = StyleSheet.create({
   },
   categoryText: {
     color: 'black',
-    fontWeight: 'bold',
+    fontFamily: 'smallFont',
+    
   },
   container: {
 

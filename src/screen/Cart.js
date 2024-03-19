@@ -1,67 +1,78 @@
-import { TouchableOpacity, Image, ScrollView, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { useNavigation } from '@react-navigation/native';
-import { FoodItems } from '../res/Data';
-import BottomBar from '../Components/BottomBar';
+import React, { useContext } from 'react';
+import { View, Text, StyleSheet, FlatList } from 'react-native';
+import SolabContext from '../store/solabContext';
+import CartItems from '../Components/CartItems';
+import strings from '../res/strings';
 
-const Cart = props => {
-  const navigation = useNavigation();
-  const renderItem = () => {
-    const CatsStoreItems = FoodItems.map(Items => {
+const Cart = () => {
+  const { cart,removeItemFromCart  } = useContext(SolabContext);
 
-      return(null);
+ 
 
-    });
-
-    return CatsStoreItems;
+  const renderCart = ({ item }) => {
+    return <CartItems {...item} hideImage={true} onRemove={() => removeItemFromCart(item.id)} />;
   };
 
 
+
+  const emptyCartMessage = () => {
+    if (cart.length === 0) {
+      console.log(cart.length)
+      return <Text style={styles.emptyText}>{strings.empty}</Text>;
+    }
+    console.log(cart.length)
+    return null;
+  };
+
   return (
-
     <View style={styles.container}>
-      <TouchableOpacity >
-        <Text style={styles.purchase}>Purchase</Text>
-      </TouchableOpacity>
-      <ScrollView>
-        <View style={styles.itemsContainer}>{renderItem()}</View>
-      </ScrollView>
-      
+      <View style={styles.toptxt}>
+        <Text style={styles.carttxt}>{` ${strings.cart} `}</Text>
+      </View>
+      <View style={styles.items}>
+        {emptyCartMessage()}
+        <FlatList
+          data={cart}
+          renderItem={renderCart}
+          keyExtractor={(item) => item.id.toString()}
+          numColumns={3}
+          ListEmptyComponent={null}
+        />
+      </View>
     </View>
+  );
+};
 
-
-  )
-}
-
-export default Cart
+export default Cart;
 
 const styles = StyleSheet.create({
+
+  toptxt: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  carttxt: {
+    fontSize: 40,
+    fontFamily: 'Angkor-Regular',
+    color: 'white',
+  },
   container: {
     flex: 1,
     flexDirection: 'column',
+    backgroundColor: '#3F3F3F',
+  },
+  items: {
+
+    flex: 1,
+    margin: 10,
     backgroundColor: 'grey',
   },
-
-  itemsContainer: {
-    flex: 1,
-    flexDirection: 'column',
-  },
-
-  purchase: {
-    flex: 1,
-    borderWidth: 1,
-    width: 100,
-    fontSize: 20,
-    paddingTop: 30,
-    paddingBottom: 10,
-    lineHeight: 1,
-    borderRadius: 15,
-    color: 'black',
+  emptyText: {
     textAlign: 'center',
-    fontWeight: 'bold',
-    backgroundColor: 'orange',
-
+    marginTop: 300,
+    color: 'black',
+    fontFamily:'PassionOne-Bold',
+    fontSize: 50,
+    opacity: 0.1,
   },
-
-
-})
+});

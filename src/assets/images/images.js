@@ -13,6 +13,8 @@ const Images = {
     cart: () =>require('./cart.png'),
     arrow: () =>require('./arrow.png'),
     blackLoggo: () =>require('./blackLogo.png'),
+    litterSale: () => require('./litterSale.png'),
+    premioSale: () => require('./premioSale.png'),
 };
 
 export default Images;

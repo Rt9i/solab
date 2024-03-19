@@ -4,13 +4,9 @@ import { NavigationContainer, TabActions, TabRouter, createNavigatorFactory } fr
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Splash from '../src/screen/Splash';
 import ScreenNames from './ScreenNames';
-import Cart from '../src/screen/Cart';
 import Home from '../src/screen/Home';
 import Login from '../src/screen/Login';
 import ProductScreen from '../src/screen/ProductScreen';
-import DogsStore from '../src/screen/DogsStore';
-import CatsStore from '../src/screen/CatsStore';
-import BottomBar from '../src/Components/BottomBar';
 import TabNav from './TabNav';
 
 

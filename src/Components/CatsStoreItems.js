@@ -1,44 +1,91 @@
-import { TouchableOpacity, Image, ScrollView, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { TouchableOpacity, Image, ScrollView, StyleSheet, Text, View, Alert } from 'react-native'
+import React, { useContext, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import ScreenNames from '../../routes/ScreenNames'
 import strings from '../res/strings'
+import SolabContext from '../store/solabContext'
 
 strings
 const CatsStoreItems = props => {
-  const { brand, name, taste, price, img, hideImage, dis } = props;
-
 
   const navigation = useNavigation();
+  const { brand, name, taste, price, img, hideImage, dis, id, quantity: initialQuantity } = props;
+  const { cart, setCart } = useContext(SolabContext);
+  const [quantity, setQuantity] = useState(initialQuantity || 1);
+
+
+
+  const checkiFCarInCart = () => {
+    const carObj = cart.find((cartItem) => cartItem.id === id);
+    return !!carObj;
+  };
+
 
   const onCardPress = () => {
     const Item = { ...props };
     navigation.navigate(ScreenNames.ProductScreen, { data: Item });
   };
 
-  const goToShop = () => {
+  const addToShop = () => {
     const Item = { ...props };
-    navigation.navigate(ScreenNames.cart, { data: Item });
+    const existingCartItem = cart.find((cartItem) => cartItem.id === id);
+
+    if (existingCartItem) {
+      existingCartItem.quantity += quantity;
+      setCart([...cart]);
+      console.log(existingCartItem.quantity);
+    } else {
+      Item.quantity = quantity;
+      const updatedCart = [...cart, Item];
+      setCart(updatedCart);
+      console.log(Item.quantity);
+    }
   };
+
+  const alertAdd = () => {
+
+    Alert.alert(
+      'Add to cart',
+      `${brand} ${price} ${strings.priceTag}`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Add', onPress: () => {
+
+            Alert.alert(
+              'Item Added',
+              `${brand} ${price} ${strings.priceTag} added to the cart`
+            );
+            addToShop();
+
+          }
+        },
+        { text: 'Add more', onPress: () => onCardPress() },
+      ]
+    );
+
+
+
+  }
 
   return (
     <View style={styles.items}>
       <View style={styles.photo}>
         <TouchableOpacity onPress={onCardPress}>
-          {!hideImage && <Image source={img} style={styles.img} />}
+          {<Image source={img} style={styles.img} />}
         </TouchableOpacity>
       </View>
 
       <View style={styles.bottomcontainer}>
 
-        <TouchableOpacity onPress={goToShop}>
+        <TouchableOpacity onPress={alertAdd}>
           <View style={styles.cart}>
             <Text style={styles.carttxt}>+</Text>
           </View>
         </TouchableOpacity>
 
         <View style={styles.props}>
-          <Text style={styles.bottomtxt1}>{` ${brand}`}</Text>
+          <Text style={styles.bottomtxt1}>{` ${taste}`}</Text>
           <Text style={styles.bottomtxt2}>{` ${price} ${strings.priceTag}`}</Text>
         </View>
       </View>
@@ -106,7 +153,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     textAlignVertical: 'center',
     backgroundColor: 'grey',
-    fontWeight: 'bold',
+    fontFamily: 'bigFont',
     borderWidth: 1,
     color: 'black',
   },
@@ -125,8 +172,6 @@ const styles = StyleSheet.create({
   props: {
     flex: 1,
     flexDirection: 'column',
-
-
   },
 
   cart: {
@@ -134,20 +179,17 @@ const styles = StyleSheet.create({
     width: 40,
   },
   carttxt: {
-    flex: 2,
-    fontSize: 42,
-    fontWeight: 'bold',
+    fontSize: 46,
+    fontFamily: 'bigFont',
     color: 'black',
     backgroundColor: '#595552',
-    borderColor: 'purple',
     textAlign: 'center',
     alignItems: 'center',
     justifyContent: 'center',
-    lineHeight: 43,
+    lineHeight: 58,
   },
 
   photo: {
-
     flex: 5,
     backgroundColor: 'black',
   },

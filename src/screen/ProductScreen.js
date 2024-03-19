@@ -3,6 +3,13 @@ import { useState } from 'react'
 import { FlatList } from 'react-native';
 import BottomBar from '../Components/BottomBar';
 
+const AddToCart= () =>{
+
+
+
+}
+
+
 
 const ProductScreen = props => {
   const product = props.route.params.data;

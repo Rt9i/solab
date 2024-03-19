@@ -1,63 +1,61 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from 'react-native';
+import React, { useState } from 'react';
+import strings from '../res/strings';
+import { useNavigation } from '@react-navigation/native';
+import ScreenNames from '../../routes/ScreenNames';
 
-const CartItems = () => {
-  const renderCartItem = () => {
-    const CatsStoreItems = Items.map(Items => {
-     
-      return (
-        
-        <Items
-          key={Items.id}
-          brand={Items.brand}
-          taste={Items.taste}
-          img={Items.img}
-          dis={Items.dis}
-        />
 
-      );
+const CartItems = props => {
+  const Item = { ...props };
+  const { brand, name, taste, price, img, hideImage, dis, id, onRemove, initialQuantity,quantity } = props;
 
-    });
+  const navigation = useNavigation();
 
-    return renderCartItem;
+  const onCardPress = () => {
+    const Item = { ...props };
+    navigation.navigate(ScreenNames.ProductScreen, { data: Item });
   };
+ const renderCartItem = () => {
   return (
-    <View>
-      
-      
+    <View style={styles.items}>
 
-      <View style={styles.items}>
+      <View style={styles.photo}>
+        <Text style={styles.quantity}>{quantity}</Text>
+        <TouchableOpacity onPress={onCardPress}>
+          {<Image source={img} style={styles.img} />}
+        </TouchableOpacity>
+      </View>
 
-        <View style={styles.photo}>
-          <TouchableOpacity onPress={onCardPress}>
-            {!hideImage && <Image source={product.img} style={styles.img} />}
-          </TouchableOpacity>
-        </View>
+      <View style={styles.bottomcontainer}>
 
-        <View style={styles.bottomcontainer}>
-
-          <TouchableOpacity>
-            <View style={styles.cart}>
-              <Text style={styles.carttxt}>-</Text>
-            </View>
-          </TouchableOpacity>
-
-          <View style={styles.props}>
-            <Text style={styles.bottomtxt1}>{` ${product.brand}`}</Text>
-            <Text style={styles.bottomtxt2}>{` ${product.taste}`}</Text>
+        <TouchableOpacity activeOpacity={0.5} onPress={() => onRemove(id)}>
+          <View style={styles.cart}>
+            <Text style={styles.carttxt}>-</Text>
           </View>
+        </TouchableOpacity>
 
+        <View style={styles.props}>
+          <Text style={styles.bottomtxt1}>{` ${brand}`}</Text>
+          <Text style={styles.bottomtxt2}>{` ${price} ${strings.priceTag}`}</Text>
         </View>
 
       </View>
-    </View>
-  )
-}
 
-export default CartItems
+    </View>
+  );
+};
+
+  return <View>{renderCartItem()}</View>;
+};
+
+export default CartItems;
 
 const styles = StyleSheet.create({
-
+  quantity: {
+    textAlign: 'center',
+    height: 20,
+    color: 'white',
+  },
   bottomtxt1: {
     flex: 1,
     backgroundColor: 'grey',
@@ -90,8 +88,10 @@ const styles = StyleSheet.create({
     color: 'black',
     backgroundColor: 'purple',
     textAlign: 'center',
-    justifyContent: 'center',
-    lineHeight: 40,
+
+    alignItems: 'center',
+
+
   },
   cart: {
     flex: 1,
@@ -104,13 +104,12 @@ const styles = StyleSheet.create({
 
   },
   items: {
-    margin: 5,
+    marginHorizontal: 2,
     flex: 5,
     backgroundColor: 'grey',
     flexDirection: 'column',
-    marginBottom: 100,
-    width: 100,
-    marginBottom: 550,
+    width: 110,
+
 
   },
   photo: {
@@ -136,8 +135,8 @@ const styles = StyleSheet.create({
 
   img: {
 
-    width: '100%',
-    height: '100%',
+    width: 100,
+    height: 130,
     backgroundColor: 'black',
   },
 })

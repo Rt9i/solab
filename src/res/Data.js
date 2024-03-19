@@ -27,72 +27,6 @@ const getCategoryItemsData = () => {
       img: Images.mongeKitten(),
       dis: 'Food Item 1 Description',
     },
-    {
-      id: 'Food4',
-      price: 10120,
-      brand: 'monge',
-      taste: 'salmon',
-      img: Images.mongeKitten(),
-      dis: 'Food Item 1 Description',
-    },
-    {
-      id: 'Food5',
-      price: 142400,
-      brand: 'monge',
-      taste: 'salmon',
-      img: Images.mongeKitten(),
-      dis: 'Food Item 1 Description',
-    },
-    {
-      id: 'Food6',
-      price: 1040,
-      brand: 'monge',
-      taste: 'salmon',
-      img: Images.mongeKitten(),
-      dis: 'Food Item 1 Description',
-    },
-    {
-      id: 'Food7',
-      price: 100542,
-      brand: 'monge',
-      taste: 'salmon',
-      img: Images.mongeKitten(),
-      dis: 'Food Item 1 Description',
-    },
-    {
-      id: 'Food8',
-      price: 45,
-      brand: 'monge',
-      taste: 'salmon',
-      img: Images.mongeKitten(),
-      dis: 'Food Item 1 Description',
-    },
-    {
-      id: 'Food9',
-      price: 54,
-      brand: 'monge',
-      taste: 'salmon',
-      img: Images.mongeKitten(),
-      dis: 'Food Item 1 Description',
-    },
-    {
-      id: 'Food10',
-      price: 78,
-      brand: 'monge',
-      taste: 'salmon',
-      img: Images.mongeKitten(),
-      dis: 'Food Item 1 Description',
-    },
-    {
-      id: 'Food11',
-      price: 54,
-      brand: 'monge',
-      taste: 'salmon',
-      img: Images.mongeKitten(),
-      dis: 'Food Item 1 Description',
-    },
- 
-    
   ];
 
 
@@ -118,6 +52,14 @@ const getCategoryItemsData = () => {
       img: Images.mongeKitten(),
       dis: 'Clothes Item 1 Description',
     },
+    {
+      id: 'clothes2',
+      price: 80,
+      brand: 'a shirt',
+      taste: 'chicken',
+      img: Images.mongeKitten(),
+      dis: 'Clothes Item 1 Description',
+    },
 
   ];
 
@@ -125,7 +67,7 @@ const getCategoryItemsData = () => {
   const getSprayItems = () => [
     {
       id: 'sprays1',
-      price: 150,
+      price: 160,
       brand: 'bonjor',
       taste: 'chicken',
       img: Images.mongeKitten(),
@@ -133,12 +75,21 @@ const getCategoryItemsData = () => {
     },
     {
       id: 'sprays2',
-      price: 150,
+      price: 180,
       brand: 'bonjor',
       taste: 'chicken',
       img: Images.mongeKitten(),
       dis: 'sprays Item 1 Description',
     },
+    {
+      id: 'sprays3',
+      price: 170,
+      brand: 'bonjor',
+      taste: 'chicken',
+      img: Images.mongeKitten(),
+      dis: 'sprays Item 1 Description',
+    },
+
 
   ];
 
