@@ -9,7 +9,7 @@ const getCategoryItemsData = () => {
       brand: 'monge',
       taste: 'salmon',
       img: Images.mongeKitten(),
-      dis: 'Food Item 1 Description',
+      dis: 'blah blah blah blahblah blah blah blahblah blah blah blahblah blah blah blahblah blah blah blahblah blah blah blah',
     },
     {
       id: 'Food2',
@@ -17,7 +17,7 @@ const getCategoryItemsData = () => {
       brand: 'monge',
       taste: 'salmon',
       img: Images.mongeKitten(),
-      dis: 'Food Item 1 Description',
+      dis: 'blah blah blah blahblah blah blah blah',
     },
     {
       id: 'Food3',
@@ -25,7 +25,7 @@ const getCategoryItemsData = () => {
       brand: 'monge',
       taste: 'salmon',
       img: Images.mongeKitten(),
-      dis: 'Food Item 1 Description',
+      dis: 'blah blah blah blahblah blah blah blahblah blah blah blah',
     },
   ];
 

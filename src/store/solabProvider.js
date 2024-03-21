@@ -1,50 +1,123 @@
 import React, { useState } from 'react';
 import SolabContext from './solabContext';
+import { Alert } from 'react-native';
 
 const SolabProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
+  const [isItemAdded, setIsItemAdded] = useState(false);
+
+
+  const addItem = (item, itemId) => {
+    const existingItemIndex = cart.findIndex((item) => item.id === itemId);
+    const updatedCart = [...cart];
+    setCart(updatedCart);
+    if (existingItemIndex !== -1) {
+      updatedCart[existingItemIndex].quantity++;
+    } else {
+      updatedCart.push(item);
+      setIsItemAdded(true);
+    }
+    setCart(updatedCart);
+  };
+
 
   const addItemToCart = (item, itemId) => {
     const existingItemIndex = cart.findIndex((item) => item.id === itemId);
-    if (existingItemIndex != -1) {
-      quantity= quantity +quantity
-    }
-
-    setCart([...cart, item]);
-  };
-
-  const removeItemFromCart = (itemId) => {
-
-    const existingItemIndex = cart.findIndex((item) => item.id === itemId);
+    const updatedCart = [...cart];
+    setCart(updatedCart);
 
     if (existingItemIndex !== -1) {
-      const updatedCart = [...cart];
-      const existingItem = updatedCart[existingItemIndex];
+      updatedCart[existingItemIndex].quantity += item.quantity;
+    } else {
+      updatedCart.push(item);
+      setIsItemAdded(true);
+    }
+    setCart(updatedCart);
+  };
 
-      if (existingItem.quantity === 1) {
+  const checkRemoveItem = (item,itemId) => {
 
-        updatedCart.splice(existingItemIndex, 1);
-      } else {
+      Alert.alert(
+        'Remove Item',
+        'Are you sure you want to remove this item?',
+        [
+          {
+            text: 'Cancel',
 
-        existingItem.quantity--;
-      }
+            style: 'cancel',
+          },
+          {
+            text: 'remove',
+            onPress: () => removeItem(itemId),
+          },
+        ]
+      );
 
-      setCart(updatedCart);
-    };
+    
   }
 
+
+  const removeItem = (itemId) => {
+    const existingItemIndex = cart.findIndex((item) => item.id === itemId);
+    if (existingItemIndex !== -1) {
+        const updatedCart = cart.filter((item, index) => index !== existingItemIndex);
+        setIsItemAdded(false);
+        setCart(updatedCart);
+    }
+};
+
+
+  const removeItemFromCart = (item, itemId) => {
+    const existingItemIndex = cart.findIndex((item) => item.id === itemId);
+    const updatedCart = [...cart];
+    const existingItem = updatedCart[existingItemIndex];
+
+
+    if (existingItemIndex !== -1) {
+
+
+
+      if (existingItem.quantity === 1) {
+        Alert.alert(
+          'Remove Item',
+          'Are you sure you want to remove this item?',
+          [
+            {
+              text: 'Cancel',
+
+              style: 'cancel',
+            },
+            {
+              text: 'remove',
+              onPress: () => removeItem(itemId),
+            },
+          ]
+        );
+
+
+      } else {
+        updatedCart[existingItemIndex].quantity--;
+      }
+
+
+      setCart(updatedCart);
+    }
+  };
 
   const contextValue = {
     cart,
     setCart,
     addItemToCart,
+    removeItem,
+    isItemAdded,
+    setIsItemAdded,
+    addItem,
+    checkRemoveItem,
     removeItemFromCart,
 
   };
 
-  return <SolabContext.Provider
-    value={contextValue}>{children}
-  </SolabContext.Provider>;
+  return <SolabContext.Provider value={contextValue}>{children}</SolabContext.Provider>;
 };
 
 export default SolabProvider;

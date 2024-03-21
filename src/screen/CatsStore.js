@@ -12,18 +12,22 @@ const CatsStore = () => {
 
 
 
+
   const renderBar = () => {
     const categories = [
-      { id: 'Food', name: 'Food', image: Images.catFood() },
+      { id: 'Food', name: 'Dry Food', image: Images.catFood() },
+      { id: 'Meat', name: 'MEAT', image: Images.spray() },
       { id: 'Leash', name: 'Leash', image: Images.leash() },
       { id: 'Clothes', name: 'Clothes', image: Images.catClothes() },
       { id: 'Sprays', name: 'Sprays', image: Images.spray() },
+
     ];
 
     return (
       <View style={styles.topBar}>
         {categories.map((category) => (
           <TouchableOpacity
+            activeOpacity={0.8}
             key={category.id}
             style={[
               styles.category,
@@ -85,8 +89,9 @@ const CatsStore = () => {
                 />
               )}
               keyExtractor={(item) => item.id}
-              numColumns={3}
+              numColumns={1}
               scrollEnabled={false}
+              contentContainerStyle={{ marginHorizontal: 2 }}
             />
           </View>
         </View>
@@ -120,6 +125,7 @@ const styles = StyleSheet.create({
 
   },
   itemscontainer: {
+
     flex: 1,
   },
   row: {
@@ -184,9 +190,9 @@ const styles = StyleSheet.create({
   },
   topBar: {
     height: 50,
-    width: 330,
+    width: 340,
     marginTop: 15,
-    marginLeft: 20,
+    marginLeft: 14,
     marginBottom: 15,
     flexDirection: 'row',
     alignItems: 'center',
@@ -197,17 +203,25 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     borderRadius: 50,
+
+    marginRight: 5,
+    paddingTop: 8,
   },
   categoryImage: {
     width: '100%',
     height: '100%',
     resizeMode: 'contain',
     borderRadius: 100,
+
   },
   categoryText: {
     color: 'black',
     fontFamily: 'smallFont',
-    
+    backgroundColor: '#84a1d2',
+    width: 64,
+    borderRadius: 10,
+    borderWidth: 1,
+    textAlign: 'center',
   },
   container: {
 
@@ -235,7 +249,7 @@ const styles = StyleSheet.create({
   },
   items: {
     flexDirection: 'column',
-    backgroundColor: 'grey',
+
     height: 200,
     width: 100,
   },

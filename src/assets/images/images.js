@@ -15,6 +15,8 @@ const Images = {
     blackLoggo: () =>require('./blackLogo.png'),
     litterSale: () => require('./litterSale.png'),
     premioSale: () => require('./premioSale.png'),
+    addCart: () => require('./addCart.png'),
+    checkMark:() => require('./checkMark.png'),
 };
 
 export default Images;

@@ -1,9 +1,10 @@
 import { TouchableOpacity, Image, ScrollView, StyleSheet, Text, View, Alert } from 'react-native'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import ScreenNames from '../../routes/ScreenNames'
 import strings from '../res/strings'
 import SolabContext from '../store/solabContext'
+import Images from '../assets/images/images'
 
 strings
 const CatsStoreItems = props => {
@@ -12,13 +13,13 @@ const CatsStoreItems = props => {
   const { brand, name, taste, price, img, hideImage, dis, id, quantity: initialQuantity } = props;
   const { cart, setCart } = useContext(SolabContext);
   const [quantity, setQuantity] = useState(initialQuantity || 1);
-
-
-
-  const checkiFCarInCart = () => {
-    const carObj = cart.find((cartItem) => cartItem.id === id);
-    return !!carObj;
-  };
+  const [isAddedToCart, setIsAddedToCart] = useState(false);
+  const { isItemAdded, setIsItemAdded } = useContext(SolabContext);
+  const { removeItem } = useContext(SolabContext);
+  useEffect(() => {
+    const isInCart = cart.some(item => item.id === id);
+    setIsAddedToCart(isInCart);
+  }, [cart]);
 
 
   const onCardPress = () => {
@@ -28,66 +29,86 @@ const CatsStoreItems = props => {
 
   const addToShop = () => {
     const Item = { ...props };
-    const existingCartItem = cart.find((cartItem) => cartItem.id === id);
 
-    if (existingCartItem) {
-      existingCartItem.quantity += quantity;
-      setCart([...cart]);
-      console.log(existingCartItem.quantity);
+    const existingCartItem = cart.find((cartItem) => cartItem.id === id);
+    if (isAddedToCart) {
+      if (isAddedToCart) {
+        console.log("is added to the cart" + isAddedToCart)
+        Alert.alert(
+          'Remove Item',
+          'Are you sure you want to remove this item?',
+          [
+            {
+              text: 'Cancel',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel',
+            },
+            {
+              text: 'Remove',
+              onPress: () => removeItem(id),
+            },
+          ]
+        );
+      }
+
     } else {
-      Item.quantity = quantity;
-      const updatedCart = [...cart, Item];
-      setCart(updatedCart);
-      console.log(Item.quantity);
+
+      if (existingCartItem) {
+        existingCartItem.quantity += quantity;
+        setCart([...cart]);
+        console.log(existingCartItem.quantity);
+      } else {
+        Item.quantity = quantity;
+        const updatedCart = [...cart, Item];
+        setCart(updatedCart);
+        console.log(Item.quantity);
+      }
     }
+
+
+    setIsAddedToCart(true);
+
   };
 
-  const alertAdd = () => {
 
-    Alert.alert(
-      'Add to cart',
-      `${brand} ${price} ${strings.priceTag}`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Add', onPress: () => {
-
-            Alert.alert(
-              'Item Added',
-              `${brand} ${price} ${strings.priceTag} added to the cart`
-            );
-            addToShop();
-
-          }
-        },
-        { text: 'Add more', onPress: () => onCardPress() },
-      ]
-    );
-
-
-
-  }
 
   return (
-    <View style={styles.items}>
-      <View style={styles.photo}>
-        <TouchableOpacity onPress={onCardPress}>
-          {<Image source={img} style={styles.img} />}
-        </TouchableOpacity>
+    <View style={styles.itemWidth}>
+
+      <View style={styles.disContainer}>
+
+        <Text style={styles.dis}>{`${dis}`}</Text>
+
       </View>
 
-      <View style={styles.bottomcontainer}>
 
-        <TouchableOpacity onPress={alertAdd}>
-          <View style={styles.cart}>
-            <Text style={styles.carttxt}>+</Text>
-          </View>
-        </TouchableOpacity>
+      <View style={styles.items}>
 
-        <View style={styles.props}>
-          <Text style={styles.bottomtxt1}>{` ${taste}`}</Text>
-          <Text style={styles.bottomtxt2}>{` ${price} ${strings.priceTag}`}</Text>
+        <View style={styles.photo}>
+          <TouchableOpacity onPress={onCardPress}>
+            {<Image source={img} style={styles.img} />}
+          </TouchableOpacity>
         </View>
+
+
+        <View style={styles.bottomcontainer}>
+
+          <TouchableOpacity activeOpacity={0.7} onPress={addToShop}>
+            <View style={styles.cart}>
+              {isAddedToCart ? (
+                <Image source={Images.checkMark()} style={styles.checkMark} />
+              ) : (
+                <Image source={Images.addCart()} style={styles.addCart} />
+              )}
+            </View>
+          </TouchableOpacity>
+
+          <View style={styles.props}>
+            <Text style={styles.bottomtxt1}>{` ${taste}`}</Text>
+            <Text style={styles.bottomtxt2}>{` ${price} ${strings.priceTag}`}</Text>
+          </View>
+        </View>
+
       </View>
     </View>
   )
@@ -96,20 +117,45 @@ const CatsStoreItems = props => {
 export default CatsStoreItems
 
 const styles = StyleSheet.create({
+  checkMark: {
+    backgroundColor: 'grey',
+    width: 40,
+    height: 39,
+    resizeMode: 'contain',
+    borderWidth: 1,
+    borderColor: 'black',
+  },
+  addCart: {
+    backgroundColor: 'grey',
+    width: 40,
+    height: 39,
+    resizeMode: 'contain',
+    borderWidth: 1,
+    borderColor: 'black',
+  },
+  disContainer: {
+    flex: 2,
+  },
+  itemWidth: {
+    paddingLeft: 1,
+    flexDirection: 'row-reverse',
+    marginBottom: 2,
+  },
   disbox: {
     flex: 2,
     height: '100%',
-    backgroundColor: 'grey',
+
   },
   dis: {
-    width: 280,
+    width: '100%',
     height: 200,
-    fontWeight: 'bold',
+    fontFamily: 'bigFont',
     color: '#9e978e',
     backgroundColor: '#393939',
     fontSize: 15,
-    borderBottomWidth: 2,
-    borderColor: 'black',
+    borderTopRightRadius: 10,
+    borderBottomRightRadius: 10,
+
   },
   itemsContainer: {
     backgroundColor: '#3F3F3F',
@@ -118,38 +164,31 @@ const styles = StyleSheet.create({
     height: 200,
     flexWrap: 'wrap',
   },
-
   items: {
     flex: 1,
-    backgroundColor: 'grey',
     flexDirection: 'column',
     height: 200,
     width: 100,
   },
-
-
   topContainer: {
     flexDirection: 'row',
   },
-
-
   img: {
     resizeMode: 'contain',
     width: '100%',
     height: '100%',
     backgroundColor: 'black',
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
   },
   bottomcontainer: {
     flex: 1.2,
     flexDirection: 'row-reverse',
-
   },
-
   bottomtxt1: {
     flex: 1,
     paddingBottom: 2,
     backgroundColor: 'grey',
-
     fontSize: 10,
     textAlignVertical: 'center',
     backgroundColor: 'grey',
@@ -191,6 +230,8 @@ const styles = StyleSheet.create({
 
   photo: {
     flex: 5,
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
     backgroundColor: 'black',
   },
 

@@ -17,10 +17,8 @@ const Cart = () => {
 
   const emptyCartMessage = () => {
     if (cart.length === 0) {
-      console.log(cart.length)
       return <Text style={styles.emptyText}>{strings.empty}</Text>;
     }
-    console.log(cart.length)
     return null;
   };
 
@@ -32,10 +30,10 @@ const Cart = () => {
       <View style={styles.items}>
         {emptyCartMessage()}
         <FlatList
-          data={cart}
+          data={cart}  
           renderItem={renderCart}
           keyExtractor={(item) => item.id.toString()}
-          numColumns={3}
+          numColumns={1}
           ListEmptyComponent={null}
         />
       </View>

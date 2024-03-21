@@ -1,135 +1,73 @@
-import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { useState } from 'react'
-import { FlatList } from 'react-native';
-import BottomBar from '../Components/BottomBar';
-
-const AddToCart= () =>{
-
-
-
-}
-
-
+import React, { useContext, useState } from 'react';
+import { Alert, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import ScreenNames from '../../routes/ScreenNames';
+import strings from '../res/strings';
+import SolabContext from '../store/solabContext';
 
 const ProductScreen = props => {
+  const navigation = useNavigation();
+
   const product = props.route.params.data;
 
-  const Numbers = () => {
-    const [selectedNumber, setSelectedNumber] = useState(null);
-    const [arrayValues, setArrayValues] = useState(Array.from({ length: 50 }, (_, index) => index + 1));
+  const { addItemToCart } = useContext(SolabContext);
 
+  const [quantity, setQuantity] = useState('1');
 
-    const renderItem = ({ item }) => (
+  const handleAddToCart = () => {
+    const quantityInt = parseInt(quantity);
 
-      <TouchableOpacity
-        style={[styles.item, item === selectedNumber && styles.selectedItem]}
-        onPress={() => setSelectedNumber(item)}
-      >
-        <Text style={styles.itemText}>{item}</Text>
+    if (isNaN(quantityInt) || quantityInt <= 0) {
+      Alert.alert('Invalid number', 'Please enter a valid number.');
+      return;
+    }
 
-      </TouchableOpacity>
-
-    );
-    console.log(selectedNumber);
-    return (
-
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.scroll}>
-        <FlatList
-          data={arrayValues}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.toString()}
-          numColumns={60}
-        />
-      </ScrollView>
-
-
-    );
+    const item = { ...product, quantity: quantityInt };
+    addItemToCart(item, item.id);
+    navigation.navigate(ScreenNames.cart);
   };
 
-  console.log("product:", product)
   return (
     <View style={styles.container}>
       <Image source={product.img} style={styles.image} />
+
+      <View style={styles.inputContainer}>
+
+        <TextInput
+          style={styles.input}
+          keyboardType="number-pad"
+          value={quantity}
+          onChangeText={setQuantity}
+          placeholder="Enter quantity"
+        />
+
+        <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
+          <Text style={styles.addToCartText}>Add to cart</Text>
+        </TouchableOpacity>
+      </View>
       <Text style={styles.title}>{`${product.brand} ${product.taste}`}</Text>
       <Text style={styles.dis}>{`${product.dis}`}</Text>
 
-      <View style={styles.bottomcomp}>
-
-        <View style={styles.numcontainer}>
-
-          <Numbers />
-
-        </View>
 
 
-        <View style={styles.addToCart}>
-          <TouchableOpacity>
-            <Text style={styles.addToCartTxt}>Add to cart</Text>
-          </TouchableOpacity>
-        </View>
-
-      </View>
-
+    
     </View>
-  )
-}
+  );
+};
 
-export default ProductScreen
+export default ProductScreen;
 
 const styles = StyleSheet.create({
-  presstxt: {
-    fontSize: 15,
-    color: 'black',
-
-  },
-  selectedItem: {
-    backgroundColor: 'green',
-    borderWidth: 2,
-    justifyContent: 'center',
+  input: {
     textAlign: 'center',
-    height: '100%',
-  },
-
-  scroll: {
-    height: 15,
-    width: 150,
-
-  },
-  numcontainer: {
-    borderBottomWidth: 1,
-    height: '100%',
-    width: '100%',
-    flex: 1,
-    marginTop: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-
-  },
-
-
-  itemText: {
-    fontSize: 18,
-    color: 'black',
-    textAlign: 'center',
-  },
-
-  itemText: {
-    fontSize: 18,
-    color: 'black',
-    textAlign: 'center',
-  },
-
-  item: {
-    backgroundColor: 'grey',
-    color: 'black',
-    padding: 10,
-    fontSize: 18,
-    height: 50,
+    fontWeight:'bold',
 
   },
   container: {
     flex: 1,
-    backgroundColor: '#393939',
+    backgroundColor: 'white',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   image: {
     width: '100%',
@@ -141,14 +79,8 @@ const styles = StyleSheet.create({
   title: {
     color: 'black',
     fontWeight: 'bold',
-    textAlign: 'center',
-    marginLeft: 50,
     fontSize: 30,
-    borderWidth: 2,
-    backgroundColor: '#1e87db',
-    borderRadius: 50,
-    borderWidth: 3,
-    width: 300,
+    marginVertical: 10,
   },
   dis: {
     fontSize: 20,
@@ -157,29 +89,38 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'black',
     backgroundColor: 'grey',
+    marginBottom: 20,
   },
-  bottomcomp: {
-    marginLeft: '25%',
-    flex: 1,
-    marginBottom: 165,
-    width: 200,
+  inputContainer: {
 
-  },
-  addToCart: {
-    flex: 1.4,
-    borderRadius: 1,
+    flexDirection: 'row',
     alignItems: 'center',
-    textAlign: 'center',
-
+    marginBottom: 20,
   },
-  addToCartTxt: {
-    fontSize: 30,
+  label: {
+    fontSize: 20,
+    marginRight: 10,
     color: 'black',
-    fontWeight: 'bold',
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 2,
-    backgroundColor: 'grey',
-    margin: 5,
   },
-})
+  input: {
+    borderWidth: 1,
+    borderColor: 'grey',
+    color: 'black',
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    fontSize: 18,
+    backgroundColor: 'white',
+    width: 100,
+  },
+  addToCartButton: {
+    backgroundColor: 'grey',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  addToCartText: {
+    fontSize: 18,
+    color: 'white',
+    fontWeight: 'bold',
+  },
+});
