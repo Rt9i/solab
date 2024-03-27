@@ -1,18 +1,16 @@
 import React, { useContext } from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import CatsStore from '../src/screen/CatsStore';
 import DogsStore from '../src/screen/DogsStore';
 import Cart from '../src/screen/Cart';
 import ScreenNames from './ScreenNames';
 import { useHeaderHeight } from '@react-navigation/elements';
-import { Image, Text, View, StyleSheet } from 'react-native';
+import { Image, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import Images from '../src/assets/images/images';
-import { useSelector } from 'react-redux';
 import SolabContext from '../src/store/solabContext';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 const TabNav = () => {
   const Tab = createBottomTabNavigator();
-  const headerHeight = useHeaderHeight();
   const { cart } = useContext(SolabContext);
 
   const CustomTabBarLabel = ({ focused, title, icon, marginLeft, marginTop }) => (
@@ -32,13 +30,23 @@ const TabNav = () => {
           <Text style={styles.itemsCounter}>{cart.length}</Text>
         </View>
       )}
-
     </View>
-
   );
 
   return (
-    <Tab.Navigator screenOptions={{ headerShown: false }}>
+    <Tab.Navigator
+      swipeEnabled={true}
+      screenOptions={{
+       headerShown:false,
+        tabBarActiveTintColor: '#7391c8',
+        tabBarInactiveTintColor: 'black',
+        tabBarLabelStyle: styles.tabBarLabelText,
+        tabBarIndicatorStyle: styles.tabBarIndicator,
+        tabBarStyle: styles.tabBar,
+
+      }}
+
+    >
       <Tab.Screen
         name={ScreenNames.catsStore}
         component={CatsStore}
@@ -48,7 +56,6 @@ const TabNav = () => {
               focused={focused}
               title="CatsStore"
               marginLeft={24}
-
               icon={Images.catIcon()}
             />
           ),
@@ -72,6 +79,7 @@ const TabNav = () => {
         name={ScreenNames.cart}
         component={Cart}
         options={({ route }) => ({
+          headerShown: false,
           tabBarLabel: ({ focused }) => (
             <CustomTabBarLabel
               focused={focused}
@@ -82,7 +90,6 @@ const TabNav = () => {
           ),
         })}
       />
-
     </Tab.Navigator>
   );
 };
@@ -92,7 +99,6 @@ export default TabNav;
 const styles = StyleSheet.create({
   image: {
     marginLeft: 20,
-
   },
   itemsCounter: {
     color: 'black',
@@ -104,19 +110,20 @@ const styles = StyleSheet.create({
     width: 20,
     lineHeight: 20,
     textAlignVertical: 'center',
-
     textAlign: 'center',
   },
   tabBarLabel: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-
   },
   tabBarLabelText: {
     fontSize: 12,
     fontFamily: 'bigFont',
     height: 20,
     marginBottom: 2,
+    shadowColor: 'black',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 1,
   },
 });

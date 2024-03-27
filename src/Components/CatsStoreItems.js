@@ -10,10 +10,11 @@ strings
 const CatsStoreItems = props => {
 
   const navigation = useNavigation();
-  const { brand, name, taste, price, img, hideImage, dis, id, quantity: initialQuantity } = props;
+  const { brand, name, taste, price, img, hideImage, dis, id, quantity: initialQuantity, displayMode } = props;
   const { cart, setCart } = useContext(SolabContext);
   const [quantity, setQuantity] = useState(initialQuantity || 1);
   const [isAddedToCart, setIsAddedToCart] = useState(false);
+
   const { isItemAdded, setIsItemAdded } = useContext(SolabContext);
   const { removeItem } = useContext(SolabContext);
   useEffect(() => {
@@ -75,12 +76,11 @@ const CatsStoreItems = props => {
   return (
     <View style={styles.itemWidth}>
 
-      <View style={styles.disContainer}>
-
-        <Text style={styles.dis}>{`${dis}`}</Text>
-
-      </View>
-
+      {displayMode === 'column' && (
+        <View style={styles.disContainer}>
+          <Text style={styles.dis}>{`${dis}`}</Text>
+        </View>
+      )}
 
       <View style={styles.items}>
 
@@ -165,21 +165,21 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   items: {
-    flex: 1,
+
     flexDirection: 'column',
     height: 200,
-    width: 100,
+    width: 110,
   },
   topContainer: {
     flexDirection: 'row',
   },
   img: {
-    resizeMode: 'contain',
-    width: '100%',
-    height: '100%',
+
+    width: 110,
+    height: 160,
     backgroundColor: 'black',
-    borderTopLeftRadius: 10,
-    borderBottomLeftRadius: 10,
+    borderRadius: 10,
+   
   },
   bottomcontainer: {
     flex: 1.2,
@@ -230,9 +230,8 @@ const styles = StyleSheet.create({
 
   photo: {
     flex: 5,
-    borderTopLeftRadius: 10,
-    borderBottomLeftRadius: 10,
-    backgroundColor: 'black',
+
+   
   },
 
 })

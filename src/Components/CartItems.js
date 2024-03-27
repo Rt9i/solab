@@ -10,7 +10,7 @@ import SolabContext from '../store/solabContext';
 const CartItems = props => {
   const Item = { ...props };
   const { brand, name, taste, price, img, hideImage, dis, id, onRemove, initialQuantity, quantity } = props;
-  const { addItem, removeItemFromCart,checkRemoveItem } = useContext(SolabContext);
+  const { addItem, removeItemFromCart, checkRemoveItem } = useContext(SolabContext);
   const navigation = useNavigation();
 
 
@@ -48,7 +48,7 @@ const CartItems = props => {
 
 
             <View style={styles.X}>
-              <TouchableOpacity onPress={() => checkRemoveItem(Item,id)} style={styles.Xtouch}>
+              <TouchableOpacity onPress={() => checkRemoveItem(Item, id)} style={styles.Xtouch}>
 
                 <Text style={styles.xtxt}>X</Text>
               </TouchableOpacity>
@@ -100,7 +100,6 @@ const styles = StyleSheet.create({
     lineHeight: 25,
   },
   X: {
-    marginTop: 110,
     marginLeft: 40,
     width: 30,
     height: 30,
@@ -109,7 +108,8 @@ const styles = StyleSheet.create({
 
   },
   addOrLesscont: {
-
+    flexDirection: 'column-reverse',
+    justifyContent: 'space-between',
 
   },
   input: {
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
     fontFamily: 'bigFont',
     fontSize: 10,
     width: 180,
-   
+
 
   },
 

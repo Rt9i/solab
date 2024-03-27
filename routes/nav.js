@@ -21,14 +21,10 @@ const MainNavigation = () => {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name={ScreenNames.splash} component={Splash} options={{ headerShown: false }} />
-        {/* <Stack.Screen name={ScreenNames.dogsStore} component={DogsStore} /> */}
-        {/* <Stack.Screen name={ScreenNames.cart} component={Cart} /> */}
         <Stack.Screen name={ScreenNames.home} component={Home} options={{ headerShown: false }} />
         <Stack.Screen name={ScreenNames.login} component={Login} />
         <Stack.Screen name={ScreenNames.ProductScreen} component={ProductScreen} />
         <Stack.Screen name={ScreenNames.Tabs} component={TabNav} options={{headerShown:false}} />
-        {/* <Stack.Screen name={ScreenNames.catsStore} component={CatsStore}  /> */}
-
       </Stack.Navigator>
     </NavigationContainer >
   );

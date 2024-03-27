@@ -48,11 +48,15 @@ const styles = StyleSheet.create({
   toptxt: {
     justifyContent: 'center',
     alignItems: 'center',
+    
   },
   carttxt: {
     fontSize: 40,
-    fontFamily: 'Angkor-Regular',
+    fontFamily: 'bigFont',
     color: 'white',
+    shadowColor:'black',
+    textShadowOffset: { width: 7, height: 5 },
+    textShadowRadius: 4,
   },
   container: {
     flex: 1,

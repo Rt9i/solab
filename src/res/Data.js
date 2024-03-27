@@ -27,6 +27,54 @@ const getCategoryItemsData = () => {
       img: Images.mongeKitten(),
       dis: 'blah blah blah blahblah blah blah blahblah blah blah blah',
     },
+    {
+      id: 'Food4',
+      price: 100,
+      brand: 'monge',
+      taste: 'salmon',
+      img: Images.mongeKitten(),
+      dis: 'blah blah blah blahblah blah blah blahblah blah blah blahblah blah blah blahblah blah blah blahblah blah blah blah',
+    },
+    {
+      id: 'Food5',
+      price: 525,
+      brand: 'monge',
+      taste: 'salmon',
+      img: Images.mongeKitten(),
+      dis: 'blah blah blah blahblah blah blah blah',
+    },
+    {
+      id: 'Food6',
+      price: 622,
+      brand: 'monge',
+      taste: 'salmon',
+      img: Images.mongeKitten(),
+      dis: 'blah blah blah blahblah blah blah blahblah blah blah blah',
+    },
+    {
+      id: 'Food7',
+      price: 100,
+      brand: 'monge',
+      taste: 'salmon',
+      img: Images.mongeKitten(),
+      dis: 'blah blah blah blahblah blah blah blahblah blah blah blahblah blah blah blahblah blah blah blahblah blah blah blah',
+    },
+    {
+      id: 'Food8',
+      price: 525,
+      brand: 'monge',
+      taste: 'salmon',
+      img: Images.mongeKitten(),
+      dis: 'blah blah blah blahblah blah blah blah',
+    },
+    {
+      id: 'Food9',
+      price: 622,
+      brand: 'monge',
+      taste: 'salmon',
+      img: Images.mongeKitten(),
+      dis: 'blah blah blah blahblah blah blah blahblah blah blah blah',
+    },
   ];
 
 
@@ -91,7 +139,25 @@ const getCategoryItemsData = () => {
     },
 
 
+
   ];
+  const getMeatItems = () => [
+    {
+      id: 'meat1',
+      price: 180,
+      brand: 'bonjor',
+      taste: 'chicken',
+      img: Images.mongeKitten(),
+      dis: 'sprays Item 1 Description',
+
+    }
+
+
+
+  ]
+
+
+
 
 
   const getCategoryItems = (category) => {
@@ -104,6 +170,9 @@ const getCategoryItemsData = () => {
         return getClothesItems();
       case 'Sprays':
         return getSprayItems();
+      case 'Meat':
+        return getMeatItems();
+
       default:
         return [];
     }
