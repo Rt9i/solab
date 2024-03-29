@@ -148,11 +148,21 @@ const CatsStore = () => {
         </TouchableOpacity>
         <View style={styles.topBar}>{renderBar()}</View>
 
-
         <View style={styles.sale}>
-          <Image source={Images.litterSale()} style={styles.saleimg} />
-          <Image source={Images.premioSale()} style={styles.saleimg} />
+          <Text style={styles.saletxt}>Sale</Text>
+          <View style={styles.salecontainer}>
+            <ScrollView horizontal={true}>
+              <Image source={Images.litterSale()} style={styles.saleimg2} />
+              <Image source={Images.premioSale()} style={styles.saleimg} />
+              <Image source={Images.premioSale()} style={styles.saleimg} />
+            </ScrollView>
+          </View>
+
         </View>
+
+
+
+
 
         <View >
           {rowOrcolumn()}
@@ -183,6 +193,26 @@ const CatsStore = () => {
 export default CatsStore
 
 const styles = StyleSheet.create({
+  sale: {
+    alignItems: 'center',
+
+
+  },
+  saletxt: {
+    textShadowColor: 'brown',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
+    fontFamily: 'bigFont',
+    fontSize: 20,
+    color: 'red',
+    backgroundColor: 'black',
+    width: 200,
+    textAlign: 'center',
+    borderRadius: 30,
+    borderWidth:0.7,
+    borderColor:'red',
+
+  },
   displaytxt: {
     fontFamily: 'bigFont',
     color: "white",
@@ -193,7 +223,7 @@ const styles = StyleSheet.create({
   },
   choiceDisplay: {
     borderTopRightRadius: 10,
-    borderTopLeftRadius:10,
+    borderTopLeftRadius: 10,
 
     borderWidth: 2,
     marginLeft: 20,
@@ -273,18 +303,29 @@ const styles = StyleSheet.create({
     fontSize: 40,
   },
   saleimg: {
+    marginLeft: 5,
     height: 130,
-    width: '50%',
-    resizeMode: 'contain',
+    width: 130,
+
   },
-  sale: {
+  saleimg2: {
+    marginLeft: 5,
+    height: 130,
+    width: 155,
+
+  },
+  salecontainer: {
+    padding: 5,
+    borderRadius: 10,
+    backgroundColor: 'black',
     flex: 1,
     flexDirection: 'row',
     height: 130,
-    marginTop: 10,
-    marginLeft: 15,
-    marginRight: 15,
+    marginRight: 10,
+    marginLeft: 10,
     marginBottom: 10,
+    borderWidth: 0.5,
+    borderColor: 'white',
 
   },
   itemscontainer: {

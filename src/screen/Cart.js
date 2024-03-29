@@ -1,3 +1,4 @@
+
 import React, { useContext } from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
 import SolabContext from '../store/solabContext';
@@ -52,6 +53,7 @@ const styles = StyleSheet.create({
   },
   carttxt: {
     fontSize: 40,
+    fontFamily: 'Angkor-Regular',
     fontFamily: 'bigFont',
     color: 'white',
     shadowColor:'black',

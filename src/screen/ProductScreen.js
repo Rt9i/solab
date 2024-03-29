@@ -1,18 +1,16 @@
 import React, { useContext, useState } from 'react';
 import { Alert, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useTheme } from '@react-navigation/native';
 import ScreenNames from '../../routes/ScreenNames';
 import strings from '../res/strings';
 import SolabContext from '../store/solabContext';
 
 const ProductScreen = props => {
   const navigation = useNavigation();
-
   const product = props.route.params.data;
-
   const { addItemToCart } = useContext(SolabContext);
+  const [quantity, setQuantity] = useState('');
 
-  const [quantity, setQuantity] = useState('1');
 
   const handleAddToCart = () => {
     const quantityInt = parseInt(quantity);
@@ -38,7 +36,9 @@ const ProductScreen = props => {
           keyboardType="number-pad"
           value={quantity}
           onChangeText={setQuantity}
-          placeholder="Enter quantity"
+          placeholder="Enter Number"
+          placeholderStyle={styles.placeholder}
+          placeholderTextColor="rgba(0,0,0,0.4)"
         />
 
         <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
@@ -50,7 +50,7 @@ const ProductScreen = props => {
 
 
 
-    
+
     </View>
   );
 };
@@ -58,10 +58,21 @@ const ProductScreen = props => {
 export default ProductScreen;
 
 const styles = StyleSheet.create({
+
+  placeholder: {
+    fontStyle: 'italic',
+  },
   input: {
     textAlign: 'center',
-    fontWeight:'bold',
-
+    fontWeight: 'bold',
+    borderWidth: 1,
+    borderColor: 'grey',
+    color: 'black',
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    fontSize: 12,
+    backgroundColor: 'white',
+    width: 100,
   },
   container: {
     flex: 1,
@@ -102,16 +113,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
     color: 'black',
   },
-  input: {
-    borderWidth: 1,
-    borderColor: 'grey',
-    color: 'black',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    fontSize: 18,
-    backgroundColor: 'white',
-    width: 100,
-  },
+
   addToCartButton: {
     backgroundColor: 'grey',
     paddingVertical: 10,

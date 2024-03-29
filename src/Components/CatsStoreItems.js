@@ -10,7 +10,7 @@ strings
 const CatsStoreItems = props => {
 
   const navigation = useNavigation();
-  const { brand, name, taste, price, img, hideImage, dis, id, quantity: initialQuantity, displayMode } = props;
+  const { brand, name, taste, price, img, hideImage, dis, id, quantity: initialQuantity } = props;
   const { cart, setCart } = useContext(SolabContext);
   const [quantity, setQuantity] = useState(initialQuantity || 1);
   const [isAddedToCart, setIsAddedToCart] = useState(false);
@@ -35,21 +35,23 @@ const CatsStoreItems = props => {
     if (isAddedToCart) {
       if (isAddedToCart) {
         console.log("is added to the cart" + isAddedToCart)
-        Alert.alert(
-          'Remove Item',
-          'Are you sure you want to remove this item?',
-          [
-            {
-              text: 'Cancel',
-              onPress: () => console.log('Cancel Pressed'),
-              style: 'cancel',
-            },
-            {
-              text: 'Remove',
-              onPress: () => removeItem(id),
-            },
-          ]
-        );
+        // Alert.alert(
+        //   'Remove Item',
+        //   'Are you sure you want to remove this item?',
+        //   [
+        //     {
+        //       text: 'Cancel',
+        //       onPress: () => console.log('Cancel Pressed'),
+        //       style: 'cancel',
+        //     },
+        //     {
+        //       text: 'Remove',
+        //       onPress: () => removeItem(id),
+        //     },
+        //   ]
+        // );
+        removeItem(id)
+
       }
 
     } else {
@@ -76,11 +78,11 @@ const CatsStoreItems = props => {
   return (
     <View style={styles.itemWidth}>
 
-      {displayMode === 'column' && (
+     
         <View style={styles.disContainer}>
           <Text style={styles.dis}>{`${dis}`}</Text>
         </View>
-      )}
+     
 
       <View style={styles.items}>
 

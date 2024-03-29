@@ -35,36 +35,36 @@ const SolabProvider = ({ children }) => {
     setCart(updatedCart);
   };
 
-  const checkRemoveItem = (item,itemId) => {
+  const checkRemoveItem = (item, itemId) => {
 
-      Alert.alert(
-        'Remove Item',
-        'Are you sure you want to remove this item?',
-        [
-          {
-            text: 'Cancel',
+    Alert.alert(
+      'Remove Item',
+      'Are you sure you want to remove this item?',
+      [
+        {
+          text: 'Cancel',
 
-            style: 'cancel',
-          },
-          {
-            text: 'remove',
-            onPress: () => removeItem(itemId),
-          },
-        ]
-      );
+          style: 'cancel',
+        },
+        {
+          text: 'remove',
+          onPress: () => removeItem(itemId),
+        },
+      ]
+    );
 
-    
+
   }
 
 
   const removeItem = (itemId) => {
     const existingItemIndex = cart.findIndex((item) => item.id === itemId);
     if (existingItemIndex !== -1) {
-        const updatedCart = cart.filter((item, index) => index !== existingItemIndex);
-        setIsItemAdded(false);
-        setCart(updatedCart);
+      const updatedCart = cart.filter((item, index) => index !== existingItemIndex);
+      setIsItemAdded(false);
+      setCart(updatedCart);
     }
-};
+  };
 
 
   const removeItemFromCart = (item, itemId) => {
