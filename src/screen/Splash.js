@@ -19,21 +19,19 @@ const Splash = props => {
   useEffect(() => {
     navigateHome();
 
-     
-  }, []) 
+
+  }, [])
 
 
   return (
 
     <View style={styles.conatiner}>
-      <TouchableOpacity onPress={navigateHome} >
-     
-        <Image
-          source={Images.whiteLogo()}
-          style={styles.image}
-        />
-      </TouchableOpacity>
-    
+
+
+      <Image
+        source={Images.whiteLogo()}
+        style={styles.image}
+      />
     </View>
 
   );

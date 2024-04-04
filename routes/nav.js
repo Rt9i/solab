@@ -25,6 +25,7 @@ const MainNavigation = () => {
         <Stack.Screen name={ScreenNames.login} component={Login} />
         <Stack.Screen name={ScreenNames.ProductScreen} component={ProductScreen} />
         <Stack.Screen name={ScreenNames.Tabs} component={TabNav} options={{headerShown:false}} />
+        
       </Stack.Navigator>
     </NavigationContainer >
   );

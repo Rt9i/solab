@@ -37,7 +37,7 @@ const TabNav = () => {
     <Tab.Navigator
       swipeEnabled={true}
       screenOptions={{
-       headerShown:false,
+        headerShown: false,
         tabBarActiveTintColor: '#7391c8',
         tabBarInactiveTintColor: 'black',
         tabBarLabelStyle: styles.tabBarLabelText,
@@ -101,14 +101,15 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   itemsCounter: {
+    marginLeft: 2,
     color: 'black',
     backgroundColor: 'red',
-    fontFamily: 'bigFont',
+    fontWeight: 'bold',
     fontSize: 10,
     borderRadius: 50,
-    height: 20,
-    width: 20,
-    lineHeight: 20,
+    height: 18,
+    width: 18,
+    lineHeight: 15,
     textAlignVertical: 'center',
     textAlign: 'center',
   },

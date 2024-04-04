@@ -7,8 +7,14 @@ import SolabContext from '../store/solabContext'
 import Images from '../assets/images/images'
 
 strings
-const CatsStoreItems = props => {
+const CatsStoreItems = ({ selectedCategory, ...props }) => {
+  const meatImg = {
+    resizeMode: 'contain',
 
+    height: 160,
+
+  };
+  console.log(selectedCategory)
   const navigation = useNavigation();
   const { brand, name, taste, price, img, hideImage, dis, id, quantity: initialQuantity } = props;
   const { cart, setCart } = useContext(SolabContext);
@@ -78,17 +84,20 @@ const CatsStoreItems = props => {
   return (
     <View style={styles.itemWidth}>
 
-     
-        <View style={styles.disContainer}>
-          <Text style={styles.dis}>{`${dis}`}</Text>
-        </View>
-     
+
+      <View style={styles.disContainer}>
+        <Text style={styles.dis}>{`${dis}`}</Text>
+      </View>
+
 
       <View style={styles.items}>
 
         <View style={styles.photo}>
-          <TouchableOpacity onPress={onCardPress}>
-            {<Image source={img} style={styles.img} />}
+          <TouchableOpacity onPress={onCardPress} activeOpacity={0.6}>
+            <Image
+              source={props.img}
+              style={[styles.img, selectedCategory === 'Meat' ? meatImg : null]}
+            />
           </TouchableOpacity>
         </View>
 
@@ -139,7 +148,8 @@ const styles = StyleSheet.create({
     flex: 2,
   },
   itemWidth: {
-    paddingLeft: 1,
+    paddingTop: 10,
+    paddingLeft: 10,
     flexDirection: 'row-reverse',
     marginBottom: 2,
   },
@@ -178,10 +188,10 @@ const styles = StyleSheet.create({
   img: {
 
     width: 110,
-    height: 160,
-    backgroundColor: 'black',
+    height: 155,
+
     borderRadius: 10,
-   
+
   },
   bottomcontainer: {
     flex: 1.2,
@@ -233,7 +243,7 @@ const styles = StyleSheet.create({
   photo: {
     flex: 5,
 
-   
+
   },
 
 })

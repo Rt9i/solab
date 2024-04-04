@@ -5,6 +5,7 @@ import getCategoryItemsData from '../res/Data';
 import Images from '../assets/images/images';
 import strings from '../res/strings';
 import { useNavigation } from '@react-navigation/native';
+import ScreenNames from '../../routes/ScreenNames';
 
 
 const CatsStore = () => {
@@ -12,8 +13,8 @@ const CatsStore = () => {
   const [selectedCategory, setSelectedCategory] = useState('Food');
   const filteredItems = getCategoryItems(selectedCategory);
   const navigation = useNavigation();
-  const [displayMode, setDisplayMode] = useState('column');
-
+  const [displayMode, setDisplayMode] = useState('row');
+ 
 
   const rowOrcolumn = () => {
     return (
@@ -94,13 +95,27 @@ const CatsStore = () => {
       id={item.id}
       quantity={item.quantity}
       displayMode={displayMode}
+      selectedCategory={selectedCategory}
+      
     />
+    
   );
   const renderBar = () => {
+    const accessoriesStyle = {
+      borderWidth: 1,
+      fontSize: 10,
+
+    };
+    const meatImg = {
+      width: 50,
+      height: 140,
+
+    };
+
     const categories = [
       { id: 'Food', name: `${strings.DryFood}`, image: Images.catFood() },
       { id: 'Meat', name: `${strings.meat}`, image: Images.Meat() },
-      { id: 'Leash', name: `${strings.leash}`, image: Images.leash() },
+      { id: 'Leash', name: `${strings.accessories}`, image: Images.leash() },
       { id: 'Clothes', name: `${strings.Clothes}`, image: Images.catClothes() },
       { id: 'Sprays', name: `${strings.Sprays}`, image: Images.spray() },
 
@@ -115,11 +130,12 @@ const CatsStore = () => {
             style={[
               styles.category,
               { backgroundColor: selectedCategory === category.id ? '#4e5e7f' : '#7391c8' },
+
             ]}
             onPress={() => setSelectedCategory(category.id)}
           >
             <Image source={category.image} style={styles.categoryImage} />
-            <Text style={styles.categoryText}>{category.name}</Text>
+            <Text style={[styles.categoryText, category.id === 'Leash' ? accessoriesStyle : null]}>{category.name}</Text>
           </TouchableOpacity>
         ))}
       </View>
@@ -129,7 +145,7 @@ const CatsStore = () => {
   return (
     <View style={styles.container}>
       <ScrollView style={styles.container}>
-        <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.goBack()} style={styles.touch}>
+        <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate(ScreenNames.home)} style={styles.touch}>
           <View style={styles.upper}>
 
             <View style={styles.loggo}>
@@ -146,12 +162,12 @@ const CatsStore = () => {
 
           </View>
         </TouchableOpacity>
-        <View style={styles.topBar}>{renderBar()}</View>
+
 
         <View style={styles.sale}>
           <Text style={styles.saletxt}>Sale</Text>
           <View style={styles.salecontainer}>
-            <ScrollView horizontal={true}>
+            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
               <Image source={Images.litterSale()} style={styles.saleimg2} />
               <Image source={Images.premioSale()} style={styles.saleimg} />
               <Image source={Images.premioSale()} style={styles.saleimg} />
@@ -159,30 +175,34 @@ const CatsStore = () => {
           </View>
 
         </View>
+        <View style={styles.topBar}>{renderBar()}</View>
 
 
 
 
-
-        <View >
+        <View style={styles.selectedDisplay} >
           {rowOrcolumn()}
 
         </View>
 
 
-        <View style={styles.display}>
-          <View style={styles.itemscontainer}>
-            <FlatList
-              data={filteredItems}
-              renderItem={renderItem}
-              key={displayMode}
-              keyExtractor={(item) => item.id}
-              numColumns={displayMode === 'row' ? 3 : 1}
-              scrollEnabled={false}
-              contentContainerStyle={{ marginHorizontal: 2 }}
-            />
-          </View>
+
+        <View style={styles.itemscontainer}>
+          {/* <View style={styles.display}> */}
+          <FlatList
+
+            data={filteredItems}
+            renderItem={renderItem}
+            key={displayMode}
+            keyExtractor={(item) => item.id}
+            numColumns={displayMode === 'row' ? 3 : 1}
+            scrollEnabled={false}
+            contentContainerStyle={{ marginHorizontal: 2 }}
+          />
+          {/* </View> */}
+
         </View>
+
       </ScrollView>
     </View>
   );
@@ -193,6 +213,20 @@ const CatsStore = () => {
 export default CatsStore
 
 const styles = StyleSheet.create({
+  accessoriesstyle: {
+    fontSize: 10,
+  },
+
+  selectedDisplay: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 100,
+    width: 100,
+    marginLeft: 40,
+
+
+
+  },
   sale: {
     alignItems: 'center',
 
@@ -209,8 +243,8 @@ const styles = StyleSheet.create({
     width: 200,
     textAlign: 'center',
     borderRadius: 30,
-    borderWidth:0.7,
-    borderColor:'red',
+    borderWidth: 0.7,
+    borderColor: 'red',
 
   },
   displaytxt: {
@@ -224,12 +258,11 @@ const styles = StyleSheet.create({
   choiceDisplay: {
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
-
     borderWidth: 2,
-    marginLeft: 20,
-    height: 70,
+
     width: 88,
     backgroundColor: 'grey',
+
   },
   smalltxt: {
     fontSize: 8,
@@ -241,7 +274,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'grey',
     marginLeft: 4,
     marginRight: 4,
-    marginBottom: 2,
+    marginBottom: 1,
+    height: 10,
   },
   smallimg: {
     height: 10,
@@ -323,29 +357,31 @@ const styles = StyleSheet.create({
     height: 130,
     marginRight: 10,
     marginLeft: 10,
-    marginBottom: 10,
+    marginBottom: 5,
     borderWidth: 0.5,
     borderColor: 'white',
 
   },
   itemscontainer: {
-    marginLeft: 10,
-    flex: 1,
+    borderWidth: 2,
+    borderColor: 'white',
+    backgroundColor: 'black',
+    marginVertical: 5,
+    marginHorizontal: 10,
+    borderRadius: 20,
+    alignItems: 'center',
   },
   row: {
     flex: 1,
     flexDirection: 'row',
   },
   display: {
-    flex: 8,
-    width: 360,
-    marginLeft: 10,
-    marginRight: 10,
-    flexDirection: 'row',
-    padding: 2,
-    backgroundColor: 'grey',
-    borderWidth: 3,
-    marginRight: 50,
+    alignItems: 'center',
+    width: '100%',
+    borderColor: 'white',
+    borderWidth: 2,
+    borderRadius: 50,
+
   },
   bottomLine: {
     height: 5,
@@ -405,7 +441,6 @@ const styles = StyleSheet.create({
     width: 340,
     marginTop: 15,
     marginLeft: 14,
-    marginBottom: 15,
     flexDirection: 'row',
     alignItems: 'center',
 
@@ -430,17 +465,15 @@ const styles = StyleSheet.create({
     color: 'black',
     fontFamily: 'smallFont',
     backgroundColor: '#84a1d2',
+    fontSize: 12,
+    height: 20,
     width: 68,
     borderRadius: 10,
     borderWidth: 1,
     textAlign: 'center',
-    textShadowColor: 'black',
-    textShadowOffset: { width: 0.1, height: 0.1 },
-    textShadowRadius: 1,
+
   },
   container: {
-
-
     flex: 1,
     flexDirection: 'column',
     backgroundColor: '#6CCAFF',

@@ -20,52 +20,52 @@ const CartItems = props => {
     navigation.navigate(ScreenNames.ProductScreen, { data: Item });
   };
 
-  const renderCartItem = () => {
-    return (
 
-      <View style={styles.container}>
-        <View style={styles.itemcontainer}>
-          <Text style={styles.dis}>{`${dis}`}</Text>
-          <View style={styles.addOrLesscont}>
-            <View style={styles.addOrLess}>
-              <TouchableOpacity onPress={() => addItem(Item, id)} style={styles.pluscontainer}>
-                <View style={styles.plus}>
-                  <Text style={styles.plus}>+</Text>
-                </View>
-              </TouchableOpacity>
-              <Text style={styles.input}>{quantity}</Text>
-              <TouchableOpacity onPress={() => removeItemFromCart(Item, id)} style={styles.minuscontainer}>
-                <View style={styles.minus}>
-                  <Text style={styles.minus}>-</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.X}>
-              <TouchableOpacity onPress={() => checkRemoveItem(Item, id)} style={styles.Xtouch}>
-                <Text style={styles.xtxt}>X</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-        <View style={styles.items}>
-          <View style={styles.photo}>
-            <TouchableOpacity onPress={onCardPress}>
-              {<Image source={img} style={styles.img} />}
+  return (
+
+    <View style={styles.container}>
+      <View style={styles.itemcontainer}>
+        <Text style={styles.dis}>{`${dis}`}</Text>
+        <View style={styles.addOrLesscont}>
+          <View style={styles.addOrLess}>
+            <TouchableOpacity onPress={() => addItem(Item, id)} style={styles.pluscontainer}>
+              <View style={styles.plus}>
+                <Text style={styles.plus}>+</Text>
+              </View>
+            </TouchableOpacity>
+            <Text style={styles.input}>{quantity}</Text>
+            <TouchableOpacity onPress={() => removeItemFromCart(Item, id)} style={styles.minuscontainer}>
+              <View style={styles.minus}>
+                <Text style={styles.minus}>-</Text>
+              </View>
             </TouchableOpacity>
           </View>
-          <View style={styles.bottomcontainer}>
-            <View style={styles.props}>
-              <Text style={styles.bottomtxt1}>{` ${brand}`}</Text>
-              <Text style={styles.bottomtxt2}>{` ${price} ${strings.priceTag}`}</Text>
-            </View>
+          <View style={styles.X}>
+            <TouchableOpacity onPress={() => checkRemoveItem(Item, id)} style={styles.Xtouch}>
+              <Text style={styles.xtxt}>X</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
+      <View style={styles.items}>
 
-    );
-  };
+        <View style={styles.photo}>
+          <TouchableOpacity onPress={onCardPress}>
+            {<Image source={img} style={styles.img} />}
+          </TouchableOpacity>
+        </View>
 
-  return <View>{renderCartItem()}</View>;
+        <View style={styles.bottomcontainer}>
+          <View style={styles.props}>
+            <Text style={styles.bottomtxt1}>{` ${brand}`}</Text>
+            <Text style={styles.bottomtxt2}>{` ${price} ${strings.priceTag}`}</Text>
+          </View>
+        </View>
+
+      </View>
+    </View>
+
+  );
 };
 
 export default CartItems;
@@ -92,6 +92,7 @@ const styles = StyleSheet.create({
   addOrLesscont: {
     flexDirection: 'column-reverse',
     justifyContent: 'space-between',
+
 
   },
   input: {
@@ -136,9 +137,9 @@ const styles = StyleSheet.create({
   },
   addOrLess: {
     flexDirection: 'row',
-    marginRight: 10,
+    marginRight: 50,
     padding: 1,
-    borderRadius: 10,
+    borderRadius: 20,
     height: 40,
     width: 72,
     justifyContent: 'space-between',
@@ -155,7 +156,7 @@ const styles = StyleSheet.create({
   dis: {
     fontFamily: 'bigFont',
     fontSize: 10,
-    width: 180,
+    width: 165,
 
 
   },

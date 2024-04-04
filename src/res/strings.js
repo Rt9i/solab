@@ -9,6 +9,8 @@ const strings = {
   Sprays: "Sprays",
   leash: "Leash",
   display: "display",
+  accessories: "Accessories",
+
 };
 
 export default strings;
