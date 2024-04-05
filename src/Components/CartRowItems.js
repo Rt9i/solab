@@ -23,49 +23,45 @@ const CartRowItems = props => {
 
 
 
-            <View style={styles.photo}>
-
-                <View style={styles.addOrLess}>
-
-                    <View style={styles.X}>
-                        <TouchableOpacity onPress={() => checkRemoveItem(Item, id)} style={styles.Xtouch}>
-                            <Text style={styles.xtxt}>X</Text>
-                        </TouchableOpacity>
-                    </View>
-
-                    <View style={styles.plusMinusInput}>
-
-                        <TouchableOpacity onPress={() => addItem(Item, id)} style={styles.pluscontainer}>
-                            <View style={styles.plus}>
-                                <Text style={styles.plus}>+</Text>
-                            </View>
-                        </TouchableOpacity>
-
-                        <Text style={styles.input}>{quantity}</Text>
-
-                        <TouchableOpacity onPress={() => removeItemFromCart(Item, id)} style={styles.minuscontainer}>
-                            <View style={styles.minus}>
-                                <Text style={styles.minus}>-</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
 
 
+            <View style={styles.addOrLess}>
+
+                <View style={styles.X}>
+                    <TouchableOpacity onPress={() => checkRemoveItem(Item, id)} style={styles.Xtouch}>
+                        <Text style={styles.xtxt}>X</Text>
+                    </TouchableOpacity>
+                </View>
+
+                <View style={styles.plusMinusInput}>
+
+                    <TouchableOpacity onPress={() => addItem(Item, id)} style={styles.pluscontainer}>
+                        <View style={styles.plus}>
+                            <Text style={styles.plus}>+</Text>
+                        </View>
+                    </TouchableOpacity>
+
+                    <Text style={styles.input}>{quantity}</Text>
+
+                    <TouchableOpacity onPress={() => removeItemFromCart(Item, id)} style={styles.minuscontainer}>
+                        <View style={styles.minus}>
+                            <Text style={styles.minus}>-</Text>
+                        </View>
+                    </TouchableOpacity>
                 </View>
 
 
-                <TouchableOpacity onPress={onCardPress} style={styles.imgTouch}>
-                    {<Image source={img} style={styles.img} />}
-                </TouchableOpacity>
             </View>
 
 
-            <View style={styles.bottomcontainer}>
-                <View style={styles.props}>
-                    <Text style={styles.bottomtxt1}>{` ${brand}`} </Text>
-                    <Text style={styles.bottomtxt2}>{` ${price} ${strings.priceTag}`}</Text>
-                </View>
+            <TouchableOpacity onPress={onCardPress} style={styles.imgTouch}>
+                {<Image source={img} style={styles.img} />}
+            </TouchableOpacity>
+            <View style={styles.props}>
+                <Text style={styles.bottomtxt1}>{` ${brand}`} </Text>
+                <Text style={styles.bottomtxt2}>{` ${price} ${strings.priceTag}`}</Text>
             </View>
+
 
 
         </View>
@@ -149,13 +145,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         borderRadius: 10,
         height: 40,
-    },
-    itemcontainer: {
-        flex: 2.6,
-        backgroundColor: '#3B3B3B',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-
 
     },
     dis: {
@@ -190,8 +179,8 @@ const styles = StyleSheet.create({
         color: 'black',
     },
     props: {
-        flex: 1,
-        flexDirection: 'column',
+
+
 
 
     },
@@ -202,15 +191,17 @@ const styles = StyleSheet.create({
 
     },
     bottomcontainer: {
-        flex: 1.2,
-        flexDirection: 'row-reverse',
+
+
 
     },
     items: {
-       marginHorizontal:1,
+        marginHorizontal: 1,
         flexDirection: 'column',
         width: 110,
-        height: 230,
+        height: 270,
+        marginLeft: 10,
+
     },
     photo: {
         paddingBottom: 1,
@@ -218,13 +209,13 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 10,
         borderTopLeftRadius: 10,
         width: 110,
+        height: 45,
+        resizeMode: 'contain',
     },
 
     img: {
-
-        width: 100,
-        height: 130,
-
-
+        resizeMode: 'contain',
+        width: 130,
+        height: 160,
     },
 })

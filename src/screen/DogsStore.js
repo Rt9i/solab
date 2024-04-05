@@ -176,18 +176,20 @@ const DogsStore = () => {
         </View>
 
 
-        <View style={styles.display}>
-          <View style={styles.itemscontainer}>
-            <FlatList
-              data={filteredItems}
-              renderItem={renderItem}
-              key={displayMode}
-              keyExtractor={(item) => item.id}
-              numColumns={displayMode === 'row' ? 3 : 1}
-              scrollEnabled={false}
-              contentContainerStyle={{ marginHorizontal: 2 }}
-            />
-          </View>
+        <View style={styles.itemscontainer}>
+          {/* <View style={styles.display}> */}
+          <FlatList
+
+            data={filteredItems}
+            renderItem={renderItem}
+            key={displayMode}
+            keyExtractor={(item) => item.id}
+            numColumns={displayMode === 'row' ? 3 : 1}
+            scrollEnabled={false}
+            contentContainerStyle={{ marginHorizontal: 2 }}
+          />
+          {/* </View> */}
+
         </View>
       </ScrollView>
     </View>
@@ -302,12 +304,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'grey',
     width: 40,
     height: 40,
-    borderWidth: 2,
+    borderWidth: 1,
+    borderColor: 'white',
   },
   rowItems: {
     fontSize: 20,
-    borderWidth: 2,
+    borderWidth: 1,
     backgroundColor: 'black',
+    borderColor: 'white',
     width: 44,
     height: 40,
 
@@ -349,9 +353,13 @@ const styles = StyleSheet.create({
 
   },
   itemscontainer: {
-    padding: 10,
+    borderWidth: 1,
+    borderColor: 'white',
+    backgroundColor: 'black',
     marginVertical: 5,
-    width: 360,
+    marginHorizontal: 10,
+    borderRadius: 20,
+    paddingLeft: 20,
   },
   row: {
     flex: 1,

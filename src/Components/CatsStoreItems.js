@@ -14,7 +14,7 @@ const CatsStoreItems = ({ selectedCategory, ...props }) => {
     height: 160,
 
   };
-  console.log(selectedCategory)
+
   const navigation = useNavigation();
   const { brand, name, taste, price, img, hideImage, dis, id, quantity: initialQuantity } = props;
   const { cart, setCart } = useContext(SolabContext);
@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
   },
   itemWidth: {
     paddingTop: 10,
-    paddingLeft: 10,
+
     flexDirection: 'row-reverse',
     marginBottom: 2,
   },

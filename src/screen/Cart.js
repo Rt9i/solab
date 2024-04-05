@@ -1,14 +1,53 @@
 
-import React, { useContext, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, Alert } from 'react-native';
 import SolabContext from '../store/solabContext';
 import strings from '../res/strings';
 import CartRowItems from '../Components/CartRowItems';
 import CartItems from '../Components/CartItems';
 import Images from '../assets/images/images';
+
 const Cart = () => {
-  const { cart, removeItemFromCart } = useContext(SolabContext);
+  const { cart, removeItemFromCart, setCart } = useContext(SolabContext);
   const [displayMode, setDisplayMode] = useState('row');
+  const [totalPrice, setTotalprice] = useState(0 + strings.priceTag)
+
+  const clearCart = () => {
+    setCart([]);
+  };
+  const alertclear = () => {
+    Alert.alert(
+      'Clear Cart',
+      'Are you sure you want to clear your cart?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Clear',
+          onPress: clearCart,
+          style: 'destructive',
+        },
+      ],
+      { cancelable: true }
+    );
+
+
+  }
+
+  const calculateTotalPrice = () => {
+    let totalPrice = 0;
+    cart.forEach(item => {
+      totalPrice += item.price * item.quantity;
+    });
+    return (<Text style={styles.totalPrice}>{`${strings.price}`} = {totalPrice}{`${strings.priceTag}`}</Text>);
+  };
+
+  useEffect(() => {
+    setTotalprice(calculateTotalPrice());
+  }, [cart]);
+
 
   const showImage = () => {
     return (
@@ -19,8 +58,10 @@ const Cart = () => {
   const rowOrcolumn = () => {
     return (
       <View style={styles.choiceDisplay}>
+
         <Text style={styles.displaytxt}>{strings.display}</Text>
         <View style={styles.rowOrcolumn}>
+
           <TouchableOpacity activeOpacity={0.7} onPress={() => setDisplayMode('row')} style={[styles.rowItems, { backgroundColor: displayMode === 'row' ? '#4e5e7f' : '#7391c8' }]} >
             <View style={styles.rowbox}>
               <View style={styles.row}>
@@ -90,9 +131,16 @@ const Cart = () => {
       <View style={styles.selectedDisplay} >
         {rowOrcolumn()}
 
+        <TouchableOpacity style={styles.cleartouch} onPress={() => { alertclear() }}>
+          <Text style={styles.clearCart}>Clear cart</Text>
+        </TouchableOpacity>
+
+
+
       </View>
 
       <View style={styles.items}>
+        {calculateTotalPrice()}
         {emptyCartMessage()}
         <FlatList
           data={cart}
@@ -112,11 +160,46 @@ const Cart = () => {
 export default Cart;
 
 const styles = StyleSheet.create({
+  cleartouch: {
+    marginTop: 40,
+
+
+  },
+  clearCart: {
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    color: 'white',
+    fontWeight: 'bold',
+    backgroundColor: 'black',
+    borderWidth: 1,
+    borderColor: 'white',
+    borderRadius: 10,
+    width: 100,
+  },
+  totalPrice: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    backgroundColor: 'grey',
+    color: 'white',
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    height: 30,
+    width: 150,
+    borderRadius: 10,
+    borderWidth: 0.5,
+    borderColor: 'white',
+    textShadowColor: 'grey',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 1,
+    marginHorizontal: 115,
+    marginBottom: 20,
+  },
   selectedDisplay: {
-    flexDirection:'column',
+    flexDirection: 'row',
     justifyContent: 'space-between',
-    height: 80,
-    backgroundColor: 'green',
+    marginHorizontal: 30,
+    height: 70,
+
   },
   box1: {
     width: 10,
@@ -173,26 +256,29 @@ const styles = StyleSheet.create({
     width: 10,
   },
   choiceDisplay: {
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
-    borderWidth: 2,
-    marginLeft: 40,
-    width: 88,
-    backgroundColor: 'grey',
-
+    width: 90,
+    marginLeft: 10,
   },
   displaytxt: {
     fontFamily: 'bigFont',
     color: "white",
     textAlign: 'center',
     textShadowColor: 'black',
+    borderWidth: 2,
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 1,
+    height: 30,
+    width: 90,
+
+
+    backgroundColor: 'grey',
   },
   rowOrcolumn: {
     width: 200,
 
-    flex: 1,
+
     flexDirection: 'row',
   },
   rowItems: {
@@ -201,6 +287,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     width: 44,
     height: 40,
+    marginLeft: 2,
 
   },
 
@@ -232,19 +319,23 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 20,
     flex: 1,
-    marginTop: 8,
-    marginHorizontal: 15,
-
-    backgroundColor: 'grey',
+    backgroundColor: 'black',
     paddingTop: 5,
+    borderWidth: 1,
+    borderColor: 'white',
 
   },
   emptyText: {
     textAlign: 'center',
     marginTop: 220,
-    color: 'black',
+    color: 'white',
     fontFamily: 'PassionOne-Bold',
-    fontSize: 50,
-    opacity: 0.1,
+    fontSize: 40,
+    opacity: 0.2,
+    width: 250,
+    marginLeft: 65,
+    borderWidth: 0.8,
+    borderColor: 'white',
+    borderRadius: 100,
   },
 });

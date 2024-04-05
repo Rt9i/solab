@@ -14,7 +14,7 @@ const CatsStore = () => {
   const filteredItems = getCategoryItems(selectedCategory);
   const navigation = useNavigation();
   const [displayMode, setDisplayMode] = useState('row');
- 
+
 
   const rowOrcolumn = () => {
     return (
@@ -96,9 +96,9 @@ const CatsStore = () => {
       quantity={item.quantity}
       displayMode={displayMode}
       selectedCategory={selectedCategory}
-      
+
     />
-    
+
   );
   const renderBar = () => {
     const accessoriesStyle = {
@@ -188,19 +188,16 @@ const CatsStore = () => {
 
 
         <View style={styles.itemscontainer}>
-          {/* <View style={styles.display}> */}
-          <FlatList
 
+          <FlatList
             data={filteredItems}
             renderItem={renderItem}
             key={displayMode}
             keyExtractor={(item) => item.id}
             numColumns={displayMode === 'row' ? 3 : 1}
             scrollEnabled={false}
-            contentContainerStyle={{ marginHorizontal: 2 }}
-          />
-          {/* </View> */}
 
+          />
         </View>
 
       </ScrollView>
@@ -369,7 +366,8 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     marginHorizontal: 10,
     borderRadius: 20,
-    alignItems: 'center',
+
+    paddingLeft: 20,
   },
   row: {
     flex: 1,

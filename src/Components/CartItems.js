@@ -156,7 +156,8 @@ const styles = StyleSheet.create({
   dis: {
     fontFamily: 'bigFont',
     fontSize: 10,
-    width: 165,
+    width: '72%',
+
 
 
   },
@@ -221,9 +222,9 @@ const styles = StyleSheet.create({
   photo: {
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
-    flex: 5,
     paddingBottom: 1,
-    backgroundColor: 'black',
+
+
   },
   store: {
     flex: 18,
@@ -246,9 +247,7 @@ const styles = StyleSheet.create({
   },
 
   img: {
-    borderTopLeftRadius: 10,
     width: 100,
-    height: 130,
-
+    height: 160,
   },
 })
