@@ -1,89 +1,40 @@
-import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList, ScrollView, Alert } from 'react-native';
 import CatsStoreItems from '../Components/CatsStoreItems';
 import getCategoryItemsData from '../res/Data';
 import Images from '../assets/images/images';
 import strings from '../res/strings';
 import { useNavigation } from '@react-navigation/native';
 import ScreenNames from '../../routes/ScreenNames';
+import DisplayItem from '../Components/DisplayItem';
+import CatsBarItems from '../Components/CatsBarItems';
+import CheckOptionItems from '../Components/CheckOptionItems';
 
 
 const CatsStore = () => {
-  const { getCategoryItems } = getCategoryItemsData();
-  const [selectedCategory, setSelectedCategory] = useState('Food');
-  const filteredItems = getCategoryItems(selectedCategory);
+  const [selectedCategory, setSelectedCategory] = useState('catFood');
   const navigation = useNavigation();
   const [displayMode, setDisplayMode] = useState('row');
+  const [selectedBrands, setSelectedBrands] = useState('monges');
+  const [optionsVisible, setOptionsVisible] = useState(false);
+
+ const [allStat, setAllStat] = useState(true);
+  const [mongetStat, setMongetstat] = useState(true);
+  const [friskiesStat, setFriskiesStat] = useState(true);
+  const [reflexStat, setReflexStat] = useState(true);
+  const [premioStat, setPremioStat] = useState(true);
+  const [solostat, setSolostat] = useState(true);
+ 
+
+  const brandsInData = getCategoryItemsData.map(item => item.brand);
+
+  const getFilteredItems = () => {
+    return getCategoryItemsData.filter(item =>
+      item.category.includes(selectedCategory) && selectedBrands.includes(item.brand)
+    );
+  };
 
 
-  const rowOrcolumn = () => {
-    return (
-      <View style={styles.choiceDisplay}>
-
-        <Text style={styles.displaytxt}>{strings.display}</Text>
-
-        <View style={styles.rowOrcolumn}>
-          <TouchableOpacity activeOpacity={0.7} onPress={() => setDisplayMode('row')} style={[styles.rowItems, { backgroundColor: displayMode === 'row' ? '#4e5e7f' : '#7391c8' }]} >
-
-            <View style={styles.rowbox}>
-              <View style={styles.row}>
-                <View style={styles.box1}>{showImage()}</View>
-                <View style={styles.box1}>{showImage()}</View>
-                <View style={styles.box1}>{showImage()}</View>
-
-              </View>
-              <View style={styles.row}>
-                <View style={styles.box2}>{showImage()}</View>
-                <View style={styles.box2}>{showImage()}</View>
-                <View style={styles.box2}>{showImage()}</View>
-
-              </View>
-            </View>
-
-          </TouchableOpacity>
-
-          <TouchableOpacity activeOpacity={0.7} onPress={() => setDisplayMode('column')} style={[styles.column, { backgroundColor: displayMode === 'column' ? '#4e5e7f' : '#7391c8' }]}>
-
-            <View style={styles.columnbox}>
-              <View style={styles.columnbox1}>
-                <View style={styles.row}>
-                  {showImage()}
-                  <Text style={styles.smalltxt}>hello</Text>
-                </View>
-              </View>
-              <View style={styles.columnbox1}>
-                <View style={styles.row}>
-                  {showImage()}
-                  <Text style={styles.smalltxt}>hello</Text>
-                </View>
-
-              </View>
-              <View style={styles.columnbox1}>
-                <View style={styles.row}>
-                  {showImage()}
-                  <Text style={styles.smalltxt}>hello</Text>
-                </View>
-
-              </View>
-            </View>
-
-          </TouchableOpacity>
-        </View>
-
-      </View>
-
-    )
-
-
-
-  }
-  const showImage = () => {
-    return (
-      <Image source={Images.photo()} style={styles.smallimg} />
-    )
-
-
-  }
   const renderItem = ({ item }) => (
     <CatsStoreItems
       key={item.id}
@@ -96,51 +47,9 @@ const CatsStore = () => {
       quantity={item.quantity}
       displayMode={displayMode}
       selectedCategory={selectedCategory}
-
+      category={item.category}
     />
-
   );
-  const renderBar = () => {
-    const accessoriesStyle = {
-      borderWidth: 1,
-      fontSize: 10,
-
-    };
-    const meatImg = {
-      width: 50,
-      height: 140,
-
-    };
-
-    const categories = [
-      { id: 'Food', name: `${strings.DryFood}`, image: Images.catFood() },
-      { id: 'Meat', name: `${strings.meat}`, image: Images.Meat() },
-      { id: 'Leash', name: `${strings.accessories}`, image: Images.leash() },
-      { id: 'Clothes', name: `${strings.Clothes}`, image: Images.catClothes() },
-      { id: 'Sprays', name: `${strings.Sprays}`, image: Images.spray() },
-
-    ];
-
-    return (
-      <View style={styles.topBar}>
-        {categories.map((category) => (
-          <TouchableOpacity
-            activeOpacity={0.8}
-            key={category.id}
-            style={[
-              styles.category,
-              { backgroundColor: selectedCategory === category.id ? '#4e5e7f' : '#7391c8' },
-
-            ]}
-            onPress={() => setSelectedCategory(category.id)}
-          >
-            <Image source={category.image} style={styles.categoryImage} />
-            <Text style={[styles.categoryText, category.id === 'Leash' ? accessoriesStyle : null]}>{category.name}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-    );
-  };
 
   return (
     <View style={styles.container}>
@@ -163,7 +72,6 @@ const CatsStore = () => {
           </View>
         </TouchableOpacity>
 
-
         <View style={styles.sale}>
           <Text style={styles.saletxt}>Sale</Text>
           <View style={styles.salecontainer}>
@@ -173,31 +81,57 @@ const CatsStore = () => {
               <Image source={Images.premioSale()} style={styles.saleimg} />
             </ScrollView>
           </View>
-
         </View>
-        <View style={styles.topBar}>{renderBar()}</View>
 
+        <View style={styles.CatsBarItemsContainer}>
 
-
+          <CatsBarItems style={styles.CatsBarItems}
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory} />
+        </View>
 
         <View style={styles.selectedDisplay} >
-          {rowOrcolumn()}
+          <View style={styles.displayer}>
 
+            <DisplayItem setDisplayMode={setDisplayMode} displayMode={displayMode} />
+
+          </View>
+          <View style={styles.checkItems}>
+            <CheckOptionItems
+              optionsVisible={optionsVisible}
+              setOptionsVisible={setOptionsVisible}
+              mongetStat={mongetStat}
+              setMongetstat={setMongetstat}
+              friskiesStat={friskiesStat}
+              setFriskiesStat={setFriskiesStat}
+              reflexStat={reflexStat}
+              setReflexStat={setReflexStat}
+              premioStat={premioStat}
+              setPremioStat={setPremioStat}
+              allStat={allStat}
+              setAllStat={setAllStat}
+              setSelectedBrands={setSelectedBrands}
+              selectedCategory={selectedCategory}
+              solostat={solostat}
+              setSolostat={setSolostat}
+            />
+
+          </View>
         </View>
 
-
-
         <View style={styles.itemscontainer}>
-
-          <FlatList
-            data={filteredItems}
-            renderItem={renderItem}
-            key={displayMode}
-            keyExtractor={(item) => item.id}
-            numColumns={displayMode === 'row' ? 3 : 1}
-            scrollEnabled={false}
-
-          />
+          {getFilteredItems().length > 0 ? (
+            <FlatList
+              data={getFilteredItems()}
+              renderItem={renderItem}
+              key={displayMode}
+              keyExtractor={(item) => item.id}
+              numColumns={displayMode === 'row' ? 3 : 1}
+              scrollEnabled={false}
+            />
+          ) : (
+            <Text style={styles.emptyText}>select a brand</Text>
+          )}
         </View>
 
       </ScrollView>
@@ -205,34 +139,22 @@ const CatsStore = () => {
   );
 };
 
-
-
 export default CatsStore
 
 const styles = StyleSheet.create({
-  accessoriesstyle: {
-    fontSize: 10,
+  emptyText: {
+    height: 200,
+    color: 'white',
+
+    textAlign: 'center',
   },
-
-  selectedDisplay: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 100,
-    width: 100,
-    marginLeft: 40,
-
-
-
+  touch: {
+    height: 70,
   },
   sale: {
     alignItems: 'center',
-
-
   },
   saletxt: {
-    textShadowColor: 'brown',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
     fontFamily: 'bigFont',
     fontSize: 20,
     color: 'red',
@@ -242,114 +164,11 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     borderWidth: 0.7,
     borderColor: 'red',
-
-  },
-  displaytxt: {
-    fontFamily: 'bigFont',
-    color: "white",
-    textAlign: 'center',
-    textShadowColor: 'black',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 1,
-  },
-  choiceDisplay: {
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
-    borderWidth: 2,
-
-    width: 88,
-    backgroundColor: 'grey',
-
-  },
-  smalltxt: {
-    fontSize: 8,
-    fontFamily: 'smallFont',
-
-  },
-  columnbox1: {
-    flexDirection: 'row',
-    backgroundColor: 'grey',
-    marginLeft: 4,
-    marginRight: 4,
-    marginBottom: 1,
-    height: 10,
-  },
-  smallimg: {
-    height: 10,
-    width: 10,
-  },
-  box1: {
-    width: 10,
-    height: 10,
-    marginTop: 5,
-    marginLeft: 2,
-    marginRight: 1,
-    backgroundColor: 'grey',
-    borderBottomWidth: 2,
-  },
-  box2: {
-    width: 10,
-    height: 10,
-    marginTop: 20,
-    marginLeft: 2,
-    marginRight: 1,
-    backgroundColor: 'grey',
-    borderBottomWidth: 2,
-  },
-
-  rowbox: {
-    flexDirection: 'column',
-
-  },
-  columnbox: {
-    flexDirection: 'column',
-
-  },
-  touch: {
-
-    height: 70,
-  },
-  column: {
-    marginLeft: 0.2,
-    backgroundColor: 'grey',
-    width: 40,
-    height: 40,
-    borderWidth: 2,
-  },
-  rowItems: {
-    fontSize: 20,
-    borderWidth: 2,
-    backgroundColor: 'black',
-    width: 44,
-    height: 40,
-
-  },
-  rowOrcolumn: {
-    width: 200,
-    flex: 1,
-    flexDirection: 'row',
-  },
-  food: {
-    fontFamily: 'bigFont',
-    fontSize: 40,
-  },
-  saleimg: {
-    marginLeft: 5,
-    height: 130,
-    width: 130,
-
-  },
-  saleimg2: {
-    marginLeft: 5,
-    height: 130,
-    width: 155,
-
   },
   salecontainer: {
     padding: 5,
     borderRadius: 10,
     backgroundColor: 'black',
-    flex: 1,
     flexDirection: 'row',
     height: 130,
     marginRight: 10,
@@ -357,35 +176,22 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     borderWidth: 0.5,
     borderColor: 'white',
-
   },
   itemscontainer: {
+
     borderWidth: 2,
     borderColor: 'white',
     backgroundColor: 'black',
-    marginVertical: 5,
+    elevation: 24,
     marginHorizontal: 10,
     borderRadius: 20,
-
     paddingLeft: 20,
-  },
-  row: {
-    flex: 1,
-    flexDirection: 'row',
-  },
-  display: {
-    alignItems: 'center',
-    width: '100%',
-    borderColor: 'white',
-    borderWidth: 2,
-    borderRadius: 50,
 
   },
-  bottomLine: {
-    height: 5,
-    width: 270,
-    borderBottomWidth: 3,
-    marginBottom: 45,
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    backgroundColor: '#6CCAFF',
   },
   image: {
     width: 55,
@@ -410,12 +216,10 @@ const styles = StyleSheet.create({
     height: 99,
     width: 260,
     marginRight: 40,
-    color: 'white',
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'column',
   },
-
   solabText: {
     color: '#00B9F4',
     fontFamily: 'bigFont',
@@ -424,8 +228,6 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
   },
-
-
   groomingText: {
     color: 'black',
     fontFamily: 'bigFont',
@@ -434,46 +236,46 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
   },
-  topBar: {
-    height: 50,
-    width: 340,
-    marginTop: 15,
-    marginLeft: 14,
+  row: {
+    flex: 1,
     flexDirection: 'row',
-    alignItems: 'center',
-
   },
-  category: {
+  bottomLine: {
+    height: 5,
+    width: 270,
+    borderBottomWidth: 3,
+    marginBottom: 45,
+  },
+  saleimg2: {
+    marginLeft: 5,
+    height: 130,
+    width: 155,
+  },
+  saleimg: {
+    marginLeft: 5,
+    height: 130,
+    width: 130,
+  },
+  CatsBarItemsContainer: {
+    justifyContent: 'center',
+    marginHorizontal: 20,
+  },
+  CatsBarItems: {
+  },
+  selectedDisplay: {
     flex: 1,
-    borderWidth: 2,
-    flexDirection: 'column',
-    alignItems: 'center',
-    borderRadius: 50,
-    marginRight: 5,
-    paddingTop: 8,
+    flexDirection: 'row',
+    marginTop: 20,
+    marginHorizontal: 30,
   },
-  categoryImage: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'contain',
-    borderRadius: 100,
+  displayer: {
+    width: 90,
+  },
+  checkItems: {
+    width: 90,
+   
+    marginBottom: 25,
+    zIndex: 1,
 
-  },
-  categoryText: {
-    color: 'black',
-    fontFamily: 'smallFont',
-    backgroundColor: '#84a1d2',
-    fontSize: 12,
-    height: 20,
-    width: 68,
-    borderRadius: 10,
-    borderWidth: 1,
-    textAlign: 'center',
-
-  },
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    backgroundColor: '#6CCAFF',
   },
 });

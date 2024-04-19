@@ -7,16 +7,13 @@ import strings from '../res/strings';
 import { useNavigation } from '@react-navigation/native';
 import ScreenNames from '../../routes/ScreenNames';
 
-
 const DogsStore = () => {
-  const { getCategoryItems } = getCategoryItemsData();
   const [selectedCategory, setSelectedCategory] = useState('dogFood');
-  const filteredItems = getCategoryItems(selectedCategory);
-  const navigation = useNavigation();
+  const navigation = useNavigation(); 
   const [displayMode, setDisplayMode] = useState('row');
 
 
-  const rowOrcolumn = () => {
+  const rowOrcolumn = () => { 
     return (
       <View style={styles.choiceDisplay}>
 
@@ -180,7 +177,7 @@ const DogsStore = () => {
           {/* <View style={styles.display}> */}
           <FlatList
 
-            data={filteredItems}
+            data={getCategoryItemsData}
             renderItem={renderItem}
             key={displayMode}
             keyExtractor={(item) => item.id}

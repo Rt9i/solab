@@ -1,18 +1,11 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import MainNavigation from './routes/nav';
-import TabNav from './routes/TabNav';
 import SolabProvider from './src/store/solabProvider';
 
-
-
-
 const App = () => {
-
   return (
-
     <View style={styles.container}>
-
       <SolabProvider>
         <MainNavigation />
       </SolabProvider>

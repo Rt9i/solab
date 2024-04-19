@@ -19,6 +19,7 @@ const Images = {
     checkMark: () => require('./checkMark.png'),
     Meat: () => require('./Meat.png'),
     photo: () => require('./photo.png'),
+    toilet: () => require('./toilet.png'),
 
     droolsChicken: () => require('./droolsChicken.png'),
     droolsKittenOceanfish: () => require('./droolsKittenOceanfish.png'),
@@ -68,6 +69,22 @@ const Images = {
     premioDeliCatTrout: () => require('./premioDeliCatTrout.png'),
     premioDeliCatWhitefishCarrots: () => require('./premioDeliCatWhitefishCarrots.png'),
     premioDelicCatSalmon: () => require('./premioDelicCatSalmon.png'),
+
+    catSoloLiver: () => require('./catSoloLiver.png'),
+    catSoloRabbit: () => require('./catSoloRabbit.png'),
+    catSoloFish: () => require('./catSoloFish.png'),
+    catSimbaRabbit: () => require('./catSimbaRabbit.png'),
+    catSimbaRabbit: () => require('./catSimbaRabbit.png'),
+    catSimbaRabbit: () => require('./catSimbaRabbit.png'),
+    
+    elizacatCow: () => require('./elizacatCow.png'),
+    elizacatFish: () => require('./elizacatFish.png'),
+    elizacatSalmon: () => require('./elizacatSalmon.png'),
+    elizacatTurkey: () => require('./elizacatTurkey.png'),
+    nuevoBeef: () => require('./nuevoBeef.png'),
+    PremioDelicatSalmon: () => require('./PremioDelicatSalmon.png'),
+    PremioCanDelicatChicken: () => require('./PremioCanDelicatChicken.png'),
+  
 };
 
 export default Images;

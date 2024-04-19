@@ -11,7 +11,7 @@ const strings = {
   leash: "Leash",
   display: "display",
   accessories: "Accessories",
-
+  toilet: 'Toilet',
 };
 
 export default strings;
