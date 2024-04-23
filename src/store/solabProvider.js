@@ -6,7 +6,6 @@ const SolabProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [isItemAdded, setIsItemAdded] = useState(false);
 
-
   const addItem = (item, itemId) => {
     const existingItemIndex = cart.findIndex((item) => item.id === itemId);
     const updatedCart = [...cart];

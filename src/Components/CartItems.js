@@ -3,7 +3,7 @@ import React, { useContext, useState } from 'react';
 import strings from '../res/strings';
 import { useNavigation } from '@react-navigation/native';
 import ScreenNames from '../../routes/ScreenNames';
-
+import CartRowItems from './CartRowItems';
 import SolabContext from '../store/solabContext';
 
 
@@ -24,6 +24,7 @@ const CartItems = props => {
   return (
 
     <View style={styles.container}>
+
       <View style={styles.itemcontainer}>
         <Text style={styles.dis}>{`${dis}`}</Text>
         <View style={styles.addOrLesscont}>
@@ -47,6 +48,7 @@ const CartItems = props => {
           </View>
         </View>
       </View>
+
       <View style={styles.items}>
 
         <View style={styles.photo}>

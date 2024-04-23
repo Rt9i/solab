@@ -104,16 +104,17 @@ const Cart = () => {
   }
 
   const renderCart = ({ item }) => {
-    if (displayMode === 'row') {
-
-      return <CartRowItems {...item} hideImage={true} onRemove={() => removeItemFromCart(item.id)} />;
+    if (item && item.id) {
+      if (displayMode === 'row') {
+        return <CartRowItems {...item} hideImage={true} onRemove={() => removeItemFromCart(item.id)} />;
+      } else {
+        return <CartItems {...item} hideImage={true} onRemove={() => removeItemFromCart(item.id)} />;
+      }
     } else {
-
-      return <CartItems {...item} hideImage={true} onRemove={() => removeItemFromCart(item.id)} />;
+      return null; // Or you can handle this case differently, like showing a loading indicator or error message
     }
-
-
   };
+
 
   const emptyCartMessage = () => {
     if (cart.length === 0) {

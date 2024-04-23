@@ -17,7 +17,7 @@ const CatsStoreItems = ({ selectedCategory, ...props }) => {
 
   const navigation = useNavigation();
   const { brand, name, taste, price, img, hideImage, dis, id, quantity: initialQuantity, category } = props;
-  const { cart, setCart } = useContext(SolabContext);
+  const { cart, setCart, handleAddItem } = useContext(SolabContext);
   const [quantity, setQuantity] = useState(initialQuantity || 1);
   const [isAddedToCart, setIsAddedToCart] = useState(false);
 

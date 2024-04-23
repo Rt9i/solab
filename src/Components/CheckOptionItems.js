@@ -1,51 +1,83 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList, ScrollView, Alert } from 'react-native';
-import CheckBoxItem from '../Components/CheckBoxItem';
-
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 const CheckOptionItems = ({
     optionsVisible,
     setOptionsVisible,
-    mongetStat,
-    setMongetstat,
-    friskiesStat,
-    setFriskiesStat,
-    reflexStat,
-    setReflexStat,
-    premioStat,
-    setPremioStat,
-    allStat,
-    setAllStat,
     setSelectedBrands,
     selectedCategory,
-    solostat,
-    setSolostat,
-
 }) => {
+    const [allStat, setAllStat] = useState(true);
+    const [meatAllStat, setMeatAllStat] = useState(true);
+    const [catAccessoriesAllStat, setCatAccessoriesAllStat] = useState(true);
+    const [catClothesAllStat, setCatClothesAllStat] = useState(true)
+    const [catSpraysAllStat, setCatSpraysAllStat] = useState(true)
+    const [catToiletAllStat, setCatToiletAllStat] = useState(true)
+
+    const [mongetStat, setMongetstat] = useState(true);
+    const [friskiesStat, setFriskiesStat] = useState(true);
+    const [reflexStat, setReflexStat] = useState(true);
+    const [premioStat, setPremioStat] = useState(true);
+    const [meatPremioStat, setMeatPremioStat] = useState(true);
+    const [solostat, setSolostat] = useState(true);
+    const [accessoriesstat, setAccessories] = useState(true);
+    const [clothesstat, setClothes] = useState(true);
+    const [spraysStat, setSprayStat] = useState(true);
+    const [toiletStat, setToiletStat] = useState(true);
     const selected = [];
+// if you wanna add a new brand add it in the checkOptionsForRender and catDryFoodCheckedOptions as a Condition or any other CheckedOptions and make a toggle for it like toggleMongetstat
 
-    useEffect(() => {
-        selected.splice(0, selected.length)
-        console.log(selected)
-    }, [selectedCategory]);
-
-
+    const CheckBoxItem = ({ onPress, isChecked }) => {
+        return (
+            <View style={styles.BouncyCheckbox}>
+                <BouncyCheckbox
+                    disableText
+                    fillColor="#9342f5"
+                    size={20}
+                    iconImageStyle={styles.iconImageStyle}
+                    iconStyle={{ borderColor: '#9342f5' }}
+                    onPress={onPress}
+                    isChecked={isChecked}
+                />
+            </View>
+        );
+    };
 
     const checkOptionsForRender = () => {
+        const selected = [];
 
-        if (solostat) selected.push('solo');
-        if (mongetStat) selected.push('monge');
-        if (friskiesStat) selected.push('Friskies');
-        if (premioStat) selected.push('premio');
-        if (reflexStat) selected.push('Reflex');
+        if (selectedCategory === 'catFood') {
+            if (mongetStat) selected.push('monge');
+            if (friskiesStat) selected.push('Friskies');
+            if (premioStat) selected.push('premio');
+            if (reflexStat) selected.push('Reflex');
+        }
 
+        if (selectedCategory === 'catMeat') {
+            if (solostat) selected.push('solo');
+            if (meatPremioStat) selected.push('premio');
+        }
+
+        if (selectedCategory === 'catAccessories') {
+            if (accessoriesstat) selected.push('accessories');
+        }
+
+        if (selectedCategory === 'catClothes') {
+            if (clothesstat) selected.push('clothes');
+        }
+
+        if (selectedCategory === 'catSprays') {
+            if (spraysStat) selected.push('sprays');
+        }
+
+        if (selectedCategory === 'catToilet') {
+            if (toiletStat) selected.push('toilet');
+        }
         setSelectedBrands(selected);
-        console.log(selected)
-    }
+        console.log('selected: ', selected);
+    };
 
-
-    const checkIfAllOptionsChecked = () => {
-
-
+    const catDryFoodCheckedOptions = () => {
         if (
             mongetStat &&
             friskiesStat &&
@@ -58,26 +90,132 @@ const CheckOptionItems = ({
             setAllStat(false);
         }
     };
+    const catMeatCheckedOptions = () => {
+        if (
+            meatPremioStat &&
+            solostat
+
+        ) {
+            setMeatAllStat(true);
+        } else {
+            setMeatAllStat(false);
+        }
+    };
+    const catAccessoriesCheckedOptions = () => {
+        if (
+            accessoriesstat
+        ) {
+            setCatAccessoriesAllStat(true);
+        } else {
+            setCatAccessoriesAllStat(false);
+        }
+    };
+    const catClothesCheckedOptions = () => {
+        if (
+            clothesstat
+        ) {
+            setCatClothesAllStat(true);
+        } else {
+            setCatClothesAllStat(false);
+        }
+    };
+    const catSpraysCheckedOptions = () => {
+        if (
+            spraysStat
+        ) {
+            setCatSpraysAllStat(true);
+        } else {
+            setCatSpraysAllStat(false);
+        }
+    };
+    const catToiletCheckedOptions = () => {
+        if (
+            toiletStat
+        ) {
+            setCatToiletAllStat(true);
+        } else {
+            setCatToiletAllStat(false);
+        }
+    };
 
     useEffect(() => {
+        catSpraysCheckedOptions()
         checkOptionsForRender()
-        checkIfAllOptionsChecked();
-    }, [mongetStat, friskiesStat, reflexStat, premioStat, solostat]);
+        catDryFoodCheckedOptions();
+        catMeatCheckedOptions()
+        catAccessoriesCheckedOptions()
+        catClothesCheckedOptions()
+        catToiletCheckedOptions()
+    }, [mongetStat, friskiesStat, reflexStat, premioStat, solostat, meatPremioStat, selectedCategory, toiletStat, accessoriesstat, clothesstat, spraysStat, toiletStat]);
 
+    const toggleAllCatToilet = () => {
+        if (catToiletAllStat) {
+            setCatToiletAllStat(false)
+            setToiletStat(false)
+        } else {
+            setCatToiletAllStat(true)
+            setToiletStat(true)
+        }
 
+    }
+    const toggleAllCatSprays = () => {
+        if (catSpraysAllStat) {
+            setCatSpraysAllStat(false)
+            setSprayStat(false)
+        } else {
+            setCatSpraysAllStat(true)
+            setSprayStat(true)
+        }
 
-    const toggleAll = () => {
+    }
+    const toggleAllCatClothes = () => {
+        if (catClothesAllStat) {
+            setCatClothesAllStat(false)
+            setClothes(false)
+        } else {
+            setCatClothesAllStat(true)
+            setClothes(true)
+        }
+
+    }
+    const toggleAllCatAccessories = () => {
+        if (catAccessoriesAllStat) {
+            setCatAccessoriesAllStat(false)
+            setAccessories(false)
+        } else {
+            setCatAccessoriesAllStat(true)
+            setAccessories(true)
+        }
+
+    }
+    const toggleAllcatMeat = () => {
+        if (meatAllStat) {
+            setMeatAllStat(false)
+            setMeatPremioStat(false)
+            setSolostat(false)
+
+        } else {
+            setMeatAllStat(true)
+            setMeatPremioStat(true)
+            setSolostat(true)
+
+        }
+
+    }
+    const toggleAllCatfood = () => {
         if (allStat) {
             setMongetstat(false);
             setFriskiesStat(false);
             setReflexStat(false);
             setPremioStat(false);
+            setSolostat(false);
             setAllStat(false);
         } else {
             setMongetstat(true);
             setFriskiesStat(true);
             setReflexStat(true);
             setPremioStat(true);
+            setSolostat(true);
             setAllStat(true);
         }
     };
@@ -99,22 +237,40 @@ const CheckOptionItems = ({
 
     const togglepremioStat = () => {
         setPremioStat(!premioStat);
-
     };
+    const toggleMeatpremioStat = () => {
+        setMeatPremioStat(!meatPremioStat);
+    };
+    const toggleAccessoriesStat = () => {
+        setAccessories(!accessoriesstat);
+    };
+    const toggleCatClothes = () => {
+        setClothes(!clothesstat)
+
+    }
+    const toggleCatSpraysStat = () => {
+        setSprayStat(!spraysStat)
+
+    }
+    const toggleToiletStat = () => {
+        setToiletStat(!toiletStat)
+
+    }
+
     const catToiletCheckBox = () => {
         return (selectedCategory === 'catToilet' ? (
 
             <View>
-                <TouchableOpacity onPress={toggleAll}>
+                <TouchableOpacity onPress={toggleAllCatToilet}>
                     <View style={styles.row}>
-                        <CheckBoxItem onPress={toggleAll} isChecked={allStat} />
+                        <CheckBoxItem onPress={toggleAllCatToilet} isChecked={catToiletAllStat} />
                         <Text style={styles.optionTxt}>All</Text>
                     </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={togglepremioStat}>
+                <TouchableOpacity onPress={toggleToiletStat}>
                     <View style={styles.row}>
-                        <CheckBoxItem onPress={togglepremioStat} isChecked={premioStat} />
+                        <CheckBoxItem onPress={toggleToiletStat} isChecked={toiletStat} />
                         <Text style={styles.optionTxt}>toilets</Text>
                     </View>
                 </TouchableOpacity>
@@ -127,16 +283,16 @@ const CheckOptionItems = ({
         return (selectedCategory === 'catSprays' ? (
 
             <View>
-                <TouchableOpacity onPress={toggleAll}>
+                <TouchableOpacity onPress={toggleAllCatSprays}>
                     <View style={styles.row}>
-                        <CheckBoxItem onPress={toggleAll} isChecked={allStat} />
+                        <CheckBoxItem onPress={toggleAllCatSprays} isChecked={catSpraysAllStat} />
                         <Text style={styles.optionTxt}>All</Text>
                     </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={togglepremioStat}>
+                <TouchableOpacity onPress={toggleCatSpraysStat}>
                     <View style={styles.row}>
-                        <CheckBoxItem onPress={togglepremioStat} isChecked={premioStat} />
+                        <CheckBoxItem onPress={toggleCatSpraysStat} isChecked={spraysStat} />
                         <Text style={styles.optionTxt}>sprays</Text>
                     </View>
                 </TouchableOpacity>
@@ -149,16 +305,16 @@ const CheckOptionItems = ({
         return (selectedCategory === 'catClothes' ? (
 
             <View>
-                <TouchableOpacity onPress={toggleAll}>
+                <TouchableOpacity onPress={toggleAllCatClothes}>
                     <View style={styles.row}>
-                        <CheckBoxItem onPress={toggleAll} isChecked={allStat} />
+                        <CheckBoxItem onPress={toggleAllCatClothes} isChecked={catClothesAllStat} />
                         <Text style={styles.optionTxt}>All</Text>
                     </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={togglepremioStat}>
+                <TouchableOpacity onPress={toggleCatClothes}>
                     <View style={styles.row}>
-                        <CheckBoxItem onPress={togglepremioStat} isChecked={premioStat} />
+                        <CheckBoxItem onPress={toggleCatClothes} isChecked={clothesstat} />
                         <Text style={styles.optionTxt}>clothes</Text>
                     </View>
                 </TouchableOpacity>
@@ -171,16 +327,16 @@ const CheckOptionItems = ({
         return (selectedCategory === 'catAccessories' ? (
 
             <View>
-                <TouchableOpacity onPress={toggleAll}>
+                <TouchableOpacity onPress={toggleAllCatAccessories}>
                     <View style={styles.row}>
-                        <CheckBoxItem onPress={toggleAll} isChecked={allStat} />
+                        <CheckBoxItem onPress={toggleAllCatAccessories} isChecked={catAccessoriesAllStat} />
                         <Text style={styles.optionTxt}>All</Text>
                     </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={togglepremioStat}>
+                <TouchableOpacity onPress={toggleAccessoriesStat}>
                     <View style={styles.row}>
-                        <CheckBoxItem onPress={togglepremioStat} isChecked={premioStat} />
+                        <CheckBoxItem onPress={toggleAccessoriesStat} isChecked={accessoriesstat} />
                         <Text style={styles.optionTxt}>accessories</Text>
                     </View>
                 </TouchableOpacity>
@@ -193,16 +349,16 @@ const CheckOptionItems = ({
         return (selectedCategory === 'catMeat' ? (
 
             <View>
-                <TouchableOpacity onPress={toggleAll}>
+                <TouchableOpacity onPress={toggleAllcatMeat}>
                     <View style={styles.row}>
-                        <CheckBoxItem onPress={toggleAll} isChecked={allStat} />
+                        <CheckBoxItem onPress={toggleAllcatMeat} isChecked={meatAllStat} />
                         <Text style={styles.optionTxt}>All</Text>
                     </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={togglepremioStat}>
+                <TouchableOpacity onPress={toggleMeatpremioStat}>
                     <View style={styles.row}>
-                        <CheckBoxItem onPress={togglepremioStat} isChecked={premioStat} />
+                        <CheckBoxItem onPress={toggleMeatpremioStat} isChecked={meatPremioStat} />
                         <Text style={styles.optionTxt}>Premio</Text>
                     </View>
                 </TouchableOpacity>
@@ -220,10 +376,10 @@ const CheckOptionItems = ({
     const catFoodCheckBox = () => {
         return (
             selectedCategory === 'catFood' ? (
-                <View>
-                    <TouchableOpacity onPress={toggleAll}>
+                <View >
+                    <TouchableOpacity onPress={toggleAllCatfood}>
                         <View style={styles.row}>
-                            <CheckBoxItem onPress={toggleAll} isChecked={allStat} />
+                            <CheckBoxItem onPress={toggleAllCatfood} isChecked={allStat} />
                             <Text style={styles.optionTxt}>All</Text>
                         </View>
                     </TouchableOpacity>
@@ -302,6 +458,11 @@ const CheckOptionItems = ({
 
 export default CheckOptionItems;
 const styles = StyleSheet.create({
+    BouncyCheckbox: {
+        flexDirection: 'row',
+        paddingBottom: 3,
+
+    },
     row: {
         flexDirection: 'row',
     },
@@ -309,7 +470,7 @@ const styles = StyleSheet.create({
     optionsstyle: {
         backgroundColor: 'white',
         borderRadius: 10,
-
+        paddingBottom: 2,
         elevation: 24,
 
     },

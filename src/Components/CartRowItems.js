@@ -13,54 +13,54 @@ const CartRowItems = props => {
     const navigation = useNavigation();
 
     const onCardPress = () => {
-        const Item = { ...props };
+        const item = { ...props };
         navigation.navigate(ScreenNames.ProductScreen, { data: Item });
     };
 
+    const addOrLess = (id) => {
+        return (
+            <>
+                <View style={styles.addOrLess}>
+                    <TouchableOpacity onPress={() => checkRemoveItem(id)} style={styles.Xtouch}>
+                        <View style={styles.X}>
+                            <Text style={styles.xtxt}>X</Text>
+                        </View>
+                    </TouchableOpacity>
+
+                    <View style={styles.plusMinusInput}>
+                        <TouchableOpacity onPress={() => addItem(id)} style={styles.pluscontainer}>
+                            <View style={styles.plus}>
+                                <Text style={styles.plus}>+</Text>
+                            </View>
+                        </TouchableOpacity>
+
+                        <Text style={styles.input}>{quantity}</Text>
+
+                        <TouchableOpacity onPress={() => removeItemFromCart(id)} style={styles.minuscontainer}>
+                            <View style={styles.minus}>
+                                <Text style={styles.minus}>-</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+
+
+                <TouchableOpacity onPress={onCardPress} style={styles.imgTouch}>
+                    {<Image source={img} style={styles.img} />}
+                </TouchableOpacity>
+                <View style={styles.props}>
+                    <Text style={styles.bottomtxt1}>{` ${brand}`} </Text>
+                    <Text style={styles.bottomtxt2}>{` ${price} ${strings.priceTag}`}</Text>
+                </View>
+            </>
+        )
+
+    }
 
     return (
         <View style={styles.items}>
 
-
-
-
-
-            <View style={styles.addOrLess}>
-
-                <View style={styles.X}>
-                    <TouchableOpacity onPress={() => checkRemoveItem(Item, id)} style={styles.Xtouch}>
-                        <Text style={styles.xtxt}>X</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.plusMinusInput}>
-
-                    <TouchableOpacity onPress={() => addItem(Item, id)} style={styles.pluscontainer}>
-                        <View style={styles.plus}>
-                            <Text style={styles.plus}>+</Text>
-                        </View>
-                    </TouchableOpacity>
-
-                    <Text style={styles.input}>{quantity}</Text>
-
-                    <TouchableOpacity onPress={() => removeItemFromCart(Item, id)} style={styles.minuscontainer}>
-                        <View style={styles.minus}>
-                            <Text style={styles.minus}>-</Text>
-                        </View>
-                    </TouchableOpacity>
-                </View>
-
-
-            </View>
-
-
-            <TouchableOpacity onPress={onCardPress} style={styles.imgTouch}>
-                {<Image source={img} style={styles.img} />}
-            </TouchableOpacity>
-            <View style={styles.props}>
-                <Text style={styles.bottomtxt1}>{` ${brand}`} </Text>
-                <Text style={styles.bottomtxt2}>{` ${price} ${strings.priceTag}`}</Text>
-            </View>
+            {addOrLess()}
 
 
 

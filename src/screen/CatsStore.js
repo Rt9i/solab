@@ -10,21 +10,12 @@ import DisplayItem from '../Components/DisplayItem';
 import CatsBarItems from '../Components/CatsBarItems';
 import CheckOptionItems from '../Components/CheckOptionItems';
 
-
 const CatsStore = () => {
   const [selectedCategory, setSelectedCategory] = useState('catFood');
   const navigation = useNavigation();
   const [displayMode, setDisplayMode] = useState('row');
   const [selectedBrands, setSelectedBrands] = useState('monges');
   const [optionsVisible, setOptionsVisible] = useState(false);
-
- const [allStat, setAllStat] = useState(true);
-  const [mongetStat, setMongetstat] = useState(true);
-  const [friskiesStat, setFriskiesStat] = useState(true);
-  const [reflexStat, setReflexStat] = useState(true);
-  const [premioStat, setPremioStat] = useState(true);
-  const [solostat, setSolostat] = useState(true);
- 
 
   const brandsInData = getCategoryItemsData.map(item => item.brand);
 
@@ -93,27 +84,19 @@ const CatsStore = () => {
         <View style={styles.selectedDisplay} >
           <View style={styles.displayer}>
 
-            <DisplayItem setDisplayMode={setDisplayMode} displayMode={displayMode} />
+            <DisplayItem
+              setDisplayMode={setDisplayMode}
+              displayMode={displayMode}
+            />
 
           </View>
           <View style={styles.checkItems}>
             <CheckOptionItems
               optionsVisible={optionsVisible}
               setOptionsVisible={setOptionsVisible}
-              mongetStat={mongetStat}
-              setMongetstat={setMongetstat}
-              friskiesStat={friskiesStat}
-              setFriskiesStat={setFriskiesStat}
-              reflexStat={reflexStat}
-              setReflexStat={setReflexStat}
-              premioStat={premioStat}
-              setPremioStat={setPremioStat}
-              allStat={allStat}
-              setAllStat={setAllStat}
+              selectedBrands={selectedBrands}
               setSelectedBrands={setSelectedBrands}
               selectedCategory={selectedCategory}
-              solostat={solostat}
-              setSolostat={setSolostat}
             />
 
           </View>
@@ -273,7 +256,7 @@ const styles = StyleSheet.create({
   },
   checkItems: {
     width: 90,
-   
+
     marginBottom: 25,
     zIndex: 1,
 
