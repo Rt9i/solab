@@ -12,6 +12,9 @@ const strings = {
   display: "display",
   accessories: "Accessories",
   toilet: 'Toilet',
+  brands:'brands',
+  selectABrand: 'select a brand',
+  sale:'Sale',
 };
 
 export default strings;

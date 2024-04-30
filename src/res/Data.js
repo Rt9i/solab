@@ -21,9 +21,11 @@ const getCategoryItemsData =
       taste: 'rrrrrrrrrr',
       img: Images.mongeKitten(),
       dis: 'bathroom?',
+
       category: [
         'cattoilet',
       ]
+
     },
 
     {
@@ -310,17 +312,7 @@ const getCategoryItemsData =
         'catFood',
       ]
     },
-    {
-      id: 'Food19',
-      price: 100,
-      brand: 'premio',
-      taste: 'chicken',
-      img: Images.premioChicken(),
-      dis: 'doorlsChicken',
-      category: [
-        'catFood',
-      ]
-    },
+
     {
       id: 'Food20',
       price: 100,
@@ -453,6 +445,17 @@ const getCategoryItemsData =
         'catFood',
       ]
     },
+    {
+      id: 'Food19',
+      price: 100,
+      brand: 'premio',
+      taste: 'chicken',
+      img: Images.premioChicken(),
+      dis: 'doorlsChicken',
+      category: [
+        'catFood',
+      ]
+    },
 
 
 
@@ -460,8 +463,8 @@ const getCategoryItemsData =
     {
       id: 'leash1',
       price: 200,
-      brand: 'royal canin',
-      taste: 'salmon',
+      brand: 'leash',
+      taste: '10m',
       img: Images.mongeKitten(),
       dis: 'Leash Item 1 Description',
       category: [
@@ -474,8 +477,8 @@ const getCategoryItemsData =
     {
       id: 'clothes1',
       price: 150,
-      brand: 'bonjor',
-      taste: 'chicken',
+      brand: 'Kitten',
+      taste: 'kitten',
       img: Images.mongeKitten(),
       dis: 'Clothes Item 1 Description',
       category: [
@@ -485,8 +488,8 @@ const getCategoryItemsData =
     {
       id: 'clothes2',
       price: 80,
-      brand: 'a shirt',
-      taste: 'chicken',
+      brand: 'Adult',
+      taste: 'adult',
       img: Images.mongeKitten(),
       dis: 'Clothes Item 1 Description',
       category: [
@@ -527,6 +530,186 @@ const getCategoryItemsData =
       dis: 'sprays Item 1 Description',
       category: [
         'catSprays',
+      ]
+    },
+  
+    {
+      id: 'meat14',
+      price: 5,
+      brand: 'solo',
+      taste: 'liver',
+      img: Images.catSoloLiver(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+
+    },
+    {
+      id: 'meat15',
+      price: 5,
+      brand: 'solo',
+      taste: 'rabbit',
+      img: Images.catSoloRabbit(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+
+    },
+    {
+      id: 'meat16',
+      price: 5,
+      brand: 'solo',
+      taste: 'fish',
+      img: Images.catSoloFish(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+
+    },
+    {
+      id: 'meat17',
+      price: 5,
+      brand: 'bado',
+      taste: 'Chicken',
+      img: Images.badoKittenChicken(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+    {
+      id: 'meat18',
+      price: 5,
+      brand: 'bado',
+      taste: 'Lamb',
+      img: Images.badoLamb(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+    {
+      id: 'meat19',
+      price: 5,
+      brand: 'bado',
+      taste: 'Salmon',
+      img: Images.badoSalmon(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+    {
+      id: 'meat20',
+      price: 5,
+      brand: 'simba',
+      taste: 'Selvaggina',
+      img: Images.catSimbaSelvaggina(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+    {
+      id: 'meat21',
+      price: 5,
+      brand: 'simba',
+      taste: 'Turkey & Kidney',
+      img: Images.catSimbaTurkeyKidney(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+    {
+      id: 'meat22',
+      price: 5,
+      brand: 'elizacat',
+      taste: 'Beef',
+      img: Images.elizacatBeef(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+    {
+      id: 'meat23',
+      price: 5,
+      brand: 'elizacat',
+      taste: 'FishVegetable',
+      img: Images.elizacatFishVegetable(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+    {
+      id: 'meat24',
+      price: 5,
+      brand: 'kitcat',
+      taste: 'Chicken&Lamb',
+      img: Images.kitcatChickenLamb(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+    {
+      id: 'meat25',
+      price: 5,
+      brand: 'kitcat',
+      taste: 'Tuna&Anchovy',
+      img: Images.kitcatTunaAnchovy(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+    {
+      id: 'meat26',
+      price: 5,
+      brand: 'lacat',
+      taste: 'Chicken',
+      img: Images.lacatChicken(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+    {
+      id: 'meat27',
+      price: 5,
+      brand: 'lacat',
+      taste: 'Duck&Turkey',
+      img: Images.lacatDuckTurkey(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+    {
+      id: 'meat28',
+      price: 5,
+      brand: 'lacat',
+      taste: 'Salmon',
+      img: Images.lacatSalmon(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+    {
+      id: 'meat29',
+      price: 5,
+      brand: 'lacat',
+      taste: 'Salmon&Cod',
+      img: Images.lacatSalmonCod(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
       ]
     },
     {
@@ -674,43 +857,293 @@ const getCategoryItemsData =
 
     },
     {
-      id: 'meat14',
+      id: 'meat30',
       price: 5,
-      brand: 'solo',
-      taste: 'liver',
-      img: Images.catSoloLiver(),
+      brand: 'monge',
+      taste: 'Anchovies',
+      img: Images.mongeAnchovies(),
       dis: 'meaty',
       category: [
         'catMeat',
       ]
-
     },
     {
-      id: 'meat15',
+      id: 'meat31',
       price: 5,
-      brand: 'solo',
-      taste: 'rabbit',
-      img: Images.catSoloRabbit(),
+      brand: 'monge',
+      taste: 'Boar',
+      img: Images.mongeBoar(),
       dis: 'meaty',
       category: [
         'catMeat',
       ]
-
     },
     {
-      id: 'meat16',
+      id: 'meat32',
       price: 5,
-      brand: 'solo',
-      taste: 'fish',
-      img: Images.catSoloFish(),
+      brand: 'nuevo',
+      taste: 'Beef',
+      img: Images.nuevocanBeef(),
       dis: 'meaty',
       category: [
         'catMeat',
       ]
-
     },
-    
-    
+    {
+      id: 'meat33',
+      price: 5,
+      brand: 'nuevo',
+      taste: 'Chicken&Beef',
+      img: Images.nuevoChickenBeef(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+    {
+      id: 'meat34',
+      price: 5,
+      brand: 'nuevo',
+      taste: 'Salmon&Carrots',
+      img: Images.nuevoSalmonCarrots(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+    {
+      id: 'meat35',
+      price: 5,
+      brand: 'nuevo',
+      taste: 'Turkey & Tuna & Catnip',
+      img: Images.nuevoTurkeyTunaCatnip(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+    {
+      id: 'meat36',
+      price: 5,
+      brand: 'premio',
+      taste: 'Beef',
+      img: Images.premiobagDelicatBeef(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+    {
+      id: 'meat38',
+      price: 5,
+      brand: 'premio',
+      taste: 'Chicken',
+      img: Images.premiobagDelicatChicken(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+    {
+      id: 'meat39',
+      price: 5,
+      brand: 'premio',
+      taste: 'Salmon',
+      img: Images.premiobagDelicatSalmon(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+    {
+      id: 'meat40',
+      price: 5,
+      brand: 'premio',
+      taste: 'Chicken',
+      img: Images.premioCanChiken(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+    {
+      id: 'meat41',
+      price: 5,
+      brand: 'premio',
+      taste: 'Salmon',
+      img: Images.premioCanSalmon(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+    {
+      id: 'meat42',
+      price: 5,
+      brand: 'premio',
+      taste: 'Chicken&Mutton',
+      img: Images.premioChickenMutton(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+    {
+      id: 'meat43',
+      price: 5,
+      brand: 'premio',
+      taste: 'Chicken',
+      img: Images.premioDelicatKittenChicken(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+    {
+      id: 'meat44',
+      price: 5,
+      brand: 'premio',
+      taste: 'Liver',
+      img: Images.premioDelicatLiver(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+    {
+      id: 'meat45',
+      price: 5,
+      brand: 'premio',
+      taste: 'Salmon',
+      img: Images.PremioDelicatSalmon(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+    {
+      id: 'meat46',
+      price: 5,
+      brand: 'premio',
+      taste: 'Chicken',
+      img: Images.premiobagDelicatChicken(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+    {
+      id: 'meat47',
+      price: 5,
+      brand: 'premio',
+      taste: 'Tuna&Aloevera',
+      img: Images.premioTunaAloevera(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+    {
+      id: 'meat48',
+      price: 5,
+      brand: 'premio',
+      taste: 'Tuna&Papaya',
+      img: Images.premioTunaPapaya(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+    {
+      id: 'meat49',
+      price: 5,
+      brand: 'schesir',
+      taste: 'Chicken',
+      img: Images.schesirChicken(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+    {
+      id: 'meat50',
+      price: 5,
+      brand: 'schesir',
+      taste: 'Chicken',
+      img: Images.premiobagDelicatChicken(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+    {
+      id: 'meat51',
+      price: 5,
+      brand: 'schesir',
+      taste: 'Tuna',
+      img: Images.schesirTuna(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+    {
+      id: 'meat52',
+      price: 5,
+      brand: 'schesir',
+      taste: 'Tuna&Mahi',
+      img: Images.schesirTunaMahi(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+
+    {
+      id: 'meat53',
+      price: 5,
+      brand: 'simba',
+      taste: 'Meat',
+      img: Images.simbaMeat(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+    {
+      id: 'meat54',
+      price: 5,
+      brand: 'simba',
+      taste: 'Rabiit',
+      img: Images.simbaRabbit(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+    {
+      id: 'meat55',
+      price: 5,
+      brand: 'simba',
+      taste: 'Turkey',
+      img: Images.simbaTurkey(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+    {
+      id: 'meat56',
+      price: 5,
+      brand: 'whiskas',
+      taste: 'Salmon',
+      img: Images.whiskasSalmon(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+      ]
+    },
+
   ]
 
 

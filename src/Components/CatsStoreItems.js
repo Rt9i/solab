@@ -7,7 +7,7 @@ import SolabContext from '../store/solabContext'
 import Images from '../assets/images/images'
 
 strings
-const CatsStoreItems = ({ selectedCategory, ...props }) => {
+const CatsStoreItems = ({ selectedCategory, displayMode, ...props }) => {
   const meatImg = {
     resizeMode: 'contain',
 
@@ -41,21 +41,6 @@ const CatsStoreItems = ({ selectedCategory, ...props }) => {
     if (isAddedToCart) {
       if (isAddedToCart) {
         console.log("is added to the cart" + isAddedToCart)
-        // Alert.alert(
-        //   'Remove Item',
-        //   'Are you sure you want to remove this item?',
-        //   [
-        //     {
-        //       text: 'Cancel',
-        //       onPress: () => console.log('Cancel Pressed'),
-        //       style: 'cancel',
-        //     },
-        //     {
-        //       text: 'Remove',
-        //       onPress: () => removeItem(id),
-        //     },
-        //   ]
-        // );
         removeItem(id)
 
       }
@@ -73,10 +58,16 @@ const CatsStoreItems = ({ selectedCategory, ...props }) => {
         console.log(Item.quantity);
       }
     }
-
-
     setIsAddedToCart(true);
 
+  };
+  const handleQuantityChange = (text) => {
+    // Ensure the input is a number
+    const parsedQuantity = parseInt(text);
+    if (!isNaN(parsedQuantity)) {
+      setQuantity(parsedQuantity.toString()); // Update the local state
+      onQuantityChange(parsedQuantity); // Pass the new quantity to the parent component
+    }
   };
 
 
@@ -84,10 +75,13 @@ const CatsStoreItems = ({ selectedCategory, ...props }) => {
   return (
     <View style={styles.itemWidth}>
 
+      {displayMode === 'column' && (
+        <View style={styles.disContainer}>
 
-      <View style={styles.disContainer}>
-        <Text style={styles.dis}>{`${dis}`}</Text>
-      </View>
+          <Text style={styles.dis}>{`${dis}`}</Text>
+
+        </View>
+      )}
 
 
       <View style={styles.items}>
@@ -145,7 +139,8 @@ const styles = StyleSheet.create({
     borderColor: 'black',
   },
   disContainer: {
-    flex: 2,
+    width: 250,
+
   },
   itemWidth: {
     paddingTop: 10,

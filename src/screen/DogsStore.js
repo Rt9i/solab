@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList, ScrollView } from 'react-native';
 import CatsStoreItems from '../Components/CatsStoreItems';
 import getCategoryItemsData from '../res/Data';
@@ -6,132 +6,68 @@ import Images from '../assets/images/images';
 import strings from '../res/strings';
 import { useNavigation } from '@react-navigation/native';
 import ScreenNames from '../../routes/ScreenNames';
+import DisplayItem from '../Components/DisplayItem';
+import DogsBarItems from '../Components/DogsBarItems';
+import CheckOptionItems from '../Components/CheckOptionItems';
+import Sizes from '../res/sizes';
+import DogCheckOptionItems from '../Components/dogCheckOptionItems';
 
 const DogsStore = () => {
   const [selectedCategory, setSelectedCategory] = useState('dogFood');
-  const navigation = useNavigation(); 
+  const navigation = useNavigation();
   const [displayMode, setDisplayMode] = useState('row');
+  const [optionsVisible, setOptionsVisible] = useState(false);
+  const [selectedBrands, setSelectedBrands] = useState('');
+
+  const getFilteredItems = () => {
+    let filteredItems = getCategoryItemsData;
 
 
-  const rowOrcolumn = () => { 
-    return (
-      <View style={styles.choiceDisplay}>
-
-        <Text style={styles.displaytxt}>{strings.display}</Text>
-
-        <View style={styles.rowOrcolumn}>
-          <TouchableOpacity activeOpacity={0.7} onPress={() => setDisplayMode('row')} style={[styles.rowItems, { backgroundColor: displayMode === 'row' ? '#4e5e7f' : '#7391c8' }]} >
-
-            <View style={styles.rowbox}>
-              <View style={styles.row}>
-                <View style={styles.box1}>{showImage()}</View>
-                <View style={styles.box1}>{showImage()}</View>
-                <View style={styles.box1}>{showImage()}</View>
-
-              </View>
-              <View style={styles.row}>
-                <View style={styles.box2}>{showImage()}</View>
-                <View style={styles.box2}>{showImage()}</View>
-                <View style={styles.box2}>{showImage()}</View>
-
-              </View>
-            </View>
-
-          </TouchableOpacity>
-
-          <TouchableOpacity activeOpacity={0.7} onPress={() => setDisplayMode('column')} style={[styles.column, { backgroundColor: displayMode === 'column' ? '#4e5e7f' : '#7391c8' }]}>
-
-            <View style={styles.columnbox}>
-              <View style={styles.columnbox1}>
-                <View style={styles.row}>
-                  {showImage()}
-                  <Text style={styles.smalltxt}>hello</Text>
-                </View>
-              </View>
-              <View style={styles.columnbox1}>
-                <View style={styles.row}>
-                  {showImage()}
-                  <Text style={styles.smalltxt}>hello</Text>
-                </View>
-
-              </View>
-              <View style={styles.columnbox1}>
-                <View style={styles.row}>
-                  {showImage()}
-                  <Text style={styles.smalltxt}>hello</Text>
-                </View>
-
-              </View>
-            </View>
-
-          </TouchableOpacity>
-        </View>
-
-      </View>
-
-    )
-
-
-
-  }
-  const showImage = () => {
-    return (
-      <Image source={Images.photo()} style={styles.smallimg} />
-    )
-
-
-  }
-  const renderItem = ({ item }) => (
-    <CatsStoreItems
-      key={item.id}
-      brand={item.brand}
-      taste={item.taste}
-      img={item.img}
-      dis={item.dis}
-      price={item.price}
-      id={item.id}
-      quantity={item.quantity}
-      displayMode={displayMode}
-    />
-  );
-  const renderBar = () => {
-    const accessoriesStyle = {
-      borderWidth: 1,
-      fontSize: 10,
-
-    };
-    const categories = [
-      { id: 'dogFood', name: `${strings.DryFood}`, image: Images.catFood() },
-      { id: 'dogMeat', name: `${strings.meat}`, image: Images.Meat() },
-      { id: 'dogLeash', name: `${strings.accessories}`, image: Images.leash() },
-      { id: 'dogClothes', name: `${strings.Clothes}`, image: Images.catClothes() },
-      { id: 'dogSprays', name: `${strings.Sprays}`, image: Images.spray() },
-
-    ];
-
-    return (
-      <View style={styles.topBar}>
-        {categories.map((category) => (
-          <TouchableOpacity
-            activeOpacity={0.8}
-            key={category.id}
-            style={[
-              styles.category,
-              { backgroundColor: selectedCategory === category.id ? '#4e5e7f' : '#7391c8' },
-            ]}
-            onPress={() => setSelectedCategory(category.id)}
-          >
-            <Image source={category.image} style={styles.categoryImage} />
-            <Text style={[styles.categoryText, category.id === 'dogLeash' ? accessoriesStyle : null]}>{category.name}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+    filteredItems = filteredItems.filter(item =>
+      item.category.includes(selectedCategory)
     );
+
+
+
+    filteredItems = filteredItems.filter(item =>
+      selectedBrands.includes(item.brand)
+    );
+
+
+    return filteredItems;
   };
 
+  useEffect(() => {
+    getFilteredItems()
+  }, [selectedCategory], selectedBrands)
+
+  const renderItem = ({ item }) => {
+    return (
+      <CatsStoreItems
+        key={item.id}
+        brand={item.brand}
+        taste={item.taste}
+        img={item.img}
+        dis={item.dis}
+        price={item.price}
+        id={item.id}
+        quantity={item.quantity}
+        displayMode={displayMode}
+        selectedCategory={selectedCategory}
+        category={item.category}
+
+      />
+    );
+  };
+  const onCategoryPress = (val) => {
+    setSelectedCategory(val)
+    setOptionsVisible(false)
+  }
+
+  const filteredItems = getFilteredItems();
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.container}>
+      <ScrollView style={styles.container} contentContainerStyle={{ minHeight: Sizes.screenHeight }}>
         <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate(ScreenNames.home)} style={styles.touch}>
           <View style={styles.upper}>
 
@@ -151,8 +87,9 @@ const DogsStore = () => {
         </TouchableOpacity>
 
 
-        <View style={styles.sale}>
-          <Text style={styles.saletxt}>Sale</Text>
+
+        {/* <View style={styles.sale}>
+          <Text style={styles.saletxt}>{strings.sale}</Text>
           <View style={styles.salecontainer}>
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
               <Image source={Images.litterSale()} style={styles.saleimg2} />
@@ -160,33 +97,52 @@ const DogsStore = () => {
               <Image source={Images.premioSale()} style={styles.saleimg} />
             </ScrollView>
           </View>
+        </View> */}
 
+
+        <View style={styles.dogssBarItemsContainer}>
+          <DogsBarItems
+            selectedCategory={selectedCategory}
+            setSelectedCategory={onCategoryPress}
+          />
         </View>
-        <View style={styles.topBar}>{renderBar()}</View>
-
-
-
 
         <View style={styles.selectedDisplay} >
-          {rowOrcolumn()}
+          <View style={styles.displayer}>
 
+            <DisplayItem
+              setDisplayMode={setDisplayMode}
+              displayMode={displayMode}
+            />
+
+          </View>
+          <View style={styles.checkItems}>
+            <CheckOptionItems
+              optionsVisible={optionsVisible}
+              setOptionsVisible={setOptionsVisible}
+              selectedBrands={selectedBrands}
+              setSelectedBrands={setSelectedBrands}
+              selectedCategory={selectedCategory}
+              getFilteredItems={getFilteredItems}
+
+            />
+
+          </View>
         </View>
 
-
         <View style={styles.itemscontainer}>
-          {/* <View style={styles.display}> */}
-          <FlatList
-
-            data={getCategoryItemsData}
-            renderItem={renderItem}
-            key={displayMode}
-            keyExtractor={(item) => item.id}
-            numColumns={displayMode === 'row' ? 3 : 1}
-            scrollEnabled={false}
-            contentContainerStyle={{ marginHorizontal: 2 }}
-          />
-          {/* </View> */}
-
+          {filteredItems.length > 0 ? (
+            <FlatList
+              data={filteredItems}
+              renderItem={renderItem}
+              key={displayMode}
+              keyExtractor={(item) => item.id.toString()}
+              numColumns={displayMode === 'row' ? 3 : 1}
+              scrollEnabled={false}
+            />
+          ) : (
+            <Text style={styles.emptyText}>{strings.selectABrand}</Text>
+          )}
         </View>
       </ScrollView>
     </View>
@@ -198,26 +154,32 @@ const DogsStore = () => {
 export default DogsStore
 
 const styles = StyleSheet.create({
-
-  selectedDisplay: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 100,
-    width: 100,
-    marginLeft: 40,
-
-
-
+  emptyText: {
+    marginTop: 150,
+    marginBottom: 150,
+    borderRadius: 20,
+    padding: 10,
+    color: 'white',
+    fontFamily: 'bigFont',
+    textAlign: 'center',
+    fontSize: 30,
+    borderWidth: 1,
+    borderColor: 'white',
+  },
+  row: {
+    flexDirection: 'row',
+  },
+  container: {
+    flex: 1,
+    zIndex: 0,
+    flexDirection: 'column',
+    backgroundColor: '#202020',
   },
   sale: {
     alignItems: 'center',
 
-
   },
   saletxt: {
-    textShadowColor: 'brown',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
     fontFamily: 'bigFont',
     fontSize: 20,
     color: 'red',
@@ -227,163 +189,6 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     borderWidth: 0.7,
     borderColor: 'red',
-
-  },
-  displaytxt: {
-    fontFamily: 'bigFont',
-
-    color: "white",
-    textAlign: 'center',
-    textShadowColor: 'black',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 1,
-  },
-  choiceDisplay: {
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
-    borderWidth: 2,
-    borderColor: 'white',
-    width: 88,
-    backgroundColor: 'grey',
-
-  },
-  smalltxt: {
-    fontSize: 8,
-    fontFamily: 'smallFont',
-
-  },
-  columnbox1: {
-    flexDirection: 'row',
-    backgroundColor: 'grey',
-    marginLeft: 4,
-    marginRight: 4,
-    marginBottom: 1,
-    height: 10,
-
-  },
-  smallimg: {
-    height: 10,
-    width: 10,
-  },
-  box1: {
-    width: 10,
-    height: 10,
-    marginTop: 5,
-    marginLeft: 2,
-    marginRight: 1,
-    backgroundColor: 'grey',
-    borderBottomWidth: 2,
-  },
-  box2: {
-    width: 10,
-    height: 10,
-    marginTop: 20,
-    marginLeft: 2,
-    marginRight: 1,
-    backgroundColor: 'grey',
-    borderBottomWidth: 2,
-  },
-
-  rowbox: {
-    flexDirection: 'column',
-
-  },
-  columnbox: {
-    flexDirection: 'column',
-
-  },
-  touch: {
-
-    height: 70,
-  },
-  column: {
-    marginLeft: 0.2,
-    backgroundColor: 'grey',
-    width: 40,
-    height: 40,
-    borderWidth: 1,
-    borderColor: 'white',
-  },
-  rowItems: {
-    fontSize: 20,
-    borderWidth: 1,
-    backgroundColor: 'black',
-    borderColor: 'white',
-    width: 44,
-    height: 40,
-
-  },
-  rowOrcolumn: {
-    width: 200,
-    flex: 1,
-    flexDirection: 'row',
-  },
-  food: {
-    fontFamily: 'bigFont',
-    fontSize: 40,
-  },
-  saleimg: {
-    marginLeft: 5,
-    height: 130,
-    width: 130,
-
-  },
-  saleimg2: {
-    marginLeft: 5,
-    height: 130,
-    width: 155,
-
-  },
-  salecontainer: {
-
-    padding: 5,
-    borderRadius: 10,
-    backgroundColor: 'black',
-    flex: 1,
-    flexDirection: 'row',
-    height: 130,
-    marginRight: 10,
-    marginLeft: 10,
-    marginBottom: 5,
-    borderWidth: 0.5,
-    borderColor: 'white',
-
-  },
-  itemscontainer: {
-    borderWidth: 1,
-    borderColor: 'white',
-    backgroundColor: 'black',
-    marginVertical: 5,
-    marginHorizontal: 10,
-    borderRadius: 20,
-    paddingLeft: 20,
-  },
-  row: {
-    flex: 1,
-    flexDirection: 'row',
-  },
-  display: {
-    justifyContent: 'center',
-    flex: 8,
-    flexDirection: 'row',
-    padding: 2,
-    backgroundColor: 'grey',
-    borderWidth: 1,
-    borderRadius: 50,
-    marginRight: 10,
-    marginLeft: 10,
-    borderColor: 'white',
-  },
-  bottomLine: {
-    height: 5,
-    width: 270,
-    borderBottomWidth: 3,
-    marginBottom: 45,
-    borderColor: 'white',
-  },
-  image: {
-    width: 55,
-    height: 55,
   },
   upper: {
     flex: 1,
@@ -399,6 +204,10 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
     marginLeft: 20,
   },
+  image: {
+    width: 55,
+    height: 55,
+  },
   solab: {
     flex: 1,
     height: 99,
@@ -409,7 +218,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'column',
   },
-
   solabText: {
     color: '#00B9F4',
     fontFamily: 'bigFont',
@@ -418,8 +226,6 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
   },
-
-
   groomingText: {
     color: 'white',
     fontFamily: 'bigFont',
@@ -428,46 +234,63 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
   },
-  topBar: {
-    height: 50,
-    width: 340,
-    marginTop: 15,
-    marginLeft: 14,
-    flexDirection: 'row',
-    alignItems: 'center',
-
+  bottomLine: {
+    height: 5,
+    width: 270,
+    borderBottomWidth: 3,
+    marginBottom: 45,
+    borderColor: 'white',
   },
-  category: {
+  salecontainer: {
+    padding: 5,
+    borderRadius: 10,
+    backgroundColor: 'black',
+    flexDirection: 'row',
+    height: 140,
+    marginRight: 10,
+    marginLeft: 10,
+    marginBottom: 5,
+    borderWidth: 0.5,
+    borderColor: 'white',
+  },
+  saleimg: {
+    marginLeft: 5,
+    height: 130,
+    width: 130,
+  },
+  saleimg2: {
+    marginLeft: 5,
+    height: 130,
+    width: 155,
+  },
+  dogssBarItemsContainer: {
+    justifyContent: 'center',
+    marginHorizontal: 20,
+  },
+
+  selectedDisplay: {
+
+    flexDirection: 'row',
+    marginTop: 20,
+    marginHorizontal: 30,
+  },
+  displayer: {
+    width: 90,
+  },
+  checkItems: {
     flex: 1,
+    zIndex: 1,
+  },
+  itemscontainer: {
+    alignItems: 'center',
     borderWidth: 2,
     borderColor: 'white',
-    flexDirection: 'column',
-    alignItems: 'center',
-    borderRadius: 50,
-    marginRight: 5,
-    paddingTop: 8,
-  },
-  categoryImage: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'contain',
-    borderRadius: 100,
-
-  },
-  categoryText: {
-    color: 'black',
-    fontFamily: 'smallFont',
-    backgroundColor: '#84a1d2',
-    fontSize: 12,
-    height: 20,
-    width: 68,
-    borderRadius: 10,
-    borderWidth: 1,
-    textAlign: 'center',
-  },
-  container: {
+    backgroundColor: 'black',
+    elevation: 24,
+    marginHorizontal: 10,
+    borderRadius: 20,
+    marginBottom: 150,
     flex: 1,
-    flexDirection: 'column',
-    backgroundColor: '#202020',
+
   },
 });

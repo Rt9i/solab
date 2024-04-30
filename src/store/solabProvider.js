@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import SolabContext from './solabContext';
 import { Alert } from 'react-native';
+import getCategoryItemsData from '../res/Data';
 
 const SolabProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [isItemAdded, setIsItemAdded] = useState(false);
+  const [brands, setBrands] = useState([])
+  const [dogBrands, setDogBrands] = useState([])
 
   const addItem = (item, itemId) => {
     const existingItemIndex = cart.findIndex((item) => item.id === itemId);
@@ -113,7 +116,10 @@ const SolabProvider = ({ children }) => {
     addItem,
     checkRemoveItem,
     removeItemFromCart,
-
+    brands,
+    setBrands,
+    dogBrands,
+    setDogBrands,
   };
 
   return <SolabContext.Provider value={contextValue}>{children}</SolabContext.Provider>;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList, ScrollView, Alert } from 'react-native';
 import CatsStoreItems from '../Components/CatsStoreItems';
 import getCategoryItemsData from '../res/Data';
@@ -9,42 +9,71 @@ import ScreenNames from '../../routes/ScreenNames';
 import DisplayItem from '../Components/DisplayItem';
 import CatsBarItems from '../Components/CatsBarItems';
 import CheckOptionItems from '../Components/CheckOptionItems';
+import Sizes from '../res/sizes';
 
 const CatsStore = () => {
   const [selectedCategory, setSelectedCategory] = useState('catFood');
   const navigation = useNavigation();
   const [displayMode, setDisplayMode] = useState('row');
-  const [selectedBrands, setSelectedBrands] = useState('monges');
+  const [selectedBrands, setSelectedBrands] = useState('');
   const [optionsVisible, setOptionsVisible] = useState(false);
 
-  const brandsInData = getCategoryItemsData.map(item => item.brand);
 
   const getFilteredItems = () => {
-    return getCategoryItemsData.filter(item =>
-      item.category.includes(selectedCategory) && selectedBrands.includes(item.brand)
+    let filteredItems = getCategoryItemsData;
+
+
+    filteredItems = filteredItems.filter(item =>
+      item.category.includes(selectedCategory)
     );
+
+
+
+    filteredItems = filteredItems.filter(item =>
+      selectedBrands.includes(item.brand)
+    );
+
+
+    return filteredItems;
   };
 
 
-  const renderItem = ({ item }) => (
-    <CatsStoreItems
-      key={item.id}
-      brand={item.brand}
-      taste={item.taste}
-      img={item.img}
-      dis={item.dis}
-      price={item.price}
-      id={item.id}
-      quantity={item.quantity}
-      displayMode={displayMode}
-      selectedCategory={selectedCategory}
-      category={item.category}
-    />
-  );
+  useEffect(() => {
+    getFilteredItems()
+  }, [selectedCategory], selectedBrands)
+
+  const renderItem = ({ item }) => {
+    return (
+      <CatsStoreItems
+        key={item.id}
+        brand={item.brand}
+        taste={item.taste}
+        img={item.img}
+        dis={item.dis}
+        price={item.price}
+        id={item.id}
+        quantity={item.quantity}
+        displayMode={displayMode}
+        selectedCategory={selectedCategory}
+        category={item.category}
+
+      />
+    );
+  };
+
+  const onCategoryPress = (val) => {
+    setSelectedCategory(val)
+    setOptionsVisible(false)
+  }
+
+  const filteredItems = getFilteredItems();
+  // console.log('filterTrueBrands:', JSON.stringify(filterTrueBrands()));
 
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.container}>
+      <ScrollView style={styles.scroll} contentContainerStyle={{ minHeight: Sizes.screenHeight }} >
+
+
         <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate(ScreenNames.home)} style={styles.touch}>
           <View style={styles.upper}>
 
@@ -62,9 +91,9 @@ const CatsStore = () => {
 
           </View>
         </TouchableOpacity>
-
+        {/* 
         <View style={styles.sale}>
-          <Text style={styles.saletxt}>Sale</Text>
+          <Text style={styles.saletxt}>{strings.sale}</Text>
           <View style={styles.salecontainer}>
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
               <Image source={Images.litterSale()} style={styles.saleimg2} />
@@ -72,13 +101,13 @@ const CatsStore = () => {
               <Image source={Images.premioSale()} style={styles.saleimg} />
             </ScrollView>
           </View>
-        </View>
+        </View> */}
 
         <View style={styles.CatsBarItemsContainer}>
 
           <CatsBarItems style={styles.CatsBarItems}
             selectedCategory={selectedCategory}
-            setSelectedCategory={setSelectedCategory} />
+            setSelectedCategory={onCategoryPress} />
         </View>
 
         <View style={styles.selectedDisplay} >
@@ -97,23 +126,25 @@ const CatsStore = () => {
               selectedBrands={selectedBrands}
               setSelectedBrands={setSelectedBrands}
               selectedCategory={selectedCategory}
+              getFilteredItems={getFilteredItems}
+
             />
 
           </View>
         </View>
 
         <View style={styles.itemscontainer}>
-          {getFilteredItems().length > 0 ? (
+          {filteredItems.length > 0 ? (
             <FlatList
-              data={getFilteredItems()}
+              data={filteredItems}
               renderItem={renderItem}
               key={displayMode}
-              keyExtractor={(item) => item.id}
+              keyExtractor={(item) => item.id.toString()}
               numColumns={displayMode === 'row' ? 3 : 1}
               scrollEnabled={false}
             />
           ) : (
-            <Text style={styles.emptyText}>select a brand</Text>
+            <Text style={styles.emptyText}>{strings.selectABrand}</Text>
           )}
         </View>
 
@@ -126,10 +157,16 @@ export default CatsStore
 
 const styles = StyleSheet.create({
   emptyText: {
-    height: 200,
+    marginTop: 150,
+    marginBottom: 150,
+    borderRadius: 20,
+    padding: 10,
     color: 'white',
-
+    fontFamily: 'bigFont',
     textAlign: 'center',
+    fontSize: 30,
+    borderWidth: 1,
+    borderColor: 'white',
   },
   touch: {
     height: 70,
@@ -153,7 +190,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: 'black',
     flexDirection: 'row',
-    height: 130,
+    height: 140,
     marginRight: 10,
     marginLeft: 10,
     marginBottom: 5,
@@ -161,18 +198,20 @@ const styles = StyleSheet.create({
     borderColor: 'white',
   },
   itemscontainer: {
-
+    alignItems: 'center',
     borderWidth: 2,
     borderColor: 'white',
     backgroundColor: 'black',
     elevation: 24,
     marginHorizontal: 10,
     borderRadius: 20,
-    paddingLeft: 20,
+
+    flex: 1,
 
   },
   container: {
     flex: 1,
+    zIndex: 0,
     flexDirection: 'column',
     backgroundColor: '#6CCAFF',
   },
@@ -241,24 +280,30 @@ const styles = StyleSheet.create({
   },
   CatsBarItemsContainer: {
     justifyContent: 'center',
-    marginHorizontal: 20,
+
   },
   CatsBarItems: {
   },
   selectedDisplay: {
-    flex: 1,
+    // flex: 1,
     flexDirection: 'row',
     marginTop: 20,
     marginHorizontal: 30,
+    zIndex: 1,
+
+    height: 'auto',
+
   },
   displayer: {
     width: 90,
   },
   checkItems: {
-    width: 90,
 
-    marginBottom: 25,
     zIndex: 1,
 
   },
+  scroll: {
+
+
+  }
 });

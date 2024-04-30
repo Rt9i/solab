@@ -4,14 +4,14 @@ import Images from '../assets/images/images';
 import strings from '../res/strings';
 
 
-const CatsBarItems = ({ selectedCategory, setSelectedCategory }) => {
+const DogsBarItems = ({ selectedCategory, setSelectedCategory }) => {
     const categories = [
-        { id: 'catFood', name: `${strings.DryFood}`, image: Images.catFood() },
-        { id: 'catMeat', name: `${strings.meat}`, image: Images.Meat() },
-        { id: 'catAccessories', name: `${strings.accessories}`, image: Images.leash() },
-        { id: 'catClothes', name: `${strings.Clothes}`, image: Images.catClothes() },
-        { id: 'catSprays', name: `${strings.Sprays}`, image: Images.spray() },
-        { id: 'catToilet', name: `${strings.toilet}`, image: Images.toilet() },
+        { id: 'dogFood', name: `${strings.DryFood}`, image: Images.catFood() },
+        { id: 'dogMeat', name: `${strings.meat}`, image: Images.Meat() },
+        { id: 'dogAccessories', name: `${strings.accessories}`, image: Images.leash() },
+        { id: 'dogClothes', name: `${strings.Clothes}`, image: Images.catClothes() },
+        { id: 'dogSprays', name: `${strings.Sprays}`, image: Images.spray() },
+        { id: 'dogToilet', name: `${strings.toilet}`, image: Images.toilet() },
     ];
 
     const renderBarItems = (category) => {
@@ -44,23 +44,25 @@ const CatsBarItems = ({ selectedCategory, setSelectedCategory }) => {
             data={categories}
             renderItem={({ item }) => renderBarItems(item)}
             keyExtractor={(item) => item.id}
-            showsHorizontalScrollIndicator={false}
+            numColumns={5}
+            scrollEnabled={false}
             style={styles.FlatList}
-            horizontal={true}
+
         />
     );
 
     return renderBar();
 };
 
-export default CatsBarItems;
+export default DogsBarItems;
 
 const styles = StyleSheet.create({
     categoryStyle: {
         width: 70,
         height: 70,
-        marginLeft: 2,
+        paddingBottom: 20,
         flex: 1,
+
     },
     category: {
         flex: 1,
@@ -70,8 +72,8 @@ const styles = StyleSheet.create({
 
     },
     categoryImage: {
-        height: 70,
-        width: 50,
+        width: '100%',
+        height: '100%',
         resizeMode: 'contain',
         borderRadius: 100,
 
@@ -90,7 +92,7 @@ const styles = StyleSheet.create({
     },
     FlatList: {
         width: '100%',
-        height: 100,
+        height: 140,
         paddingHorizontal: 10,
     },
 

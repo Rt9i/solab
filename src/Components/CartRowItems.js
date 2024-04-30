@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import ScreenNames from '../../routes/ScreenNames';
 import SolabContext from '../store/solabContext';
 
-const CartRowItems = props => {
+const CartRowItems = (props) => {
 
     const Item = { ...props };
     const { brand, name, taste, price, img, hideImage, id, onRemove, initialQuantity, quantity } = props;
@@ -13,22 +13,21 @@ const CartRowItems = props => {
     const navigation = useNavigation();
 
     const onCardPress = () => {
-        const item = { ...props };
         navigation.navigate(ScreenNames.ProductScreen, { data: Item });
     };
-
-    const addOrLess = (id) => {
+  
+    const addOrLess = () => {
         return (
             <>
                 <View style={styles.addOrLess}>
-                    <TouchableOpacity onPress={() => checkRemoveItem(id)} style={styles.Xtouch}>
+                    <TouchableOpacity onPress={() => checkRemoveItem(Item, id)} style={styles.Xtouch}>
                         <View style={styles.X}>
                             <Text style={styles.xtxt}>X</Text>
                         </View>
                     </TouchableOpacity>
 
                     <View style={styles.plusMinusInput}>
-                        <TouchableOpacity onPress={() => addItem(id)} style={styles.pluscontainer}>
+                        <TouchableOpacity onPress={() => addItem(Item, id)} style={styles.pluscontainer}>
                             <View style={styles.plus}>
                                 <Text style={styles.plus}>+</Text>
                             </View>
@@ -36,7 +35,7 @@ const CartRowItems = props => {
 
                         <Text style={styles.input}>{quantity}</Text>
 
-                        <TouchableOpacity onPress={() => removeItemFromCart(id)} style={styles.minuscontainer}>
+                        <TouchableOpacity onPress={() => removeItemFromCart(Item, id)} style={styles.minuscontainer}>
                             <View style={styles.minus}>
                                 <Text style={styles.minus}>-</Text>
                             </View>
@@ -59,16 +58,9 @@ const CartRowItems = props => {
 
     return (
         <View style={styles.items}>
-
             {addOrLess()}
-
-
-
         </View>
-
-
     );
-
 };
 
 export default CartRowItems;
