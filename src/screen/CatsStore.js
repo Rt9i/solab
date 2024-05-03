@@ -10,6 +10,8 @@ import DisplayItem from '../Components/DisplayItem';
 import CatsBarItems from '../Components/CatsBarItems';
 import CheckOptionItems from '../Components/CheckOptionItems';
 import Sizes from '../res/sizes';
+import SlideAndSnapAnimation from '../animations/SlideAndSnapAnimation';
+
 
 const CatsStore = () => {
   const [selectedCategory, setSelectedCategory] = useState('catFood');
@@ -19,23 +21,13 @@ const CatsStore = () => {
   const [optionsVisible, setOptionsVisible] = useState(false);
 
 
+
   const getFilteredItems = () => {
-    let filteredItems = getCategoryItemsData;
-
-
-    filteredItems = filteredItems.filter(item =>
-      item.category.includes(selectedCategory)
+    return getCategoryItemsData.filter(
+      item => item.category.includes(selectedCategory) && item.category.includes('firstRow')
     );
-
-
-
-    filteredItems = filteredItems.filter(item =>
-      selectedBrands.includes(item.brand)
-    );
-
-
-    return filteredItems;
   };
+
 
 
   useEffect(() => {
@@ -69,12 +61,16 @@ const CatsStore = () => {
   const filteredItems = getFilteredItems();
   // console.log('filterTrueBrands:', JSON.stringify(filterTrueBrands()));
 
+  const handleScroll = (event) => {
+    const scrollPosition = event.nativeEvent.contentOffset.x;
+    console.log('Scroll position:', scrollPosition);
+  };
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scroll} contentContainerStyle={{ minHeight: Sizes.screenHeight }} >
 
 
-        <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate(ScreenNames.home)} style={styles.touch}>
+        {/* <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate(ScreenNames.home)} style={styles.touch}>
           <View style={styles.upper}>
 
             <View style={styles.loggo}>
@@ -90,18 +86,11 @@ const CatsStore = () => {
             </View>
 
           </View>
-        </TouchableOpacity>
-        {/* 
+        </TouchableOpacity> */}
+
         <View style={styles.sale}>
-          <Text style={styles.saletxt}>{strings.sale}</Text>
-          <View style={styles.salecontainer}>
-            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-              <Image source={Images.litterSale()} style={styles.saleimg2} />
-              <Image source={Images.premioSale()} style={styles.saleimg} />
-              <Image source={Images.premioSale()} style={styles.saleimg} />
-            </ScrollView>
-          </View>
-        </View> */}
+          <SlideAndSnapAnimation onScroll={handleScroll} />
+        </View>
 
         <View style={styles.CatsBarItemsContainer}>
 
@@ -109,7 +98,48 @@ const CatsStore = () => {
             selectedCategory={selectedCategory}
             setSelectedCategory={onCategoryPress} />
         </View>
+        <View style={styles.rows}>
 
+
+          <ScrollView horizontal={true}>
+            <View style={styles.firstRow}>
+              {getFilteredItems().map(item => (
+                <CatsStoreItems
+                  key={item.id}
+                  brand={item.brand}
+                  taste={item.taste}
+                  img={item.img}
+                  dis={item.dis}
+                  price={item.price}
+                  id={item.id}
+                  quantity={item.quantity}
+                  displayMode={displayMode}
+                  selectedCategory={selectedCategory}
+                  category={item.category}
+                />
+              ))}
+            </View>
+          </ScrollView>
+
+
+
+          <ScrollView horizontal={true}>
+            <View style={styles.secondRow}>
+
+            </View>
+          </ScrollView>
+
+
+          <ScrollView horizontal={true}>
+            <View style={styles.thirdRow}>
+
+            </View>
+          </ScrollView>
+
+
+        </View>
+
+        {/* 
         <View style={styles.selectedDisplay} >
           <View style={styles.displayer}>
 
@@ -131,9 +161,9 @@ const CatsStore = () => {
             />
 
           </View>
-        </View>
+        </View> */}
 
-        <View style={styles.itemscontainer}>
+        {/* <View style={styles.itemscontainer}>
           {filteredItems.length > 0 ? (
             <FlatList
               data={filteredItems}
@@ -146,7 +176,7 @@ const CatsStore = () => {
           ) : (
             <Text style={styles.emptyText}>{strings.selectABrand}</Text>
           )}
-        </View>
+        </View> */}
 
       </ScrollView>
     </View>
@@ -156,6 +186,31 @@ const CatsStore = () => {
 export default CatsStore
 
 const styles = StyleSheet.create({
+  rows: {
+
+  },
+  thirdRow: {
+    height: 200,
+    backgroundColor: 'black',
+    borderWidth: 1,
+    margin: 5,
+    borderColor: 'white',
+  },
+  secondRow: {
+    height: 200,
+    backgroundColor: 'black',
+    borderWidth: 1,
+    margin: 5,
+    borderColor: 'white',
+  },
+  firstRow: {
+    flexDirection: 'row',
+    height: 200,
+    backgroundColor: 'black',
+    borderWidth: 1,
+    margin: 5,
+    borderColor: 'white',
+  },
   emptyText: {
     marginTop: 150,
     marginBottom: 150,
@@ -173,6 +228,8 @@ const styles = StyleSheet.create({
   },
   sale: {
     alignItems: 'center',
+    height: 400,
+
   },
   saletxt: {
     fontFamily: 'bigFont',

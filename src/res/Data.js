@@ -532,7 +532,7 @@ const getCategoryItemsData =
         'catSprays',
       ]
     },
-  
+
     {
       id: 'meat14',
       price: 5,
@@ -542,6 +542,7 @@ const getCategoryItemsData =
       dis: 'meaty',
       category: [
         'catMeat',
+        'firstRow'
       ]
 
     },
@@ -554,6 +555,7 @@ const getCategoryItemsData =
       dis: 'meaty',
       category: [
         'catMeat',
+        'firstRow'
       ]
 
     },
@@ -566,6 +568,7 @@ const getCategoryItemsData =
       dis: 'meaty',
       category: [
         'catMeat',
+        'firstRow'
       ]
 
     },
@@ -578,6 +581,7 @@ const getCategoryItemsData =
       dis: 'meaty',
       category: [
         'catMeat',
+
       ]
     },
     {
@@ -589,6 +593,7 @@ const getCategoryItemsData =
       dis: 'meaty',
       category: [
         'catMeat',
+
       ]
     },
     {
@@ -611,6 +616,7 @@ const getCategoryItemsData =
       dis: 'meaty',
       category: [
         'catMeat',
+        'firstRow',
       ]
     },
     {
@@ -622,6 +628,19 @@ const getCategoryItemsData =
       dis: 'meaty',
       category: [
         'catMeat',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'meat57',
+      price: 5,
+      brand: 'simba',
+      taste: 'Turkey & Kidney',
+      img: Images.catSimbaRabbit(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+        'firstRow',
       ]
     },
     {
@@ -633,6 +652,7 @@ const getCategoryItemsData =
       dis: 'meaty',
       category: [
         'catMeat',
+        'firstRow',
       ]
     },
     {
@@ -644,6 +664,7 @@ const getCategoryItemsData =
       dis: 'meaty',
       category: [
         'catMeat',
+        'firstRow',
       ]
     },
     {
@@ -655,6 +676,7 @@ const getCategoryItemsData =
       dis: 'meaty',
       category: [
         'catMeat',
+        'firstRow',
       ]
     },
     {
@@ -666,6 +688,7 @@ const getCategoryItemsData =
       dis: 'meaty',
       category: [
         'catMeat',
+        'firstRow',
       ]
     },
     {
@@ -677,6 +700,7 @@ const getCategoryItemsData =
       dis: 'meaty',
       category: [
         'catMeat',
+        'firstRow',
       ]
     },
     {
@@ -688,6 +712,7 @@ const getCategoryItemsData =
       dis: 'meaty',
       category: [
         'catMeat',
+        'firstRow',
       ]
     },
     {
@@ -699,6 +724,7 @@ const getCategoryItemsData =
       dis: 'meaty',
       category: [
         'catMeat',
+        'firstRow',
       ]
     },
     {
@@ -709,6 +735,7 @@ const getCategoryItemsData =
       img: Images.lacatSalmonCod(),
       dis: 'meaty',
       category: [
+        'firstRow',
         'catMeat',
       ]
     },
@@ -721,6 +748,7 @@ const getCategoryItemsData =
       dis: 'meaty',
       category: [
         'catMeat',
+        
       ]
 
     },

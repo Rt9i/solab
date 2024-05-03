@@ -1,8 +1,7 @@
-import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image, FlatList } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, Image, FlatList, Animated, Easing } from 'react-native';
 import Images from '../assets/images/images';
 import strings from '../res/strings';
-
 
 const CatsBarItems = ({ selectedCategory, setSelectedCategory }) => {
     const categories = [
@@ -12,15 +11,36 @@ const CatsBarItems = ({ selectedCategory, setSelectedCategory }) => {
         { id: 'catClothes', name: `${strings.Clothes}`, image: Images.catClothes() },
         { id: 'catSprays', name: `${strings.Sprays}`, image: Images.spray() },
         { id: 'catToilet', name: `${strings.toilet}`, image: Images.toilet() },
+        { id: 'catTreats', name: `${strings.treats}`, image: Images.treats() },
     ];
 
-    const renderBarItems = (category) => {
+    const [animatedValues, setAnimatedValues] = useState(categories.map(() => new Animated.Value(1)));
+
+    const renderBarItems = (category, index) => {
         const accessoriesStyle = {
             borderWidth: 1,
             fontSize: 10,
         };
+
+        const animateBounce = () => {
+            Animated.sequence([
+                Animated.timing(animatedValues[index], {
+                    toValue: 1.05,
+                    duration: 100,
+                    easing: Easing.linear,
+                    useNativeDriver: true,
+                }),
+                Animated.timing(animatedValues[index], {
+                    toValue: 1,
+                    duration: 100,
+                    easing: Easing.linear,
+                    useNativeDriver: true,
+                }),
+            ]).start();
+        };
+
         return (
-            <View style={styles.categoryStyle}>
+            <Animated.View style={[styles.categoryStyle, { transform: [{ scale: animatedValues[index] }] }]}>
                 <TouchableOpacity
                     activeOpacity={0.8}
                     key={category.id}
@@ -28,21 +48,24 @@ const CatsBarItems = ({ selectedCategory, setSelectedCategory }) => {
                         styles.category,
                         { backgroundColor: selectedCategory === category.id ? '#7391c8' : '#4e5e7f' },
                     ]}
-                    onPress={() => setSelectedCategory(category.id)}
+                    onPress={() => {
+                        setSelectedCategory(category.id);
+                        animateBounce();
+                    }}
                 >
                     <Image source={category.image} style={styles.categoryImage} />
                     <Text style={[styles.categoryText, category.id === 'catAccessories' ? accessoriesStyle : null]}>
                         {category.name}
                     </Text>
                 </TouchableOpacity>
-            </View>
+            </Animated.View>
         );
     };
 
     const renderBar = () => (
         <FlatList
             data={categories}
-            renderItem={({ item }) => renderBarItems(item)}
+            renderItem={({ item, index }) => renderBarItems(item, index)}
             keyExtractor={(item) => item.id}
             showsHorizontalScrollIndicator={false}
             style={styles.FlatList}
@@ -59,7 +82,8 @@ const styles = StyleSheet.create({
     categoryStyle: {
         width: 70,
         height: 70,
-        marginLeft: 2,
+        marginTop: 5,
+        marginRight: 8,
         flex: 1,
     },
     category: {
@@ -67,14 +91,12 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         alignItems: 'center',
         borderRadius: 50,
-
     },
     categoryImage: {
         height: 70,
         width: 50,
         resizeMode: 'contain',
         borderRadius: 100,
-
     },
     categoryText: {
         color: 'black',
@@ -86,13 +108,10 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 1,
         textAlign: 'center',
-
     },
     FlatList: {
         width: '100%',
         height: 100,
         paddingHorizontal: 10,
     },
-
-
 });

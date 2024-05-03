@@ -10,7 +10,7 @@ import DisplayItem from '../Components/DisplayItem';
 import DogsBarItems from '../Components/DogsBarItems';
 import CheckOptionItems from '../Components/CheckOptionItems';
 import Sizes from '../res/sizes';
-import DogCheckOptionItems from '../Components/dogCheckOptionItems';
+
 
 const DogsStore = () => {
   const [selectedCategory, setSelectedCategory] = useState('dogFood');

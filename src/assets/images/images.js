@@ -7,6 +7,8 @@ const Images = {
     catClothes: () => require('./photos/catClothes.png'),
     spray: () => require('./photos/spray.png'),
     leash: () => require('./photos/leash.png'),
+    treats: () => require('./photos/treats.png'),
+
     home: () => require('./photos/home.png'),
     dogIcon: () => require('./photos/dogIcon.png'),
     catIcon: () => require('./photos/catIcon.png'),
