@@ -1,4 +1,5 @@
 import Images from "../assets/images/images";
+import strings from "./strings";
 //  category: [
 //     'catFood',
 //     'catMeat',
@@ -11,9 +12,71 @@ import Images from "../assets/images/images";
 //     'dogAccessories',
 //     'dogClothes',
 //     'dogSprays',
+//     'catTreats',
 //   ]
 const getCategoryItemsData =
   [
+    {
+      id: 'catTreats',
+      price: 15,
+      brand: 'premio',
+      taste: 'Anti hairball',
+      img: Images.premioTreatAntiHairBall(),
+      dis: 'anti hair treats helpes the cat with harballs',
+      category: [
+        'catTreats',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'catTreats3',
+      price: 15,
+      brand: 'premio',
+      taste: 'denta Chews',
+      img: Images.premioTreatPillows(),
+      dis: '',
+      category: [
+        'catTreats',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'catTreats4',
+      price: 15,
+      brand: 'premio',
+      taste: 'catnip',
+      img: Images.premioTreatCatnip(),
+      dis: '',
+      category: [
+        'catTreats',
+        'firstRow',
+      ]
+    },
+
+    {
+      id: 'catTreats5',
+      price: 40,
+      brand: '',
+      taste: 'catBiscuts',
+      img: Images.catBiscuts(),
+      dis: '',
+      category: [
+        'catTreats',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'catTreats2',
+      price: 15,
+      brand: 'premio',
+      taste: 'Anti hairball',
+      img: Images.premioTreatKitten(),
+      dis: 'anti hair treats helpes the cat with harballs',
+      category: [
+        'catTreats',
+        'secondRow',
+      ]
+    },
     {
       id: 'toilet',
       price: 200,
@@ -23,7 +86,8 @@ const getCategoryItemsData =
       dis: 'bathroom?',
 
       category: [
-        'cattoilet',
+        'catToilet',
+        'firstRow',
       ]
 
     },
@@ -112,8 +176,42 @@ const getCategoryItemsData =
 
 
 
-
-
+    {
+      id: 'Fooder2s3',
+      price: 100,
+      brand: 'cango',
+      taste: 'Beef',
+      img: Images.cangoAdultLambRice(),
+      dis: 'doorlsChicken',
+      category: [
+        'catFood',
+        'thirdRow',
+      ]
+    },
+    {
+      id: 'Fooder2',
+      price: 100,
+      brand: 'bado',
+      taste: 'Chicken',
+      img: Images.badoAdultChicken(),
+      dis: 'doorlsChicken',
+      category: [
+        'catFood',
+        'thirdRow',
+      ]
+    },
+    {
+      id: 'Fooder23',
+      price: 100,
+      brand: 'bado',
+      taste: 'Beef',
+      img: Images.badoAdultBeef(),
+      dis: 'doorlsChicken',
+      category: [
+        'catFood',
+        'thirdRow',
+      ]
+    },
     {
       id: 'Food1',
       price: 100,
@@ -123,17 +221,7 @@ const getCategoryItemsData =
       dis: 'doorlsChicken',
       category: [
         'catFood',
-      ]
-    },
-    {
-      id: 'Food2',
-      price: 100,
-      brand: 'drools',
-      taste: 'Oceanfish',
-      img: Images.droolsKittenOceanfish(),
-      dis: 'doorlsChicken',
-      category: [
-        'catFood',
+        'eigthRow',
       ]
     },
     {
@@ -145,10 +233,48 @@ const getCategoryItemsData =
       dis: 'doorlsChicken',
       category: [
         'catFood',
+        'eigthRow',
       ]
     },
     {
-      id: 'Food4',
+      id: 'Food345s',
+      price: 100,
+      brand: 'drools',
+      taste: 'OceanFish',
+      img: Images.droolsCompleteOceanFish(),
+      dis: 'doorlsChicken',
+      category: [
+        'catFood',
+        'eigthRow',
+      ]
+    },
+
+    {
+      id: 'Food2',
+      price: 100,
+      brand: 'drools',
+      taste: 'Oceanfish',
+      img: Images.droolsKittenOceanfish(),
+      dis: 'doorlsChicken',
+      category: [
+        'catFood',
+        'secondRow',
+      ]
+    },
+    {
+      id: 'Foods78',
+      price: 100,
+      brand: 'Friskies',
+      taste: 'SeaFood',
+      img: Images.friskiesSeaFoodTunaSalmonWhitefishCrabShrimp(),
+      dis: 'doorlsChicken',
+      category: [
+        'catFood',
+        'firstRow'
+      ]
+    },
+    {
+      id: 'Food587',
       price: 100,
       brand: 'Friskies',
       taste: 'Chicken&Salmon&Gravy',
@@ -156,6 +282,32 @@ const getCategoryItemsData =
       dis: 'doorlsChicken',
       category: [
         'catFood',
+        'firstRow'
+      ]
+    },
+
+    {
+      id: 'Food6',
+      price: 100,
+      brand: 'Friskies',
+      taste: 'Chicken&beef&carrots&greenBeans',
+      img: Images.FriskiesTenderCrunchyCombo(),
+      dis: 'doorlsChicken',
+      category: [
+        'catFood',
+        'firstRow'
+      ]
+    },
+    {
+      id: 'Food100',
+      price: 100,
+      brand: 'Friskies',
+      taste: 'beef&carrots&greenBeans',
+      img: Images.FriskiesSurfinTurfin(),
+      dis: 'doorlsChicken',
+      category: [
+        'catFood',
+        'firstRow'
       ]
     },
     {
@@ -167,17 +319,32 @@ const getCategoryItemsData =
       dis: 'doorlsChicken',
       category: [
         'catFood',
+        'firstRow'
       ]
     },
     {
-      id: 'Food6',
+      id: 'Food566',
       price: 100,
       brand: 'Friskies',
-      taste: 'beef&carrots&greenBeans',
-      img: Images.FriskiesTenderCrunchyCombo(),
+      taste: 'hicken&Salmon&Gravy',
+      img: Images.friskiesGravySwirlersChickenSalmonGravy16Pounds(),
       dis: 'doorlsChicken',
       category: [
         'catFood',
+        'firstRow'
+      ]
+    },
+
+    {
+      id: 'Food4',
+      price: 100,
+      brand: 'Friskies',
+      taste: 'Chicken&Beef&Carrots&GreenBeans',
+      img: Images.FriskiesTenderCrunchy16Pounds(),
+      dis: 'doorlsChicken',
+      category: [
+        'catFood',
+        'firstRow'
       ]
     },
     {
@@ -189,6 +356,7 @@ const getCategoryItemsData =
       dis: 'doorlsChicken',
       category: [
         'catFood',
+        'secondRow'
       ]
     },
     {
@@ -200,6 +368,7 @@ const getCategoryItemsData =
       dis: 'doorlsChicken',
       category: [
         'catFood',
+        'thirdRow'
       ]
     },
     {
@@ -211,6 +380,7 @@ const getCategoryItemsData =
       dis: 'doorlsChicken',
       category: [
         'catFood',
+        'thirdRow'
       ]
     },
     {
@@ -222,6 +392,7 @@ const getCategoryItemsData =
       dis: 'doorlsChicken',
       category: [
         'catFood',
+        'thirdRow',
       ]
     },
     {
@@ -233,6 +404,7 @@ const getCategoryItemsData =
       dis: 'doorlsChicken',
       category: [
         'catFood',
+        'thirdRow',
       ]
     },
     {
@@ -244,6 +416,7 @@ const getCategoryItemsData =
       dis: 'doorlsChicken',
       category: [
         'catFood',
+        'fourthRow',
       ]
     },
     {
@@ -255,6 +428,7 @@ const getCategoryItemsData =
       dis: 'doorlsChicken',
       category: [
         'catFood',
+        'fourthRow',
       ]
     },
     {
@@ -266,6 +440,7 @@ const getCategoryItemsData =
       dis: 'doorlsChicken',
       category: [
         'catFood',
+        'fourthRow',
       ]
     },
     {
@@ -277,6 +452,31 @@ const getCategoryItemsData =
       dis: 'doorlsChicken',
       category: [
         'catFood',
+        'secondRow',
+      ]
+    },
+    {
+      id: 'Food33',
+      price: 100,
+      brand: 'monge',
+      taste: 'Trout',
+      img: Images.mongeKittenTrout(),
+      dis: 'doorlsChicken',
+      category: [
+        'catFood',
+        'secondRow',
+      ]
+    },
+    {
+      id: 'Food34',
+      price: 100,
+      brand: 'monge',
+      taste: 'Codfish',
+      img: Images.mongeSterillisedCodfish(),
+      dis: 'doorlsChicken',
+      category: [
+        'catFood',
+        'fourthRow',
       ]
     },
     {
@@ -288,10 +488,23 @@ const getCategoryItemsData =
       dis: 'doorlsChicken',
       category: [
         'catFood',
+        'fourthRow',
       ]
     },
     {
-      id: 'Food17',
+      id: 'Food20',
+      price: 100,
+      brand: 'monge',
+      taste: 'chicken',
+      img: Images.moongeSterilisedTrout(),
+      dis: 'doorlsChicken',
+      category: [
+        'catFood',
+        'fourthRow',
+      ]
+    },
+    {
+      id: 'Food1w7',
       price: 100,
       brand: 'ND',
       taste: 'Herring&Irange',
@@ -299,6 +512,19 @@ const getCategoryItemsData =
       dis: 'doorlsChicken',
       category: [
         'catFood',
+        'thirdRow',
+      ]
+    },
+    {
+      id: 'Food17df',
+      price: 100,
+      brand: 'ND',
+      taste: 'Cod&Shrimp&Pumkin&Melon',
+      img: Images.NDCodShrimpPumkinCantaloupeMelon(),
+      dis: 'doorlsChicken',
+      category: [
+        'catFood',
+        'thirdRow',
       ]
     },
     {
@@ -310,6 +536,43 @@ const getCategoryItemsData =
       dis: 'doorlsChicken',
       category: [
         'catFood',
+        'ninthRow',
+      ]
+    },
+    {
+      id: 'Food18t',
+      price: 100,
+      brand: 'pets Choice',
+      taste: 'Chicken&Rice',
+      img: Images.petsChoiceAdultChickenRice(),
+      dis: 'doorlsChicken',
+      category: [
+        'catFood',
+        'ninthRow',
+      ]
+    },
+    {
+      id: 'Food18r',
+      price: 100,
+      brand: 'pets Choice',
+      taste: 'Lamb&Rice',
+      img: Images.petsChoiceAdultLambRice(),
+      dis: 'doorlsChicken',
+      category: [
+        'catFood',
+        'ninthRow',
+      ]
+    },
+    {
+      id: 'Food18e',
+      price: 100,
+      brand: 'pets Choice',
+      taste: 'Chicken&Rice',
+      img: Images.petsChoiceKittenFoodChickenRice(),
+      dis: 'doorlsChicken',
+      category: [
+        'catFood',
+        'secondRow',
       ]
     },
 
@@ -322,6 +585,7 @@ const getCategoryItemsData =
       dis: 'doorlsChicken',
       category: [
         'catFood',
+        'sixthRow',
       ]
     },
     {
@@ -333,6 +597,7 @@ const getCategoryItemsData =
       dis: 'doorlsChicken',
       category: [
         'catFood',
+        'sixthRow',
       ]
     },
     {
@@ -344,6 +609,7 @@ const getCategoryItemsData =
       dis: 'doorlsChicken',
       category: [
         'catFood',
+        'sixthRow',
       ]
     },
     {
@@ -355,6 +621,7 @@ const getCategoryItemsData =
       dis: 'doorlsChicken',
       category: [
         'catFood',
+        'sixthRow',
       ]
     },
     {
@@ -366,6 +633,7 @@ const getCategoryItemsData =
       dis: 'doorlsChicken',
       category: [
         'catFood',
+        'sixthRow',
       ]
     },
     {
@@ -377,6 +645,67 @@ const getCategoryItemsData =
       dis: 'doorlsChicken',
       category: [
         'catFood',
+        'sixthRow',
+      ]
+    },
+    {
+      id: 'Food36',
+      price: 100,
+      brand: 'Reflex',
+      taste: 'chicken&Rice',
+      img: Images.reflexAdultChickenRice(),
+      dis: 'doorlsChicken',
+      category: [
+        'catFood',
+        'sixthRow',
+      ]
+    },
+    {
+      id: 'Food37',
+      price: 100,
+      brand: 'Reflex',
+      taste: 'chicken',
+      img: Images.reflexKittenChicken(),
+      dis: 'doorlsChicken',
+      category: [
+        'catFood',
+        'secondRow',
+      ]
+    },
+    {
+      id: 'Food38',
+      price: 100,
+      brand: 'Reflex',
+      taste: 'Chicken',
+      img: Images.reflexSterilisedChicken(),
+      dis: 'doorlsChicken',
+      category: [
+        'catFood',
+        'sixthRow',
+      ]
+    },
+    {
+      id: 'Food39',
+      price: 100,
+      brand: 'Reflex',
+      taste: 'Choosy',
+      img: Images.reflexChoosy(),
+      dis: 'doorlsChicken',
+      category: [
+        'catFood',
+        'sixthRow',
+      ]
+    },
+    {
+      id: 'Food40',
+      price: 100,
+      brand: 'Reflex',
+      taste: 'Salmon',
+      img: Images.reflexHairBallSalmon(),
+      dis: 'doorlsChicken',
+      category: [
+        'catFood',
+        'sixthRow',
       ]
     },
     {
@@ -388,6 +717,7 @@ const getCategoryItemsData =
       dis: 'doorlsChicken',
       category: [
         'catFood',
+        'fifthRow',
       ]
     },
     {
@@ -399,6 +729,7 @@ const getCategoryItemsData =
       dis: 'doorlsChicken',
       category: [
         'catFood',
+        'secondRow',
       ]
     },
     {
@@ -410,6 +741,7 @@ const getCategoryItemsData =
       dis: 'doorlsChicken',
       category: [
         'catFood',
+        'fifthRow',
       ]
     },
     {
@@ -421,6 +753,7 @@ const getCategoryItemsData =
       dis: 'doorlsChicken',
       category: [
         'catFood',
+        'thirdRow',
       ]
     },
     {
@@ -432,6 +765,31 @@ const getCategoryItemsData =
       dis: 'doorlsChicken',
       category: [
         'catFood',
+        'secondRow',
+      ]
+    },
+    {
+      id: 'Food3d034',
+      price: 100,
+      brand: 'laCat',
+      taste: 'Chicken',
+      img: Images.lacatChickenAdult(),
+      dis: 'doorlsChicken',
+      category: [
+        'catFood',
+        'thirdRow',
+      ]
+    },
+    {
+      id: 'Food3d0234',
+      price: 100,
+      brand: 'laCat',
+      taste: 'Chicken',
+      img: Images.lacatKittensChicken(),
+      dis: 'doorlsChicken',
+      category: [
+        'catFood',
+        'thirdRow',
       ]
     },
     {
@@ -443,10 +801,11 @@ const getCategoryItemsData =
       dis: 'doorlsChicken',
       category: [
         'catFood',
+        'seventhRow',
       ]
     },
     {
-      id: 'Food19',
+      id: 'Food193e',
       price: 100,
       brand: 'premio',
       taste: 'chicken',
@@ -454,6 +813,67 @@ const getCategoryItemsData =
       dis: 'doorlsChicken',
       category: [
         'catFood',
+        'seventhRow',
+      ]
+    },
+    {
+      id: 'Food129',
+      price: 100,
+      brand: 'premio',
+      taste: 'chicken',
+      img: Images.premioChickenFood(),
+      dis: 'doorlsChicken',
+      category: [
+        'catFood',
+        'seventhRow',
+      ]
+    },
+    {
+      id: 'Food2419',
+      price: 100,
+      brand: 'premio',
+      taste: 'chicken',
+      img: Images.kittenChickenPremio(),
+      dis: 'doorlsChicken',
+      category: [
+        'catFood',
+        'secondRow',
+      ]
+    },
+    {
+      id: 'Food41',
+      price: 100,
+      brand: 'royalcanin',
+      taste: 'chicken',
+      img: Images.royalcaninSterilisedFood(),
+      dis: 'doorlsChicken',
+      category: [
+        'catFood',
+        'fifthRow',
+      ]
+    },
+    {
+      id: 'Food413ds',
+      price: 100,
+      brand: 'royalcanin',
+      taste: 'special',
+      img: Images.royalCaninMotherBabycat(),
+      dis: 'doorlsChicken',
+      category: [
+        'catFood',
+        'fifthRow',
+      ]
+    },
+    {
+      id: 'Food42',
+      price: 100,
+      brand: 'royalcanin',
+      taste: 'special',
+      img: Images.royalcaninKittenDryFood(),
+      dis: '1.2kg',
+      category: [
+        'catFood',
+        'secondRow',
       ]
     },
 
@@ -469,6 +889,7 @@ const getCategoryItemsData =
       dis: 'Leash Item 1 Description',
       category: [
         'catAccessories',
+        'firstRow'
       ]
     },
 
@@ -483,6 +904,7 @@ const getCategoryItemsData =
       dis: 'Clothes Item 1 Description',
       category: [
         'catClothes',
+        'firstRow'
       ]
     },
     {
@@ -494,6 +916,7 @@ const getCategoryItemsData =
       dis: 'Clothes Item 1 Description',
       category: [
         'catClothes',
+        'firstRow'
       ]
     },
 
@@ -508,6 +931,7 @@ const getCategoryItemsData =
       dis: 'sprays Item 1 Description',
       category: [
         'catSprays',
+        'firstRow',
       ]
     },
     {
@@ -519,6 +943,7 @@ const getCategoryItemsData =
       dis: 'sprays Item 1 Description',
       category: [
         'catSprays',
+        'firstRow',
       ]
     },
     {
@@ -530,6 +955,7 @@ const getCategoryItemsData =
       dis: 'sprays Item 1 Description',
       category: [
         'catSprays',
+        'firstRow',
       ]
     },
 
@@ -546,6 +972,31 @@ const getCategoryItemsData =
       ]
 
     },
+    {
+      id: 'meat4w',
+      price: 5,
+      brand: 'premio',
+      taste: 'Tuna&Papaya&Gravy',
+      img: Images.premioTunaPapayaGravy(),
+      dis: '',
+      category: [
+        'catMeat',
+        'fifthRow',
+      ]
+    },
+    {
+      id: 'meat4ws',
+      price: 5,
+      brand: 'premio',
+      taste: 'Tuna&Aloevera&Gravy',
+      img: Images.PremioTunaAloeveraGravy(),
+      dis: '',
+      category: [
+        'catMeat',
+        'fifthRow',
+      ]
+    },
+
     {
       id: 'meat15',
       price: 5,
@@ -620,6 +1071,42 @@ const getCategoryItemsData =
       ]
     },
     {
+      id: 'meat4wsw',
+      price: 5,
+      brand: 'simba',
+      taste: 'Duck',
+      img: Images.simbaDuck(),
+      dis: '',
+      category: [
+        'catMeat',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'meat4wssdw',
+      price: 5,
+      brand: 'simba',
+      taste: 'Lamb',
+      img: Images.simbaLamb(),
+      dis: '',
+      category: [
+        'catMeat',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'meat4wssd23w',
+      price: 5,
+      brand: 'simba',
+      taste: 'Beef',
+      img: Images.simbaBeef(),
+      dis: '',
+      category: [
+        'catMeat',
+        'firstRow',
+      ]
+    },
+    {
       id: 'meat21',
       price: 5,
       brand: 'simba',
@@ -644,27 +1131,124 @@ const getCategoryItemsData =
       ]
     },
     {
-      id: 'meat22',
+      id: 'meat22wd',
+      price: 8,
+      brand: 'premio',
+      taste: 'Tuna',
+      img: Images.premioCanTuna(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+        'secondRow',
+      ]
+    },
+    {
+      id: 'meat22w23d',
+      price: 8,
+      brand: 'premio',
+      taste: 'Chicken&Duck',
+      img: Images.premioCanChickenDuck(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+        'secondRow',
+      ]
+    },
+    {
+      id: 'meat22w23dd',
+      price: 8,
+      brand: 'premio',
+      taste: 'Salmon',
+      img: Images.premioKittenCanSalmon(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+        'fourthRow',
+      ]
+    },
+    {
+      id: 'meat22w2323dd',
+      price: 8,
+      brand: 'premio',
+      taste: 'Chicken',
+      img: Images.premioKittenCanChicken(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+        'fourthRow',
+      ]
+    },
+    {
+      id: 'meat295',
       price: 5,
+      brand: 'wanpy',
+      taste: 'Chicken',
+      img: Images.wanpyTunaChickenCarrot(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+        'sixthRow',
+      ]
+    },
+    {
+      id: 'meat29w5',
+      price: 5,
+      brand: 'wanpy',
+      taste: 'Duck&Pumkin',
+      img: Images.wanpyDuckPumkin(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+        'sixthRow',
+      ]
+    },
+    {
+      id: 'meat22',
+      price: 8,
+      brand: 'elizacat',
+      taste: 'Beef',
+      img: Images.elizacatSalmon(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+        'secondRow',
+      ]
+    },
+
+    {
+      id: '59',
+      price: 8,
+      brand: 'elizacat',
+      taste: 'Beef',
+      img: Images.elizacatTurkey(),
+      dis: 'meaty',
+      category: [
+        'catMeat',
+        'secondRow',
+      ]
+    },
+    {
+      id: '58',
+      price: 8,
       brand: 'elizacat',
       taste: 'Beef',
       img: Images.elizacatBeef(),
       dis: 'meaty',
       category: [
         'catMeat',
-        'firstRow',
+        'secondRow',
       ]
     },
     {
       id: 'meat23',
-      price: 5,
+      price: 8,
       brand: 'elizacat',
       taste: 'FishVegetable',
       img: Images.elizacatFishVegetable(),
       dis: 'meaty',
       category: [
         'catMeat',
-        'firstRow',
+        'secondRow',
       ]
     },
     {
@@ -676,7 +1260,7 @@ const getCategoryItemsData =
       dis: 'meaty',
       category: [
         'catMeat',
-        'firstRow',
+        'seventhRow',
       ]
     },
     {
@@ -688,54 +1272,54 @@ const getCategoryItemsData =
       dis: 'meaty',
       category: [
         'catMeat',
-        'firstRow',
+        'seventhRow',
       ]
     },
     {
       id: 'meat26',
-      price: 5,
+      price: 8,
       brand: 'lacat',
       taste: 'Chicken',
       img: Images.lacatChicken(),
       dis: 'meaty',
       category: [
         'catMeat',
-        'firstRow',
+        'secondRow',
       ]
     },
     {
       id: 'meat27',
-      price: 5,
+      price: 8,
       brand: 'lacat',
       taste: 'Duck&Turkey',
       img: Images.lacatDuckTurkey(),
       dis: 'meaty',
       category: [
         'catMeat',
-        'firstRow',
+        'secondRow',
       ]
     },
     {
       id: 'meat28',
-      price: 5,
+      price: 8,
       brand: 'lacat',
       taste: 'Salmon',
       img: Images.lacatSalmon(),
       dis: 'meaty',
       category: [
         'catMeat',
-        'firstRow',
+        'secondRow',
       ]
     },
     {
       id: 'meat29',
-      price: 5,
+      price: 8,
       brand: 'lacat',
       taste: 'Salmon&Cod',
       img: Images.lacatSalmonCod(),
       dis: 'meaty',
       category: [
-        'firstRow',
+        'secondRow',
         'catMeat',
       ]
     },
@@ -748,7 +1332,7 @@ const getCategoryItemsData =
       dis: 'meaty',
       category: [
         'catMeat',
-        
+        'thirdRow',
       ]
 
     },
@@ -760,7 +1344,7 @@ const getCategoryItemsData =
       img: Images.premioDeliCatBeefLiver(),
       dis: 'meaty',
       category: [
-        'catMeat',
+        'catMeat', 'fourthRow',
       ]
 
     },
@@ -772,7 +1356,7 @@ const getCategoryItemsData =
       img: Images.premioDeliCatChicken(),
       dis: 'meaty',
       category: [
-        'catMeat',
+        'catMeat', 'thirdRow',
       ]
 
     },
@@ -784,7 +1368,7 @@ const getCategoryItemsData =
       img: Images.premioDeliCatChickenCarrotsMilk(),
       dis: 'meaty',
       category: [
-        'catMeat',
+        'catMeat', 'fourthRow',
       ]
 
     },
@@ -796,7 +1380,7 @@ const getCategoryItemsData =
       img: Images.premioDeliCatChickenDuckVegetables(),
       dis: 'meaty',
       category: [
-        'catMeat',
+        'catMeat', 'thirdRow',
       ]
 
     },
@@ -808,7 +1392,7 @@ const getCategoryItemsData =
       img: Images.premioDeliCatChickenHerbs(),
       dis: 'meaty',
       category: [
-        'catMeat',
+        'catMeat', 'thirdRow',
       ]
 
     },
@@ -820,7 +1404,7 @@ const getCategoryItemsData =
       img: Images.premioDeliCatChickenLiver(),
       dis: 'meaty',
       category: [
-        'catMeat',
+        'catMeat', 'fourthRow',
       ]
 
     },
@@ -833,6 +1417,7 @@ const getCategoryItemsData =
       dis: 'meaty',
       category: [
         'catMeat',
+        'thirdRow',
       ]
 
     },
@@ -845,6 +1430,7 @@ const getCategoryItemsData =
       dis: 'meaty',
       category: [
         'catMeat',
+        'thirdRow',
       ]
 
     },
@@ -857,6 +1443,7 @@ const getCategoryItemsData =
       dis: 'meaty',
       category: [
         'catMeat',
+        'thirdRow',
       ]
 
     },
@@ -869,6 +1456,7 @@ const getCategoryItemsData =
       dis: 'meaty',
       category: [
         'catMeat',
+        'fourthRow',
       ]
 
     },
@@ -881,6 +1469,7 @@ const getCategoryItemsData =
       dis: 'meaty',
       category: [
         'catMeat',
+        'thirdRow',
       ]
 
     },
@@ -893,6 +1482,7 @@ const getCategoryItemsData =
       dis: 'meaty',
       category: [
         'catMeat',
+
       ]
     },
     {
@@ -1084,46 +1674,51 @@ const getCategoryItemsData =
     },
     {
       id: 'meat49',
-      price: 5,
+      price: 7,
       brand: 'schesir',
       taste: 'Chicken',
       img: Images.schesirChicken(),
       dis: 'meaty',
       category: [
         'catMeat',
+        'fifthRow',
       ]
     },
     {
-      id: 'meat50',
-      price: 5,
+      id: 'meat57',
+      price: 7,
       brand: 'schesir',
       taste: 'Chicken',
-      img: Images.premiobagDelicatChicken(),
+      img: Images.schesirChickenPineapple(),
       dis: 'meaty',
       category: [
         'catMeat',
+        'fifthRow',
       ]
     },
     {
-      id: 'meat51',
-      price: 5,
+      id: 'meat58',
+      price: 7,
       brand: 'schesir',
-      taste: 'Tuna',
+      taste: 'Chicken',
       img: Images.schesirTuna(),
       dis: 'meaty',
       category: [
         'catMeat',
+        'fifthRow',
       ]
     },
+
     {
       id: 'meat52',
-      price: 5,
+      price: 7,
       brand: 'schesir',
       taste: 'Tuna&Mahi',
       img: Images.schesirTunaMahi(),
       dis: 'meaty',
       category: [
         'catMeat',
+        'fifthRow',
       ]
     },
 
@@ -1136,6 +1731,7 @@ const getCategoryItemsData =
       dis: 'meaty',
       category: [
         'catMeat',
+
       ]
     },
     {
@@ -1173,6 +1769,31 @@ const getCategoryItemsData =
     },
 
   ]
+
+export const rowTitlesByCategory = {
+  catFood: [
+    "Friskies",
+    'Kittens',
+    '',
+    'monge',
+    'royal canin',
+    'reflex',
+    'premio',
+    'drools',
+    'petsChoice',
+
+  ],
+  catMeat: [
+    `3 = 10${strings.priceTag}`,
+    `3 = 20 ${strings.priceTag}`,
+    `3 = 10 ${strings.priceTag}`,
+    ` Kitten 3 = 10 ${strings.priceTag}`,
+  ],
+  catTreats: [
+    '',
+    'Kittens',
+  ]
+}
 
 
 export default getCategoryItemsData;

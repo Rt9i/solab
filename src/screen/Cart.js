@@ -97,7 +97,7 @@ const Cart = (props) => {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.items}>
+     <View style={[styles.items, displayMode === 'row' && { alignItems: 'center' }]}>
         {calculateTotalPrice(item)}
         {emptyCartMessage()}
         <FlatList
@@ -187,7 +187,9 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     borderWidth: 1,
     borderColor: 'white',
+    
   },
+  
   emptyText: {
     textAlign: 'center',
     marginTop: 220,
@@ -196,7 +198,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
     opacity: 0.2,
     width: 250,
-    marginLeft: 65,
+  
     borderWidth: 0.8,
     borderColor: 'white',
     borderRadius: 100,

@@ -4,6 +4,7 @@ import strings from '../res/strings';
 import { useNavigation } from '@react-navigation/native';
 import ScreenNames from '../../routes/ScreenNames';
 import SolabContext from '../store/solabContext';
+import AddOrLess from './AddOrLess';
 
 const CartRowItems = (props) => {
 
@@ -15,33 +16,11 @@ const CartRowItems = (props) => {
     const onCardPress = () => {
         navigation.navigate(ScreenNames.ProductScreen, { data: Item });
     };
-  
+
     const addOrLess = () => {
         return (
             <>
-                <View style={styles.addOrLess}>
-                    <TouchableOpacity onPress={() => checkRemoveItem(Item, id)} style={styles.Xtouch}>
-                        <View style={styles.X}>
-                            <Text style={styles.xtxt}>X</Text>
-                        </View>
-                    </TouchableOpacity>
-
-                    <View style={styles.plusMinusInput}>
-                        <TouchableOpacity onPress={() => addItem(Item, id)} style={styles.pluscontainer}>
-                            <View style={styles.plus}>
-                                <Text style={styles.plus}>+</Text>
-                            </View>
-                        </TouchableOpacity>
-
-                        <Text style={styles.input}>{quantity}</Text>
-
-                        <TouchableOpacity onPress={() => removeItemFromCart(Item, id)} style={styles.minuscontainer}>
-                            <View style={styles.minus}>
-                                <Text style={styles.minus}>-</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                </View>
+                <AddOrLess Item={props} itemId={id} />
 
 
                 <TouchableOpacity onPress={onCardPress} style={styles.imgTouch}>

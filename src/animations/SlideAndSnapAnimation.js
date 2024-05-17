@@ -3,7 +3,7 @@ import { View, ScrollView, Animated, Image, StyleSheet } from 'react-native';
 import Sizes from '../res/sizes';
 import Images from '../assets/images/images';
 
-const imageList = [Images.litterSale(), Images.premioSale(), Images.premioSale()];
+const imageList = [Images.nature() ,Images.litterSale(), Images.premioSale(), Images.premioSale()];
 
 const SlideAndSnapAnimation = () => {
     const [activeIndex, setActiveIndex] = useState(0);
@@ -26,7 +26,7 @@ const SlideAndSnapAnimation = () => {
     const animateDotSize = (index) => {
         const newDotSizes = dotSizes.map((size, i) => {
             return Animated.spring(size, {
-                toValue: i === index ? 10 : 8, // Set to large size for active dot, small for others
+                toValue: i === index ? 10 : 8, 
                 duration: 100,
                 useNativeDriver: false,
             });
@@ -42,8 +42,8 @@ const SlideAndSnapAnimation = () => {
                 style={[
                     styles.dot,
                     {
-                        backgroundColor: index === activeIndex ? 'black' : 'gray',
-                        opacity: index === activeIndex ? 1 : 0.5,
+                        backgroundColor: index === activeIndex ? 'black' : 'white',
+                        opacity: index === activeIndex ? 1 : 0.6,
                         width: dotSizes[index],
                         height: dotSizes[index],
                     }
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         flexDirection: 'row',
         justifyContent: 'center',
-        bottom: 20, // Adjust as needed
+        bottom: 5, 
         left: 0,
         right: 0,
     },
@@ -105,6 +105,7 @@ const styles = StyleSheet.create({
         width: 10,
         height: 10,
         borderRadius: 10,
-        marginHorizontal: 5, // Adjust spacing between dots
+        marginHorizontal: 5,
+       
     },
 });

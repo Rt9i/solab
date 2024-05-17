@@ -5,7 +5,7 @@ import strings from '../res/strings';
 
 const CatsBarItems = ({ selectedCategory, setSelectedCategory }) => {
     const categories = [
-        { id: 'catFood', name: `${strings.DryFood}`, image: Images.catFood() },
+        { id: 'catFood', name: `${strings.DryFood}`, image: Images.catFood()},
         { id: 'catMeat', name: `${strings.meat}`, image: Images.Meat() },
         { id: 'catAccessories', name: `${strings.accessories}`, image: Images.leash() },
         { id: 'catClothes', name: `${strings.Clothes}`, image: Images.catClothes() },

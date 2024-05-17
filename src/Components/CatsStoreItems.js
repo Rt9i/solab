@@ -5,29 +5,26 @@ import ScreenNames from '../../routes/ScreenNames'
 import strings from '../res/strings'
 import SolabContext from '../store/solabContext'
 import Images from '../assets/images/images'
-
+import AddOrLess from './AddOrLess'
 strings
 const CatsStoreItems = ({ selectedCategory, displayMode, ...props }) => {
   const meatImg = {
     resizeMode: 'contain',
-
-    height: 160,
-
+    height: 110,
   };
 
   const navigation = useNavigation();
-  const { brand, name, taste, price, img, hideImage, dis, id, quantity: initialQuantity, category } = props;
-  const { cart, setCart, handleAddItem } = useContext(SolabContext);
-  const [quantity, setQuantity] = useState(initialQuantity || 1);
+  const { brand, name, taste, price, img, hideImage, dis, id, quantity, category } = props;
+  const { cart, setCart, handleAddItem, addItem } = useContext(SolabContext);
+  // const [quantity, setQuantity] = useState(initialQuantity || 1);
   const [isAddedToCart, setIsAddedToCart] = useState(false);
-
   const { isItemAdded, setIsItemAdded } = useContext(SolabContext);
   const { removeItem } = useContext(SolabContext);
+
   useEffect(() => {
     const isInCart = cart.some(item => item.id === id);
     setIsAddedToCart(isInCart);
   }, [cart]);
-
 
   const onCardPress = () => {
     const Item = { ...props };
@@ -37,51 +34,15 @@ const CatsStoreItems = ({ selectedCategory, displayMode, ...props }) => {
   const addToShop = () => {
     const Item = { ...props };
 
-    const existingCartItem = cart.find((cartItem) => cartItem.id === id);
-    if (isAddedToCart) {
-      if (isAddedToCart) {
-        console.log("is added to the cart" + isAddedToCart)
-        removeItem(id)
-
-      }
-
-    } else {
-
-      if (existingCartItem) {
-        existingCartItem.quantity += quantity;
-        setCart([...cart]);
-        console.log(existingCartItem.quantity);
-      } else {
-        Item.quantity = quantity;
-        const updatedCart = [...cart, Item];
-        setCart(updatedCart);
-        console.log(Item.quantity);
-      }
-    }
-    setIsAddedToCart(true);
+    addItem(Item, Item.id)
 
   };
-  const handleQuantityChange = (text) => {
-    // Ensure the input is a number
-    const parsedQuantity = parseInt(text);
-    if (!isNaN(parsedQuantity)) {
-      setQuantity(parsedQuantity.toString()); // Update the local state
-      onQuantityChange(parsedQuantity); // Pass the new quantity to the parent component
-    }
-  };
+
 
 
 
   return (
     <View style={styles.itemWidth}>
-
-      {displayMode === 'column' && (
-        <View style={styles.disContainer}>
-
-          <Text style={styles.dis}>{`${dis}`}</Text>
-
-        </View>
-      )}
 
 
       <View style={styles.items}>
@@ -90,7 +51,7 @@ const CatsStoreItems = ({ selectedCategory, displayMode, ...props }) => {
           <TouchableOpacity onPress={onCardPress} activeOpacity={0.6}>
             <Image
               source={props.img}
-              style={[styles.img, selectedCategory === 'Meat' ? meatImg : null]}
+              style={[styles.img, selectedCategory === 'catMeat' ? meatImg : null]}
             />
           </TouchableOpacity>
         </View>
@@ -98,20 +59,25 @@ const CatsStoreItems = ({ selectedCategory, displayMode, ...props }) => {
 
         <View style={styles.bottomcontainer}>
 
+
+          <View style={styles.props}>
+            <Text style={styles.bottomtxt1}>{` ${taste}`}</Text>
+            <Text style={styles.bottomtxt2}>{` ${price} ${strings.priceTag}`}</Text>
+          </View>
+
+
           <TouchableOpacity activeOpacity={0.7} onPress={addToShop}>
             <View style={styles.cart}>
               {isAddedToCart ? (
-                <Image source={Images.checkMark()} style={styles.checkMark} />
+                <AddOrLess itemId={id} Item={props} />
+
               ) : (
                 <Image source={Images.addCart()} style={styles.addCart} />
               )}
             </View>
           </TouchableOpacity>
 
-          <View style={styles.props}>
-            <Text style={styles.bottomtxt1}>{` ${taste}`}</Text>
-            <Text style={styles.bottomtxt2}>{` ${price} ${strings.priceTag}`}</Text>
-          </View>
+
         </View>
 
       </View>
@@ -132,8 +98,8 @@ const styles = StyleSheet.create({
   },
   addCart: {
     backgroundColor: 'grey',
-    width: 40,
-    height: 39,
+    width: 110,
+    height: 20,
     resizeMode: 'contain',
     borderWidth: 1,
     borderColor: 'black',
@@ -143,10 +109,13 @@ const styles = StyleSheet.create({
 
   },
   itemWidth: {
-    paddingTop: 10,
-
+    width: 115,
+    height: 250,
     flexDirection: 'row-reverse',
     marginBottom: 2,
+
+    marginHorizontal: 2,
+
   },
   disbox: {
     flex: 2,
@@ -172,57 +141,66 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   items: {
-
+    flex: 1,
+    borderWidth: 1,
+    borderColor: 'black',
     flexDirection: 'column',
-    height: 200,
+    height: 220,
     width: 110,
+    marginRight: 5,
+    backgroundColor: 'rgba(20, 70, 200, 0.1)',
+
   },
   topContainer: {
     flexDirection: 'row',
   },
   img: {
-
+    resizeMode: 'contain',
     width: 110,
-    height: 155,
+    height: 110,
 
     borderRadius: 10,
 
   },
   bottomcontainer: {
-    flex: 1.2,
-    flexDirection: 'row-reverse',
+    flex: 3.5,
+    flexDirection: 'column',
+   
+    alignItems: 'center',
+
   },
   bottomtxt1: {
-    flex: 1,
     paddingBottom: 2,
-    backgroundColor: 'grey',
     fontSize: 10,
     textAlignVertical: 'center',
-    backgroundColor: 'grey',
     fontFamily: 'bigFont',
-    borderWidth: 1,
     color: 'black',
   },
 
   bottomtxt2: {
-    flex: 1,
+    paddingBottom: 2,
     fontSize: 12,
-    backgroundColor: 'grey',
     textAlignVertical: 'center',
-    backgroundColor: 'grey',
-    fontWeight: 'bold',
-    borderWidth: 1,
+    fontFamily: 'bigFont',
     color: 'black',
+    bottom: 1,
+
   },
 
   props: {
     flex: 1,
+    height: 55,
+    width: 110,
+
     flexDirection: 'column',
+    justifyContent: 'space-between',
+
+
   },
 
   cart: {
-    flex: 1,
-    width: 40,
+
+    width: 110,
   },
   carttxt: {
     fontSize: 46,
@@ -236,8 +214,9 @@ const styles = StyleSheet.create({
   },
 
   photo: {
-    flex: 5,
 
+    width: '100%',
+    flex: 4,
 
   },
 

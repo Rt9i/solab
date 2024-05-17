@@ -9,6 +9,7 @@ const ScreenNames =  {
     catsStore:'CatsStore',
     bottomTabNavigator: 'BottomTabNavigator',
     Tabs:'tabs',
+    seeAll:'seeAll'
   };
   
   export default ScreenNames;

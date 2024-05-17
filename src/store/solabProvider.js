@@ -9,16 +9,30 @@ const SolabProvider = ({ children }) => {
   const [brands, setBrands] = useState([])
   const [dogBrands, setDogBrands] = useState([])
 
+
+
+
   const addItem = (item, itemId) => {
+
+  
+
     const existingItemIndex = cart.findIndex((item) => item.id === itemId);
     const updatedCart = [...cart];
-    setCart(updatedCart);
+   
+    // setCart(updatedCart);
+
     if (existingItemIndex !== -1) {
       updatedCart[existingItemIndex].quantity++;
     } else {
+      item.quantity = 1 ; 
       updatedCart.push(item);
       setIsItemAdded(true);
     }
+
+
+    
+
+
     setCart(updatedCart);
   };
 
@@ -37,7 +51,7 @@ const SolabProvider = ({ children }) => {
     setCart(updatedCart);
   };
 
-  const checkRemoveItem = (item, itemId) => {
+  const checkRemoveItem = ( itemId) => {
 
     Alert.alert(
       'Remove Item',
@@ -120,6 +134,7 @@ const SolabProvider = ({ children }) => {
     setBrands,
     dogBrands,
     setDogBrands,
+  
   };
 
   return <SolabContext.Provider value={contextValue}>{children}</SolabContext.Provider>;

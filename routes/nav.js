@@ -8,6 +8,7 @@ import Home from '../src/screen/Home';
 import Login from '../src/screen/Login';
 import ProductScreen from '../src/screen/ProductScreen';
 import TabNav from './TabNav';
+import SeeAllProducts from '../src/screen/SeeAllProducts';
 
 
 
@@ -25,6 +26,7 @@ const MainNavigation = () => {
         <Stack.Screen name={ScreenNames.login} component={Login} />
         <Stack.Screen name={ScreenNames.ProductScreen} component={ProductScreen} />
         <Stack.Screen name={ScreenNames.Tabs} component={TabNav} options={{ headerShown: false }} />
+        <Stack.Screen name={ScreenNames.seeAll} component={SeeAllProducts} />
       </Stack.Navigator>
     </NavigationContainer >
   );
