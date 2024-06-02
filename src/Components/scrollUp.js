@@ -1,48 +1,69 @@
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
-import React from 'react';
+import { StyleSheet, TouchableOpacity, Animated, Easing, View, Image } from 'react-native';
+import React, { useRef, useEffect } from 'react';
+import Images from '../assets/images/images';
 
-const ScrollUp = () => {
+const ScrollUp = ({ scrollViewRef }) => {
+    const translateY = useRef(new Animated.Value(0)).current;
+
     const handlePress = () => {
-        // Scrolls back to the top when the arrow is pressed
-        scrollViewRef.scrollTo({ y: 0, animated: true });
+        if (scrollViewRef && scrollViewRef.current) {
+            // Scroll the screen to the top
+            scrollViewRef.current.scrollTo({ y: 0, animated: true });
+        }
+
+        // Add animation for the arrow
+        Animated.timing(translateY, {
+            toValue: -900, // Adjust the value to move the arrow all the way up
+            duration: 300, // Adjust the duration of the animation
+            easing: Easing.ease, // Add easing for a smoother animation
+            useNativeDriver: true,
+        }).start();
     };
 
-    return (
-        <View style={styles.container}>
-            <ScrollView
-                style={styles.scrollView}
-                scrollEventThrottle={16}
-                ref={(ref) => (scrollViewRef = ref)} // Reference to the ScrollView
-            >
-                {/* Your content goes here */}
-            </ScrollView>
+    useEffect(() => {
+        const animationListener = translateY.addListener(({ value }) => {
+            // Check if the animation has completed (reached the target value)
+            if (value === -900) {
+                // Reset translateY value to bring the arrow back to its original position
+                translateY.setValue(0);
+            }
+        });
 
-            <TouchableOpacity style={styles.arrowContainer} onPress={handlePress}>
-                <Text style={styles.arrow}>↑</Text>
+        return () => {
+            // Clean up the listener when the component unmounts
+            translateY.removeListener(animationListener);
+        };
+    }, [translateY]);
+
+    return (
+        <Animated.View style={[styles.arrowContainer, { transform: [{ translateY }] }]}>
+            <TouchableOpacity style={styles.touch} onPress={handlePress} activeOpacity={0.9}>
+                <View style={styles.img}>
+                    <Image style={styles.img} source={Images.twoArrows()} />
+                </View>
             </TouchableOpacity>
-        </View>
+        </Animated.View>
     );
 };
 
 export default ScrollUp;
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
+    img: {
+        height: 20,
+        resizeMode: 'contain',
     },
-    scrollView: {
-        flex: 1,
+    touch: {
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        width: 30,
+        height: 30,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 20,
     },
     arrowContainer: {
         position: 'absolute',
-        bottom: 20,
-        right: 20,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        borderRadius: 20,
-        padding: 10,
-    },
-    arrow: {
-        color: 'white',
-        fontSize: 24,
+        bottom: 10,
+        right: 10,
     },
 });

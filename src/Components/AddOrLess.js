@@ -5,12 +5,12 @@ import SolabContext from '../store/solabContext';
 const AddOrLess = ({ itemId, Item, quantity }) => {
 
     const { checkRemoveItem, removeItemFromCart, addItem, cart } = useContext(SolabContext);
- 
+
 
 
     const getItemFromCart = () => {
         const itemFromCart = cart.find(item => item.id == itemId)
-       
+
         return itemFromCart?.quantity
     }
 
@@ -25,6 +25,7 @@ const AddOrLess = ({ itemId, Item, quantity }) => {
                         <Text style={styles.xtxt}>X</Text>
                     </View>
                 </TouchableOpacity>
+
 
                 <View style={styles.plusMinusInput}>
                     <TouchableOpacity onPress={() => addItem(Item, itemId)} style={styles.pluscontainer}>
@@ -113,9 +114,10 @@ const styles = StyleSheet.create({
         backgroundColor: 'green',
         lineHeight: 41,
         color: 'white',
+        width: '100',
     },
     addOrLess: {
-      
+
         flexDirection: 'row',
         justifyContent: 'space-between',
         borderRadius: 10,

@@ -3,7 +3,7 @@ import { View, ScrollView, Animated, Image, StyleSheet } from 'react-native';
 import Sizes from '../res/sizes';
 import Images from '../assets/images/images';
 
-const imageList = [Images.nature() ,Images.litterSale(), Images.premioSale(), Images.premioSale()];
+const imageList = [Images.saleTest(),Images.premioSale() ];
 
 const SlideAndSnapAnimation = () => {
     const [activeIndex, setActiveIndex] = useState(0);
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     image: {
         width: '100%',
         height: '100%',
-        resizeMode: 'contain',
+        resizeMode: 'cover',
     },
     dotsContainer: {
         position: 'absolute',

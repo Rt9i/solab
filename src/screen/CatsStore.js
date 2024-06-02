@@ -1,24 +1,26 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList, ScrollView, Alert } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { View, StyleSheet, ScrollView, Animated } from 'react-native';
 import CatsStoreItems from '../Components/CatsStoreItems';
 import getCategoryItemsData, { rowTitlesByCategory } from '../res/Data';
-import Images from '../assets/images/images';
-import strings from '../res/strings';
 import { useNavigation } from '@react-navigation/native';
-import ScreenNames from '../../routes/ScreenNames';
-import DisplayItem from '../Components/DisplayItem';
 import CatsBarItems from '../Components/CatsBarItems';
-import CheckOptionItems from '../Components/CheckOptionItems';
 import Sizes from '../res/sizes';
 import SlideAndSnapAnimation from '../animations/SlideAndSnapAnimation';
 import RowContainer from '../Components/RowContainer';
 import ScrollUp from '../Components/scrollUp';
+
 
 const CatsStore = () => {
   const [selectedCategory, setSelectedCategory] = useState('catFood');
   const navigation = useNavigation();
   const [displayMode, setDisplayMode] = useState('row');
   const [optionsVisible, setOptionsVisible] = useState(false);
+
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const [showScrollUp, setShowScrollUp] = useState(false);
+  const scrollViewRef = useRef();
+
+
 
   const getRowFilteredItems = (value) => {
     return getCategoryItemsData.filter(
@@ -30,57 +32,35 @@ const CatsStore = () => {
 
     const rows = [
       {
-        text: '',
-        catMeat: 'teeeeeext',
-        catAccessories: 'this is cat accesories',
         items: 'firstRow',
-        selectedCategory: 'catFood',
       },
       {
-        text: 'second',
-        catMeat: 'second teeeeext',
         items: 'secondRow',
-        selectedCategory: 'catFood',
-
       },
       {
-        text: 'third',
         items: 'thirdRow',
-        selectedCategory: 'catFood',
       },
       {
-        text: 'fourth',
         items: 'fourthRow',
-        selectedCategory: 'catFood',
       },
       {
-        text: 'fifth',
         items: 'fifthRow',
-        selectedCategory: 'catFood',
       },
       {
-        text: 'sixth',
         items: 'sixthRow',
-        selectedCategory: 'catFood',
       },
       {
-        text: 'seventh',
         items: 'seventhRow',
-        selectedCategory: 'catFood',
       },
       {
-        text: 'seventh',
         items: 'eigthRow',
-        selectedCategory: 'catMeat',
       },
       {
-        text: 'seventh',
         items: 'ninthRow',
-        selectedCategory: 'catMeat',
       },
     ]
 
-    
+
 
     return rows.map((row, index) => {
       return <RowContainer
@@ -121,39 +101,59 @@ const CatsStore = () => {
   }
 
 
-  const handleScroll = (event) => {
-    const scrollPosition = event.nativeEvent.contentOffset.x;
 
+  const handleScroll = (event) => {
+    const scrollPosition = event.nativeEvent.contentOffset.y;
+    setShowScrollUp(scrollPosition > 250);
   };
 
 
+  const handleScrollUpPress = () => {
+    Animated.timing(scrollY, {
+      toValue: 0,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  }
 
+  //cat
+  const cat = [
+    { Food: 'catFood' },
+    { Meat: 'catMeat' },
+    { Accessories: 'catAccessories' },
+    { Clothes: 'catClothes' },
+    { Sprays: 'catSprays' },
+    { Toilet: 'catToilet' },
+    { Perfume: 'catPerfume' },
+  ];
 
   return (
     <View style={styles.container}>
-
-      <ScrollView style={styles.scroll} contentContainerStyle={{ minHeight: Sizes.screenHeight }} >
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={{ minHeight: Sizes.screenHeight }}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+        ref={scrollViewRef}
+      >
 
 
         {/* {solabTxt()} */}
-
         <View style={styles.sale}>
           <SlideAndSnapAnimation onScroll={handleScroll} />
         </View>
-
         <View style={styles.catsBarItemsContainer}>
-
           <CatsBarItems
             style={styles.CatsBarItems}
             selectedCategory={selectedCategory}
-            setSelectedCategory={onCategoryPress} />
+            setSelectedCategory={onCategoryPress}
+            Array={cat}
+
+          />
         </View>
-
         {handleRows()}
-
-       
       </ScrollView>
-      <ScrollUp />
+      {showScrollUp && <ScrollUp scrollViewRef={scrollViewRef} onPress={handleScrollUpPress} />}
     </View>
   );
 };

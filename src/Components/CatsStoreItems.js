@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
   bottomcontainer: {
     flex: 3.5,
     flexDirection: 'column',
-   
+
     alignItems: 'center',
 
   },
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
   },
 
   cart: {
-
+    marginBottom: 5,
     width: 110,
   },
   carttxt: {

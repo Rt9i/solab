@@ -16,6 +16,7 @@ const strings = {
   selectABrand: 'select a brand',
   sale:'Sale',
   treats:'Treats',
+  perfume:'perfume',
 };
 
 export default strings;

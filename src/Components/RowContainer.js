@@ -11,11 +11,9 @@ const RowContainer = ({ items, renderItem, text, selectedCategory, row, catMeat 
     const navigation = useNavigation()
 
     const onSeeAllPress = () => {
-      
+
         navigation.navigate(ScreenNames.seeAll, { items, renderItem });
     };
-
-    
 
     if (!items?.length) {
         return null
@@ -25,23 +23,14 @@ const RowContainer = ({ items, renderItem, text, selectedCategory, row, catMeat 
         <View style={styles.container}>
             <View style={styles.txtcont}>
                 <TouchableOpacity onPress={onSeeAllPress} style={styles.touch}>
-
                     <View style={styles.seeAll}>
                         <Text style={styles.seAll}>see All -{">"}</Text>
                     </View>
                 </TouchableOpacity>
-
-
                 {Boolean(text) && (
                     <Text style={styles.txt}>{text}</Text>
                 )}
-
-
-
-
-
             </View>
-
 
             <ScrollView
                 style={styles.scroll}
@@ -55,6 +44,7 @@ const RowContainer = ({ items, renderItem, text, selectedCategory, row, catMeat 
                     {items.map((item, index) => renderItem({ item, index }))}
                 </View>
             </ScrollView>
+
         </View>
     );
 };

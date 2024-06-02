@@ -3,15 +3,17 @@ import { StyleSheet, Text, View, TouchableOpacity, Image, FlatList, Animated, Ea
 import Images from '../assets/images/images';
 import strings from '../res/strings';
 
-const CatsBarItems = ({ selectedCategory, setSelectedCategory }) => {
+const CatsBarItems = ({ selectedCategory, setSelectedCategory, Array }) => {
+
     const categories = [
-        { id: 'catFood', name: `${strings.DryFood}`, image: Images.catFood()},
-        { id: 'catMeat', name: `${strings.meat}`, image: Images.Meat() },
-        { id: 'catAccessories', name: `${strings.accessories}`, image: Images.leash() },
-        { id: 'catClothes', name: `${strings.Clothes}`, image: Images.catClothes() },
-        { id: 'catSprays', name: `${strings.Sprays}`, image: Images.spray() },
-        { id: 'catToilet', name: `${strings.toilet}`, image: Images.toilet() },
-        { id: 'catTreats', name: `${strings.treats}`, image: Images.treats() },
+        { id: Array[0].Food, name: `${strings.DryFood}`, image: Images.catFood() },
+        { id: Array[1].Meat, name: `${strings.meat}`, image: Images.Meat() },
+        { id: Array[2].Accessories, name: `${strings.accessories}`, image: Images.leash() },
+        { id: Array[3].Clothes, name: `${strings.Clothes}`, image: Images.catClothes() },
+        { id: Array[4].Sprays, name: `${strings.Sprays}`, image: Images.spray() },
+        { id: Array[5].Toilet, name: `${strings.toilet}`, image: Images.toilet() },
+        { id: Array[6].Perfume, name: `${strings.treats}`, image: Images.treats() },
+    
     ];
 
     const [animatedValues, setAnimatedValues] = useState(categories.map(() => new Animated.Value(1)));
@@ -71,6 +73,7 @@ const CatsBarItems = ({ selectedCategory, setSelectedCategory }) => {
             style={styles.FlatList}
             horizontal={true}
         />
+        // Function()
     );
 
     return renderBar();
@@ -79,6 +82,14 @@ const CatsBarItems = ({ selectedCategory, setSelectedCategory }) => {
 export default CatsBarItems;
 
 const styles = StyleSheet.create({
+    txt: {
+        fontSize: 50,
+        textAlign: 'center',
+    },
+    test: {
+
+        backgroundColor: 'red',
+    },
     categoryStyle: {
         width: 70,
         height: 70,
