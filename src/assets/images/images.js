@@ -1,6 +1,7 @@
 const Images = {
     whiteLogo: () => require('./photos/whiteLogo.jpg'),
     dog: () => require('./photos/dog.png'),
+    bowl: () => require('./photos/bowl.png'),
     perfume: () => require('./photos/perfume.png'),
     cat: () => require('./photos/cat.png'),
     mongeKitten: () => require('./photos/mongeKitten.png'),
@@ -149,6 +150,7 @@ const Images = {
     premioTreatKitten: () => require('./photos/premioTreatKitten.png'),
     premioTreatPillows: () => require('./photos/premioTreatPillows.png'),
     premioTreatCatnip: () => require('./photos/premioTreatCatnip.png'),
+    PremioTreatTuna: () => require('./photos/PremioTreatTuna.png'),
     catBiscuts: () => require('./photos/catBiscuts.png'),
     premioTunaPapayaGravy: () => require('./photos/premioTunaPapayaGravy.png'),
     PremioTunaAloeveraGravy: () => require('./photos/PremioTunaAloeveraGravy.png'),
@@ -164,7 +166,6 @@ const Images = {
     wanpyChickenCarrot: () => require('./photos/wanpyChickenCarrot.png'),
     wanpySalmonChickenCarrot: () => require('./photos/wanpySalmonChickenCarrot.png'),
     premioChickenDuck: () => require('./photos/premioChickenDuck.png'),
-    toy1: () => require('./photos/toy1.png'),
     laser1: () => require('./photos/laser1.png'),
     stick1: () => require('./photos/stick1.png'),
     stick2: () => require('./photos/stick2.png'),
@@ -172,8 +173,9 @@ const Images = {
     stick4: () => require('./photos/stick4.png'),
     catnipDart: () => require('./photos/catnipDart.png'),
     mice: () => require('./photos/mice.png'),
-    toy2: () => require('./photos/toy2.png'),
     mice2: () => require('./photos/mice2.png'),
+    toy1: () => require('./photos/toy1.png'),
+    toy2: () => require('./photos/toy2.png'),
     toy3: () => require('./photos/toy3.png'),
     toy4: () => require('./photos/toy4.png'),
     toy5: () => require('./photos/toy5.png'),
@@ -182,10 +184,10 @@ const Images = {
     toy8: () => require('./photos/toy8.png'),
     toy9: () => require('./photos/toy9.png'),
     toy10: () => require('./photos/toy10.png'),
-    bag: () => require('./photos/bag.png'),
-    bag2: () => require('./photos/bag2.png'),
     toy11: () => require('./photos/toy11.png'),
     toy12: () => require('./photos/toy12.png'),
+    bag: () => require('./photos/bag.png'),
+    bag2: () => require('./photos/bag2.png'),
     treatTunaSalmon: () => require('./photos/treatTunaSalmon.png'),
     treatTunaShtips: () => require('./photos/treatTunaShtips.png'),
     treatTunaCodFish: () => require('./photos/treatTunaCodFish.png'),
@@ -224,7 +226,6 @@ const Images = {
     saleTest: () => require('./photos/saleTest.jpg'),
     AdroolsChicken: () => require('./photos/AdroolsChicken.png'),
     ApremioSupremeChicken: () => require('./photos/ApremioSupremeChicken.png'),
-    bioForm: () => require('./photos/bioForm.png'),
     droolsPupyChiken: () => require('./photos/droolsPupyChiken.png'),
     grandorfLambBrownRice: () => require('./photos/grandorfLambBrownRice.png'),
     grandorfLambDuckTurkey: () => require('./photos/grandorfLambDuckTurkey.png'),
@@ -238,22 +239,19 @@ const Images = {
     grandorfRabbitTurkeySterilised: () => require('./photos/grandorfRabbitTurkeySterilised.png'),
     grandorfTurkeyBrownRice: () => require('./photos/grandorfTurkeyBrownRice.png'),
     grandorfTurkeySterilised: () => require('./photos/grandorfTurkeySterilised.png'),
-
-
-
     DmongeChickenRicePotatoes: () => require('./photos/DmongeChickenRicePotatoes.png'),
     DMongeLambRice: () => require('./photos/DMongeLambRice.png'),
     DMongeSalmonRice3kg: () => require('./photos/DMongeSalmonRice3kg.png'),
     dReflexChicken15kg: () => require('./photos/dReflexChicken15kg.png'),
     DPluto20kg: () => require('./photos/DPluto20kg.png'),
     DpropreformancePuppySmallBreedLambBlueberry2kg: () => require('./photos/DpropreformancePuppySmallBreedLambBlueberry2kg.png'),
+    bioform3k: () => require('./photos/bioform3k.png'),
     DReflexBeef12kg: () => require('./photos/DReflexBeef12kg.png'),
     DReflexChicken3kg: () => require('./photos/DReflexChicken3kg.png'),
-    bioform3k: () => require('./photos/bioform3k.png'),
     DRelfexLambRice15kg: () => require('./photos/DRelfexLambRice15kg.png'),
     DReflexChickenRice3kg: () => require('./photos/DReflexChickenRice3kg.png'),
     DReflexLambRiceJunior: () => require('./photos/DReflexLambRiceJunior.png'),
-    DReflexSalmon: () => require('./photos/DReflexSalmon.jpg'),
+    DReflexSalmon: () => require('./photos/DReflexSalmon.png'),
     DReflexSalmon12kg: () => require('./photos/DReflexSalmon12kg.png'),
     DRoyalcaninMiniAdult: () => require('./photos/DRoyalcaninMiniAdult.png'),
     DRoyalcaninPomoranian3kg: () => require('./photos/DRoyalcaninPomoranian3kg.png'),
@@ -261,7 +259,6 @@ const Images = {
     DRoyalcaninShihtzu: () => require('./photos/DRoyalcaninShihtzu.png'),
     DGrandorfLambTurkey: () => require('./photos/DGrandorfLambTurkey.png'),
     DGrandorfWhiteFish10kg: () => require('./photos/DGrandorfWhiteFish10kg.png'),
-   
     DSimbaLamb: () => require('./photos/DSimbaLamb.png'),
     AlphaDogSalmon: () => require('./photos/AlphaDogSalmon.png'),
     cnaanChciekn: () => require('./photos/cnaanChciekn.png'),
@@ -309,10 +306,8 @@ const Images = {
     bowl28: () => require('./photos/bowl28.png'),
     bowl29: () => require('./photos/bowl29.png'),
     bowl30: () => require('./photos/bowl30.png'),
-   
     cardboard1: () => require('./photos/cardboard1.png'),
     waterbottelfountaint: () => require('./photos/waterbottelfountaint.png'),
-   
     sprayticks: () => require('./photos/sprayticks.png'),
     srayidk: () => require('./photos/srayidk.png'),
     srpayantipet: () => require('./photos/srpayantipet.png'),
@@ -320,12 +315,8 @@ const Images = {
     frontlineSpray: () => require('./photos/frontlineSpray.png'),
     sprayEGO: () => require('./photos/sprayEGO.png'),
     spraylitterbox: () => require('./photos/spraylitterbox.png'),
-    
     petscleanBlue: () => require('./photos/petscleanBlue.png'),
     petscleanpink: () => require('./photos/petscleanpink.png'),
     pads: () => require('./photos/pads.png'),
-  
-    
 };
-
 export default Images;

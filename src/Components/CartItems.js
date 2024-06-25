@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, TextInput } from 'react-native';
 import React, { useContext, useState } from 'react';
-import strings from '../res/strings';
 import { useNavigation } from '@react-navigation/native';
 import ScreenNames from '../../routes/ScreenNames';
 import CartRowItems from './CartRowItems';
@@ -8,7 +7,7 @@ import SolabContext from '../store/solabContext';
 
 
 const CartItems = props => {
-
+  const { strings, changeLanguage } = useContext(SolabContext);
   const Item = { ...props };
   const { brand, name, taste, price, img, hideImage, dis, id, onRemove, initialQuantity, quantity } = props;
   const { addItem, removeItemFromCart, checkRemoveItem } = useContext(SolabContext);
@@ -41,11 +40,14 @@ const CartItems = props => {
               </View>
             </TouchableOpacity>
           </View>
+
           <View style={styles.X}>
-            <TouchableOpacity onPress={() => checkRemoveItem(Item, id)} style={styles.Xtouch}>
+            <TouchableOpacity onPress={() => checkRemoveItem(id)} style={styles.Xtouch}>
               <Text style={styles.xtxt}>X</Text>
             </TouchableOpacity>
           </View>
+
+
         </View>
       </View>
 

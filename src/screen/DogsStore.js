@@ -107,8 +107,12 @@ const DogsStore = () => {
     { Accessories: 'dogAccessories', },
     { Clothes: 'dogClothes', },
     { Sprays: 'dogSprays', },
-    { Toilet: 'dogLitter', },
+    { Toilet: 'dogToilet', },
     { Perfume: 'dogPerfume', },
+    { Treats: 'dogTreats' },
+    { bowl: 'DogBowl' },
+   
+  
   ];
 
 

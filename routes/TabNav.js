@@ -11,12 +11,15 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 const TabNav = () => {
   const Tab = createBottomTabNavigator();
-  const { cart } = useContext(SolabContext);
+  const { cart, strings, changeLanguage } = useContext(SolabContext);
 
-  const CustomTabBarLabel = ({ focused, title, icon, marginLeft, marginTop }) => (
+  const CustomTabBarLabel = ({ focused, title, icon, marginLeft, marginTop, language }) => {
+  const renderCartLength = (title === strings.cart)
+  
+  return (
     <View style={styles.tabBarLabel}>
       <View>
-        <View style={{ marginTop }} >
+        <View style={{ marginTop }}>
           <Image source={icon} style={{ width: 24, height: 24, marginLeft }} />
         </View>
         <View>
@@ -25,13 +28,14 @@ const TabNav = () => {
           </Text>
         </View>
       </View>
-      {title === 'Cart' && cart.length > 0 && (
+      {renderCartLength && (
         <View>
           <Text style={styles.itemsCounter}>{cart.length}</Text>
         </View>
       )}
     </View>
   );
+};
 
   return (
     <Tab.Navigator
@@ -54,7 +58,7 @@ const TabNav = () => {
           tabBarLabel: ({ focused }) => (
             <CustomTabBarLabel
               focused={focused}
-              title="CatsStore"
+              title={`${strings.catsStore}`}
               marginLeft={24}
               icon={Images.catIcon()}
             />
@@ -68,7 +72,7 @@ const TabNav = () => {
           tabBarLabel: ({ focused }) => (
             <CustomTabBarLabel
               focused={focused}
-              title="DogsStore"
+              title={`${strings.dogsStore}`}
               marginLeft={24}
               icon={Images.dogIcon()}
             />
@@ -83,7 +87,7 @@ const TabNav = () => {
           tabBarLabel: ({ focused }) => (
             <CustomTabBarLabel
               focused={focused}
-              title="Cart"
+              title={`${strings.cart}`}
               icon={Images.cart()}
               cartLength={Cart.length}
             />

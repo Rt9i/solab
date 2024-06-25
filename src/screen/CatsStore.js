@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react';
-import { View, StyleSheet, ScrollView, Animated } from 'react-native';
+import React, { useContext, useRef, useState } from 'react';
+import { View, StyleSheet, ScrollView, Animated, Text, Button } from 'react-native';
 import CatsStoreItems from '../Components/CatsStoreItems';
 import getCategoryItemsData, { rowTitlesByCategory } from '../res/Data';
 import { useNavigation } from '@react-navigation/native';
@@ -8,6 +8,8 @@ import Sizes from '../res/sizes';
 import SlideAndSnapAnimation from '../animations/SlideAndSnapAnimation';
 import RowContainer from '../Components/RowContainer';
 import ScrollUp from '../Components/scrollUp';
+import LinearGradient from 'react-native-linear-gradient';
+import SolabContext from '../store/solabContext';
 
 
 const CatsStore = () => {
@@ -21,6 +23,7 @@ const CatsStore = () => {
   const scrollViewRef = useRef();
 
 
+  const { strings, changeLanguage, } = useContext(SolabContext);
 
   const getRowFilteredItems = (value) => {
     return getCategoryItemsData.filter(
@@ -29,42 +32,20 @@ const CatsStore = () => {
   }
 
   const handleRows = () => {
-
     const rows = [
-      {
-        items: 'firstRow',
-      },
-      {
-        items: 'secondRow',
-      },
-      {
-        items: 'thirdRow',
-      },
-      {
-        items: 'fourthRow',
-      },
-      {
-        items: 'fifthRow',
-      },
-      {
-        items: 'sixthRow',
-      },
-      {
-        items: 'seventhRow',
-      },
-      {
-        items: 'eigthRow',
-      },
-      {
-        items: 'ninthRow',
-      },
-    ]
-
-
-
-    return rows.map((row, index) => {
-      return <RowContainer
-
+      { items: 'firstRow' },
+      { items: 'secondRow' },
+      { items: 'thirdRow' },
+      { items: 'fourthRow' },
+      { items: 'fifthRow' },
+      { items: 'sixthRow' },
+      { items: 'seventhRow' },
+      { items: 'eigthRow' },
+      { items: 'ninthRow' },
+      { items: 'tenthRow' },
+    ];
+    return rows.map((row, index) => (
+       <RowContainer
         row={row}
         text={rowTitlesByCategory[selectedCategory]?.[index]}
         catMeatTxt={row.catMeat}
@@ -72,13 +53,14 @@ const CatsStore = () => {
         renderItem={renderItem}
         selectedCategory={selectedCategory}
       />
-    })
+    ))
   }
-
-
   const renderItem = ({ item }) => {
     return (
       <CatsStoreItems
+        salePrice={item.salePrice}
+        saleAmmount={item.saleAmmount}
+        kg={item.kg}
         key={item.id}
         brand={item.brand}
         taste={item.taste}
@@ -90,7 +72,6 @@ const CatsStore = () => {
         displayMode={displayMode}
         selectedCategory={selectedCategory}
         category={item.category}
-
       />
     );
   };
@@ -100,13 +81,10 @@ const CatsStore = () => {
     setOptionsVisible(false)
   }
 
-
-
   const handleScroll = (event) => {
     const scrollPosition = event.nativeEvent.contentOffset.y;
     setShowScrollUp(scrollPosition > 250);
   };
-
 
   const handleScrollUpPress = () => {
     Animated.timing(scrollY, {
@@ -116,7 +94,6 @@ const CatsStore = () => {
     }).start();
   }
 
-  //cat
   const cat = [
     { Food: 'catFood' },
     { Meat: 'catMeat' },
@@ -125,10 +102,18 @@ const CatsStore = () => {
     { Sprays: 'catSprays' },
     { Toilet: 'catToilet' },
     { Perfume: 'catPerfume' },
+    { Treats: 'catTreats' },
+    { bowl: 'catBowl' },
   ];
 
   return (
-    <View style={styles.container}>
+    
+    <LinearGradient
+      colors={['#6CCAFF', '#6CCAFF', '#0066FF']}
+      locations={[0, 0.58, 1]}
+      style={styles.container}
+    >
+    
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={{ minHeight: Sizes.screenHeight }}
@@ -136,25 +121,32 @@ const CatsStore = () => {
         scrollEventThrottle={16}
         ref={scrollViewRef}
       >
+        <View>
+          <Button title=" English" onPress={() => changeLanguage('en')} />
+          <Button title=" עברית" onPress={() => changeLanguage('he')} />
+          <Button title=" عربي" onPress={() => changeLanguage('ar')} />
+        </View>
 
 
-        {/* {solabTxt()} */}
         <View style={styles.sale}>
           <SlideAndSnapAnimation onScroll={handleScroll} />
         </View>
+
+
         <View style={styles.catsBarItemsContainer}>
           <CatsBarItems
             style={styles.CatsBarItems}
             selectedCategory={selectedCategory}
             setSelectedCategory={onCategoryPress}
             Array={cat}
-
           />
         </View>
+
         {handleRows()}
       </ScrollView>
       {showScrollUp && <ScrollUp scrollViewRef={scrollViewRef} onPress={handleScrollUpPress} />}
-    </View>
+     
+    </LinearGradient>
   );
 };
 

@@ -1,13 +1,13 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, TextInput } from 'react-native';
 import React, { useContext, useState } from 'react';
-import strings from '../res/strings';
+
 import { useNavigation } from '@react-navigation/native';
 import ScreenNames from '../../routes/ScreenNames';
 import SolabContext from '../store/solabContext';
 import AddOrLess from './AddOrLess';
 
 const CartRowItems = (props) => {
-
+    const { strings, changeLanguage } = useContext(SolabContext);
     const Item = { ...props };
     const { brand, name, taste, price, img, hideImage, id, onRemove, initialQuantity, quantity } = props;
     const { addItem, removeItemFromCart, checkRemoveItem } = useContext(SolabContext);

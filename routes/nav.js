@@ -11,9 +11,6 @@ import TabNav from './TabNav';
 import SeeAllProducts from '../src/screen/SeeAllProducts';
 
 
-
-
-
 const MainNavigation = () => {
 
   const Stack = createNativeStackNavigator();
@@ -24,7 +21,18 @@ const MainNavigation = () => {
         <Stack.Screen name={ScreenNames.splash} component={Splash} options={{ headerShown: false }} />
         <Stack.Screen name={ScreenNames.home} component={Home} options={{ headerShown: false }} />
         <Stack.Screen name={ScreenNames.login} component={Login} />
-        <Stack.Screen name={ScreenNames.ProductScreen} component={ProductScreen} />
+        <Stack.Screen
+          name={ScreenNames.ProductScreen}
+          component={ProductScreen}
+          options={{
+            headerTitle: '', // Set your custom header title
+            headerStyle: {
+              backgroundColor: 'grey', // Customize header background color
+            },
+            headerTintColor: '#FFFFFF', // Customize header text color
+            headerTitleAlign: 'center', // Align header title centrally
+          }}
+        />
         <Stack.Screen name={ScreenNames.Tabs} component={TabNav} options={{ headerShown: false }} />
         <Stack.Screen name={ScreenNames.seeAll} component={SeeAllProducts} />
       </Stack.Navigator>

@@ -1,22 +1,26 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image, FlatList, Animated, Easing } from 'react-native';
+import React, { useContext, useState, useRef } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, Image, FlatList, Animated, Easing, Dimensions } from 'react-native';
 import Images from '../assets/images/images';
-import strings from '../res/strings';
+import SolabContext from '../store/solabContext';
 
 const CatsBarItems = ({ selectedCategory, setSelectedCategory, Array }) => {
+    const { strings, changeLanguage } = useContext(SolabContext);
+    const categoriesMap = Object.assign({}, ...Array);
 
     const categories = [
-        { id: Array[0].Food, name: `${strings.DryFood}`, image: Images.catFood() },
-        { id: Array[1].Meat, name: `${strings.meat}`, image: Images.Meat() },
-        { id: Array[2].Accessories, name: `${strings.accessories}`, image: Images.leash() },
-        { id: Array[3].Clothes, name: `${strings.Clothes}`, image: Images.catClothes() },
-        { id: Array[4].Sprays, name: `${strings.Sprays}`, image: Images.spray() },
-        { id: Array[5].Toilet, name: `${strings.toilet}`, image: Images.toilet() },
-        { id: Array[6].Perfume, name: `${strings.treats}`, image: Images.treats() },
-    
+        { id: categoriesMap.Food, name: `${strings.DryFood}`, image: Images.catFood() },
+        { id: categoriesMap.Meat, name: `${strings.meat}`, image: Images.Meat() },
+        { id: categoriesMap.Accessories, name: `${strings.accessories}`, image: Images.leash() },
+        { id: categoriesMap.Clothes, name: `${strings.Clothes}`, image: Images.catClothes() },
+        { id: categoriesMap.Sprays, name: `${strings.Sprays}`, image: Images.spray() },
+        { id: categoriesMap.Toilet, name: `${strings.toilet}`, image: Images.toilet() },
+        { id: categoriesMap.Treats, name: `${strings.treats}`, image: Images.treats() },
+        { id: categoriesMap.Perfume, name: `${strings.perfume}`, image: Images.perfume() },
+        { id: categoriesMap.bowl, name: `${strings.bowl}`, image: Images.bowl() },
     ];
 
     const [animatedValues, setAnimatedValues] = useState(categories.map(() => new Animated.Value(1)));
+    const flatListRef = useRef(null);
 
     const renderBarItems = (category, index) => {
         const accessoriesStyle = {
@@ -53,6 +57,7 @@ const CatsBarItems = ({ selectedCategory, setSelectedCategory, Array }) => {
                     onPress={() => {
                         setSelectedCategory(category.id);
                         animateBounce();
+                        scrollToCategory(index);
                     }}
                 >
                     <Image source={category.image} style={styles.categoryImage} />
@@ -66,6 +71,7 @@ const CatsBarItems = ({ selectedCategory, setSelectedCategory, Array }) => {
 
     const renderBar = () => (
         <FlatList
+            ref={flatListRef}
             data={categories}
             renderItem={({ item, index }) => renderBarItems(item, index)}
             keyExtractor={(item) => item.id}
@@ -73,8 +79,16 @@ const CatsBarItems = ({ selectedCategory, setSelectedCategory, Array }) => {
             style={styles.FlatList}
             horizontal={true}
         />
-        // Function()
     );
+
+    const scrollToCategory = (index) => {
+        // Calculate the width of each item in the FlatList
+        const itemWidth = 79; // Width of each item, adjust as per your styles
+        const screenWidth = Dimensions.get('window').width;
+        const scrollToX = index * itemWidth - (screenWidth / 2 - itemWidth / 2); // Adjusted scroll position
+
+        flatListRef.current.scrollToOffset({ animated: true, offset: scrollToX });
+    };
 
     return renderBar();
 };
@@ -87,7 +101,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     test: {
-
         backgroundColor: 'red',
     },
     categoryStyle: {

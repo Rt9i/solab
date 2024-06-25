@@ -2,19 +2,21 @@ import { TouchableOpacity, Image, ScrollView, StyleSheet, Text, View, Alert } fr
 import React, { useContext, useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import ScreenNames from '../../routes/ScreenNames'
-import strings from '../res/strings'
 import SolabContext from '../store/solabContext'
 import Images from '../assets/images/images'
 import AddOrLess from './AddOrLess'
-strings
+
+
+
 const CatsStoreItems = ({ selectedCategory, displayMode, ...props }) => {
+  const { strings, changeLanguage } = useContext(SolabContext);
   const meatImg = {
     resizeMode: 'contain',
     height: 110,
   };
 
   const navigation = useNavigation();
-  const { brand, name, taste, price, img, hideImage, dis, id, quantity, category } = props;
+  const { brand, name, taste, price, img, hideImage, dis, id, quantity, category, kg, saleAmmount, salePrice } = props;
   const { cart, setCart, handleAddItem, addItem } = useContext(SolabContext);
   // const [quantity, setQuantity] = useState(initialQuantity || 1);
   const [isAddedToCart, setIsAddedToCart] = useState(false);
@@ -45,6 +47,7 @@ const CatsStoreItems = ({ selectedCategory, displayMode, ...props }) => {
     <View style={styles.itemWidth}>
 
 
+
       <View style={styles.items}>
 
         <View style={styles.photo}>
@@ -62,18 +65,28 @@ const CatsStoreItems = ({ selectedCategory, displayMode, ...props }) => {
 
           <View style={styles.props}>
             <Text style={styles.bottomtxt1}>{` ${taste}`}</Text>
-            <Text style={styles.bottomtxt2}>{` ${price} ${strings.priceTag}`}</Text>
+            <View style={styles.rows}>
+
+              <View style={styles.row}>
+
+                {kg && <Text style={styles.bottomtxt3}>{`${kg}`}</Text>}
+                {kg && <Text style={styles.bottomtxt4}>kg</Text>}
+              </View>
+            </View>
           </View>
 
-
-          <TouchableOpacity activeOpacity={0.7} onPress={addToShop}>
+          <TouchableOpacity activeOpacity={0.7} onPress={onCardPress}>
             <View style={styles.cart}>
-              {isAddedToCart ? (
+              {/* {isAddedToCart ? (
                 <AddOrLess itemId={id} Item={props} />
 
               ) : (
                 <Image source={Images.addCart()} style={styles.addCart} />
-              )}
+              )} */}
+
+
+              <Image source={Images.addCart()} style={styles.addCart} />
+              <Text style={styles.bottomtxt2}>{` ${price} ${strings.priceTag}`}</Text>
             </View>
           </TouchableOpacity>
 
@@ -81,6 +94,14 @@ const CatsStoreItems = ({ selectedCategory, displayMode, ...props }) => {
         </View>
 
       </View>
+
+      {saleAmmount &&
+        <View style={styles.sale}>
+          <Text style={styles.saletxt}>{saleAmmount} {salePrice}</Text>
+        </View>
+
+      }
+
     </View>
   )
 }
@@ -88,6 +109,29 @@ const CatsStoreItems = ({ selectedCategory, displayMode, ...props }) => {
 export default CatsStoreItems
 
 const styles = StyleSheet.create({
+  saletxt: {
+    borderWidth: 1,
+
+  },
+  sale: {
+
+    justifyContent: 'center',
+    flexDirection: 'row',
+    elevation: 24,
+    width: '95%',
+
+    position: 'absolute',
+    zIndex: 0,
+    backgroundColor: 'red',
+  },
+  row: {
+    flexDirection: 'row',
+  },
+  rows: {
+    marginRight: 5,
+    flexDirection: 'row',
+    justifyContent: "space-between",
+  },
   checkMark: {
     backgroundColor: 'grey',
     width: 40,
@@ -97,21 +141,18 @@ const styles = StyleSheet.create({
     borderColor: 'black',
   },
   addCart: {
-    backgroundColor: 'grey',
-    width: 110,
+    width: 20,
     height: 20,
     resizeMode: 'contain',
-    borderWidth: 1,
-    borderColor: 'black',
   },
   disContainer: {
     width: 250,
 
   },
   itemWidth: {
-    width: 115,
+    width: 140,
     height: 250,
-    flexDirection: 'row-reverse',
+
     marginBottom: 2,
 
     marginHorizontal: 2,
@@ -142,24 +183,31 @@ const styles = StyleSheet.create({
   },
   items: {
     flex: 1,
-    borderWidth: 1,
-    borderColor: 'black',
+    borderRadius: 5,
     flexDirection: 'column',
     height: 220,
-    width: 110,
+    width: '100%',
     marginRight: 5,
     backgroundColor: 'rgba(20, 70, 200, 0.1)',
-
+    shadowColor: 'black',
+    shadowOffset: {
+      width: 0,
+      height: 0.1, // Decreased height for a lighter shadow
+    },
+    shadowOpacity: 0.1, // Reduced opacity for a lighter shadow
+    shadowRadius: 1, // Reduced radius for a less pronounced blur
+    // elevation: 2, // Adjusted elevation for Android devices
   },
+
+
+
   topContainer: {
     flexDirection: 'row',
   },
   img: {
     resizeMode: 'contain',
-    width: 110,
-    height: 110,
-
-    borderRadius: 10,
+    width: '100%',
+    height: '100%',
 
   },
   bottomcontainer: {
@@ -186,7 +234,25 @@ const styles = StyleSheet.create({
     bottom: 1,
 
   },
+  bottomtxt3: {
+    paddingBottom: 2,
+    fontSize: 12,
+    textAlignVertical: 'center',
+    fontFamily: 'bigFont',
+    color: 'black',
+    bottom: 1,
 
+  },
+  bottomtxt4: {
+    marginTop: 5,
+    paddingBottom: 2,
+    fontSize: 8,
+    textAlignVertical: 'center',
+    fontFamily: 'bigFont',
+    color: 'black',
+    bottom: 1,
+
+  },
   props: {
     flex: 1,
     height: 55,
@@ -199,7 +265,15 @@ const styles = StyleSheet.create({
   },
 
   cart: {
+    borderRadius: 10,
+    paddingHorizontal: 8,
+    justifyContent: 'space-between',
+    backgroundColor: 'grey',
+    borderWidth: 0.3,
+    borderColor: 'black',
+    flexDirection: 'row',
     marginBottom: 5,
+    height: 22,
     width: 110,
   },
   carttxt: {
@@ -214,9 +288,7 @@ const styles = StyleSheet.create({
   },
 
   photo: {
-
-    width: '100%',
-    flex: 4,
+    flex: 7,
 
   },
 

@@ -1,36 +1,50 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SolabContext from './solabContext';
 import { Alert } from 'react-native';
-import getCategoryItemsData from '../res/Data';
+import { enStrings, heStrings, arStrings } from '../res/strings';
 
 const SolabProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [isItemAdded, setIsItemAdded] = useState(false);
   const [brands, setBrands] = useState([])
   const [dogBrands, setDogBrands] = useState([])
+  const [language, setLanguage] = useState('ar');
+  const [strings, setStrings] = useState(heStrings);
+ 
 
+  const translations = {
+    en: enStrings,
+    he: heStrings,
+    ar: arStrings,
+  };
 
+  const changeLanguage = (lang) => {
+    setLanguage(lang);
+  };
 
+  useEffect(() => {
+    setStrings(translations[language]);
+  }, [language]);
 
   const addItem = (item, itemId) => {
 
-  
+
 
     const existingItemIndex = cart.findIndex((item) => item.id === itemId);
     const updatedCart = [...cart];
-   
+
     // setCart(updatedCart);
 
     if (existingItemIndex !== -1) {
       updatedCart[existingItemIndex].quantity++;
     } else {
-      item.quantity = 1 ; 
+      item.quantity = 1;
       updatedCart.push(item);
       setIsItemAdded(true);
     }
 
 
-    
+
 
 
     setCart(updatedCart);
@@ -51,7 +65,7 @@ const SolabProvider = ({ children }) => {
     setCart(updatedCart);
   };
 
-  const checkRemoveItem = ( itemId) => {
+  const checkRemoveItem = (itemId) => {
 
     Alert.alert(
       'Remove Item',
@@ -134,7 +148,10 @@ const SolabProvider = ({ children }) => {
     setBrands,
     dogBrands,
     setDogBrands,
-  
+    strings,
+    changeLanguage,
+    
+
   };
 
   return <SolabContext.Provider value={contextValue}>{children}</SolabContext.Provider>;

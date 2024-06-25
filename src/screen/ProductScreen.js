@@ -2,15 +2,16 @@ import React, { useContext, useState } from 'react';
 import { Alert, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useNavigation, useTheme } from '@react-navigation/native';
 import ScreenNames from '../../routes/ScreenNames';
-import strings from '../res/strings';
+
 import SolabContext from '../store/solabContext';
+import LinearGradient from 'react-native-linear-gradient';
 
 const ProductScreen = props => {
   const navigation = useNavigation();
   const product = props.route.params.data;
   const { addItemToCart } = useContext(SolabContext);
   const [quantity, setQuantity] = useState('');
-
+  const { strings } = useContext(SolabContext);
 
   const handleAddToCart = () => {
     const quantityInt = parseInt(quantity);
@@ -27,27 +28,31 @@ const ProductScreen = props => {
 
   return (
     <View style={styles.container}>
-      <Image source={product.img} style={styles.image} />
+      <LinearGradient
+        colors={['white', 'white', 'black']}
+        locations={[0, 0.58, 1]}
+        style={styles.container}
+      >
+        <Image source={product.img} style={styles.image} />
 
-      <View style={styles.inputContainer}>
+        <View style={styles.inputContainer}>
 
-        <TextInput
-          style={styles.input}
-          keyboardType="number-pad"
-          value={quantity}
-          onChangeText={setQuantity}
-          placeholder="Enter Number"
-          placeholderStyle={styles.placeholder}
-          placeholderTextColor="rgba(0,0,0,0.4)"
-        />
+          <TextInput
+            style={styles.input}
+            keyboardType="number-pad"
+            value={quantity}
+            onChangeText={setQuantity}
+            placeholder={strings.enterNumber}
+            placeholderStyle={styles.placeholder}
+            placeholderTextColor="rgba(0,0,0,0.4)"
+          />
 
-        <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
-          <Text style={styles.addToCartText}>Add to cart</Text>
-        </TouchableOpacity>
-      </View>
-      <Text style={styles.title}>{`${product.brand} ${product.taste}`}</Text>
-      <Text style={styles.dis}>{`${product.dis}`}</Text>
+          <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
+            <Text style={styles.addToCartText}>{strings.addToCart}</Text>
+          </TouchableOpacity>
+        </View>
 
+      </LinearGradient>
 
 
 
@@ -76,9 +81,8 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
+
+
   },
   image: {
     width: '100%',
@@ -87,26 +91,26 @@ const styles = StyleSheet.create({
     backgroundColor: "#071e31",
     borderRadius: 100,
   },
-  title: {
-    color: 'black',
-    fontWeight: 'bold',
-    fontSize: 30,
-    marginVertical: 10,
-  },
-  dis: {
-    fontSize: 20,
-    padding: 5,
-    borderRadius: 25,
-    fontWeight: 'bold',
-    color: 'black',
-    backgroundColor: 'grey',
-    marginBottom: 20,
-  },
+  // title: {
+  //   color: 'black',
+  //   fontWeight: 'bold',
+  //   fontSize: 30,
+  //   marginVertical: 10,
+  // },
+  // dis: {
+  //   fontSize: 20,
+  //   padding: 5,
+  //   borderRadius: 25,
+  //   fontWeight: 'bold',
+  //   color: 'black',
+  //   backgroundColor: 'grey',
+  //   marginBottom: 20,
+  // },
   inputContainer: {
-
+    justifyContent: 'center',
     flexDirection: 'row',
     alignItems: 'center',
-    
+
   },
   label: {
     fontSize: 20,

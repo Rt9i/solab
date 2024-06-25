@@ -3,14 +3,22 @@ import { View, ScrollView, Animated, Image, StyleSheet } from 'react-native';
 import Sizes from '../res/sizes';
 import Images from '../assets/images/images';
 
-const imageList = [Images.saleTest(),Images.premioSale() ];
+const imageList = [Images.saleTest(), Images.premioSale(),];
+
+// Define color sets for each image
+const colorsList = [
+    ['#FF6347', '#FFA07A', '#FF4500', '#FF6347'],
+    ['#4682B4', '#5F9EA0', '#00CED1', '#4682B4']
+];
 
 const SlideAndSnapAnimation = () => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [dotSizes, setDotSizes] = useState(Array(imageList.length).fill().map(() => new Animated.Value(8))); // Start with small size
+    const [gridColors, setGridColors] = useState(colorsList[0]); // Initial colors
 
     useEffect(() => {
         animateDotSize(activeIndex); // Initial animation for active dot size
+        setGridColors(colorsList[activeIndex]); // Set initial grid colors
     }, []);
 
     const handleScroll = (event) => {
@@ -20,14 +28,14 @@ const SlideAndSnapAnimation = () => {
         if (newIndex !== activeIndex) {
             setActiveIndex(newIndex);
             animateDotSize(newIndex);
+            setGridColors(colorsList[newIndex]); // Update grid colors
         }
     };
 
     const animateDotSize = (index) => {
         const newDotSizes = dotSizes.map((size, i) => {
             return Animated.spring(size, {
-                toValue: i === index ? 10 : 8, 
-                duration: 100,
+                toValue: i === index ? 10 : 8,
                 useNativeDriver: false,
             });
         });
@@ -52,8 +60,19 @@ const SlideAndSnapAnimation = () => {
         ));
     };
 
+    const renderGrid = () => {
+        return (
+            <View style={styles.gridContainer}>
+                {gridColors.map((color, index) => (
+                    <View key={index} style={[styles.gridItem, { backgroundColor: color }]} />
+                ))}
+            </View>
+        );
+    };
+
     return (
         <View style={styles.container}>
+            {renderGrid()}
             <ScrollView
                 horizontal
                 pagingEnabled
@@ -70,7 +89,6 @@ const SlideAndSnapAnimation = () => {
                     </View>
                 ))}
             </ScrollView>
-
             <View style={styles.dotsContainer}>
                 {renderPaginationDots()}
             </View>
@@ -97,7 +115,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         flexDirection: 'row',
         justifyContent: 'center',
-        bottom: 5, 
+        bottom: 5,
         left: 0,
         right: 0,
     },
@@ -106,6 +124,20 @@ const styles = StyleSheet.create({
         height: 10,
         borderRadius: 10,
         marginHorizontal: 5,
-       
+    },
+    gridContainer: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    gridItem: {
+        width: '25%',
+        height: '25%',
     },
 });

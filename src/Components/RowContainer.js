@@ -1,10 +1,11 @@
-import { StyleSheet, View, ScrollView, Dimensions, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, ScrollView, Dimensions, Text, TouchableOpacity, FlatList } from 'react-native';
 import React, { Component } from 'react';
 import { rowTitlesByCategory } from '../res/Data';
 import { useNavigation } from '@react-navigation/native';
 import ScreenNames from '../../routes/ScreenNames';
 
 const RowContainer = ({ items, renderItem, text, selectedCategory, row, catMeat }) => {
+    
     const itemWidth = 115;
     const totalWidth = items.length * itemWidth;
     const shouldScroll = totalWidth > Dimensions.get('window').width;
@@ -21,33 +22,29 @@ const RowContainer = ({ items, renderItem, text, selectedCategory, row, catMeat 
 
     return (
         <View style={styles.container}>
-            <View style={styles.txtcont}>
-                <TouchableOpacity onPress={onSeeAllPress} style={styles.touch}>
-                    <View style={styles.seeAll}>
-                        <Text style={styles.seAll}>see All -{">"}</Text>
-                    </View>
-                </TouchableOpacity>
-                {Boolean(text) && (
-                    <Text style={styles.txt}>{text}</Text>
-                )}
+        <View style={styles.txtcont}>
+          <TouchableOpacity onPress={onSeeAllPress} style={styles.touch}>
+            <View style={styles.seeAll}>
+              <Text style={styles.seAll}>see All -{'>'}</Text>
             </View>
-
-            <ScrollView
-                style={styles.scroll}
-                horizontal={shouldScroll}
-                showsHorizontalScrollIndicator={shouldScroll}
-                decelerationRate={shouldScroll ? 'fast' : 'normal'}
-                scrollEventThrottle={16}
-                contentContainerStyle={{ flexGrow: shouldScroll ? 0 : 1 }}
-            >
-                <View style={styles.row}>
-                    {items.map((item, index) => renderItem({ item, index }))}
-                </View>
-            </ScrollView>
-
+          </TouchableOpacity>
+          {Boolean(text) && (
+            <Text style={styles.txt}>{text}</Text>
+          )}
         </View>
+  
+        <FlatList
+          data={items}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id.toString()}
+          horizontal={true} 
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ flexGrow: shouldScroll ? 0 : 1 }}
+         
+        />
+      </View>
     );
-};
+};  
 
 export default RowContainer;
 

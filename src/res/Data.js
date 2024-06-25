@@ -1,5 +1,7 @@
+import { useContext } from "react";
 import Images from "../assets/images/images";
-import strings from "./strings";
+import SolabContext from "../store/solabContext";
+
 //  category: [
 //     'catFood',
 //     'catMeat',
@@ -17,11 +19,572 @@ import strings from "./strings";
 const getCategoryItemsData =
   [
     {
+      id: 'toy1',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.toy1(),
+      dis: '',
+      category: [
+        'catAccessories',
+        'thirdRow',
+      ]
+    },
+    {
+      id: 'toy2',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.toy2(),
+      dis: '',
+      category: [
+        'catAccessories',
+        'thirdRow',
+      ]
+    },
+    {
+      id: 'toy3',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.toy3(),
+      dis: '',
+      category: [
+        'catAccessories',
+        'thirdRow',
+      ]
+    },
+    {
+      id: 'toy4',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.toy4(),
+      dis: '',
+      category: [
+        'catAccessories',
+        'thirdRow',
+      ]
+    },
+    {
+      id: 'toy5',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.toy5(),
+      dis: '',
+      category: [
+        'catAccessories',
+        'thirdRow',
+      ]
+    },
+    {
+      id: 'toy6',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.toy6(),
+      dis: '',
+      category: [
+        'catAccessories',
+        'thirdRow',
+      ]
+    },
+    {
+      id: 'toy7',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.toy7(),
+      dis: '',
+      category: [
+        'catAccessories',
+        'thirdRow',
+      ]
+    },
+    {
+      id: 'toy8',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.toy8(),
+      dis: '',
+      category: [
+        'catAccessories',
+        'thirdRow',
+      ]
+    },
+    {
+      id: 'toy9',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.toy9(),
+      dis: '',
+      category: [
+        'catAccessories',
+        'thirdRow',
+      ]
+    },
+    {
+      id: 'toy10',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.toy10(),
+      dis: '',
+      category: [
+        'catAccessories',
+        'thirdRow',
+      ]
+    },
+    {
+      id: 'toy11',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.toy11(),
+      dis: '',
+      category: [
+        'catAccessories',
+        'thirdRow',
+      ]
+    },
+    {
+      id: 'toy12',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.toy12(),
+      dis: '',
+      category: [
+        'catAccessories',
+        'thirdRow',
+      ]
+    },
+    {
+      id: 'Bowl1',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.bowl1(),
+      dis: '',
+      category: [
+        'catBowl',
+        'DogBowl',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'Bowl2',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.bowl2(),
+      dis: '',
+      category: [
+        'catBowl',
+        'DogBowl',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'Bowl3',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.bowl3(),
+      dis: '',
+      category: [
+        'catBowl',
+        'DogBowl',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'Bowl4',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.bowl4(),
+      dis: '',
+      category: [
+        'catBowl',
+        'DogBowl',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'Bowl5',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.bowl5(),
+      dis: '',
+      category: [
+        'catBowl',
+        'DogBowl',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'Bowl6',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.bowl6(),
+      dis: '',
+      category: [
+        'catBowl',
+        'DogBowl',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'Bowl7',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.bowl7(),
+      dis: '',
+      category: [
+        'catBowl',
+        'DogBowl',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'Bowl8',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.bowl8(),
+      dis: '',
+      category: [
+        'catBowl',
+        'DogBowl',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'Bowl9',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.bowl9(),
+      dis: '',
+      category: [
+        'catBowl',
+        'DogBowl',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'Bowl10',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.bowl10(),
+      dis: '',
+      category: [
+        'catBowl',
+        'DogBowl',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'Bowl11',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.bowl11(),
+      dis: '',
+      category: [
+        'catBowl',
+        'DogBowl',
+        'firstRow',
+      ]
+    },
+
+    {
+      id: 'Bowl12',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.bowl12(),
+      dis: '',
+      category: [
+        'catBowl',
+        'DogBowl',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'Bowl13',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.bowl13(),
+      dis: '',
+      category: [
+        'catBowl',
+        'DogBowl',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'Bowl14',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.bowl14(),
+      dis: '',
+      category: [
+        'catBowl',
+        'DogBowl',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'Bowl15',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.bowl15(),
+      dis: '',
+      category: [
+        'catBowl',
+        'DogBowl',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'Bowl16',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.bowl16(),
+      dis: '',
+      category: [
+        'catBowl',
+        'DogBowl',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'Bowl17',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.bowl17(),
+      dis: '',
+      category: [
+        'catBowl',
+        'DogBowl',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'Bowl18',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.bowl18(),
+      dis: '',
+      category: [
+        'catBowl',
+        'DogBowl',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'Bowl19',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.bowl19(),
+      dis: '',
+      category: [
+        'catBowl',
+        'DogBowl',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'Bowl20',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.bowl20(),
+      dis: '',
+      category: [
+        'catBowl',
+        'DogBowl',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'Bowl21',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.bowl21(),
+      dis: '',
+      category: [
+        'catBowl',
+        'DogBowl',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'Bowl22',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.bowl22(),
+      dis: '',
+      category: [
+        'catBowl',
+        'DogBowl',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'Bowl23',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.bowl23(),
+      dis: '',
+      category: [
+        'catBowl',
+        'DogBowl',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'Bowl24',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.bowl24(),
+      dis: '',
+      category: [
+        'catBowl',
+        'DogBowl',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'Bowl25',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.bowl25(),
+      dis: '',
+      category: [
+        'catBowl',
+        'DogBowl',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'Bowl26',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.bowl26(),
+      dis: '',
+      category: [
+        'catBowl',
+        'DogBowl',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'Bowl27',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.bowl27(),
+      dis: '',
+      category: [
+        'catBowl',
+        'DogBowl',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'Bowl28',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.bowl28(),
+      dis: '',
+      category: [
+        'catBowl',
+        'DogBowl',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'Bowl29',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.bowl29(),
+      dis: '',
+      category: [
+        'catBowl',
+        'DogBowl',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'Bowl30',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.bowl30(),
+      dis: '',
+      category: [
+        'catBowl',
+        'DogBowl',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'Bowl31',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.bowl31(),
+      dis: '',
+      category: [
+        'catBowl',
+        'DogBowl',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'Bowl32',
+      price: 5,
+      brand: '',
+      taste: '',
+      img: Images.bowl32(),
+      dis: '',
+      category: [
+        'catBowl',
+        'DogBowl',
+        'firstRow',
+      ]
+    },
+    {
       id: 'DogMeat1',
-      price: 100,
+      price: 5,
       brand: 'monge',
-      taste: 'i weee',
-      img: Images.mongeKitten(),
+      taste: '',
+      img: Images.DSimbaLamb(),
       dis: 'Dog food fr fr fr',
       category: [
         'dogMeat',
@@ -29,29 +592,187 @@ const getCategoryItemsData =
       ]
     },
     {
-      id: 'DogAccessories1',
-      price: 100,
+      id: 'DogMeat2',
+      price: 8,
       brand: 'monge',
-      taste: 'i weee',
-      img: Images.mongeKitten(),
+      taste: '',
+      img: Images.AlphaDogSalmon(),
       dis: 'Dog food fr fr fr',
       category: [
-        'dogAccessories',
-        'firstRow',
+        'dogMeat',
+        'thirdRow',
       ]
     },
     {
-      id: 'Dogclothes1',
-      price: 100,
+      id: 'DogMeat3',
+      price: 8,
       brand: 'monge',
-      taste: 'i weee',
-      img: Images.mongeKitten(),
+      taste: '',
+      img: Images.cnaanChciekn(),
       dis: 'Dog food fr fr fr',
       category: [
-        'dogClothes',
-        'firstRow',
+        'dogMeat',
+        'thirdRow',
       ]
     },
+    {
+      id: 'DogMeat4',
+      price: 8,
+      brand: 'monge',
+      taste: '',
+      img: Images.DDOGeatBeef(),
+      dis: 'Dog food fr fr fr',
+      category: [
+        'dogMeat',
+        'thirdRow',
+      ]
+    },
+    {
+      id: 'DogMeat5',
+      price: 10,
+      brand: 'monge',
+      taste: '',
+      img: Images.DNuevoDeerNoodlesCowberry(),
+      dis: 'Dog food fr fr fr',
+      category: [
+        'dogMeat',
+        'thirdRow',
+      ]
+    },
+    {
+      id: 'DogMeat6',
+      price: 5,
+      brand: 'monge',
+      taste: '',
+      img: Images.DMongeCanTurkey(),
+      dis: 'Dog food fr fr fr',
+      category: [
+        'dogMeat',
+        'secondRow',
+      ]
+    },
+    {
+      id: 'DogMeat7',
+      price: 5,
+      brand: 'monge',
+      taste: '',
+      img: Images.mongecanChicken(),
+      dis: 'Dog food fr fr fr',
+      category: [
+        'dogMeat',
+        'secondRow',
+      ]
+    },
+    {
+      id: 'DogMeat8',
+      price: 5,
+      brand: 'monge',
+      taste: '',
+      img: Images.DMongeCanCodFish(),
+      dis: 'Dog food fr fr fr',
+      category: [
+        'dogMeat',
+        'secondRow',
+      ]
+    },
+    {
+      id: 'DogMeat9',
+      price: 5,
+      brand: 'monge',
+      taste: '',
+      img: Images.DMongecanSalmon(),
+      dis: 'Dog food fr fr fr',
+      category: [
+        'dogMeat',
+        'secondRow',
+      ]
+    },
+    {
+      id: 'DogMeat10',
+      price: 5,
+      brand: 'monge',
+      taste: '',
+      img: Images.DMongeCanTurkey(),
+      dis: 'Dog food fr fr fr',
+      category: [
+        'dogMeat',
+        'secondRow',
+      ]
+    },
+    {
+      id: 'DogMeat11',
+      price: 5,
+      brand: 'monge',
+      taste: '',
+      img: Images.DMongeCanTuna(),
+      dis: 'Dog food fr fr fr',
+      category: [
+        'dogMeat',
+        'secondRow',
+      ]
+    },
+    {
+      id: 'DogMeat12',
+      price: 5,
+      brand: 'Horizon',
+      taste: 'Chicken&Beef',
+      img: Images.DHorizonChickenBeef(),
+      dis: '',
+      category: [
+        'dogMeat',
+        'secondRow',
+      ]
+    },
+    {
+      id: 'DogMeat13',
+      price: 5,
+      brand: 'Horizon',
+      taste: 'Chicken',
+      img: Images.DHorizonChicken(),
+      dis: '',
+      category: [
+        'dogMeat',
+        'secondRow',
+      ]
+    },
+    {
+      id: 'DogMeat14',
+      price: 5,
+      brand: 'gim',
+      taste: 'Chicken',
+      img: Images.gimcansSmall(),
+      dis: '',
+      category: [
+        'dogMeat',
+        'fourthRow',
+      ]
+    },
+    {
+      id: 'DogMeat15',
+      price: 5,
+      brand: 'gim',
+      taste: 'Chicken',
+      img: Images.gimcanBig(),
+      dis: '',
+      category: [
+        'dogMeat',
+        'fourthRow',
+      ]
+    },
+    {
+      id: 'DogMeat16',
+      price: 5,
+      brand: 'gim',
+      taste: 'Chicken',
+      img: Images.greengimdog(),
+      dis: '',
+      category: [
+        'dogMeat',
+        'fourthRow',
+      ]
+    },
+
+
     {
       id: 'catPerfume',
       price: 35,
@@ -89,7 +810,7 @@ const getCategoryItemsData =
       ]
     },
     {
-      id: 'catTreats',
+      id: 'catTreatse223',
       price: 15,
       brand: 'premio',
       taste: 'Anti hairball',
@@ -260,6 +981,18 @@ const getCategoryItemsData =
       ]
     },
     {
+      id: 'catTreats3',
+      price: 15,
+      brand: 'premio',
+      taste: 'Anti hairball',
+      img: Images.PremioTreatTuna(),
+      dis: '',
+      category: [
+        'catTreats',
+        'thirdRow',
+      ]
+    },
+    {
       id: 'toilet1',
       price: 90,
       brand: 'EverClean',
@@ -327,7 +1060,7 @@ const getCategoryItemsData =
     },
     {
       id: 'toilet6',
-      price: 90,
+      price: 50,
       brand: 'kitKatLitter',
       taste: '',
       img: Images.kitKatLitter(),
@@ -341,31 +1074,63 @@ const getCategoryItemsData =
     },
     {
       id: 'toilet7',
-      price: 90,
+      price: 30,
       brand: 'EverClean',
       taste: '',
       img: Images.LitterSmell(),
       dis: 'bathroom?',
-
       category: [
         'catToilet',
         'thirdRow',
       ]
-
     },
     {
       id: 'toilet8',
-      price: 90,
+      price: 30,
       brand: 'EverClean',
       taste: '',
       img: Images.LitterSmell2(),
       dis: 'bathroom?',
-
       category: [
         'catToilet',
         'thirdRow',
       ]
-
+    },
+    {
+      id: 'toilet9',
+      price: 50,
+      brand: 'petsclean',
+      taste: '',
+      img: Images.petscleanBlue(),
+      dis: '',
+      category: [
+        'catToilet',
+        'secondRow',
+      ]
+    },
+    {
+      id: 'toilet10',
+      price: 50,
+      brand: 'petsclean',
+      taste: '',
+      img: Images.petscleanpink(),
+      dis: '',
+      category: [
+        'catToilet',
+        'secondRow',
+      ]
+    },
+    {
+      id: 'Dtoilet1',
+      price: 100,
+      brand: 'petsclean',
+      taste: '',
+      img: Images.pads(),
+      dis: '',
+      category: [
+        'dogToilet',
+        'firstRow',
+      ]
     },
     {
       id: 'DogFood1',
@@ -386,10 +1151,10 @@ const getCategoryItemsData =
       brand: 'premio',
       taste: 'Chicken',
       img: Images.ApremioSupremeChicken(),
-      dis: 'Dog food fr fr fr',
+      dis: '',
       category: [
         'dogFood',
-        'firstRow',
+        'secondRow',
       ]
     },
     {
@@ -397,8 +1162,8 @@ const getCategoryItemsData =
       price: 545,
       brand: 'bioForm',
       taste: '',
-      img: Images.bioForm(),
-      dis: 'Dog food fr fr fr',
+      img: Images.bioform3k(),
+      dis: '',
       category: [
         'dogFood',
         'firstRow',
@@ -413,7 +1178,7 @@ const getCategoryItemsData =
       dis: 'Dog food fr fr fr',
       category: [
         'dogFood',
-        'firstRow',
+        'secondRow',
       ]
     },
     {
@@ -425,7 +1190,7 @@ const getCategoryItemsData =
       dis: 'Dog food fr fr fr',
       category: [
         'dogFood',
-        'firstRow',
+        'thirdRow',
       ]
     },
     {
@@ -436,8 +1201,8 @@ const getCategoryItemsData =
       img: Images.grandorfLambDuckTurkey(),
       dis: 'Dog food fr fr fr',
       category: [
-        'dogFood',
-        'firstRow',
+        'catFood',
+        'tenthRow',
       ]
     },
     {
@@ -448,20 +1213,8 @@ const getCategoryItemsData =
       img: Images.grandorfLambTurkey(),
       dis: 'Dog food fr fr fr',
       category: [
-        'dogFood',
-        'firstRow',
-      ]
-    },
-    {
-      id: 'DogFood8',
-      price: 545,
-      brand: 'grandorf',
-      taste: 'Lamb&Turkey',
-      img: Images.grandorfLambTurkeyKitten(),
-      dis: 'Dog food fr fr fr',
-      category: [
-        'dogFood',
-        'secondRow',
+        'catFood',
+        'tenthRow',
       ]
     },
     {
@@ -470,10 +1223,10 @@ const getCategoryItemsData =
       brand: 'grandorf',
       taste: 'Liver&Duck&Turkey',
       img: Images.grandorfLiverDuckTurkey(),
-      dis: 'Dog food fr fr fr',
+      dis: '',
       category: [
-        'dogFood',
-        'firstRow',
+        'catFood',
+        'tenthRow',
       ]
     },
     {
@@ -501,18 +1254,7 @@ const getCategoryItemsData =
       ]
     },
 
-    {
-      id: 'DogFood13',
-      price: 545,
-      brand: 'grandorf',
-      taste: 'Lamb&Turkey',
-      img: Images.grandorfPuppyLambTurkey(),
-      dis: 'Dog food fr fr fr',
-      category: [
-        'dogFood',
-        'secondRow',
-      ]
-    },
+
     {
       id: 'DogFood14',
       price: 545,
@@ -521,8 +1263,8 @@ const getCategoryItemsData =
       img: Images.grandorfRabbitTurkeySterilised(),
       dis: 'Dog food fr fr fr',
       category: [
-        'dogFood',
-        'thirdRow',
+        'catFood',
+        'tenthRow',
       ]
     },
     {
@@ -531,10 +1273,10 @@ const getCategoryItemsData =
       brand: 'grandorf',
       taste: 'Lamb&BrownRice',
       img: Images.grandorfTurkeyBrownRice(),
-      dis: 'Dog food fr fr fr',
+      dis: '',
       category: [
         'dogFood',
-        'firstRow',
+        'thirdRow',
       ]
     },
     {
@@ -543,24 +1285,157 @@ const getCategoryItemsData =
       brand: 'grandorf',
       taste: 'Turkey',
       img: Images.grandorfTurkeySterilised(),
-      dis: 'Dog food fr fr fr',
+      dis: '',
+      category: [
+        'catFood',
+        'tenthRow',
+      ]
+    },
+    {
+      id: 'DogFood17',
+      price: 75,
+      brand: 'Monge',
+      taste: 'Turkey',
+      img: Images.DmongeChickenRicePotatoes(),
+      dis: '',
       category: [
         'dogFood',
-        'firstRow',
+        'fourthRow',
       ]
     },
-  
     {
-      id: 'dogAccessories1',
-      price: 65,
-      brand: 'monge',
-      taste: 'i dont know',
-      img: Images.mongeKitten(),
-      dis: 'Dog food fr fr fr',
+      id: 'DogFood18',
+      price: 75,
+      brand: 'Monge',
+      taste: 'Lamb&Rice',
+      img: Images.DMongeLambRice(),
+      dis: '',
       category: [
-        'dogAccessories',
+        'dogFood',
+        'fourthRow',
       ]
     },
+    {
+      id: 'DogFood19',
+      price: 75,
+      brand: 'Monge',
+      taste: 'Salmon&Rice',
+      img: Images.DMongeSalmonRice3kg(),
+      dis: '',
+      category: [
+        'dogFood',
+        'fourthRow',
+      ]
+    },
+    {
+      id: 'DogFood21',
+      price: 75,
+      brand: 'Reflex',
+      taste: 'Chicken',
+      img: Images.dReflexChicken15kg(),
+      dis: '',
+      category: [
+        'dogFood',
+        'fifthRow',
+      ]
+    },
+    {
+      id: 'DogFood20',
+      price: 75,
+      brand: 'Reflex',
+      taste: 'Lamb&Blueberry',
+      img: Images.DpropreformancePuppySmallBreedLambBlueberry2kg(),
+      dis: '',
+      category: [
+        'dogFood',
+        'secondRow',
+      ]
+    },
+    {
+      id: 'DogFood22',
+      price: 50,
+      brand: 'Reflex',
+      taste: 'Beef',
+      img: Images.DReflexBeef12kg(),
+      dis: '',
+      category: [
+        'dogFood',
+        'fifthRow',
+      ]
+    },
+    {
+      id: 'DogFood23',
+      price: 50,
+      brand: 'Reflex',
+      taste: 'Chicken',
+      img: Images.DReflexChicken3kg(),
+      dis: '',
+      category: [
+        'dogFood',
+        'fifthRow',
+      ]
+    },
+    {
+      id: 'DogFood24',
+      price: 50,
+      brand: 'Reflex',
+      taste: 'Lamb&Rice',
+      img: Images.DRelfexLambRice15kg(),
+      dis: '',
+      category: [
+        'dogFood',
+        'fifthRow',
+      ]
+    },
+    {
+      id: 'DogFood25',
+      price: 50,
+      brand: 'Reflex',
+      taste: 'Chicken&Rice',
+      img: Images.DReflexChickenRice3kg(),
+      dis: '',
+      category: [
+        'dogFood',
+        'fifthRow',
+      ]
+    },
+    {
+      id: 'DogFood26',
+      price: 50,
+      brand: 'Reflex',
+      taste: 'LambRice',
+      img: Images.DReflexLambRiceJunior(),
+      dis: '',
+      category: [
+        'dogFood',
+        'secondRow',
+      ]
+    },
+    {
+      id: 'DogFood27',
+      price: 50,
+      brand: 'Reflex',
+      taste: 'Salmon',
+      img: Images.DReflexSalmon(),
+      dis: '',
+      category: [
+        'dogFood',
+        'fifthRow',
+      ]
+    },
+    {
+      id: 'DogFood28',
+      price: 75,
+      brand: 'Reflex',
+      taste: 'Salmon',
+      img: Images.DReflexSalmon12kg(),
+      dis: '',
+      category: [
+        'dogFood',
+        'fifthRow',
+      ]
+    },
+
 
 
 
@@ -577,19 +1452,96 @@ const getCategoryItemsData =
       ]
     },
     {
-      id: 'DogSprays1',
-      price: 46,
-      brand: 'yea',
-      taste: 'i dont know',
-      img: Images.mongeKitten(),
-      dis: 'Dog food fr fr fr',
+      id: 'sprays1',
+      price: 0,
+      brand: '',
+      taste: '',
+      img: Images.sprayticks(),
+      dis: '',
       category: [
         'dogSprays',
+        'catSprays',
+        'firstRow',
       ]
     },
-
-
-
+    {
+      id: 'sprays2',
+      price: 0,
+      brand: '',
+      taste: '',
+      img: Images.srayidk(),
+      dis: '',
+      category: [
+        'dogSprays',
+        'catSprays',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'sprays3',
+      price: 0,
+      brand: '',
+      taste: '',
+      img: Images.srpayantipet(),
+      dis: '',
+      category: [
+        'dogSprays',
+        'catSprays',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'sprays4',
+      price: 0,
+      brand: '',
+      taste: '',
+      img: Images.srpayticks2(),
+      dis: '',
+      category: [
+        'dogSprays',
+        'catSprays',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'sprays5',
+      price: 0,
+      brand: '',
+      taste: '',
+      img: Images.frontlineSpray(),
+      dis: '',
+      category: [
+        'dogSprays',
+        'catSprays',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'sprays6',
+      price: 0,
+      brand: '',
+      taste: '',
+      img: Images.sprayEGO(),
+      dis: '',
+      category: [
+        'dogSprays',
+        'catSprays',
+        'firstRow',
+      ]
+    },
+    {
+      id: 'sprays7',
+      price: 0,
+      brand: '',
+      taste: '',
+      img: Images.spraylitterbox(),
+      dis: '',
+      category: [
+        'dogSprays',
+        'catSprays',
+        'firstRow',
+      ]
+    },
     {
       id: 'Fooder2s3',
       price: 100,
@@ -676,8 +1628,11 @@ const getCategoryItemsData =
       ]
     },
     {
+      saleAmmount: 3,
+      salePrice: 10,
       id: 'Foods78',
       price: 100,
+      kg: 20,
       brand: 'Friskies',
       taste: 'SeaFood',
       img: Images.friskiesSeaFoodTunaSalmonWhitefishCrabShrimp(),
@@ -991,7 +1946,7 @@ const getCategoryItemsData =
     },
 
     {
-      id: 'Food20',
+      id: 'Food20a',
       price: 100,
       brand: 'Reflex',
       taste: 'Chicken&Rice',
@@ -1295,12 +2250,12 @@ const getCategoryItemsData =
 
 
     {
-      id: 'leash1',
+      id: 'bag1',
       price: 150,
       brand: 'leash',
       taste: 'bag',
       img: Images.bag3(),
-      dis: 'Leash Item 1 Description',
+      dis: '',
       category: [
         'catAccessories',
         'firstRow'
@@ -1308,31 +2263,55 @@ const getCategoryItemsData =
     },
 
     {
-      id: 'leash2',
+      id: 'bag4',
       price: 150,
       brand: 'leash',
       taste: 'bag',
       img: Images.bag4(),
-      dis: 'Leash Item 1 Description',
+      dis: '',
       category: [
         'catAccessories',
         'firstRow'
       ]
     },
     {
-      id: 'leash3',
+      id: 'bag5',
       price: 150,
       brand: 'leash',
       taste: 'bag',
       img: Images.bag5(),
-      dis: 'Leash Item 1 Description',
+      dis: '',
       category: [
         'catAccessories',
         'firstRow'
       ]
     },
     {
-      id: 'leash4',
+      id: 'acc1',
+      price: 50,
+      brand: '',
+      taste: '',
+      img: Images.cardboard1(),
+      dis: '',
+      category: [
+        'catAccessories',
+        'secondRow'
+      ]
+    },
+    {
+      id: 'acc2',
+      price: 50,
+      brand: '',
+      taste: '',
+      img: Images.waterbottelfountaint(),
+      dis: '',
+      category: [
+        'dogAccessories',
+        'firstRow'
+      ]
+    },
+    {
+      id: 'bag6',
       price: 150,
       brand: 'leash',
       taste: 'bag',
@@ -1364,6 +2343,7 @@ const getCategoryItemsData =
       dis: 'Clothes Item 1 Description',
       category: [
         'catClothes',
+        'dogClothes',
         'firstRow'
       ]
     },
@@ -1376,6 +2356,7 @@ const getCategoryItemsData =
       dis: 'Clothes Item 1 Description',
       category: [
         'catClothes',
+        'dogClothes',
         'firstRow'
       ]
     },
@@ -1389,6 +2370,7 @@ const getCategoryItemsData =
       dis: 'Clothes Item 1 Description',
       category: [
         'catClothes',
+        'dogClothes',
         'firstRow'
       ]
     },
@@ -1401,48 +2383,10 @@ const getCategoryItemsData =
       dis: 'Clothes Item 1 Description',
       category: [
         'catClothes',
+        'dogClothes',
         'firstRow'
       ]
     },
-
-
-    {
-      id: 'sprays1',
-      price: 10,
-      brand: 'bonjor',
-      taste: 'chicken',
-      img: Images.mongeKitten(),
-      dis: 'sprays Item 1 Description',
-      category: [
-        'catSprays',
-        'firstRow',
-      ]
-    },
-    {
-      id: 'sprays2',
-      price: 10,
-      brand: 'bonjor',
-      taste: 'chicken',
-      img: Images.mongeKitten(),
-      dis: 'sprays Item 1 Description',
-      category: [
-        'catSprays',
-        'firstRow',
-      ]
-    },
-    {
-      id: 'sprays3',
-      price: 5,
-      brand: 'bonjor',
-      taste: 'chicken',
-      img: Images.mongeKitten(),
-      dis: 'sprays Item 1 Description',
-      category: [
-        'catSprays',
-        'firstRow',
-      ]
-    },
-
     {
       id: 'meat14',
       price: 5,
@@ -1480,7 +2424,6 @@ const getCategoryItemsData =
         'fifthRow',
       ]
     },
-
     {
       id: 'meat15',
       price: 5,
@@ -2154,6 +3097,7 @@ const getCategoryItemsData =
       dis: 'meaty',
       category: [
         'catMeat',
+        'firstRow',
       ]
     },
     {
@@ -2192,7 +3136,6 @@ const getCategoryItemsData =
         'fifthRow',
       ]
     },
-
     {
       id: 'meat52',
       price: 7,
@@ -2205,7 +3148,6 @@ const getCategoryItemsData =
         'fifthRow',
       ]
     },
-
     {
       id: 'meat53',
       price: 5,
@@ -2253,7 +3195,6 @@ const getCategoryItemsData =
     },
 
   ]
-
 export const rowTitlesByCategory = {
   catFood: [
     "Friskies",
@@ -2265,25 +3206,32 @@ export const rowTitlesByCategory = {
     'premio',
     'drools',
     'petsChoice',
-
+    'Grandorf',
   ],
   catMeat: [
-    `3 = 10${strings.priceTag}`,
-    `3 = 20 ${strings.priceTag}`,
-    `3 = 10 ${strings.priceTag}`,
-    ` Kitten 3 = 10 ${strings.priceTag}`,
+    // `3 = 10${strings.priceTag}`,
+    // `3 = 20 ${strings.priceTag}`,
+    // `3 = 10 ${strings.priceTag}`,
+    // ` Kitten 3 = 10 ${strings.priceTag}`,
   ],
   catToilet: [
-    `3 = 250${strings.priceTag}`,
+    // `3 = 250${strings.priceTag}`,
   ],
   catTreats: [
     '',
     'Kittens',
-    `8 = 50 ${strings.priceTag}`,
+    // `8 = 50 ${strings.priceTag}`,
     '',
     '',
     '',
 
-  ]
+  ],
+  dogFood: [
+    '',
+    'puppy',
+    'Grandorf',
+    'Monge',
+    'Reflex',
+  ],
 }
 export default getCategoryItemsData;

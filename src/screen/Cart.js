@@ -1,23 +1,22 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, Alert } from 'react-native';
 import SolabContext from '../store/solabContext';
-import strings from '../res/strings';
 import CartRowItems from '../Components/CartRowItems';
 import CartItems from '../Components/CartItems';
 import Images from '../assets/images/images';
 import DisplayItem from '../Components/DisplayItem';
 
 const Cart = (props) => {
-  const item = { ...props };
-  const { brand, name, taste, price, img, hideImage, id, onRemove, initialQuantity, quantity } = props;
+  const { strings, changeLanguage } = useContext(SolabContext);
   const { cart, removeItemFromCart, setCart } = useContext(SolabContext);
   const [displayMode, setDisplayMode] = useState('row');
-  const [totalPrice, setTotalprice] = useState(0 + strings.priceTag)
+  const [totalPrice, setTotalPrice] = useState(0);
 
   const clearCart = () => {
     setCart([]);
   };
-  const alertclear = () => {
+
+  const alertClear = () => {
     Alert.alert(
       'Clear Cart',
       'Are you sure you want to clear your cart?',
@@ -34,32 +33,25 @@ const Cart = (props) => {
       ],
       { cancelable: true }
     );
-
-
-  }
+  };
 
   const calculateTotalPrice = () => {
     let totalPrice = 0;
     cart.forEach(item => {
       totalPrice += item.price * item.quantity;
     });
-    return (
-      <Text style={styles.totalPrice}>
-        {`${strings.price}`} = {totalPrice}{`${strings.priceTag}`}
-      </Text>
-    );
+    setTotalPrice(totalPrice);
   };
 
   useEffect(() => {
-    setTotalprice(calculateTotalPrice(item));
+    calculateTotalPrice();
   }, [cart]);
-
 
   const showImage = () => {
     return (
       <Image source={Images.photo()} style={styles.smallimg} />
-    )
-  }
+    );
+  };
 
   const renderCart = ({ item }) => {
     if (item && item.id) {
@@ -69,10 +61,9 @@ const Cart = (props) => {
         return <CartItems {...item} hideImage={true} onRemove={() => removeItemFromCart(item.id)} />;
       }
     } else {
-      return null; // Or you can handle this case differently, like showing a loading indicator or error message
+      return null;
     }
   };
-
 
   const emptyCartMessage = () => {
     if (cart.length === 0) {
@@ -84,21 +75,23 @@ const Cart = (props) => {
   return (
     <View style={styles.container}>
       <View style={styles.toptxt}>
-        <Text style={styles.carttxt}>{` ${strings.cart} `}</Text>
+        <Text style={styles.carttxt}>{strings.cart}</Text>
       </View>
 
-      <View style={styles.selectedDisplay} >
+      <View style={styles.selectedDisplay}>
         <DisplayItem
           setDisplayMode={setDisplayMode}
           displayMode={displayMode}
         />
-        <TouchableOpacity style={styles.cleartouch} onPress={() => { alertclear() }}>
-          <Text style={styles.clearCart}>Clear cart</Text>
+        <TouchableOpacity style={styles.cleartouch} onPress={alertClear}>
+          <Text style={styles.clearCart}>{strings.clearCart}</Text>
         </TouchableOpacity>
       </View>
 
-     <View style={[styles.items, displayMode === 'row' && { alignItems: 'center' }]}>
-        {calculateTotalPrice(item)}
+      <View style={[styles.items, displayMode === 'row' && { alignItems: 'center' }]}>
+        <Text style={styles.totalPrice}>
+          {`${strings.price}`} = {totalPrice} {`${strings.priceTag}`}
+        </Text>
         {emptyCartMessage()}
         <FlatList
           data={cart}
@@ -154,7 +147,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginHorizontal: 30,
-
   },
   toptxt: {
     justifyContent: 'center',
@@ -187,9 +179,7 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     borderWidth: 1,
     borderColor: 'white',
-    
   },
-  
   emptyText: {
     textAlign: 'center',
     marginTop: 220,
@@ -198,7 +188,6 @@ const styles = StyleSheet.create({
     fontSize: 40,
     opacity: 0.2,
     width: 250,
-  
     borderWidth: 0.8,
     borderColor: 'white',
     borderRadius: 100,

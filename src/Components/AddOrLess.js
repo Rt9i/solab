@@ -3,9 +3,8 @@ import React, { useContext, useEffect, useState } from 'react'
 import SolabContext from '../store/solabContext';
 
 const AddOrLess = ({ itemId, Item, quantity }) => {
-
     const { checkRemoveItem, removeItemFromCart, addItem, cart } = useContext(SolabContext);
-
+ 
 
 
     const getItemFromCart = () => {
@@ -95,6 +94,7 @@ const styles = StyleSheet.create({
         width: 20,
     },
     minus: {
+
         fontFamily: 'bigFont',
         fontSize: 25,
         alignContent: 'center',

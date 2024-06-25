@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Images from '../assets/images/images';
 import strings from '../res/strings';
+import SolabContext from '../store/solabContext';
 
 
 const DisplayItem = ({ setDisplayMode, displayMode }) => {
-
+  const { strings, changeLanguage } = useContext(SolabContext);
+  
   const setDisplay = () => {
     const updatedMode = displayMode === 'row' ? 'column' : 'row';
     setDisplayMode(updatedMode);
@@ -24,7 +26,7 @@ const DisplayItem = ({ setDisplayMode, displayMode }) => {
       <Text style={styles.displaytxt}>{strings.display}</Text>
 
       <View style={styles.rowOrcolumn}>
-       
+
         {(displayMode === 'row') && (
           < TouchableOpacity
             activeOpacity={0.7}
@@ -52,11 +54,11 @@ const DisplayItem = ({ setDisplayMode, displayMode }) => {
               </View>
             </View>
           </TouchableOpacity>)
-    
-        }  
-        
+
+        }
+
         {displayMode === 'column' && (
-          
+
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => setDisplayMode('row') + setDisplay()}
@@ -65,7 +67,7 @@ const DisplayItem = ({ setDisplayMode, displayMode }) => {
               { backgroundColor: '#7391c8' },
             ]}
           >
-       
+
 
             <View style={styles.rowbox}>
 
