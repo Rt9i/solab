@@ -8,7 +8,7 @@ const SolabProvider = ({ children }) => {
   const [isItemAdded, setIsItemAdded] = useState(false);
   const [brands, setBrands] = useState([])
   const [dogBrands, setDogBrands] = useState([])
-  const [language, setLanguage] = useState('ar');
+  const [language, setLanguage] = useState('he');
   const [strings, setStrings] = useState(heStrings);
  
 

@@ -97,9 +97,8 @@ const CatsStoreItems = ({ selectedCategory, displayMode, ...props }) => {
 
       {saleAmmount &&
         <View style={styles.sale}>
-          <Text style={styles.saletxt}>{saleAmmount} {salePrice}</Text>
+         <Text style={styles.saletxt}>{saleAmmount} {salePrice}</Text>
         </View>
-
       }
 
     </View>

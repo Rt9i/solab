@@ -45,7 +45,7 @@ const CatsStore = () => {
       { items: 'tenthRow' },
     ];
     return rows.map((row, index) => (
-       <RowContainer
+      <RowContainer
         row={row}
         text={rowTitlesByCategory[selectedCategory]?.[index]}
         catMeatTxt={row.catMeat}
@@ -106,14 +106,19 @@ const CatsStore = () => {
     { bowl: 'catBowl' },
   ];
 
+  const getAllUswersFromApi = () => {
+
+
+  }
+
   return (
-    
+
     <LinearGradient
       colors={['#6CCAFF', '#6CCAFF', '#0066FF']}
       locations={[0, 0.58, 1]}
       style={styles.container}
     >
-    
+
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={{ minHeight: Sizes.screenHeight }}
@@ -145,7 +150,7 @@ const CatsStore = () => {
         {handleRows()}
       </ScrollView>
       {showScrollUp && <ScrollUp scrollViewRef={scrollViewRef} onPress={handleScrollUpPress} />}
-     
+
     </LinearGradient>
   );
 };

@@ -14,28 +14,29 @@ const TabNav = () => {
   const { cart, strings, changeLanguage } = useContext(SolabContext);
 
   const CustomTabBarLabel = ({ focused, title, icon, marginLeft, marginTop, language }) => {
-  const renderCartLength = (title === strings.cart)
-  
-  return (
-    <View style={styles.tabBarLabel}>
-      <View>
-        <View style={{ marginTop }}>
-          <Image source={icon} style={{ width: 24, height: 24, marginLeft }} />
-        </View>
+    const renderCartLength = (title === strings.cart)
+
+    return (
+      <View style={styles.tabBarLabel}>
         <View>
-          <Text style={[styles.tabBarLabelText, { color: focused ? '#7391c8' : 'black' }]}>
-            {title}
-          </Text>
+          <View style={{ marginTop }}>
+            <Image source={icon} style={{ width: 24, height: 24, marginLeft }} />
+          </View>
+          <View>
+            <Text style={[styles.tabBarLabelText, { color: focused ? '#7391c8' : 'black' }]}>
+              {title}
+            </Text>
+          </View>
         </View>
+        {renderCartLength && (
+          <View>
+            {cart.length > 0 && (<Text style={styles.itemsCounter}>{cart.length}</Text>)}
+
+          </View>
+        )}
       </View>
-      {renderCartLength && (
-        <View>
-          <Text style={styles.itemsCounter}>{cart.length}</Text>
-        </View>
-      )}
-    </View>
-  );
-};
+    );
+  };
 
   return (
     <Tab.Navigator

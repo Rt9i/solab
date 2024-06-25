@@ -1643,6 +1643,7 @@ const getCategoryItemsData =
       ]
     },
     {
+      
       id: 'Food587',
       price: 100,
       brand: 'Friskies',
