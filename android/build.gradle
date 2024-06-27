@@ -8,7 +8,7 @@ buildscript {
         kotlinVersion = "1.5.31" // Adjust according to your Kotlin plugin version
     }
     repositories {
-        google()
+        google()    
         mavenCentral()
     }
     dependencies {
@@ -16,6 +16,13 @@ buildscript {
         classpath("com.facebook.react:react-native-gradle-plugin:0.6.4") // Adjust version as per your React Native version
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
         classpath("com.google.gms:google-services:4.3.10") // Ensure this version is suitable for your Firebase setup
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
     }
 }
 

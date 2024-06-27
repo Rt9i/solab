@@ -17,8 +17,8 @@ const MainNavigation = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-           <Stack.Screen name={ScreenNames.login} component={Login} />
+      <Stack.Navigator> 
+           {/* <Stack.Screen name={ScreenNames.login} component={Login} /> */}
         <Stack.Screen name={ScreenNames.splash} component={Splash} options={{ headerShown: false }} />
         <Stack.Screen name={ScreenNames.home} component={Home} options={{ headerShown: false }} />
         

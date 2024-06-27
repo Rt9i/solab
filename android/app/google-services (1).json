@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "253100960092",
+    "project_id": "solab-eb3ba",
+    "storage_bucket": "solab-eb3ba.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:253100960092:android:341da7583fca3689fcb999",
+        "android_client_info": {
+          "package_name": "com.solab"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiayGvzgvBiJafeY-vJHS6IFK1y32lFRY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

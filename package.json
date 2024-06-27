@@ -14,7 +14,7 @@
     "@freakycoder/react-native-bounceable": "^1.0.3",
     "@react-native-firebase/app": "^20.1.0",
     "@react-native-firebase/auth": "^20.1.0",
-    "@react-native-google-signin/google-signin": "react-native-google-signin/google-signin",
+    "@react-native-google-signin/google-signin": "^12.2.1",
     "@react-native-picker/picker": "^2.6.1",
     "@react-navigation/bottom-tabs": "^6.5.20",
     "@react-navigation/native": "^6.1.17",
