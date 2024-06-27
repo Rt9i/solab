@@ -9,7 +9,7 @@ const App = () => {
       <SolabProvider>
         <MainNavigation />
       </SolabProvider>
-    </View>
+    </View> 
   );
 };
 

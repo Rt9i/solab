@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { View, StyleSheet, ScrollView, Animated, Text, Button } from 'react-native';
 import CatsStoreItems from '../Components/CatsStoreItems';
 import getCategoryItemsData, { rowTitlesByCategory } from '../res/Data';
@@ -10,9 +10,11 @@ import RowContainer from '../Components/RowContainer';
 import ScrollUp from '../Components/scrollUp';
 import LinearGradient from 'react-native-linear-gradient';
 import SolabContext from '../store/solabContext';
+import Login from './Login';
+import ScreenNames from '../../routes/ScreenNames';
+import { getAllUsers } from '../res/api';
 
-
-const CatsStore = () => {
+const CatsStore = (props) => {
   const [selectedCategory, setSelectedCategory] = useState('catFood');
   const navigation = useNavigation();
   const [displayMode, setDisplayMode] = useState('row');
@@ -106,11 +108,6 @@ const CatsStore = () => {
     { bowl: 'catBowl' },
   ];
 
-  const getAllUswersFromApi = () => {
-
-
-  }
-
   return (
 
     <LinearGradient
@@ -131,7 +128,6 @@ const CatsStore = () => {
           <Button title=" עברית" onPress={() => changeLanguage('he')} />
           <Button title=" عربي" onPress={() => changeLanguage('ar')} />
         </View>
-
 
         <View style={styles.sale}>
           <SlideAndSnapAnimation onScroll={handleScroll} />

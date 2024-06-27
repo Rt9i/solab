@@ -5,7 +5,7 @@ import { screensEnabled } from 'react-native-screens';
 import Images from '../assets/images/images';
 import { TouchableOpacity } from 'react-native';
 import BottomBar from '../Components/BottomBar';
-
+import { getAllUsers } from '../res/api';
 
 const Splash = props => {
   console.log('can go back? ', props.navigation.canGoBack());
@@ -18,9 +18,20 @@ const Splash = props => {
   };
   useEffect(() => {
     navigateHome();
-
+    // getAllUsersFromApi();
 
   }, [])
+  const navigateLogin = (data) => {
+    props.navigation.replace(ScreenNames.login, { users: data });
+  };
+  
+  const getAllUsersFromApi = () => {
+    getAllUsers().then(res => {
+      navigateLogin(res); 
+      console.log('users: ', res);
+    });
+  };
+
 
 
   return (
