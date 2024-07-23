@@ -1,16 +1,22 @@
 import React, { useContext, useState } from 'react';
-import { Alert, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { useNavigation, useTheme } from '@react-navigation/native';
-import ScreenNames from '../../routes/ScreenNames';
-
+import {
+  Alert,
+  Image,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import SolabContext from '../store/solabContext';
 import LinearGradient from 'react-native-linear-gradient';
 
-const ProductScreen = props => {
+const ProductScreen = (props) => {
   const navigation = useNavigation();
   const product = props.route.params.data;
   const { addItemToCart } = useContext(SolabContext);
-  const [quantity, setQuantity] = useState('');
+  const [quantity, setQuantity] = useState('1');
   const { strings } = useContext(SolabContext);
 
   const handleAddToCart = () => {
@@ -23,110 +29,120 @@ const ProductScreen = props => {
 
     const item = { ...product, quantity: quantityInt };
     addItemToCart(item, item.id);
-    navigation.navigate(ScreenNames.cart);
+    navigation.goBack();
   };
 
   return (
     <View style={styles.container}>
       <LinearGradient
-        colors={['white', 'white', 'black']}
-        locations={[0, 0.58, 1]}
-        style={styles.container}
-      >
+        colors={['#ffffff', '#f0f0f0', '#e0e0e0']}
+        style={styles.gradient}>
         <Image source={product.img} style={styles.image} />
 
         <View style={styles.inputContainer}>
-
           <TextInput
             style={styles.input}
             keyboardType="number-pad"
             value={quantity}
             onChangeText={setQuantity}
             placeholder={strings.enterNumber}
-            placeholderStyle={styles.placeholder}
-            placeholderTextColor="rgba(0,0,0,0.4)"
+            placeholderTextColor="#888"
           />
 
-          <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
+          <TouchableOpacity
+            style={styles.addToCartButton}
+            onPress={handleAddToCart}>
             <Text style={styles.addToCartText}>{strings.addToCart}</Text>
           </TouchableOpacity>
         </View>
 
+        <View style={styles.descriptionContainer}>
+          <Text style={styles.descriptionText}>{product.dis}</Text>
+        </View>
       </LinearGradient>
-
-
-
     </View>
   );
 };
 
-export default ProductScreen;
-
 const styles = StyleSheet.create({
-
-  placeholder: {
-    fontStyle: 'italic',
-  },
-  input: {
-    textAlign: 'center',
-    fontWeight: 'bold',
-    borderWidth: 1,
-    borderColor: 'grey',
-    color: 'black',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    fontSize: 11,
-    backgroundColor: 'white',
-    width: 100,
+  gradient: {
+    flex: 1,
+    padding: 16,
   },
   container: {
     flex: 1,
-
-
+    backgroundColor: '#f8f8f8',
   },
   image: {
     width: '100%',
-    height: 340,
+    height: 300,
     resizeMode: 'contain',
-    backgroundColor: "#071e31",
-    borderRadius: 100,
+    borderRadius: 12,
+    marginBottom: 16,
+    borderColor: '#ddd',
+    borderWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
   },
-  // title: {
-  //   color: 'black',
-  //   fontWeight: 'bold',
-  //   fontSize: 30,
-  //   marginVertical: 10,
-  // },
-  // dis: {
-  //   fontSize: 20,
-  //   padding: 5,
-  //   borderRadius: 25,
-  //   fontWeight: 'bold',
-  //   color: 'black',
-  //   backgroundColor: 'grey',
-  //   marginBottom: 20,
-  // },
   inputContainer: {
-    justifyContent: 'center',
     flexDirection: 'row',
     alignItems: 'center',
-
+    justifyContent: 'space-between',
+    marginVertical: 16,
   },
-  label: {
-    fontSize: 20,
+  input: {
+    flex: 1,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    fontSize: 16,
+    backgroundColor: '#fff',
     marginRight: 10,
     color: 'black',
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
   },
-
   addToCartButton: {
-    backgroundColor: 'grey',
-    paddingVertical: 10,
+    backgroundColor: '#4CAF50',
+    paddingVertical: 12,
     paddingHorizontal: 20,
-    borderRadius: 5,
+    borderRadius: 8,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
   },
   addToCartText: {
-    fontSize: 18,
-    color: 'white',
+    fontSize: 16,
+    color: '#fff',
     fontWeight: 'bold',
   },
+  descriptionContainer: {
+    marginTop: 20,
+    padding: 16,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    borderColor: '#ddd',
+    borderWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+  descriptionText: {
+    fontSize: 16,
+    color: '#333',
+    textAlign: 'center',
+  },
 });
+
+export default ProductScreen;

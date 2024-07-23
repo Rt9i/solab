@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     },
     arrowContainer: {
         position: 'absolute',
-        bottom: 10,
+        bottom: 70,
         right: 10,
     },
 });

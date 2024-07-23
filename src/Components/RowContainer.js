@@ -1,25 +1,38 @@
-import React, { useEffect, useRef } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, FlatList } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, {useContext, useEffect, useRef} from 'react';
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  Dimensions,
+} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import ScreenNames from '../../routes/ScreenNames';
+import SolabContext from '../store/solabContext';
 
-const RowContainer = ({ items, renderItem, text, selectedCategory }) => {
+const RowContainer = ({items, renderItem, text, selectedCategory}) => {
   const navigation = useNavigation();
   const flatListRef = useRef();
+  const {selectedIcons} = useContext(SolabContext);
 
   const onSeeAllPress = () => {
-    navigation.navigate(ScreenNames.seeAll, { items, renderItem });
+    navigation.navigate(ScreenNames.seeAll, {items, renderItem});
   };
 
   useEffect(() => {
     if (flatListRef.current) {
-      flatListRef.current.scrollToOffset({ offset: 0, animated: true });
+      flatListRef.current.scrollToOffset({offset: 0, animated: true});
     }
-  }, [selectedCategory]);
+  }, [selectedCategory, selectedIcons]);
 
   if (!items?.length) {
     return null;
   }
+
+  const screenWidth = Dimensions.get('window').width;
+  const totalItemsWidth = items.length * 75; // Replace ITEM_WIDTH with actual width of each item
+  const shouldScroll = totalItemsWidth > screenWidth;
 
   return (
     <View style={styles.container}>
@@ -30,12 +43,15 @@ const RowContainer = ({ items, renderItem, text, selectedCategory }) => {
         {text && <Text style={styles.headerText}>{text}</Text>}
       </View>
       <FlatList
+        style={styles.items}
         ref={flatListRef}
         data={items}
+        
         renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString()}
-        horizontal
+        keyExtractor={item => item.id.toString()}
+        horizontal={true}
         showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{flexGrow: shouldScroll ? 0 : 1}}
       />
     </View>
   );
@@ -44,6 +60,9 @@ const RowContainer = ({ items, renderItem, text, selectedCategory }) => {
 export default RowContainer;
 
 const styles = StyleSheet.create({
+  items: {
+    
+  },
   container: {
     marginBottom: 20,
     marginLeft: 15,
@@ -56,12 +75,13 @@ const styles = StyleSheet.create({
     marginBottom: 3,
   },
   seeAllButton: {
-    borderWidth: 0.3,
-    borderRadius: 10,
     height: 20,
   },
   seeAllText: {
+    padding: 2,
+    borderWidth: 0.3,
     fontFamily: 'smallFont',
+    justifyContent: 'center',
     textAlign: 'center',
     borderRadius: 10,
     color: 'black',

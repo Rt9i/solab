@@ -1,64 +1,91 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { View, StyleSheet, ScrollView, Animated, Text, Button } from 'react-native';
+import React, {useContext, useState, useRef} from 'react';
+import {View, StyleSheet, ScrollView, Animated} from 'react-native';
 import CatsStoreItems from '../Components/CatsStoreItems';
-import getCategoryItemsData, { rowTitlesByCategory } from '../res/Data';
-import { useNavigation } from '@react-navigation/native';
+import getCategoryItemsData from '../res/Data';
+import {useNavigation} from '@react-navigation/native';
 import CatsBarItems from '../Components/CatsBarItems';
 import Sizes from '../res/sizes';
 import SlideAndSnapAnimation from '../animations/SlideAndSnapAnimation';
 import RowContainer from '../Components/RowContainer';
 import ScrollUp from '../Components/scrollUp';
 import LinearGradient from 'react-native-linear-gradient';
+import TopBar from '../Components/topBar';
 import SolabContext from '../store/solabContext';
-import Login from './Login';
-import ScreenNames from '../../routes/ScreenNames';
-import { getAllUsers } from '../res/api';
+import BottomBar from '../Components/BottomBar';
 
-const CatsStore = (props) => {
-  const [selectedCategory, setSelectedCategory] = useState('catFood');
+const CatsStore = props => {
+  const [selectedCategory, setSelectedCategory] = useState('food');
   const navigation = useNavigation();
   const [displayMode, setDisplayMode] = useState('row');
   const [optionsVisible, setOptionsVisible] = useState(false);
+  const {selectedIcons, search, setSearch} = useContext(SolabContext);
 
   const scrollY = useRef(new Animated.Value(0)).current;
   const [showScrollUp, setShowScrollUp] = useState(false);
   const scrollViewRef = useRef();
 
+  const getFilteredItemsForRow = rowValue => {
+   
+    const isSearchActive = search.length > 0;
 
-  const { strings, changeLanguage, } = useContext(SolabContext);
+    const filteredItems = getCategoryItemsData.filter(item => {
+    
+      if (isSearchActive) {
+        return (
+          item.name &&
+          item.name.toLowerCase().includes(search.toLowerCase()) &&
+          item.category.includes(rowValue)
+        );
+      }
 
-  const getRowFilteredItems = (value) => {
-    return getCategoryItemsData.filter(
-      item => item.category.includes(selectedCategory) && item.category.includes(value)
-    );
-  }
+  
+      return (
+        item.category.includes(selectedCategory) &&
+        item.category.includes(rowValue) &&
+        item.petType &&
+        item.petType.includes(selectedIcons)
+      );
+    });
+
+  
+    const uniqueItems = filteredItems.reduce((acc, item) => {
+      if (!acc.find(existingItem => existingItem.id === item.id)) {
+        acc.push(item);
+      }
+      return acc;
+    }, []);
+
+    return uniqueItems;
+  };
 
   const handleRows = () => {
     const rows = [
-      { items: 'firstRow' },
-      { items: 'secondRow' },
-      { items: 'thirdRow' },
-      { items: 'fourthRow' },
-      { items: 'fifthRow' },
-      { items: 'sixthRow' },
-      { items: 'seventhRow' },
-      { items: 'eigthRow' },
-      { items: 'ninthRow' },
-      { items: 'tenthRow' },
+      {items: 'firstRow', id: 1},
+      {items: 'secondRow', id: 2},
+      {items: 'thirdRow', id: 3},
+      {items: 'fourthRow', id: 4},
+      {items: 'fifthRow', id: 5},
+      {items: 'sixthRow', id: 6},
+      {items: 'seventhRow', id: 7},
+      {items: 'eigthRow', id: 8},
+      {items: 'ninthRow', id: 9},
+      {items: 'tenthRow', id: 10},
     ];
-    return rows.map((row, index) => (
-      <RowContainer
-        row={row}
-        text={rowTitlesByCategory[selectedCategory]?.[index]}
-        catMeatTxt={row.catMeat}
-        items={getRowFilteredItems(row.items)}
-        renderItem={renderItem}
-        selectedCategory={selectedCategory}
-      />
-    ))
-  }
-  const renderItem = ({ item }) => {
-    return (
+
+    return rows.map(row => (
+      <View  key={row.id}>
+        <RowContainer
+          row={row}
+          items={getFilteredItemsForRow(row.items)}
+          renderItem={renderItem}
+          selectedCategory={selectedCategory}
+        />
+      </View>
+    ));
+  };
+
+  const renderItem = ({item}) => (
+    <View style={styles.itemContainer}>
       <CatsStoreItems
         salePrice={item.salePrice}
         saleAmmount={item.saleAmmount}
@@ -74,16 +101,18 @@ const CatsStore = (props) => {
         displayMode={displayMode}
         selectedCategory={selectedCategory}
         category={item.category}
+        petType={item.petType}
+        name={item.name}
       />
-    );
+    </View>
+  );
+
+  const onCategoryPress = val => {
+    setSelectedCategory(val);
+    setOptionsVisible(false);
   };
 
-  const onCategoryPress = (val) => {
-    setSelectedCategory(val)
-    setOptionsVisible(false)
-  }
-
-  const handleScroll = (event) => {
+  const handleScroll = event => {
     const scrollPosition = event.nativeEvent.contentOffset.y;
     setShowScrollUp(scrollPosition > 250);
   };
@@ -94,45 +123,36 @@ const CatsStore = (props) => {
       duration: 500,
       useNativeDriver: true,
     }).start();
-  }
+  };
 
   const cat = [
-    { Food: 'catFood' },
-    { Meat: 'catMeat' },
-    { Accessories: 'catAccessories' },
-    { Clothes: 'catClothes' },
-    { Sprays: 'catSprays' },
-    { Toilet: 'catToilet' },
-    { Perfume: 'catPerfume' },
-    { Treats: 'catTreats' },
-    { bowl: 'catBowl' },
+    {Food: 'food'},
+    {Meat: 'meat'},
+    {Accessories: 'accessories'},
+    {Clothes: 'clothes'},
+    {Sprays: 'sprays'},
+    {Toilet: 'toilet'},
+    {Perfume: 'perfume'},
+    {Treats: 'treats'},
+    {bowl: 'bowl'},
   ];
 
   return (
-
     <LinearGradient
-      colors={['#6CCAFF', '#6CCAFF', '#0066FF']}
-      locations={[0, 0.58, 1]}
-      style={styles.container}
-    >
+      colors={['#6CCAFF', '#6CCAFF', '#004C99']}
+      locations={[0, 0.1, 1]}
+      style={styles.container}>
+      <TopBar />
 
       <ScrollView
         style={styles.scroll}
-        contentContainerStyle={{ minHeight: Sizes.screenHeight }}
+        contentContainerStyle={{minHeight: Sizes.screenHeight}}
         onScroll={handleScroll}
         scrollEventThrottle={16}
-        ref={scrollViewRef}
-      >
-        <View>
-          <Button title=" English" onPress={() => changeLanguage('en')} />
-          <Button title=" עברית" onPress={() => changeLanguage('he')} />
-          <Button title=" عربي" onPress={() => changeLanguage('ar')} />
-        </View>
-
+        ref={scrollViewRef}>
         <View style={styles.sale}>
           <SlideAndSnapAnimation onScroll={handleScroll} />
         </View>
-
 
         <View style={styles.catsBarItemsContainer}>
           <CatsBarItems
@@ -143,17 +163,39 @@ const CatsStore = (props) => {
           />
         </View>
 
-        {handleRows()}
+        <View>{handleRows()}</View>
       </ScrollView>
-      {showScrollUp && <ScrollUp scrollViewRef={scrollViewRef} onPress={handleScrollUpPress} />}
-
+      <BottomBar />
+      {showScrollUp && (
+        <ScrollUp scrollViewRef={scrollViewRef} onPress={handleScrollUpPress} />
+      )}
     </LinearGradient>
   );
 };
 
-export default CatsStore
+export default CatsStore;
 
 const styles = StyleSheet.create({
+  cont: {
+    flexDirection: 'row',
+    marginLeft: 10,
+    marginTop: 10,
+  },
+  imgcont: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    width: 45,
+    height: 45,
+    borderRadius: 30,
+    flexDirection: 'row',
+    marginLeft: 5,
+  },
+  img: {
+    resizeMode: 'contain',
+    width: 35,
+    height: 35,
+  },
   container: {
     flex: 1,
     flexDirection: 'column',
@@ -189,4 +231,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   scroll: {},
+  itemContainer: {
+    marginLeft: 10
+  },
 });
