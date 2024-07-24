@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Platform, UIManager, Button } from 'react-native';
 import SolabContext from '../store/solabContext';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Images from '../assets/images/images';
 
 if (Platform.OS === 'android') {
@@ -60,11 +61,40 @@ const SettingsScreen = () => {
       },
     },
   ];
-
-  const handleLogout = async () => {
-    await logout(); // Clear user data
-    navigation.navigate('Login'); // Redirect to login screen
+  const clearAsyncStorage = async () => {
+    try {
+      await AsyncStorage.removeItem('user');
+      await AsyncStorage.removeItem('cart');
+      // Add other keys if needed
+    } catch (error) {
+      console.log('Failed to clear AsyncStorage:', error);
+    }
   };
+  const checkAsyncStorage = async () => {
+    try {
+      const keys = await AsyncStorage.getAllKeys(); // Get all keys
+      console.log('AsyncStorage keys:', keys);
+  
+      const allData = await AsyncStorage.multiGet(keys); // Get all key-value pairs
+      console.log('AsyncStorage data:', allData);
+    } catch (error) {
+      console.log('Failed to check AsyncStorage:', error);
+    }
+  };
+  
+  // Call this function to inspect AsyncStorage
+  const handleLogout = async () => {
+    try {
+      await clearAsyncStorage();
+      await checkAsyncStorage(); // Check AsyncStorage contents
+      navigation.navigate('Login');
+    } catch (error) {
+      console.log('Failed to log out:', error);
+    }
+  };
+  
+  
+  
 
   const renderSettings = () => {
     return settings.map((setting, index) => (

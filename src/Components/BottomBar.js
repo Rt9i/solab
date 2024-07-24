@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, {useContext, useState} from 'react';
 import {
   View,
   TouchableOpacity,
@@ -7,14 +7,14 @@ import {
   Text,
   Animated,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import SolabContext from '../store/solabContext';
 import Images from '../assets/images/images';
 
 const BottomBar = () => {
   const navigation = useNavigation();
-  const { selectedIcons, setSelectedIcons, strings } = useContext(SolabContext);
-  
+  const {selectedIcons, setSelectedIcons, strings} = useContext(SolabContext);
+
   const [expandedIcon, setExpandedIcon] = useState(null);
 
   const iconsArray = [
@@ -30,19 +30,19 @@ const BottomBar = () => {
     },
   ];
 
-  const expandBackground = (icon) => {
+  const expandBackground = icon => {
     const animation = new Animated.Value(0);
-    
+
     Animated.timing(animation, {
       toValue: 1,
       duration: 300,
       useNativeDriver: false,
     }).start();
-    
-    setExpandedIcon({ category: icon.category, animation });
+
+    setExpandedIcon({category: icon.category, animation});
   };
 
-  const handleIconPress = (icon) => {
+  const handleIconPress = icon => {
     setSelectedIcons(icon.category);
     if (expandedIcon?.category !== icon.category) {
       expandBackground(icon); // Trigger the expansion animation
@@ -50,21 +50,21 @@ const BottomBar = () => {
   };
 
   const renderDogCatIcon = () =>
-    iconsArray.map((icon) => {
-      const backgroundSize = expandedIcon?.category === icon.category
-        ? expandedIcon.animation.interpolate({
-            inputRange: [0, 1],
-            outputRange: [0, 1], // Numeric values for scaling
-          })
-        : 1; // Default size when not expanded
+    iconsArray.map(icon => {
+      const backgroundSize =
+        expandedIcon?.category === icon.category
+          ? expandedIcon.animation.interpolate({
+              inputRange: [0, 1],
+              outputRange: [0, 1], // Numeric values for scaling
+            })
+          : 1; // Default size when not expanded
 
       return (
         <TouchableOpacity
           activeOpacity={0.9}
           key={icon.id}
           onPress={() => handleIconPress(icon)}
-          style={styles.iconContainer}
-        >
+          style={styles.iconContainer}>
           <View style={styles.imgcontWrapper}>
             <View
               style={[
@@ -78,8 +78,11 @@ const BottomBar = () => {
               style={[
                 styles.expansionCircle,
                 {
-                  backgroundColor: selectedIcons === icon.category ? '#9ACD32' : 'rgba(255, 255, 255, 0.3)', // White with transparency
-                  transform: [{ scale: backgroundSize }],
+                  backgroundColor:
+                    selectedIcons === icon.category
+                      ? '#9ACD32'
+                      : 'rgba(255, 255, 255, 0.3)', // White with transparency
+                  transform: [{scale: backgroundSize}],
                   elevation: selectedIcons === icon.category ? 10 : 2, // Shadow elevation
                 },
               ]}
@@ -91,17 +94,15 @@ const BottomBar = () => {
                   backgroundColor: 'transparent', // Transparent background for the icon
                   zIndex: 1, // Make sure the icon is above the background
                 },
-              ]}
-            >
+              ]}>
               <Image source={icon.image} style={styles.img} />
             </View>
           </View>
           <Text
             style={[
               styles.label,
-              { color: selectedIcons === icon.category ? '#9ACD32' : '#888' },
-            ]}
-          >
+              {color: selectedIcons === icon.category ? '#9ACD32' : '#888'},
+            ]}>
             {strings[icon.category + 'sStore']}
           </Text>
         </TouchableOpacity>
@@ -152,7 +153,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.3)', // White with transparency
     zIndex: 0, // Ensure it is below the icon
     shadowColor: '#000', // Shadow color
-    shadowOffset: { width: 0, height: 2 }, // Shadow offset
+    shadowOffset: {width: 0, height: 2}, // Shadow offset
     shadowOpacity: 0.3, // Shadow opacity
     shadowRadius: 3, // Shadow radius
   },
@@ -162,6 +163,7 @@ const styles = StyleSheet.create({
     height: 30,
   },
   bottomBar: {
+    
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',

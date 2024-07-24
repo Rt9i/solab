@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {StyleSheet} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Splash from '../src/screen/Splash';
 import Login from '../src/screen/Login';
 import Home from '../src/screen/Home';
@@ -15,17 +15,33 @@ import ScreenNames from './ScreenNames';
 
 const Stack = createNativeStackNavigator();
 
-const MainNavigation = ({ initialRouteName }) => {
+const MainNavigation = ({initialRouteName}) => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName={initialRouteName}>
-        <Stack.Screen name={ScreenNames.splash} component={Splash} options={{ headerShown: false }} />
-        <Stack.Screen name={ScreenNames.login} component={Login} />
-        <Stack.Screen name={ScreenNames.home} component={Home} options={{ headerShown: false }} />
+        <Stack.Screen
+          name={ScreenNames.splash}
+          component={Splash}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name={ScreenNames.login}
+          component={Login}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name={ScreenNames.home}
+          component={Home}
+          options={{headerShown: false}}
+        />
         <Stack.Screen name={ScreenNames.settings} component={SettingsScreen} />
         <Stack.Screen name={ScreenNames.cart} component={Cart} />
         <Stack.Screen name={ScreenNames.profile} component={Profile} />
-        <Stack.Screen name={ScreenNames.catsStore} component={CatsStore} options={{ headerShown: false }} />
+        <Stack.Screen
+          name={ScreenNames.catsStore}
+          component={CatsStore}
+          options={{headerShown: false}}
+        />
         <Stack.Screen
           name={ScreenNames.ProductScreen}
           component={ProductScreen}

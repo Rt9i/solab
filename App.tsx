@@ -1,12 +1,12 @@
 import React, { useEffect, useContext, useState, useCallback } from 'react';
 import { StyleSheet, View, ActivityIndicator } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Ensure this is uncommented
 import MainNavigation from './routes/nav';
 import SolabProvider from './src/store/solabProvider';
 import SolabContext from './src/store/solabContext';
 import ScreenNames from './routes/ScreenNames';
 
-const AppContent = React.memo(() => {
+const AppContent = () => {
   const { saveUser, isAuthenticated } = useContext(SolabContext);
   const [initialRoute, setInitialRoute] = useState(null);
 
@@ -38,7 +38,7 @@ const AppContent = React.memo(() => {
   }
 
   return <MainNavigation initialRouteName={initialRoute} />;
-});
+};
 
 const App = () => {
   return (

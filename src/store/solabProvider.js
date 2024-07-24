@@ -14,7 +14,7 @@ const SolabProvider = ({children}) => {
   const [selectedIcons, setSelectedIcons] = useState();
   const [search, setSearch] = useState('');
   const [user, setUser] = useState(null); // Added state for user
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Added state for authentication
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const translations = {
     en: enStrings,
@@ -97,27 +97,45 @@ const SolabProvider = ({children}) => {
     loadUser();
   }, []);
 
-  const saveUser = async userData => {
+  const saveUser = async (userData) => {
     try {
       await AsyncStorage.setItem('user', JSON.stringify(userData));
-      setUser(userData);
-      setIsAuthenticated(true);
+      console.log('User data saved successfully');
     } catch (error) {
-      console.log('Failed to save user to storage:', error);
+      console.error('Failed to save user data:', error);
+    }
+  };
+  
+  
+
+  const clearAsyncStorage = async () => {
+    try {
+      await AsyncStorage.removeItem('user');
+      await AsyncStorage.removeItem('cart');
+      // Add other keys if needed
+    } catch (error) {
+      console.log('Failed to clear AsyncStorage:', error);
     }
   };
 
   const logout = async () => {
     try {
-      await AsyncStorage.clear(); // Clear all data
-      setIsAuthenticated(false); // Update authentication state
+      // Clear AsyncStorage
+      await clearAsyncStorage();
+
+      // Reset state
+      setUser(null);
+      setCart([]);
+      setIsAuthenticated(false);
+
+      // Redirect to login screen
+      // This requires access to navigation, potentially from useNavigation hook
+      // or passed as a prop
     } catch (error) {
-      console.error(
-        'Error clearing AsyncStorage or updating authentication state:',
-        error,
-      );
+      console.log('Failed to log out:', error);
     }
-  };
+  }
+
   const addItem = (item, itemId) => {
     const existingItemIndex = cart.findIndex(item => item.id === itemId);
     const updatedCart = [...cart];
