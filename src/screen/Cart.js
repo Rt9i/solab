@@ -30,11 +30,11 @@ const Cart = props => {
         const savedCart = await AsyncStorage.getItem('cart');
         if (savedCart) {
           const parsedCart = JSON.parse(savedCart);
-          console.log('Loaded cart from storage:', parsedCart); // Add this line for debugging
+          // console.log('Loaded cart from storage:', parsedCart);
           setCart(parsedCart);
         }
       } catch (error) {
-        console.log('Failed to load cart from storage:', error);
+        // console.log('Failed to load cart from storage:', error);
       }
     };
 
@@ -44,10 +44,10 @@ const Cart = props => {
   useEffect(() => {
     const saveCart = async () => {
       try {
-        console.log('Saving cart to storage:', cart); // Add this line for debugging
+        // console.log('Saving cart to storage:', cart); 
         await AsyncStorage.setItem('cart', JSON.stringify(cart));
       } catch (error) {
-        console.log('Failed to save cart to storage:', error);
+        // console.log('Failed to save cart to storage:', error);
       }
     };
 

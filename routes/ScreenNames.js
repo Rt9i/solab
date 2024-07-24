@@ -7,6 +7,7 @@ const ScreenNames = {
   login: 'Login',
   cart: 'Cart',
   ProductScreen: 'ProductScreen',
+  profile:'Profile',
   catsStore: 'CatsStore',
   bottomTabNavigator: 'BottomTabNavigator',
   Tabs: 'tabs',

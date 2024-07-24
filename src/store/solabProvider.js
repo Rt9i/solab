@@ -13,6 +13,8 @@ const SolabProvider = ({ children }) => {
   const [strings, setStrings] = useState(heStrings);
   const [selectedIcons, setSelectedIcons] = useState();
   const [search, setSearch] = useState('');
+  const [user, setUser] = useState(null); // Added state for user
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Added state for authentication
 
   const translations = {
     en: enStrings,
@@ -55,7 +57,6 @@ const SolabProvider = ({ children }) => {
         const savedCart = await AsyncStorage.getItem('cart');
         if (savedCart) {
           const parsedCart = JSON.parse(savedCart);
-          console.log('Loaded cart from storage in context:', parsedCart); // Debugging line
           setCart(parsedCart);
         }
       } catch (error) {
@@ -70,7 +71,6 @@ const SolabProvider = ({ children }) => {
   useEffect(() => {
     const saveCart = async () => {
       try {
-        console.log('Saving cart to storage in context:', cart); // Debugging line
         await AsyncStorage.setItem('cart', JSON.stringify(cart));
       } catch (error) {
         console.log('Failed to save cart to storage in context:', error);
@@ -79,6 +79,43 @@ const SolabProvider = ({ children }) => {
 
     saveCart();
   }, [cart]);
+
+  // Load user from AsyncStorage on initialization
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const savedUser = await AsyncStorage.getItem('user');
+        if (savedUser) {
+          setUser(JSON.parse(savedUser));
+          setIsAuthenticated(true);
+        }
+      } catch (error) {
+        console.log('Failed to load user from storage:', error);
+      }
+    };
+
+    loadUser();
+  }, []);
+
+  const saveUser = async (userData) => {
+    try {
+      await AsyncStorage.setItem('user', JSON.stringify(userData));
+      setUser(userData);
+      setIsAuthenticated(true);
+    } catch (error) {
+      console.log('Failed to save user to storage:', error);
+    }
+  };
+
+  const logout = async () => {
+    try {
+      await AsyncStorage.removeItem('user');
+      setUser(null);
+      setIsAuthenticated(false);
+    } catch (error) {
+      console.log('Failed to remove user from storage:', error);
+    }
+  };
 
   const addItem = (item, itemId) => {
     const existingItemIndex = cart.findIndex((item) => item.id === itemId);
@@ -184,6 +221,10 @@ const SolabProvider = ({ children }) => {
     setSelectedIcons,
     search,
     setSearch,
+    user,
+    isAuthenticated,
+    saveUser,
+    logout,
   };
 
   return (

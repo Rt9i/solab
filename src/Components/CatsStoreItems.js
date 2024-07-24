@@ -114,10 +114,10 @@ const styles = StyleSheet.create({
   },
   sale: {
     position: 'absolute',
-    top: 5,
-    left: -22,
-    width: 100,
-    height: 19,
+    top: 10,
+    right: 70, // Adjust to position it within the frame
+    width: 89, // Adjust to fit within the item frame
+    height: 20, // Adjust to fit within the item frame
     backgroundColor: '#D9534F',
     justifyContent: 'center',
     alignItems: 'center',
@@ -133,8 +133,6 @@ const styles = StyleSheet.create({
     transform: [{rotate: '45deg'}],
   },
   saleText: {
-    marginRight: 10,
-    marginTop: 2,
     color: 'white',
     fontSize: 12,
     textAlign: 'center',
@@ -162,7 +160,8 @@ const styles = StyleSheet.create({
     width: 140,
     height: 250,
     marginBottom: 2,
-   
+    borderRadius: 5, // Added border radius to the item frame
+    overflow: 'hidden', // Ensure content doesn't overflow
   },
   items: {
     flex: 1,
@@ -173,6 +172,7 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 0.1},
     shadowOpacity: 0.1,
     shadowRadius: 1,
+    overflow: 'hidden', // Ensure content doesn't overflow
   },
   img: {
     marginTop: 15,
@@ -231,7 +231,6 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     flexDirection: 'row',
     marginBottom: 5,
-
     height: 22,
     width: 120,
     alignItems: 'center',
