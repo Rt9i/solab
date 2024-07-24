@@ -121,6 +121,7 @@ const styles = StyleSheet.create({
   leftContainer: {
     flexDirection: 'row',
     flex: 1,
+ 
   },
   touch: {
     width: 50,
@@ -130,8 +131,8 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     justifyContent: 'center',
-    alignItems: 'center',
-    left: 1,
+    
+    left: -10,
   },
   img: {
     width: '60%',
@@ -163,15 +164,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   searchContainer: {
-    flex: 2,
+    flex: 3,
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#f0f0f0',
     borderRadius: 20,
-    borderColor: 'gray',
+    borderColor: '#d0d0d0',
     borderWidth: 1,
     height: 40,
     paddingHorizontal: 10,
+    marginHorizontal: 10,
   },
   searchIconContainer: {
     justifyContent: 'center',
