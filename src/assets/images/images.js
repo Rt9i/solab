@@ -1,6 +1,7 @@
 const Images = {
   whiteLogo: () => require('./photos/whiteLogo.jpg'),
   dog: () => require('./photos/dog.png'),
+  logout: () => require('./photos/logout.png'),
   profileIcon: () => require('./photos/profileIcon.png'),
   clear: () => require('./photos/clear.png'),
   search: () => require('./photos/search.png'),

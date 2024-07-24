@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Platform, UIManager } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Platform, UIManager, Button } from 'react-native';
 import SolabContext from '../store/solabContext';
 import { useNavigation } from '@react-navigation/native';
 import Images from '../assets/images/images';
@@ -9,7 +9,7 @@ if (Platform.OS === 'android') {
 }
 
 const SettingsScreen = () => {
-  const { strings, changeLanguage } = useContext(SolabContext);
+  const { strings, changeLanguage, logout } = useContext(SolabContext);
   const navigation = useNavigation();
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
 
@@ -21,7 +21,6 @@ const SettingsScreen = () => {
         // Navigate to Profile screen with userId
         const userId = 'USER_ID'; // Replace with dynamic user ID if available
         navigation.navigate('Profile', { userId: '66a133852373371941757e0c' });
-
       },
     },
     {
@@ -38,7 +37,7 @@ const SettingsScreen = () => {
       image: Images.languageIcon(),
       onPress: () => {
         changeLanguage('en');
-        navigation.goBack()
+        navigation.goBack();
         setIsLanguageOpen(false);
       },
     },
@@ -46,8 +45,8 @@ const SettingsScreen = () => {
       name: 'עברית',
       image: Images.languageIcon(),
       onPress: () => {
-        navigation.goBack()
         changeLanguage('he');
+        navigation.goBack();
         setIsLanguageOpen(false);
       },
     },
@@ -56,14 +55,15 @@ const SettingsScreen = () => {
       image: Images.languageIcon(),
       onPress: () => {
         changeLanguage('ar');
-        navigation.goBack()
+        navigation.goBack();
         setIsLanguageOpen(false);
       },
     },
   ];
 
-  const goBack = () => {
-    navigation.goBack();
+  const handleLogout = async () => {
+    await logout(); // Clear user data
+    navigation.navigate('Login'); // Redirect to login screen
   };
 
   const renderSettings = () => {
@@ -98,6 +98,9 @@ const SettingsScreen = () => {
             {renderLanguages()}
           </View>
         )}
+        <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
+          <Text style={styles.logoutText}>Logout</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -144,6 +147,18 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#E0E0E0', // Light gray border top
     paddingTop: 10,
+  },
+  logoutButton: {
+    marginTop: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: '#FF3B30', // Red background for logout button
+    borderRadius: 5,
+  },
+  logoutText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    textAlign: 'center',
   },
 });
 

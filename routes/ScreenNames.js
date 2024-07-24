@@ -1,4 +1,3 @@
-
 const ScreenNames = {
   language: 'LanguageScreen',
   settings: 'SettingsScreen',
@@ -7,13 +6,12 @@ const ScreenNames = {
   login: 'Login',
   cart: 'Cart',
   ProductScreen: 'ProductScreen',
-  profile:'Profile',
+  profile: 'Profile',
   catsStore: 'CatsStore',
   bottomTabNavigator: 'BottomTabNavigator',
   Tabs: 'tabs',
   seeAll: 'seeAll',
-  html:'html',
-
+  html: 'html',
 };
 
 export default ScreenNames;

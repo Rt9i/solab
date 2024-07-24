@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SolabContext from './solabContext';
-import { Alert } from 'react-native';
-import { enStrings, heStrings, arStrings } from '../res/strings';
+import {Alert} from 'react-native';
+import {enStrings, heStrings, arStrings} from '../res/strings';
 
-const SolabProvider = ({ children }) => {
+const SolabProvider = ({children}) => {
   const [cart, setCart] = useState([]);
   const [isItemAdded, setIsItemAdded] = useState(false);
   const [brands, setBrands] = useState([]);
@@ -22,7 +22,7 @@ const SolabProvider = ({ children }) => {
     ar: arStrings,
   };
 
-  const changeLanguage = async (lang) => {
+  const changeLanguage = async lang => {
     try {
       await AsyncStorage.setItem('language', lang);
       setLanguage(lang);
@@ -97,7 +97,7 @@ const SolabProvider = ({ children }) => {
     loadUser();
   }, []);
 
-  const saveUser = async (userData) => {
+  const saveUser = async userData => {
     try {
       await AsyncStorage.setItem('user', JSON.stringify(userData));
       setUser(userData);
@@ -109,16 +109,17 @@ const SolabProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await AsyncStorage.removeItem('user');
-      setUser(null);
-      setIsAuthenticated(false);
+      await AsyncStorage.clear(); // Clear all data
+      setIsAuthenticated(false); // Update authentication state
     } catch (error) {
-      console.log('Failed to remove user from storage:', error);
+      console.error(
+        'Error clearing AsyncStorage or updating authentication state:',
+        error,
+      );
     }
   };
-
   const addItem = (item, itemId) => {
-    const existingItemIndex = cart.findIndex((item) => item.id === itemId);
+    const existingItemIndex = cart.findIndex(item => item.id === itemId);
     const updatedCart = [...cart];
 
     if (existingItemIndex !== -1) {
@@ -133,7 +134,7 @@ const SolabProvider = ({ children }) => {
   };
 
   const addItemToCart = (item, itemId) => {
-    const existingItemIndex = cart.findIndex((item) => item.id === itemId);
+    const existingItemIndex = cart.findIndex(item => item.id === itemId);
     const updatedCart = [...cart];
     setCart(updatedCart);
 
@@ -146,34 +147,32 @@ const SolabProvider = ({ children }) => {
     setCart(updatedCart);
   };
 
-  const checkRemoveItem = (itemId) => {
-    Alert.alert(
-      'Remove Item',
-      'Are you sure you want to remove this item?',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Remove',
-          onPress: () => removeItem(itemId),
-        },
-      ]
-    );
+  const checkRemoveItem = itemId => {
+    Alert.alert('Remove Item', 'Are you sure you want to remove this item?', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'Remove',
+        onPress: () => removeItem(itemId),
+      },
+    ]);
   };
 
-  const removeItem = (itemId) => {
-    const existingItemIndex = cart.findIndex((item) => item.id === itemId);
+  const removeItem = itemId => {
+    const existingItemIndex = cart.findIndex(item => item.id === itemId);
     if (existingItemIndex !== -1) {
-      const updatedCart = cart.filter((item, index) => index !== existingItemIndex);
+      const updatedCart = cart.filter(
+        (item, index) => index !== existingItemIndex,
+      );
       setIsItemAdded(false);
       setCart(updatedCart);
     }
   };
 
   const removeItemFromCart = (item, itemId) => {
-    const existingItemIndex = cart.findIndex((item) => item.id === itemId);
+    const existingItemIndex = cart.findIndex(item => item.id === itemId);
     const updatedCart = [...cart];
     const existingItem = updatedCart[existingItemIndex];
 
@@ -191,7 +190,7 @@ const SolabProvider = ({ children }) => {
               text: 'Remove',
               onPress: () => removeItem(itemId),
             },
-          ]
+          ],
         );
       } else {
         updatedCart[existingItemIndex].quantity--;
@@ -223,6 +222,7 @@ const SolabProvider = ({ children }) => {
     setSearch,
     user,
     isAuthenticated,
+    setIsAuthenticated,
     saveUser,
     logout,
   };
