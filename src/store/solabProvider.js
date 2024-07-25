@@ -1,7 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SolabContext from './solabContext';
-import {Alert} from 'react-native';
 import {enStrings, heStrings, arStrings} from '../res/strings';
 
 const SolabProvider = ({children}) => {
@@ -13,7 +12,7 @@ const SolabProvider = ({children}) => {
   const [strings, setStrings] = useState(heStrings);
   const [selectedIcons, setSelectedIcons] = useState();
   const [search, setSearch] = useState('');
-  const [user, setUser] = useState(null); // Added state for user
+  const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const translations = {
@@ -22,14 +21,14 @@ const SolabProvider = ({children}) => {
     ar: arStrings,
   };
 
-  const changeLanguage = async lang => {
+  const changeLanguage = useCallback(async lang => {
     try {
       await AsyncStorage.setItem('language', lang);
       setLanguage(lang);
     } catch (error) {
       console.log('Failed to save language to storage:', error);
     }
-  };
+  }, []);
 
   useEffect(() => {
     setStrings(translations[language]);
@@ -50,14 +49,12 @@ const SolabProvider = ({children}) => {
     loadLanguage();
   }, []);
 
-  // Load cart from AsyncStorage
   useEffect(() => {
     const loadCart = async () => {
       try {
         const savedCart = await AsyncStorage.getItem('cart');
         if (savedCart) {
-          const parsedCart = JSON.parse(savedCart);
-          setCart(parsedCart);
+          setCart(JSON.parse(savedCart));
         }
       } catch (error) {
         console.log('Failed to load cart from storage in context:', error);
@@ -67,7 +64,6 @@ const SolabProvider = ({children}) => {
     loadCart();
   }, []);
 
-  // Save cart to AsyncStorage whenever it changes
   useEffect(() => {
     const saveCart = async () => {
       try {
@@ -80,7 +76,6 @@ const SolabProvider = ({children}) => {
     saveCart();
   }, [cart]);
 
-  // Load user from AsyncStorage on initialization
   useEffect(() => {
     const loadUser = async () => {
       try {
@@ -97,75 +92,64 @@ const SolabProvider = ({children}) => {
     loadUser();
   }, []);
 
-  const saveUser = async (userData) => {
+  const saveUser = useCallback(async userData => {
     try {
-      await AsyncStorage.setItem('user', JSON.stringify(userData));
+      setUser(userData); // Update the user state
+      await AsyncStorage.setItem('user', JSON.stringify(userData)); // Save to AsyncStorage
+      setIsAuthenticated(true); // Set authenticated state
       console.log('User data saved successfully');
     } catch (error) {
       console.error('Failed to save user data:', error);
     }
-  };
-  
-  
+  }, []);
 
-  const clearAsyncStorage = async () => {
+  const clearAsyncStorage = useCallback(async () => {
     try {
+      // Log before clearing
+      const userBefore = await AsyncStorage.getItem('user');
+      const cartBefore = await AsyncStorage.getItem('cart');
+      console.log('Before clearing:', {userBefore, cartBefore});
+
       await AsyncStorage.removeItem('user');
       await AsyncStorage.removeItem('cart');
-      // Add other keys if needed
+
+      // Log after clearing
+      const userAfter = await AsyncStorage.getItem('user');
+      const cartAfter = await AsyncStorage.getItem('cart');
+      console.log('After clearing:', {userAfter, cartAfter});
     } catch (error) {
       console.log('Failed to clear AsyncStorage:', error);
     }
-  };
+  }, []);
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
-      // Clear AsyncStorage
-      await clearAsyncStorage();
-
-      // Reset state
-      setUser(null);
-      setCart([]);
-      setIsAuthenticated(false);
-
-      // Redirect to login screen
-      // This requires access to navigation, potentially from useNavigation hook
-      // or passed as a prop
+      await clearAsyncStorage(); // Ensure AsyncStorage is cleared
+      setUser(null); // Clear user state
+      setCart([]); // Clear cart state
+      setIsAuthenticated(false); // Update authentication state
+      console.log('Logged out successfully');
     } catch (error) {
       console.log('Failed to log out:', error);
     }
-  }
+  }, [clearAsyncStorage]);
 
-  const addItem = (item, itemId) => {
-    const existingItemIndex = cart.findIndex(item => item.id === itemId);
-    const updatedCart = [...cart];
+  const addItemToCart = useCallback(
+    (item, itemId) => {
+      const existingItemIndex = cart.findIndex(item => item.id === itemId);
+      const updatedCart = [...cart];
+      if (existingItemIndex !== -1) {
+        updatedCart[existingItemIndex].quantity += item.quantity;
+      } else {
+        updatedCart.push(item);
+        setIsItemAdded(true);
+      }
+      setCart(updatedCart);
+    },
+    [cart],
+  );
 
-    if (existingItemIndex !== -1) {
-      updatedCart[existingItemIndex].quantity++;
-    } else {
-      item.quantity = 1;
-      updatedCart.push(item);
-      setIsItemAdded(true);
-    }
-
-    setCart(updatedCart);
-  };
-
-  const addItemToCart = (item, itemId) => {
-    const existingItemIndex = cart.findIndex(item => item.id === itemId);
-    const updatedCart = [...cart];
-    setCart(updatedCart);
-
-    if (existingItemIndex !== -1) {
-      updatedCart[existingItemIndex].quantity += item.quantity;
-    } else {
-      updatedCart.push(item);
-      setIsItemAdded(true);
-    }
-    setCart(updatedCart);
-  };
-
-  const checkRemoveItem = itemId => {
+  const checkRemoveItem = useCallback(itemId => {
     Alert.alert('Remove Item', 'Are you sure you want to remove this item?', [
       {
         text: 'Cancel',
@@ -176,47 +160,46 @@ const SolabProvider = ({children}) => {
         onPress: () => removeItem(itemId),
       },
     ]);
-  };
+  }, []);
 
-  const removeItem = itemId => {
-    const existingItemIndex = cart.findIndex(item => item.id === itemId);
-    if (existingItemIndex !== -1) {
-      const updatedCart = cart.filter(
-        (item, index) => index !== existingItemIndex,
-      );
+  const removeItem = useCallback(
+    itemId => {
+      const updatedCart = cart.filter(item => item.id !== itemId);
       setIsItemAdded(false);
       setCart(updatedCart);
-    }
-  };
+    },
+    [cart],
+  );
 
-  const removeItemFromCart = (item, itemId) => {
-    const existingItemIndex = cart.findIndex(item => item.id === itemId);
-    const updatedCart = [...cart];
-    const existingItem = updatedCart[existingItemIndex];
-
-    if (existingItemIndex !== -1) {
-      if (existingItem.quantity === 1) {
-        Alert.alert(
-          'Remove Item',
-          'Are you sure you want to remove this item?',
-          [
-            {
-              text: 'Cancel',
-              style: 'cancel',
-            },
-            {
-              text: 'Remove',
-              onPress: () => removeItem(itemId),
-            },
-          ],
-        );
-      } else {
-        updatedCart[existingItemIndex].quantity--;
+  const removeItemFromCart = useCallback(
+    (item, itemId) => {
+      const existingItemIndex = cart.findIndex(item => item.id === itemId);
+      const updatedCart = [...cart];
+      const existingItem = updatedCart[existingItemIndex];
+      if (existingItemIndex !== -1) {
+        if (existingItem.quantity === 1) {
+          Alert.alert(
+            'Remove Item',
+            'Are you sure you want to remove this item?',
+            [
+              {
+                text: 'Cancel',
+                style: 'cancel',
+              },
+              {
+                text: 'Remove',
+                onPress: () => removeItem(itemId),
+              },
+            ],
+          );
+        } else {
+          updatedCart[existingItemIndex].quantity--;
+        }
+        setCart(updatedCart);
       }
-
-      setCart(updatedCart);
-    }
-  };
+    },
+    [cart],
+  );
 
   const contextValue = {
     cart,
@@ -225,7 +208,6 @@ const SolabProvider = ({children}) => {
     removeItem,
     isItemAdded,
     setIsItemAdded,
-    addItem,
     checkRemoveItem,
     removeItemFromCart,
     brands,
@@ -240,9 +222,10 @@ const SolabProvider = ({children}) => {
     setSearch,
     user,
     isAuthenticated,
-    setIsAuthenticated,
-    saveUser,
+    setUser,
+    saveUser, // Use saveUser function here
     logout,
+    clearAsyncStorage,
   };
 
   return (

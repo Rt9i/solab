@@ -1,22 +1,48 @@
-import React, { useContext } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Image, ActivityIndicator } from 'react-native';
+import { useRoute } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import SolabContext from '../store/solabContext';
+import Images from '../assets/images/images';
 
-const Profile = () => {
-  const { user } = useContext(SolabContext); // Get user data from context
+const ProfileScreen = () => {
+  const [profileData, setProfileData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const { params } = useRoute();
+  const { user } = React.useContext(SolabContext);
 
-  if (!user) {
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const userId = params?.userId || user?.id;
+        if (userId) {
+          const response = await fetch(`https://solab-server.onrender.com/getUserByID/${userId}`);
+          const data = await response.json();
+          setProfileData(data);
+        }
+      } catch (error) {
+        console.log('Failed to fetch user profile:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserProfile();
+  }, [params, user]);
+
+  if (loading) {
     return (
       <View style={styles.container}>
-        <Text>Loading...</Text>
+        <ActivityIndicator size="large" color="#007bff" />
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.phoneNumber}>{user.phoneNumber}</Text>
-      <Text style={styles.userName}>{user.userName}</Text> 
+      <Image source={Images.profileIcon()} style={styles.profileImage} />
+      <Text style={styles.userName}>{profileData?.userName || 'User Name'}</Text>
+      <Text style={styles.userPhone}>{profileData?.phoneNumber || 'Phone Number'}</Text>
     </View>
   );
 };
@@ -26,16 +52,24 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#f8f9fa',
+    padding: 16,
   },
-  phoneNumber: {
-    fontSize: 30,
-    color: 'black',
+  profileImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginBottom: 16,
   },
   userName: {
-    fontSize: 20,
-    color: 'gray',
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  userPhone: {
+    fontSize: 16,
+    color: '#666',
   },
 });
 
-export default Profile;
+export default ProfileScreen;

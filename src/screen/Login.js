@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, { useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -6,9 +6,11 @@ import {
   Button,
   StyleSheet,
   ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native';
-import {logIn, createUser} from '../res/api';
-import {useNavigation} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { logIn, createUser } from '../res/api';
+import { useNavigation } from '@react-navigation/native';
 import SolabContext from '../store/solabContext';
 
 const Login = () => {
@@ -21,17 +23,19 @@ const Login = () => {
     phoneNumber: '',
     password: '',
   });
+  const [showPassword, setShowPassword] = useState(false);
 
   const clearTxt = () => {
     setPhoneNumber('');
     setPassword('');
     setUserName('');
   };
+
   const navigation = useNavigation();
-  const {saveUser} = useContext(SolabContext);
+  const { saveUser, clearAsyncStorage } = useContext(SolabContext);
 
   const handleLogin = async () => {
-    setErrors({phoneNumber: '', password: ''});
+    setErrors({ phoneNumber: '', password: '' });
 
     if (!phoneNumber || !password) {
       setErrors({
@@ -42,7 +46,7 @@ const Login = () => {
     }
 
     if (password.length <= 4) {
-      setErrors({password: 'Password must be longer than 4 characters'});
+      setErrors({ password: 'Password must be longer than 4 characters' });
       return;
     }
 
@@ -53,28 +57,33 @@ const Login = () => {
       console.log('Login response:', response);
 
       if (response.auth && response.user) {
-        saveUser(response.user); // Save the user data
+        await clearAsyncStorage();
+        await saveUser(response.user); 
         navigation.navigate('Splash');
       } else {
-        // Assume that response.errorMessage will contain relevant information
-        if (response.errorMessage.includes('Password')) {
-          setErrors({password: 'Password is wrong'});
-        } else if (response.errorMessage.includes('Phone number')) {
-          setErrors({phoneNumber: 'Phone number is wrong'});
-        } else {
-          setErrors({password: response.errorMessage || 'Login failed'});
-        }
+        handleLoginError(response.errorMessage);
       }
     } catch (error) {
       console.error('Login error:', error);
-      setErrors({phoneNumber: 'Phone number is wrong', password: ''});
+      setErrors({
+        phoneNumber: 'Phone number or password is wrong',
+        password: '',
+      });
     } finally {
       setLoading(false);
     }
   };
 
+  const handleLoginError = (errorMessage) => {
+    if (errorMessage.includes('Phone number')) {
+      setErrors({ phoneNumber: 'Phone number or password is wrong' });
+    } else {
+      setErrors({ password: 'Phone number or password is wrong' });
+    }
+  };
+
   const handleRegister = async () => {
-    setErrors({phoneNumber: '', password: ''});
+    setErrors({ phoneNumber: '', password: '' });
 
     if (!userName || !phoneNumber || !password) {
       setErrors({
@@ -85,7 +94,7 @@ const Login = () => {
     }
 
     if (password.length <= 4) {
-      setErrors({password: 'Password must be longer than 4 characters'});
+      setErrors({ password: 'Password must be longer than 4 characters' });
       return;
     }
 
@@ -97,19 +106,19 @@ const Login = () => {
       if (response.user) {
         Alert.alert(
           'Success',
-          'User registered successfully. You can now log in.',
+          'User registered successfully. You can now log in.'
         );
         setRegisterMode(false);
       } else {
         if (response.errorMessage.includes('Phone number')) {
-          setErrors({phoneNumber: 'Phone number already exists'});
+          setErrors({ phoneNumber: 'Phone number already exists' });
         } else {
-          setErrors({password: response.errorMessage || 'Registration failed'});
+          setErrors({ password: response.errorMessage || 'Registration failed' });
         }
       }
     } catch (error) {
       console.error('Register error:', error);
-      setErrors({password: 'An error occurred. Please try again'});
+      setErrors({ password: 'An error occurred. Please try again' });
     } finally {
       setLoading(false);
     }
@@ -126,6 +135,8 @@ const Login = () => {
             onChangeText={setUserName}
             placeholder="Name"
             placeholderTextColor="rgba(0, 0, 0, 0.3)"
+            accessibilityLabel="Name input"
+            testID="userNameInput" // For testing
           />
         )}
         <Text style={styles.errorText}>{errors.phoneNumber}</Text>
@@ -136,27 +147,50 @@ const Login = () => {
           keyboardType="phone-pad"
           placeholder="Phone Number"
           placeholderTextColor="rgba(0, 0, 0, 0.3)"
+          accessibilityLabel="Phone number input"
+          testID="phoneNumberInput" // For testing
         />
-        <Text style={styles.errorText}>{errors.password}</Text>
-        <TextInput
-          style={[styles.input, errors.password && styles.inputError]}
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          placeholder="Password"
-          placeholderTextColor="rgba(0, 0, 0, 0.3)"
-        />
+        <View style={styles.passwordContainer}>
+          <TextInput
+            style={[
+              styles.input,
+              styles.passwordInput,
+              errors.password && styles.inputError,
+            ]}
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={!showPassword}
+            placeholder="Password"
+            placeholderTextColor="rgba(0, 0, 0, 0.3)"
+            accessibilityLabel="Password input"
+            testID="passwordInput" // For testing
+          />
+          <TouchableOpacity
+            onPress={() => setShowPassword(!showPassword)}
+            style={styles.eyeIcon}
+            accessibilityLabel={
+              showPassword ? 'Hide password' : 'Show password'
+            }>
+            <Text style={styles.show}>{showPassword ? 'hide' : 'show'}</Text>
+          </TouchableOpacity>
+        </View>
         <Button
           title={registerMode ? 'Register' : 'Log In'}
           onPress={registerMode ? handleRegister : handleLogin}
           color="#007bff"
-          disabled={loading} // Disable the button if loading is true
+          disabled={loading}
+          accessibilityLabel={
+            registerMode ? 'Register button' : 'Log In button'
+          }
         />
         <Button
           title={registerMode ? 'Switch to Log In' : 'Switch to Register'}
           onPress={() => setRegisterMode(!registerMode)}
           color="#6c757d"
-          disabled={loading} // Disable the button if loading is true
+          disabled={loading}
+          accessibilityLabel={
+            registerMode ? 'Switch to Log In' : 'Switch to Register'
+          }
         />
         {loading && (
           <View style={styles.loadingContainer}>
@@ -170,6 +204,10 @@ const Login = () => {
 };
 
 const styles = StyleSheet.create({
+  show: {
+    marginBottom: 15,
+    color: 'black',
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -184,7 +222,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     elevation: 3,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
   },
@@ -212,6 +250,18 @@ const styles = StyleSheet.create({
     color: '#dc3545',
     fontSize: 14,
     marginBottom: 8,
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  passwordInput: {
+    flex: 1,
+  },
+  eyeIcon: {
+    position: 'absolute',
+    right: 10,
   },
   loadingContainer: {
     marginTop: 20,

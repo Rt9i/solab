@@ -1,65 +1,71 @@
-import React, {useContext, useState, useRef} from 'react';
-import {View, StyleSheet, ScrollView, Animated} from 'react-native';
-import CatsStoreItems from '../Components/CatsStoreItems';
+import React, {useContext, useState, useRef, useMemo} from 'react';
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Animated,
+  Dimensions,
+  Text,
+} from 'react-native';
 import getCategoryItemsData from '../res/Data';
 import {useNavigation} from '@react-navigation/native';
 import CatsBarItems from '../Components/CatsBarItems';
 import Sizes from '../res/sizes';
-import SlideAndSnapAnimation from '../animations/SlideAndSnapAnimation';
+import Swipe from '../Components/Swipe';
 import RowContainer from '../Components/RowContainer';
 import ScrollUp from '../Components/scrollUp';
 import LinearGradient from 'react-native-linear-gradient';
 import TopBar from '../Components/topBar';
 import SolabContext from '../store/solabContext';
 import BottomBar from '../Components/BottomBar';
+import CatsStoreItems from '../Components/CatsStoreItems';
 
 const CatsStore = props => {
   const [selectedCategory, setSelectedCategory] = useState('food');
   const navigation = useNavigation();
   const [displayMode, setDisplayMode] = useState('row');
   const [optionsVisible, setOptionsVisible] = useState(false);
-  const {selectedIcons, search, setSearch} = useContext(SolabContext);
+  const {selectedIcons, search} = useContext(SolabContext);
 
   const scrollY = useRef(new Animated.Value(0)).current;
   const [showScrollUp, setShowScrollUp] = useState(false);
-  const scrollViewRef = useRef();
+  const scrollViewRef = useRef(null);
 
-  const getFilteredItemsForRow = rowValue => {
-   
-    const isSearchActive = search.length > 0;
+  const getFilteredItemsForRow = useMemo(
+    () => rowValue => {
+      const isSearchActive = search.length > 0;
 
-    const filteredItems = getCategoryItemsData.filter(item => {
-    
-      if (isSearchActive) {
+      const filteredItems = getCategoryItemsData.filter(item => {
+        if (isSearchActive) {
+          return (
+            item.name &&
+            item.name.toLowerCase().includes(search.toLowerCase()) &&
+            item.category.includes(rowValue)
+          );
+        }
+
         return (
-          item.name &&
-          item.name.toLowerCase().includes(search.toLowerCase()) &&
-          item.category.includes(rowValue)
+          item.category.includes(selectedCategory) &&
+          item.category.includes(rowValue) &&
+          item.petType &&
+          item.petType.includes(selectedIcons)
         );
-      }
+      });
 
-  
-      return (
-        item.category.includes(selectedCategory) &&
-        item.category.includes(rowValue) &&
-        item.petType &&
-        item.petType.includes(selectedIcons)
-      );
-    });
+      const uniqueItems = filteredItems.reduce((acc, item) => {
+        if (!acc.find(existingItem => existingItem.id === item.id)) {
+          acc.push(item);
+        }
+        return acc;
+      }, []);
 
-  
-    const uniqueItems = filteredItems.reduce((acc, item) => {
-      if (!acc.find(existingItem => existingItem.id === item.id)) {
-        acc.push(item);
-      }
-      return acc;
-    }, []);
+      return uniqueItems;
+    },
+    [search, selectedCategory, selectedIcons],
+  );
 
-    return uniqueItems;
-  };
-
-  const handleRows = () => {
-    const rows = [
+  const rows = useMemo(
+    () => [
       {items: 'firstRow', id: 1},
       {items: 'secondRow', id: 2},
       {items: 'thirdRow', id: 3},
@@ -70,19 +76,18 @@ const CatsStore = props => {
       {items: 'eigthRow', id: 8},
       {items: 'ninthRow', id: 9},
       {items: 'tenthRow', id: 10},
-    ];
+    ],
+    [],
+  );
 
-    return rows.map(row => (
-      <View  key={row.id}>
-        <RowContainer
-          row={row}
-          items={getFilteredItemsForRow(row.items)}
-          renderItem={renderItem}
-          selectedCategory={selectedCategory}
-        />
-      </View>
-    ));
-  };
+  const renderRow = ({item}) => (
+    <RowContainer
+      row={item}
+      items={getFilteredItemsForRow(item.items)}
+      renderItem={renderItem}
+      selectedCategory={selectedCategory}
+    />
+  );
 
   const renderItem = ({item}) => (
     <View style={styles.itemContainer}>
@@ -118,11 +123,7 @@ const CatsStore = props => {
   };
 
   const handleScrollUpPress = () => {
-    Animated.timing(scrollY, {
-      toValue: 0,
-      duration: 500,
-      useNativeDriver: true,
-    }).start();
+    scrollViewRef.current.scrollTo({x: 0, y: 0, animated: true}); // Using ref to scroll
   };
 
   const cat = [
@@ -151,7 +152,7 @@ const CatsStore = props => {
         scrollEventThrottle={16}
         ref={scrollViewRef}>
         <View style={styles.sale}>
-          <SlideAndSnapAnimation onScroll={handleScroll} />
+          <Swipe />
         </View>
 
         <View style={styles.catsBarItemsContainer}>
@@ -163,8 +164,17 @@ const CatsStore = props => {
           />
         </View>
 
-        <View>{handleRows()}</View>
+        {rows.map(row => (
+          <RowContainer
+            key={row.id}
+            row={row}
+            items={getFilteredItemsForRow(row.items)}
+            renderItem={renderItem}
+            selectedCategory={selectedCategory}
+          />
+        ))}
       </ScrollView>
+
       <BottomBar />
       {showScrollUp && (
         <ScrollUp scrollViewRef={scrollViewRef} onPress={handleScrollUpPress} />
@@ -176,62 +186,20 @@ const CatsStore = props => {
 export default CatsStore;
 
 const styles = StyleSheet.create({
-  cont: {
-    flexDirection: 'row',
-    marginLeft: 10,
-    marginTop: 10,
-  },
-  imgcont: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    width: 45,
-    height: 45,
-    borderRadius: 30,
-    flexDirection: 'row',
-    marginLeft: 5,
-  },
-  img: {
-    resizeMode: 'contain',
-    width: 35,
-    height: 35,
-  },
   container: {
     flex: 1,
-    flexDirection: 'column',
     backgroundColor: '#6CCAFF',
   },
-  sale: {
-    alignItems: 'center',
-    height: 230,
-  },
-  salecontainer: {
-    padding: 5,
-    borderRadius: 10,
-    backgroundColor: 'black',
-    flexDirection: 'row',
-    height: 140,
-    marginRight: 10,
-    marginLeft: 10,
-    marginBottom: 5,
-    borderWidth: 0.5,
-    borderColor: 'white',
-  },
-  itemscontainer: {
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: 'white',
-    backgroundColor: 'black',
-    elevation: 24,
-    marginHorizontal: 10,
-    borderRadius: 20,
+  scrollView: {
     flex: 1,
+  },
+  scrollContainer: {
+    paddingBottom: Sizes.screenHeight,
   },
   catsBarItemsContainer: {
     justifyContent: 'center',
   },
-  scroll: {},
   itemContainer: {
-    marginLeft: 10
+    marginLeft: 10,
   },
 });
