@@ -1,30 +1,34 @@
-import React, { useContext } from 'react';
-import { TouchableOpacity, Image, StyleSheet, Text, View } from 'react-native';
+import React, {useContext} from 'react';
+import {TouchableOpacity, Image, StyleSheet, Text, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Images from '../assets/images/images';
 import ScreenNames from '../../routes/ScreenNames';
 import SolabContext from '../store/solabContext';
 
-const Home = (props) => {
-  const { setSelectedIcons } = useContext(SolabContext);
-
+const Home = props => {
+  const {setSelectedIcons} = useContext(SolabContext);
+  
   // Function to navigate and set selectedIcons
-  const navigateStore = (value) => {
+  const navigateStore = value => {
     setSelectedIcons(value); // Set selectedIcons to 'cat' or 'dog'
     props.navigation.navigate(ScreenNames.catsStore);
   };
 
   // Function to render each food item
-  const renderFoodItem = (foodType, imageSource, buttonText, gradientColors, textStyle) => (
+  const renderFoodItem = (
+    foodType,
+    imageSource,
+    buttonText,
+    gradientColors,
+    textStyle,
+  ) => (
     <LinearGradient
       colors={gradientColors}
-      locations={[0, 0.70, 1]}
-      style={styles.fullScreenContainer}
-    >
+      locations={[0, 0.7, 1]}
+      style={styles.fullScreenContainer}>
       <TouchableOpacity
         onPress={() => navigateStore(foodType)}
-        style={styles.touch}
-      >
+        style={styles.touch}>
         <Image source={imageSource} style={styles.image} />
         <Text style={textStyle}>{buttonText}</Text>
       </TouchableOpacity>
@@ -33,8 +37,20 @@ const Home = (props) => {
 
   return (
     <View style={styles.container}>
-      {renderFoodItem('dog', Images.dog(), 'Dog Food', ['#808080', '#000000', '#000000'], styles.dogButtonText)}
-      {renderFoodItem('cat', Images.cat(), 'Cat Food', ['#6CCAFF', '#0066FF', '#004C99'], styles.catButtonText)}
+      {renderFoodItem(
+        'dog',
+        Images.dog(),
+        'Dog Food',
+        ['#808080', '#000000', '#000000'],
+        styles.dogButtonText,
+      )}
+      {renderFoodItem(
+        'cat',
+        Images.cat(),
+        'Cat Food',
+        ['#6CCAFF', '#0066FF', '#004C99'],
+        styles.catButtonText,
+      )}
     </View>
   );
 };

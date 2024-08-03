@@ -15,14 +15,16 @@ import SolabContext from '../store/solabContext';
 import CartRowItems from '../Components/CartRowItems';
 import CartItems from '../Components/CartItems';
 import Images from '../assets/images/images';
+import {updateUserCart} from '../res/api';
 
 const Cart = props => {
-  const {strings} = useContext(SolabContext);
+  const {strings, user} = useContext(SolabContext);
   const {cart, removeItemFromCart, setCart} = useContext(SolabContext);
   const [displayMode, setDisplayMode] = useState('row');
   const [selectedItems, setSelectedItems] = useState([]);
   const [isSelectAll, setIsSelectAll] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
+console.log("...the cart now ", cart)
 
   useEffect(() => {
     const loadCart = async () => {
@@ -30,11 +32,10 @@ const Cart = props => {
         const savedCart = await AsyncStorage.getItem('cart');
         if (savedCart) {
           const parsedCart = JSON.parse(savedCart);
-          // console.log('Loaded cart from storage:', parsedCart);
           setCart(parsedCart);
         }
       } catch (error) {
-        // console.log('Failed to load cart from storage:', error);
+        console.log('Failed to load cart from storage:', error);
       }
     };
 
@@ -44,18 +45,21 @@ const Cart = props => {
   useEffect(() => {
     const saveCart = async () => {
       try {
-        // console.log('Saving cart to storage:', cart); 
         await AsyncStorage.setItem('cart', JSON.stringify(cart));
       } catch (error) {
-        // console.log('Failed to save cart to storage:', error);
+        console.log('Failed to save cart to storage:', error);
       }
     };
-
+  
     saveCart();
   }, [cart]);
+  
 
-  const clearCart = () => {
+  const clearCart = async () => {
     setCart([]);
+    if (user && user._id) {
+      await updateUserCart(user._id, []); // Send empty cart to server
+    }
   };
 
   const alertClear = () => {
@@ -79,7 +83,7 @@ const Cart = props => {
 
   const calculateTotalPrice = () => {
     let totalPrice = 0;
-    cart.forEach(item => {
+    cart.map(item => {
       if (
         item.saleAmmount &&
         item.salePrice &&
@@ -103,19 +107,44 @@ const Cart = props => {
   }, [cart]);
 
   useEffect(() => {
-    // Check if all items are selected
     setIsSelectAll(
       cart.length > 0 && cart.every(item => selectedItems.includes(item.id)),
     );
   }, [selectedItems, cart]);
 
-  const handleCheckBoxChange = (isChecked, id) => {
+  const handleCheckBoxChange = async (isChecked, id) => {
     if (isChecked) {
-      setSelectedItems(prevSelectedItems => [...prevSelectedItems, id]);
+      setSelectedItems(prevSelectedItems => {
+        const newItems = [...prevSelectedItems, id];
+        if (user && user._id) {
+          updateUserCart(
+            user._id,
+            cart.filter(item => newItems.includes(item.id)),
+          ); // Update server with new cart items
+        }
+        return newItems;
+      });
     } else {
-      setSelectedItems(prevSelectedItems =>
-        prevSelectedItems.filter(itemId => itemId !== id),
-      );
+      setSelectedItems(prevSelectedItems => {
+        const newItems = prevSelectedItems.filter(itemId => itemId !== id);
+        if (user && user._id) {
+          updateUserCart(
+            user._id,
+            cart.filter(item => newItems.includes(item.id)),
+          ); // Update server with updated cart items
+        }
+        return newItems;
+      });
+    }
+  };
+
+  const removeSelectedItems = async () => {
+    const newCart = cart.filter(item => !selectedItems.includes(item.id));
+    setCart(newCart);
+    setSelectedItems([]);
+    setIsSelectAll(false);
+    if (user && user._id) {
+      await updateUserCart(user._id, newCart); // Update server with new cart items
     }
   };
 
@@ -128,16 +157,8 @@ const Cart = props => {
     }
   };
 
-  const removeSelectedItems = () => {
-    const newCart = cart.filter(item => !selectedItems.includes(item.id));
-    setCart(newCart);
-    setSelectedItems([]);
-    setIsSelectAll(false);
-  };
-
   const renderCart = ({item}) => {
-    if (item && item.id) {
-      if (displayMode === 'row') {
+
         return (
           <CartRowItems
             {...item}
@@ -147,19 +168,7 @@ const Cart = props => {
             onCheckBoxChange={handleCheckBoxChange}
           />
         );
-      } else {
-        return (
-          <CartItems
-            {...item}
-            hideImage={true}
-            isSelected={selectedItems.includes(item.id)}
-            onCheckBoxChange={handleCheckBoxChange}
-          />
-        );
-      }
-    } else {
-      return null;
-    }
+      
   };
 
   const emptyCartMessage = () => {
@@ -168,6 +177,21 @@ const Cart = props => {
     }
     return null;
   };
+
+  useEffect(() => {
+    // Only update the server if user and cart are available
+    if (user?.id && cart) {
+      const updateCart = async () => {
+        try {
+          await updateUserCart(user.id, cart);
+        } catch (error) {
+          console.error('Error updating cart on server:', error);
+        }
+      };
+
+      updateCart();
+    }
+  }, [cart]); // Dependencies: will run when cart or user.id changes
 
   return (
     <LinearGradient
@@ -202,8 +226,9 @@ const Cart = props => {
       <FlatList
         data={cart}
         renderItem={renderCart}
-        keyExtractor={item => item.id}
-        key={displayMode}
+        keyExtractor={(item, index) => `${item.id}-${index}`}
+
+        key={item => item.id}
         ListEmptyComponent={emptyCartMessage}
         contentContainerStyle={
           cart.length === 0 ? styles.emptyCartContainer : undefined
@@ -215,7 +240,6 @@ const Cart = props => {
 
 const styles = StyleSheet.create({
   allTouch: {
-   
     width: 30,
     height: 30,
   },

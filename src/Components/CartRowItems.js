@@ -10,7 +10,7 @@ const CartRowItems = props => {
   const {strings} = useContext(SolabContext);
   const Item = {...props};
   const {brand, price, img, id} = props;
-  const {addItem, removeItemFromCart, checkRemoveItem} =
+  const {addItemToCart, removeItemFromCart, checkRemoveItem,addItem} =
     useContext(SolabContext);
   const navigation = useNavigation();
 

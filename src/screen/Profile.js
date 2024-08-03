@@ -1,48 +1,54 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, ActivityIndicator } from 'react-native';
-import { useRoute } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, {useContext} from 'react';
+import {View, Text, StyleSheet, Image, FlatList} from 'react-native';
 import SolabContext from '../store/solabContext';
 import Images from '../assets/images/images';
 
 const ProfileScreen = () => {
-  const [profileData, setProfileData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const { params } = useRoute();
-  const { user } = React.useContext(SolabContext);
+  const {user} = useContext(SolabContext);
 
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        const userId = params?.userId || user?.id;
-        if (userId) {
-          const response = await fetch(`https://solab-server.onrender.com/getUserByID/${userId}`);
-          const data = await response.json();
-          setProfileData(data);
-        }
-      } catch (error) {
-        console.log('Failed to fetch user profile:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserProfile();
-  }, [params, user]);
-
-  if (loading) {
+  if (!user) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator size="large" color="#007bff" />
+        <Text style={styles.errorText}>User not found</Text>
       </View>
     );
   }
 
+  // Log user data for debugging
+  console.log('User data:', user);
+
+  // Check if products exist and are correctly formatted
+  const products = user.products || [];
+  console.log('Products:', products);
+
   return (
     <View style={styles.container}>
       <Image source={Images.profileIcon()} style={styles.profileImage} />
-      <Text style={styles.userName}>{profileData?.userName || 'User Name'}</Text>
-      <Text style={styles.userPhone}>{profileData?.phoneNumber || 'Phone Number'}</Text>
+      <Text style={styles.userName}>{user.userName || 'User Name'}</Text>
+      <Text style={styles.userPhone}>{user.phoneNumber || 'Phone Number'}</Text>
+
+      {/* Render list of products */}
+      {products.length > 0 ? (
+        <FlatList
+          data={products}
+          keyExtractor={item => item.productId.toString()}
+          renderItem={({item}) => (
+            <View style={styles.productContainer}>
+              <Image source={{uri: item.img}} style={styles.productImage} />
+              <View style={styles.productDetails}>
+                <Text style={styles.productName}>
+                  {item.productName || 'Product Name'}
+                </Text>
+                <Text style={styles.productPrice}>
+                  ${item.price || 'Price'}
+                </Text>
+              </View>
+            </View>
+          )}
+        />
+      ) : (
+        <Text style={styles.noProductsText}>No products found</Text>
+      )}
     </View>
   );
 };
@@ -69,6 +75,45 @@ const styles = StyleSheet.create({
   userPhone: {
     fontSize: 16,
     color: '#666',
+  },
+  productContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+    padding: 10,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  productImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 8,
+    marginRight: 10,
+  },
+  productDetails: {
+    flex: 1,
+  },
+  productName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  productPrice: {
+    fontSize: 14,
+    color: '#666',
+  },
+  noProductsText: {
+    fontSize: 18,
+    color: '#999',
+  },
+  errorText: {
+    fontSize: 18,
+    color: '#ff0000',
   },
 });
 

@@ -2,6 +2,7 @@ import React, {useEffect, useState, useCallback} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SolabContext from './solabContext';
 import {enStrings, heStrings, arStrings} from '../res/strings';
+import {Alert} from 'react-native';
 
 const SolabProvider = ({children}) => {
   const [cart, setCart] = useState([]);
@@ -50,19 +51,49 @@ const SolabProvider = ({children}) => {
   }, []);
 
   useEffect(() => {
-    const loadCart = async () => {
+    
+    const loadUserData = async () => {
       try {
-        const savedCart = await AsyncStorage.getItem('cart');
-        if (savedCart) {
-          setCart(JSON.parse(savedCart));
+        const storedUser = await AsyncStorage.getItem('user');
+        if (storedUser) {
+          setUser(JSON.parse(storedUser));
+          setIsAuthenticated(true);
         }
       } catch (error) {
-        console.log('Failed to load cart from storage in context:', error);
+        console.error('Failed to load user data:', error);
       }
     };
 
-    loadCart();
+    loadUserData();
   }, []);
+
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      loadCart();
+    }
+  }, [isAuthenticated, user]);
+
+  const loadCart = async () => {
+    if (!user || !user._id) {
+      console.error('User ID is undefined or invalid');
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `https://solab-server.onrender.com/getUserProducts/${user._id}`,
+      );
+      const result = await response.json();
+
+      if (response.ok) {
+        setCart(result.products || []);
+      } else {
+        console.error('Failed to load cart from server:', result.errorMessage);
+      }
+    } catch (error) {
+      console.error('Failed to load cart from server:', error);
+    }
+  };
 
   useEffect(() => {
     const saveCart = async () => {
@@ -134,6 +165,20 @@ const SolabProvider = ({children}) => {
     }
   }, [clearAsyncStorage]);
 
+  const addItem = (item, itemId) => {
+    const existingItemIndex = cart.findIndex(item => item.id === itemId);
+    const updatedCart = [...cart];
+
+    if (existingItemIndex !== -1) {
+      updatedCart[existingItemIndex].quantity++;
+    } else {
+      item.quantity = 1;
+      updatedCart.push(item);
+      setIsItemAdded(true);
+    }
+
+    setCart(updatedCart);
+  };
   const addItemToCart = useCallback(
     (item, itemId) => {
       const existingItemIndex = cart.findIndex(item => item.id === itemId);
@@ -200,11 +245,29 @@ const SolabProvider = ({children}) => {
     },
     [cart],
   );
-
+ 
+  const saveUserProducts = useCallback(async (products) => {
+    try {
+      if (user) {
+        // Update user products in state
+        const updatedUser = { ...user, products };
+        setUser(updatedUser);
+        // Save updated user data to AsyncStorage
+        await AsyncStorage.setItem('user', JSON.stringify(updatedUser));
+        console.log('User products saved successfully');
+      } else {
+        console.warn('No user data available to save products');
+      }
+    } catch (error) {
+      console.error('Failed to save user products:', error);
+    }
+  }, [user]);
+  
   const contextValue = {
     cart,
     setCart,
     addItemToCart,
+    addItem,
     removeItem,
     isItemAdded,
     setIsItemAdded,
@@ -223,9 +286,10 @@ const SolabProvider = ({children}) => {
     user,
     isAuthenticated,
     setUser,
-    saveUser, // Use saveUser function here
+    saveUser,
     logout,
     clearAsyncStorage,
+    saveUserProducts,
   };
 
   return (

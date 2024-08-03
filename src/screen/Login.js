@@ -7,6 +7,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { logIn, createUser } from '../res/api';
@@ -36,7 +37,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     setErrors({ phoneNumber: '', password: '' });
-
+  
     if (!phoneNumber || !password) {
       setErrors({
         phoneNumber: !phoneNumber ? 'Phone number is required' : '',
@@ -44,21 +45,28 @@ const Login = () => {
       });
       return;
     }
-
+  
     if (password.length <= 4) {
       setErrors({ password: 'Password must be longer than 4 characters' });
       return;
     }
-
+  
     setLoading(true);
-
+  
     try {
       const response = await logIn(phoneNumber, password);
       console.log('Login response:', response);
-
+  
       if (response.auth && response.user) {
         await clearAsyncStorage();
         await saveUser(response.user); 
+  
+        // Fetch user products
+        const productsResponse = await getUserProducts(response.user._id);
+        if (productsResponse.products) {
+          saveUserProducts(productsResponse.products); // Save products to context
+        }
+  
         navigation.navigate('Splash');
       } else {
         handleLoginError(response.errorMessage);
@@ -73,6 +81,7 @@ const Login = () => {
       setLoading(false);
     }
   };
+  
 
   const handleLoginError = (errorMessage) => {
     if (errorMessage.includes('Phone number')) {
@@ -109,18 +118,27 @@ const Login = () => {
           'User registered successfully. You can now log in.'
         );
         setRegisterMode(false);
+        clearTxt();
       } else {
-        if (response.errorMessage.includes('Phone number')) {
-          setErrors({ phoneNumber: 'Phone number already exists' });
-        } else {
-          setErrors({ password: response.errorMessage || 'Registration failed' });
-        }
+        handleRegisterError(response.errorMessage);
       }
     } catch (error) {
       console.error('Register error:', error);
-      setErrors({ password: 'An error occurred. Please try again' });
+      if (error.message.includes('E11000 duplicate key error collection')) {
+        setErrors({ phoneNumber: 'Phone number already exists' });
+      } else {
+        setErrors({ password: 'An error occurred. Please try again' });
+      }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleRegisterError = (errorMessage) => {
+    if (errorMessage.includes('Phone number')) {
+      setErrors({ phoneNumber: 'Phone number already exists' });
+    } else {
+      setErrors({ password: errorMessage || 'Registration failed' });
     }
   };
 
@@ -174,24 +192,22 @@ const Login = () => {
             <Text style={styles.show}>{showPassword ? 'hide' : 'show'}</Text>
           </TouchableOpacity>
         </View>
-        <Button
-          title={registerMode ? 'Register' : 'Log In'}
+        <TouchableOpacity
+          style={styles.button}
           onPress={registerMode ? handleRegister : handleLogin}
-          color="#007bff"
           disabled={loading}
-          accessibilityLabel={
-            registerMode ? 'Register button' : 'Log In button'
-          }
-        />
-        <Button
-          title={registerMode ? 'Switch to Log In' : 'Switch to Register'}
+          accessibilityLabel={registerMode ? 'Register button' : 'Log In button'}
+        >
+          <Text style={styles.buttonText}>{registerMode ? 'Register' : 'Log In'}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.button, styles.switchButton]}
           onPress={() => setRegisterMode(!registerMode)}
-          color="#6c757d"
           disabled={loading}
-          accessibilityLabel={
-            registerMode ? 'Switch to Log In' : 'Switch to Register'
-          }
-        />
+          accessibilityLabel={registerMode ? 'Switch to Log In' : 'Switch to Register'}
+        >
+          <Text style={styles.buttonText}>{registerMode ? 'Switch to Log In' : 'Switch to Register'}</Text>
+        </TouchableOpacity>
         {loading && (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="#007bff" />
@@ -263,14 +279,31 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 10,
   },
-  loadingContainer: {
-    marginTop: 20,
+  button: {
+    height: 40,
+    justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#007bff',
+    borderRadius: 5,
+    marginBottom: 16,
+  },
+  buttonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  switchButton: {
+    backgroundColor: '#6c757d',
+  },
+  loadingContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 16,
   },
   loadingText: {
     marginTop: 8,
     fontSize: 16,
-    color: '#007bff',
+    color: '#6c757d',
   },
 });
 

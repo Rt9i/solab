@@ -1,37 +1,39 @@
-import {Image, StyleSheet, View} from 'react-native';
-import React, {useEffect} from 'react';
+import { Image, StyleSheet, View } from 'react-native';
+import React, { useContext, useEffect } from 'react';
 import ScreenNames from '../../routes/ScreenNames';
-
 import Images from '../assets/images/images';
+import { getUserProducts } from '../res/api'; // Import the function
+import SolabContext from '../store/solabContext';
 
-import {getAllUsers} from '../res/api';
+const Splash = (props) => {
+  const { user, saveUserProducts } = useContext(SolabContext);
+  const currentUserId = user ? user._id : null;
 
-const Splash = props => {
-  console.log('can go back? ', props.navigation.canGoBack());
-
-  const navigateHome = () => {
-    props.navigation.navigate(ScreenNames.splash);
-    setTimeout(() => {
-      props.navigation.replace(ScreenNames.home);
-    }, 500);
-  };
   useEffect(() => {
-    navigateHome();
-    // getAllUsersFromApi();
-  }, []);
-  const navigateLogin = data => {
-    props.navigation.replace(ScreenNames.login, {users: data});
-  };
+    if (currentUserId) {
+      // Fetch user products and update context
+      getUserProducts(currentUserId).then((response) => {
+        if (response.products) {
+          saveUserProducts(response.products); // Save products to context
+        }
+      }).catch(error => {
+        console.error('Error fetching user products:', error);
+      });
+    }
 
-  const getAllUsersFromApi = () => {
-    getAllUsers().then(res => {
-      navigateLogin(res);
-      console.log('users: ', res);
-    });
-  };
+    // Navigate to home screen
+    const navigateHome = () => {
+      props.navigation.navigate(ScreenNames.splash);
+      setTimeout(() => {
+        props.navigation.replace(ScreenNames.home);
+      }, 500);
+    };
+    navigateHome();
+
+  }, [currentUserId]);
 
   return (
-    <View style={styles.conatiner}>
+    <View style={styles.container}>
       <Image source={Images.whiteLogo()} style={styles.image} />
     </View>
   );
@@ -40,7 +42,7 @@ const Splash = props => {
 export default Splash;
 
 const styles = StyleSheet.create({
-  conatiner: {
+  container: {
     flex: 1,
     backgroundColor: 'black',
     alignItems: 'center',
