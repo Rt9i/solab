@@ -13,9 +13,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import SolabContext from '../store/solabContext';
 import CartRowItems from '../Components/CartRowItems';
-import CartItems from '../Components/CartItems';
 import Images from '../assets/images/images';
 import {updateUserCart} from '../res/api';
+import {useFocusEffect} from '@react-navigation/native';
 
 const Cart = props => {
   const {strings, user} = useContext(SolabContext);
@@ -24,7 +24,68 @@ const Cart = props => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [isSelectAll, setIsSelectAll] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
-console.log("...the cart now ", cart)
+  const [previousCartState, setPreviousCartState] = useState([]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // Save cart data to server when screen is focused
+      if (user?.id && cart) {
+        const saveCart = async () => {
+          try {
+            await updateUserCart(user.id, cart);
+          } catch (error) {
+            console.error('Error updating cart on server:', error);
+          }
+        };
+
+        saveCart();
+      }
+
+      return () => {
+        // Save cart data to server when screen loses focus
+        if (user?.id && cart) {
+          const saveCart = async () => {
+            try {
+              await updateUserCart(user.id, cart);
+            } catch (error) {
+              console.error('Error updating cart on server:', error);
+            }
+          };
+
+          saveCart();
+        }
+      };
+    }, [user?.id, cart]),
+  );
+  
+  const getUserProductMap = () => {
+    return user.products.reduce((acc, item) => {
+      acc[item.productId] = item.quantity;
+      return acc;
+    }, {});
+  };
+
+  const updateCartWithUserProducts = () => {
+    const userProductMap = getUserProductMap();
+
+    const updatedCart = cart
+      .map(item => {
+        const newQuantity = userProductMap[item.id];
+        if (newQuantity) {
+          return {...item, quantity: newQuantity};
+        }
+        return item;
+      })
+      .filter(item => userProductMap[item.id]);
+
+    setCart(updatedCart);
+  };
+
+  useEffect(() => {
+    if (user?.products) {
+      updateCartWithUserProducts();
+    }
+  }, [user?.products]);
 
   useEffect(() => {
     const loadCart = async () => {
@@ -33,6 +94,7 @@ console.log("...the cart now ", cart)
         if (savedCart) {
           const parsedCart = JSON.parse(savedCart);
           setCart(parsedCart);
+          setPreviousCartState(parsedCart); // Initialize previous cart state
         }
       } catch (error) {
         console.log('Failed to load cart from storage:', error);
@@ -50,15 +112,14 @@ console.log("...the cart now ", cart)
         console.log('Failed to save cart to storage:', error);
       }
     };
-  
+
     saveCart();
   }, [cart]);
-  
 
   const clearCart = async () => {
     setCart([]);
     if (user && user._id) {
-      await updateUserCart(user._id, []); // Send empty cart to server
+      await updateUserCart(user._id, []);
     }
   };
 
@@ -83,19 +144,21 @@ console.log("...the cart now ", cart)
 
   const calculateTotalPrice = () => {
     let totalPrice = 0;
-    cart.map(item => {
-      if (
-        item.saleAmmount &&
-        item.salePrice &&
-        item.quantity >= item.saleAmmount
-      ) {
-        const numSales = Math.floor(item.quantity / item.saleAmmount);
-        const remainingQuantity = item.quantity % item.saleAmmount;
-        const totalSalePrice = numSales * item.salePrice;
-        const totalRegularPrice = remainingQuantity * item.price;
+
+    cart.forEach(item => {
+      const saleAmount = Number(item.saleAmmount) || null;
+      const salePrice = Number(item.salePrice) || null;
+      const price = Number(item.price) || 0;
+      const quantity = Number(item.quantity) || 0;
+
+      if (saleAmount && salePrice && quantity >= saleAmount) {
+        const numSales = Math.floor(quantity / saleAmount);
+        const remainingQuantity = quantity % saleAmount;
+        const totalSalePrice = numSales * salePrice;
+        const totalRegularPrice = remainingQuantity * price;
         totalPrice += totalSalePrice + totalRegularPrice;
       } else {
-        totalPrice += item.price * item.quantity;
+        totalPrice += price * quantity;
       }
     });
 
@@ -120,7 +183,7 @@ console.log("...the cart now ", cart)
           updateUserCart(
             user._id,
             cart.filter(item => newItems.includes(item.id)),
-          ); // Update server with new cart items
+          );
         }
         return newItems;
       });
@@ -131,7 +194,7 @@ console.log("...the cart now ", cart)
           updateUserCart(
             user._id,
             cart.filter(item => newItems.includes(item.id)),
-          ); // Update server with updated cart items
+          );
         }
         return newItems;
       });
@@ -144,7 +207,7 @@ console.log("...the cart now ", cart)
     setSelectedItems([]);
     setIsSelectAll(false);
     if (user && user._id) {
-      await updateUserCart(user._id, newCart); // Update server with new cart items
+      await updateUserCart(user._id, newCart);
     }
   };
 
@@ -158,17 +221,15 @@ console.log("...the cart now ", cart)
   };
 
   const renderCart = ({item}) => {
-
-        return (
-          <CartRowItems
-            {...item}
-            id={item.id}
-            hideImage={true}
-            isSelected={selectedItems.includes(item.id)}
-            onCheckBoxChange={handleCheckBoxChange}
-          />
-        );
-      
+    return (
+      <CartRowItems
+        {...item}
+        id={item.id}
+        hideImage={true}
+        isSelected={selectedItems.includes(item.id)}
+        onCheckBoxChange={handleCheckBoxChange}
+      />
+    );
   };
 
   const emptyCartMessage = () => {
@@ -179,11 +240,16 @@ console.log("...the cart now ", cart)
   };
 
   useEffect(() => {
-    // Only update the server if user and cart are available
-    if (user?.id && cart) {
+    // Only update the server if user and cart are available and cart has changed
+    if (
+      user?.id &&
+      cart &&
+      JSON.stringify(cart) !== JSON.stringify(previousCartState)
+    ) {
       const updateCart = async () => {
         try {
           await updateUserCart(user.id, cart);
+          setPreviousCartState(cart); // Update previous cart state
         } catch (error) {
           console.error('Error updating cart on server:', error);
         }
@@ -191,7 +257,7 @@ console.log("...the cart now ", cart)
 
       updateCart();
     }
-  }, [cart]); // Dependencies: will run when cart or user.id changes
+  }, [cart, user?.id]); // Dependencies: will run when cart or user.id changes
 
   return (
     <LinearGradient
@@ -227,7 +293,6 @@ console.log("...the cart now ", cart)
         data={cart}
         renderItem={renderCart}
         keyExtractor={(item, index) => `${item.id}-${index}`}
-
         key={item => item.id}
         ListEmptyComponent={emptyCartMessage}
         contentContainerStyle={
