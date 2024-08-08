@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useMemo, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -25,6 +25,41 @@ const Cart = props => {
   const [isSelectAll, setIsSelectAll] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
   const [previousCartState, setPreviousCartState] = useState([]);
+
+  const debounceTimeout = useRef(null);
+
+  useEffect(() => {
+    // console.log('useEffect has been used');
+    // console.log('Debounce timer started');
+
+    const saveCartWithDebounce = async () => {
+      if (debounceTimeout.current) {
+        clearTimeout(debounceTimeout.current);
+      }
+
+      debounceTimeout.current = setTimeout(async () => {
+        if (user?._id && cart && cart.length > 0) {
+          try {
+            // Use cart directly if newItems is not needed
+            await updateUserCart(user._id, cart);
+            // console.log('Cart saved to server:', cart);
+          } catch (error) {
+            console.error('Error updating cart on server:', error);
+          }
+        } else {
+          console.log('No cart items to save or user ID is missing');
+        }
+      }, 1700); 
+    };
+
+    saveCartWithDebounce();
+
+    return () => {
+      if (debounceTimeout.current) {
+        clearTimeout(debounceTimeout.current);
+      }
+    };
+  }, [cart, user?._id]); // Include dependencies here
 
   useFocusEffect(
     React.useCallback(() => {
@@ -57,7 +92,7 @@ const Cart = props => {
       };
     }, [user?.id, cart]),
   );
-  
+
   const getUserProductMap = () => {
     return user.products.reduce((acc, item) => {
       acc[item.productId] = item.quantity;

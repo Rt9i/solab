@@ -20,6 +20,8 @@ export const getUserProfile = async (userId) => {
     throw error;
   }
 };
+
+
 export const updateUserCart = async (userId, cart) => {
   if (!userId) {
     console.error('User ID is undefined');
