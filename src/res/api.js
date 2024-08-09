@@ -27,6 +27,8 @@ export const updateUserCart = async (userId, cart) => {
     console.error('User ID is undefined');
     return;
   }
+
+  // Transform the cart items to include productId and other details
   const cartItems = cart.map(item => ({
     productId: item.id,
     price: item.price,
@@ -41,7 +43,7 @@ export const updateUserCart = async (userId, cart) => {
     salePrice: item.salePrice,
   }));
 
-  const payload = {cartItems};
+  const payload = { cartItems };
   console.log('Payload to be sent:', JSON.stringify(payload));
 
   try {
@@ -77,6 +79,7 @@ export const updateUserCart = async (userId, cart) => {
     console.error('Failed to update cart on server:', error);
   }
 };
+
 
 export const loadCart = async userId => {
   if (!userId) {
