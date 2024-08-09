@@ -28,9 +28,9 @@ export const updateUserCart = async (userId, cart) => {
     return;
   }
 
-
+  // Ensure productId is included in the payload
   const cartItems = cart.map(item => ({
-    productId: item.id,  // Check if 'item.id' matches what the server expects
+    productId: item.productId, // Ensure this is correctly set
     price: item.price,
     brand: item.brand,
     taste: item.taste,
@@ -79,6 +79,7 @@ export const updateUserCart = async (userId, cart) => {
     console.error('Failed to update cart on server:', error);
   }
 };
+
 
 
 export const loadCart = async userId => {
