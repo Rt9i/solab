@@ -29,20 +29,16 @@ const Cart = props => {
   const debounceTimeout = useRef(null);
 
   useEffect(() => {
-    // console.log('useEffect has been used');
-    // console.log('Debounce timer started');
-
     const saveCartWithDebounce = async () => {
       if (debounceTimeout.current) {
         clearTimeout(debounceTimeout.current);
       }
-
+  
       debounceTimeout.current = setTimeout(async () => {
         if (user?._id && cart && cart.length > 0) {
           try {
-            // Use cart directly if newItems is not needed
             await updateUserCart(user._id, cart);
-            // console.log('Cart saved to server:', cart);
+            console.log('Cart saved to server:', cart);
           } catch (error) {
             console.error('Error updating cart on server:', error);
           }
@@ -51,16 +47,16 @@ const Cart = props => {
         }
       }, 1700); 
     };
-
+  
     saveCartWithDebounce();
-
+  
     return () => {
       if (debounceTimeout.current) {
         clearTimeout(debounceTimeout.current);
       }
     };
-  }, [cart, user?._id]); // Include dependencies here
-
+  }, [cart, user?._id]);
+  
   useFocusEffect(
     React.useCallback(() => {
       // Save cart data to server when screen is focused
