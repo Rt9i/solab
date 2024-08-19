@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   FlatList,
   Dimensions,
-  Platform,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import ScreenNames from '../../routes/ScreenNames';
@@ -34,11 +33,6 @@ const RowContainer = ({ items, renderItem, text, selectedCategory }) => {
     return null;
   }
 
-  const screenWidth = Dimensions.get('window').width;
-  const ITEM_WIDTH = 75; // Ensure this matches your item width
-  const totalItemsWidth = items.length * ITEM_WIDTH;
-  const shouldScroll = totalItemsWidth > screenWidth;
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -48,19 +42,16 @@ const RowContainer = ({ items, renderItem, text, selectedCategory }) => {
         {text && <Text style={styles.headerText}>{text}</Text>}
       </View>
       <FlatList
-        style={styles.items}
         ref={flatListRef}
         data={items}
         renderItem={({ item }) => <RenderItem item={item} renderItem={renderItem} />}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={(item) => item.id.toString()}
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ flexGrow: shouldScroll ? 0 : 1 }}
         initialNumToRender={10}
         maxToRenderPerBatch={5}
         windowSize={10}
-        updateCellsBatchingPeriod={50} // Adjust for smoother scrolling
-        removeClippedSubviews={Platform.OS === 'android'} // Only for Android
+        contentContainerStyle={styles.itemsContainer}
       />
     </View>
   );
@@ -69,7 +60,6 @@ const RowContainer = ({ items, renderItem, text, selectedCategory }) => {
 export default RowContainer;
 
 const styles = StyleSheet.create({
-  items: {},
   container: {
     marginBottom: 20,
     marginLeft: 15,
@@ -100,5 +90,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: 'rgba(176, 196, 222, 0.7)',
     color: 'black',
+  },
+  itemsContainer: {
+    
   },
 });

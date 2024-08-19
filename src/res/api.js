@@ -56,6 +56,7 @@ export const updateUserCart = async (userId, cart) => {
       body: JSON.stringify(payload),
     });
 
+    // Log the raw response text
     const text = await response.text();
     console.log('Server response:', text);
 
@@ -102,12 +103,21 @@ export const getUserProducts = async userId => {
     if (!/^[0-9a-fA-F]{24}$/.test(userId)) {
       throw new Error('Invalid ObjectId format');
     }
-    return await appFetch(`/getUserProducts/${userId}`, 'GET');
+    
+    const response = await appFetch(`/getUserProducts/${userId}`, 'GET');
+    
+    // Check if the response has the `products` field
+    if (!response.products) {
+      throw new Error('Products not found in response');
+    }
+    
+    return response.products; // Return the products array
   } catch (error) {
     console.error('Failed to fetch user products:', error);
     throw error;
   }
 };
+
 
 export const getUserByID = async id => {
   try {

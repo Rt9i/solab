@@ -13,6 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { logIn, createUser } from '../res/api';
 import { useNavigation } from '@react-navigation/native';
 import SolabContext from '../store/solabContext';
+import { getUserProducts } from '../res/api';
 
 const Login = () => {
   const [phoneNumber, setPhoneNumber] = useState('');

@@ -206,31 +206,17 @@ const Cart = props => {
     );
   }, [selectedItems, cart]);
 
-  const handleCheckBoxChange = async (isChecked, id) => {
-    if (isChecked) {
-      setSelectedItems(prevSelectedItems => {
-        const newItems = [...prevSelectedItems, id];
-        if (user && user._id) {
-          updateUserCart(
-            user._id,
-            cart.filter(item => newItems.includes(item.id)),
-          );
-        }
-        return newItems;
-      });
-    } else {
-      setSelectedItems(prevSelectedItems => {
-        const newItems = prevSelectedItems.filter(itemId => itemId !== id);
-        if (user && user._id) {
-          updateUserCart(
-            user._id,
-            cart.filter(item => newItems.includes(item.id)),
-          );
-        }
-        return newItems;
-      });
-    }
+  const handleCheckBoxChange = (isChecked, id) => {
+    setSelectedItems(prevSelectedItems => {
+      const newItems = isChecked 
+        ? [...prevSelectedItems, id] 
+        : prevSelectedItems.filter(itemId => itemId !== id);
+      
+      // The cart update logic is removed
+      return newItems;
+    });
   };
+  
 
   const removeSelectedItems = async () => {
     const newCart = cart.filter(item => !selectedItems.includes(item.id));
