@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, {useState, useContext} from 'react';
 import {
   View,
   Text,
@@ -9,16 +9,18 @@ import {
   UIManager,
 } from 'react-native';
 import SolabContext from '../store/solabContext';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Images from '../assets/images/images';
+import ScreenNames from '../../routes/ScreenNames';
 
 if (Platform.OS === 'android') {
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
 const SettingsScreen = () => {
-  const { user, changeLanguage, logout, clearAsyncStorage } = useContext(SolabContext);
+  const {user, setUser, changeLanguage, logout, clearAsyncStorage} =
+    useContext(SolabContext);
   const navigation = useNavigation();
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
 
@@ -35,7 +37,7 @@ const SettingsScreen = () => {
       image: Images.profileIcon(),
       onPress: () => {
         if (currentUserId) {
-          navigation.navigate('Profile', { userId: currentUserId });
+          navigation.navigate('Profile', {userId: currentUserId});
         } else {
           console.log('User ID is not available');
         }
@@ -79,28 +81,9 @@ const SettingsScreen = () => {
     },
   ];
 
- 
-
-  const checkAsyncStorage = async () => {
-    try {
-      const keys = await AsyncStorage.getAllKeys();
-      console.log('AsyncStorage keys:', keys);
-
-      const allData = await AsyncStorage.multiGet(keys);
-      console.log('AsyncStorage data:', allData);
-    } catch (error) {
-      console.log('Failed to check AsyncStorage:', error);
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await clearAsyncStorage;
-      await checkAsyncStorage();
-      navigation.navigate('Login');
-    } catch (error) {
-      console.log('Failed to log out:', error);
-    }
+  const handleLogOut = () => {
+    logout();
+    navigation.navigate(ScreenNames.login);
   };
 
   const renderSettings = () => {
@@ -133,7 +116,7 @@ const SettingsScreen = () => {
         {isLanguageOpen && (
           <View style={styles.languageContainer}>{renderLanguages()}</View>
         )}
-        <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
+        <TouchableOpacity onPress={handleLogOut} style={styles.logoutButton}>
           <Text style={styles.logoutText}>Logout</Text>
         </TouchableOpacity>
       </View>

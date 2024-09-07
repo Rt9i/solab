@@ -12,6 +12,9 @@ import CatsStore from '../src/screen/CatsStore';
 import ProductScreen from '../src/screen/ProductScreen';
 import SeeAllProducts from '../src/screen/SeeAllProducts';
 import ScreenNames from './ScreenNames';
+import WorkersHome from '../src/screen/WorkersHome';
+
+
 
 const Stack = createNativeStackNavigator();
 
@@ -19,16 +22,20 @@ const MainNavigation = ({initialRouteName}) => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName={initialRouteName}>
-        <Stack.Screen
-          name={ScreenNames.splash}
-          component={Splash}
-          options={{headerShown: false}}
-        />
+        
+      {/* <Stack.Screen name={ScreenNames.workerHome} component={WorkersHome} /> */}
         <Stack.Screen
           name={ScreenNames.login}
           component={Login}
           options={{headerShown: false}}
         />
+        <Stack.Screen
+          name={ScreenNames.splash}
+          component={Splash}
+          options={{headerShown: false}}
+        />
+
+
         <Stack.Screen
           name={ScreenNames.home}
           component={Home}

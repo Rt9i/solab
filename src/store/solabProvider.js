@@ -1,8 +1,11 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState, useCallback, useRef} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SolabContext from './solabContext';
 import {enStrings, heStrings, arStrings} from '../res/strings';
 import {Alert} from 'react-native';
+import ScreenNames from '../../routes/ScreenNames';
+import {useNavigation} from '@react-navigation/native';
+import { updateUserCart } from '../res/api';
 
 const SolabProvider = ({children}) => {
   const [cart, setCart] = useState([]);
@@ -16,11 +19,40 @@ const SolabProvider = ({children}) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  const debounceTimeout = useRef(null);
   const translations = {
     en: enStrings,
     he: heStrings,
     ar: arStrings,
   };
+  useEffect(() => {
+    const saveCartWithDebounce = async () => {
+      if (debounceTimeout.current) {
+        clearTimeout(debounceTimeout.current);
+      }
+
+      debounceTimeout.current = setTimeout(async () => {
+        if (user?._id && cart && cart.length > 0) {
+          try {
+            await updateUserCart(user._id, cart);
+            console.log('Cart saved to server:', cart);
+          } catch (error) {
+            console.error('Error updating cart on server:', error);
+          }
+        } else {
+          console.log('No cart items to save or user ID is missing');
+        }
+      }, 1700);
+    };
+
+    saveCartWithDebounce();
+
+    return () => {
+      if (debounceTimeout.current) {
+        clearTimeout(debounceTimeout.current);
+      }
+    };
+  }, [cart, user?._id]);
 
   const changeLanguage = useCallback(async lang => {
     try {
@@ -51,7 +83,6 @@ const SolabProvider = ({children}) => {
   }, []);
 
   useEffect(() => {
-    
     const loadUserData = async () => {
       try {
         const storedUser = await AsyncStorage.getItem('user');
@@ -245,24 +276,27 @@ const SolabProvider = ({children}) => {
     },
     [cart],
   );
- 
-  const saveUserProducts = useCallback(async (products) => {
-    try {
-      if (user) {
-        // Update user products in state
-        const updatedUser = { ...user, products };
-        setUser(updatedUser);
-        // Save updated user data to AsyncStorage
-        await AsyncStorage.setItem('user', JSON.stringify(updatedUser));
-        console.log('User products saved successfully');
-      } else {
-        console.warn('No user data available to save products');
+
+  const saveUserProducts = useCallback(
+    async products => {
+      try {
+        if (user) {
+          // Update user products in state
+          const updatedUser = {...user, products};
+          setUser(updatedUser);
+          // Save updated user data to AsyncStorage
+          await AsyncStorage.setItem('user', JSON.stringify(updatedUser));
+          console.log('User products saved successfully');
+        } else {
+          console.warn('No user data available to save products');
+        }
+      } catch (error) {
+        console.error('Failed to save user products:', error);
       }
-    } catch (error) {
-      console.error('Failed to save user products:', error);
-    }
-  }, [user]);
-  
+    },
+    [user],
+  );
+
   const contextValue = {
     cart,
     setCart,
@@ -290,6 +324,7 @@ const SolabProvider = ({children}) => {
     logout,
     clearAsyncStorage,
     saveUserProducts,
+    setUser,
   };
 
   return (

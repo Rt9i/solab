@@ -12,6 +12,7 @@ const ScreenNames = {
   Tabs: 'tabs',
   seeAll: 'seeAll',
   html: 'html',
+  workerHome: 'WorkerHome',
 };
 
 export default ScreenNames;

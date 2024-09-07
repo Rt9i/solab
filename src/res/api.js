@@ -141,18 +141,32 @@ export const logIn = async (phoneNumber, password) => {
   }
 };
 
+
 export const createUser = async (userName, phoneNumber, password) => {
   try {
-    return await appFetch('/createUser', 'POST', {
-      userName,
-      phoneNumber,
-      password,
+    const response = await fetch(`${mainURL}/createUser`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userName,
+        phoneNumber,
+        password,
+        role: 'client',
+      }),
     });
+
+    const data = await response.json();
+    console.log('User created:', data);
+    return data; // Ensure the response is returned
   } catch (error) {
-    console.error('User creation failed:', error);
-    throw error;
+    console.error('Error creating user:', error);
+    throw error; // Rethrow the error to handle it properly where the function is called
   }
 };
+
+
 
 const appFetch = async (route, method = 'GET', body = null) => {
   const url = `${mainURL}${route}`;
@@ -174,22 +188,25 @@ const appFetch = async (route, method = 'GET', body = null) => {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('HTTP Error:', response.status, errorText);
+      console.error('HTTP Error:', response.status, response.statusText, errorText);
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     const textResponse = await response.text();
     console.log('Response:', textResponse);
 
-    let jsonResponse;
-    try {
-      jsonResponse = JSON.parse(textResponse);
-    } catch (e) {
-      console.error('Failed to parse JSON:', e);
-      throw new Error('Response is not valid JSON');
+    // Check if response is empty before parsing
+    if (textResponse) {
+      try {
+        const jsonResponse = JSON.parse(textResponse);
+        return jsonResponse;
+      } catch (e) {
+        console.error('Failed to parse JSON:', e);
+        throw new Error('Response is not valid JSON');
+      }
+    } else {
+      return {}; // Return an empty object or handle the empty response as needed
     }
-
-    return jsonResponse;
   } catch (error) {
     console.error('Fetch error:', error.message);
     throw error;
