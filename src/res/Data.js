@@ -16,7 +16,7 @@ import SolabContext from '../store/solabContext';
 //
 //     'treats',
 //   ]
-const getCategoryItemsData = [
+const data = [ 
   {
     id: 'toy1',
     price: 15,
@@ -25,6 +25,7 @@ const getCategoryItemsData = [
     img: Images.toy1(),
     dis: '',
     category: ['accessories', 'thirdRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat', 'dog'],
   },
   {
@@ -35,6 +36,7 @@ const getCategoryItemsData = [
     img: Images.toy2(),
     dis: '',
     category: ['accessories', 'thirdRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat'],
   },
   {
@@ -45,6 +47,7 @@ const getCategoryItemsData = [
     img: Images.toy3(),
     dis: '',
     category: ['accessories', 'thirdRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat', 'dog'],
   },
   {
@@ -55,6 +58,7 @@ const getCategoryItemsData = [
     img: Images.toy4(),
     dis: '',
     category: ['accessories', 'thirdRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat'],
   },
   {
@@ -65,6 +69,7 @@ const getCategoryItemsData = [
     img: Images.toy5(),
     dis: '',
     category: ['accessories', 'thirdRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat'],
   },
   {
@@ -75,6 +80,7 @@ const getCategoryItemsData = [
     img: Images.toy6(),
     dis: '',
     category: ['accessories', 'thirdRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat'],
   },
   {
@@ -85,6 +91,7 @@ const getCategoryItemsData = [
     img: Images.toy7(),
     dis: '',
     category: ['accessories', 'thirdRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat'],
   },
   {
@@ -95,6 +102,7 @@ const getCategoryItemsData = [
     img: Images.toy8(),
     dis: '',
     category: ['accessories', 'thirdRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat'],
   },
   {
@@ -105,6 +113,7 @@ const getCategoryItemsData = [
     img: Images.toy9(),
     dis: '',
     category: ['accessories', 'thirdRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat'],
   },
   {
@@ -115,6 +124,7 @@ const getCategoryItemsData = [
     img: Images.toy10(),
     dis: '',
     category: ['accessories', 'thirdRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat'],
   },
   {
@@ -125,6 +135,7 @@ const getCategoryItemsData = [
     img: Images.toy11(),
     dis: '',
     category: ['accessories', 'thirdRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat'],
   },
   {
@@ -135,6 +146,7 @@ const getCategoryItemsData = [
     img: Images.toy12(),
     dis: '',
     category: ['accessories', 'thirdRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat'],
   },
   {
@@ -145,6 +157,7 @@ const getCategoryItemsData = [
     img: Images.bowl1(),
     dis: '',
     category: ['bowl', 'firstRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat', 'dog'],
   },
   {
@@ -155,6 +168,7 @@ const getCategoryItemsData = [
     img: Images.bowl2(),
     dis: '',
     category: ['bowl', 'firstRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat', 'dog'],
   },
   {
@@ -165,6 +179,7 @@ const getCategoryItemsData = [
     img: Images.bowl3(),
     dis: '',
     category: ['bowl', 'firstRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat', 'dog'],
   },
   {
@@ -175,6 +190,7 @@ const getCategoryItemsData = [
     img: Images.bowl4(),
     dis: '',
     category: ['bowl', 'firstRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat', 'dog'],
   },
   {
@@ -185,6 +201,7 @@ const getCategoryItemsData = [
     img: Images.bowl5(),
     dis: '',
     category: ['bowl', 'firstRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat', 'dog'],
   },
   {
@@ -195,6 +212,7 @@ const getCategoryItemsData = [
     img: Images.bowl6(),
     dis: '',
     category: ['bowl', 'firstRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat', 'dog'],
   },
   {
@@ -205,6 +223,7 @@ const getCategoryItemsData = [
     img: Images.bowl7(),
     dis: '',
     category: ['bowl', 'firstRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat', 'dog'],
   },
   {
@@ -215,6 +234,7 @@ const getCategoryItemsData = [
     img: Images.bowl8(),
     dis: '',
     category: ['bowl', 'firstRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat', 'dog'],
   },
   {
@@ -225,6 +245,7 @@ const getCategoryItemsData = [
     img: Images.bowl9(),
     dis: '',
     category: ['bowl', 'firstRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat', 'dog'],
   },
   {
@@ -235,6 +256,7 @@ const getCategoryItemsData = [
     img: Images.bowl10(),
     dis: '',
     category: ['bowl', 'firstRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat', 'dog'],
   },
   {
@@ -245,6 +267,7 @@ const getCategoryItemsData = [
     img: Images.bowl11(),
     dis: '',
     category: ['bowl', 'firstRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat', 'dog'],
   },
 
@@ -256,6 +279,7 @@ const getCategoryItemsData = [
     img: Images.bowl12(),
     dis: '',
     category: ['bowl', 'firstRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat', 'dog'],
   },
   {
@@ -266,6 +290,7 @@ const getCategoryItemsData = [
     img: Images.bowl13(),
     dis: '',
     category: ['bowl', 'firstRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat', 'dog'],
   },
   {
@@ -276,6 +301,7 @@ const getCategoryItemsData = [
     img: Images.bowl14(),
     dis: '',
     category: ['bowl', 'firstRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat', 'dog'],
   },
   {
@@ -286,6 +312,7 @@ const getCategoryItemsData = [
     img: Images.bowl15(),
     dis: '',
     category: ['bowl', 'firstRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat', 'dog'],
   },
   {
@@ -296,6 +323,7 @@ const getCategoryItemsData = [
     img: Images.bowl16(),
     dis: '',
     category: ['bowl', 'firstRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat', 'dog'],
   },
   {
@@ -306,6 +334,7 @@ const getCategoryItemsData = [
     img: Images.bowl17(),
     dis: '',
     category: ['bowl', 'firstRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat', 'dog'],
   },
   {
@@ -316,6 +345,7 @@ const getCategoryItemsData = [
     img: Images.bowl18(),
     dis: '',
     category: ['bowl', 'firstRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat', 'dog'],
   },
   {
@@ -326,6 +356,7 @@ const getCategoryItemsData = [
     img: Images.bowl19(),
     dis: '',
     category: ['bowl', 'firstRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat', 'dog'],
   },
   {
@@ -336,6 +367,7 @@ const getCategoryItemsData = [
     img: Images.bowl20(),
     dis: '',
     category: ['bowl', 'firstRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat', 'dog'],
   },
   {
@@ -346,6 +378,7 @@ const getCategoryItemsData = [
     img: Images.bowl21(),
     dis: '',
     category: ['bowl', 'firstRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat', 'dog'],
   },
   {
@@ -356,6 +389,7 @@ const getCategoryItemsData = [
     img: Images.bowl22(),
     dis: '',
     category: ['bowl', 'firstRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat', 'dog'],
   },
   {
@@ -366,6 +400,7 @@ const getCategoryItemsData = [
     img: Images.bowl23(),
     dis: '',
     category: ['bowl', 'firstRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat', 'dog'],
   },
   {
@@ -376,6 +411,7 @@ const getCategoryItemsData = [
     img: Images.bowl24(),
     dis: '',
     category: ['bowl', 'firstRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat', 'dog'],
   },
   {
@@ -386,6 +422,7 @@ const getCategoryItemsData = [
     img: Images.bowl25(),
     dis: '',
     category: ['bowl', 'firstRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat', 'dog'],
   },
   {
@@ -396,6 +433,7 @@ const getCategoryItemsData = [
     img: Images.bowl26(),
     dis: '',
     category: ['bowl', 'firstRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['cat', 'dog'],
   },
   {
@@ -489,6 +527,7 @@ const getCategoryItemsData = [
     img: Images.cnaanChciekn(),
     dis: 'Dog food fr fr fr',
     category: ['meat', 'thirdRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['dog'],
   },
   {
@@ -499,6 +538,7 @@ const getCategoryItemsData = [
     img: Images.DDOGeatBeef(),
     dis: 'Dog food fr fr fr',
     category: ['meat', 'thirdRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['dog'],
   },
   {
@@ -509,6 +549,7 @@ const getCategoryItemsData = [
     img: Images.DNuevoDeerNoodlesCowberry(),
     dis: 'Dog food fr fr fr',
     category: ['meat', 'thirdRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['dog'],
   },
   {
@@ -519,6 +560,7 @@ const getCategoryItemsData = [
     img: Images.DMongeCanTurkey(),
     dis: 'Dog food fr fr fr',
     category: ['meat', 'secondRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['dog'],
   },
   {
@@ -529,6 +571,7 @@ const getCategoryItemsData = [
     img: Images.mongecanChicken(),
     dis: 'Dog food fr fr fr',
     category: ['meat', 'secondRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['dog'],
   },
   {
@@ -539,6 +582,7 @@ const getCategoryItemsData = [
     img: Images.DMongeCanCodFish(),
     dis: 'Dog food fr fr fr',
     category: ['meat', 'secondRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['dog'],
   },
   {
@@ -549,6 +593,7 @@ const getCategoryItemsData = [
     img: Images.DMongecanSalmon(),
     dis: 'Dog food fr fr fr',
     category: ['meat', 'secondRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['dog'],
   },
   {
@@ -559,6 +604,7 @@ const getCategoryItemsData = [
     img: Images.DMongeCanTurkey(),
     dis: 'Dog food fr fr fr',
     category: ['meat', 'secondRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['dog'],
   },
   {
@@ -569,6 +615,7 @@ const getCategoryItemsData = [
     img: Images.DMongeCanTuna(),
     dis: 'Dog food fr fr fr',
     category: ['meat', 'secondRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['dog'],
   },
   {
@@ -579,6 +626,7 @@ const getCategoryItemsData = [
     img: Images.DHorizonChickenBeef(),
     dis: '',
     category: ['meat', 'secondRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['dog'],
   },
   {
@@ -589,6 +637,7 @@ const getCategoryItemsData = [
     img: Images.DHorizonChicken(),
     dis: '',
     category: ['meat', 'secondRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['dog'],
   },
   {
@@ -599,6 +648,7 @@ const getCategoryItemsData = [
     img: Images.gimcansSmall(),
     dis: '',
     category: ['meat', 'fourthRow'],
+    searchKeys: ['meat', 'dog', 'puppy'],
     petType: ['dog'],
   },
   {
@@ -1324,8 +1374,9 @@ const getCategoryItemsData = [
     img: Images.FriskiesTenderCrunchyCombo(),
     dis: 'doorlsChicken',
     category: ['food', 'firstRow'],
+    searchKeys: ['cat'],
     petType: ['cat'],
-  },
+  },  
   {
     id: 'Food100',
     price: 100,
@@ -1334,6 +1385,7 @@ const getCategoryItemsData = [
     img: Images.FriskiesSurfinTurfin(),
     dis: 'doorlsChicken',
     category: ['food', 'firstRow'],
+    searchKeys: ['cat'],
     petType: ['cat'],
   },
   {
@@ -1344,6 +1396,7 @@ const getCategoryItemsData = [
     img: Images.FriskiesSeaFood(),
     dis: 'doorlsChicken',
     category: ['food', 'firstRow'],
+    searchKeys: ['bird'],
     petType: ['cat'],
   },
   {
@@ -1404,7 +1457,7 @@ const getCategoryItemsData = [
     taste: 'chicken',
     img: Images.meraChicken(),
     dis: 'doorlsChicken',
-    category: ['food', 'thirdRow'],
+    category: ['food', 'thirdRow'],   searchKeys: ['toy'],
     petType: ['cat'],
   },
   {
@@ -1414,7 +1467,7 @@ const getCategoryItemsData = [
     taste: 'chicken',
     img: Images.meraSensetiveAdultChicken(),
     dis: 'doorlsChicken',
-    category: ['food', 'thirdRow'],
+    category: ['food', 'thirdRow'],searchKeys: ['toy'],
     petType: ['cat'],
   },
   {
@@ -1424,7 +1477,7 @@ const getCategoryItemsData = [
     taste: 'beef',
     img: Images.mongeBeef(),
     dis: 'doorlsChicken',
-    category: ['food', 'fourthRow'],
+    category: ['food', 'fourthRow'],searchKeys: ['fire'],
     petType: ['cat'],
   },
   {
@@ -1434,7 +1487,7 @@ const getCategoryItemsData = [
     taste: 'chicken',
     img: Images.mongeChicken(),
     dis: 'doorlsChicken',
-    category: ['food', 'fourthRow'],
+    category: ['food', 'fourthRow'],searchKeys: ['fire'],
     petType: ['cat'],
   },
   {
@@ -2529,4 +2582,4 @@ const getCategoryItemsData = [
   },
 ];
 
-export default getCategoryItemsData;
+export default data;

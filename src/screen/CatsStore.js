@@ -1,31 +1,29 @@
 import React, {useContext, useState, useRef, useMemo} from 'react';
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  Animated,
-  Dimensions,
-  Text,
-} from 'react-native';
-import getCategoryItemsData from '../res/Data';
-import {useNavigation} from '@react-navigation/native';
-import CatsBarItems from '../Components/CatsBarItems';
-import Sizes from '../res/sizes';
-import Swipe from '../Components/Swipe';
-import RowContainer from '../Components/RowContainer';
-import ScrollUp from '../Components/scrollUp';
+import {View, StyleSheet, ScrollView, Animated} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import TopBar from '../Components/topBar';
 import SolabContext from '../store/solabContext';
+import RowContainer from '../Components/RowContainer';
 import BottomBar from '../Components/BottomBar';
+import ScrollUp from '../Components/scrollUp';
+import CatsBarItems from '../Components/CatsBarItems';
+import Swipe from '../Components/Swipe';
 import CatsStoreItems from '../Components/CatsStoreItems';
+import Sizes from '../res/sizes';
+import {useNavigation} from '@react-navigation/native';
+
+import data from '../res/Data';
 
 const CatsStore = props => {
-  const [selectedCategory, setSelectedCategory] = useState('food');
   const navigation = useNavigation();
   const [displayMode, setDisplayMode] = useState('row');
   const [optionsVisible, setOptionsVisible] = useState(false);
-  const {selectedIcons, search} = useContext(SolabContext);
+  const {
+    selectedIcons,
+    search,
+    setSelectedCategory,
+    selectedCategory,
+  } = useContext(SolabContext);
 
   const scrollY = useRef(new Animated.Value(0)).current;
   const [showScrollUp, setShowScrollUp] = useState(false);
@@ -33,25 +31,32 @@ const CatsStore = props => {
 
   const getFilteredItemsForRow = useMemo(
     () => rowValue => {
+      console.log(`Filtering for rowValue: ${rowValue}`); // Debug log
       const isSearchActive = search.length > 0;
 
-      const filteredItems = getCategoryItemsData.filter(item => {
+      const filteredItems = data.filter(item => {
+        const matchesSearch = isSearchActive
+          ? search.some(keyword =>
+              item.searchKeys?.some(key => key.toLowerCase().includes(keyword)),
+            )
+          : true;
+
+        const matchesCategory =
+          item.category?.includes(selectedCategory) &&
+          item.category?.includes(rowValue);
+
+        const matchesPetType = item.petType?.includes(selectedIcons);
+
+        // If search is active, return items matching search and rowValue
         if (isSearchActive) {
-          return (
-            item.name &&
-            item.name.toLowerCase().includes(search.toLowerCase()) &&
-            item.category.includes(rowValue)
-          );
+          return matchesSearch && item.category?.includes(rowValue);
         }
 
-        return (
-          item.category.includes(selectedCategory) &&
-          item.category.includes(rowValue) &&
-          item.petType &&
-          item.petType.includes(selectedIcons)
-        );
+        // Otherwise, return items matching category, rowValue, and petType
+        return matchesCategory && matchesPetType;
       });
 
+      // Ensure uniqueness of items by their ID
       const uniqueItems = filteredItems.reduce((acc, item) => {
         if (!acc.find(existingItem => existingItem.id === item.id)) {
           acc.push(item);
@@ -59,9 +64,11 @@ const CatsStore = props => {
         return acc;
       }, []);
 
+      console.log(`Unique Items:`, uniqueItems); // Debug log
+
       return uniqueItems;
     },
-    [search, selectedCategory, selectedIcons],
+    [search, selectedCategory, selectedIcons, data],
   );
 
   const rows = useMemo(
@@ -123,7 +130,7 @@ const CatsStore = props => {
   };
 
   const handleScrollUpPress = () => {
-    scrollViewRef.current.scrollTo({x: 0, y: 0, animated: true}); // Using ref to scroll
+    scrollViewRef.current.scrollTo({x: 0, y: 0, animated: true});
   };
 
   const cat = [
@@ -144,7 +151,6 @@ const CatsStore = props => {
       locations={[0, 0.1, 1]}
       style={styles.container}>
       <TopBar />
-
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={{minHeight: Sizes.screenHeight}}
@@ -190,11 +196,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#6CCAFF',
   },
-  scrollView: {
+  scroll: {
     flex: 1,
-  },
-  scrollContainer: {
-    paddingBottom: Sizes.screenHeight,
   },
   catsBarItemsContainer: {
     justifyContent: 'center',

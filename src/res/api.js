@@ -28,7 +28,7 @@ export const updateUserCart = async (userId, cart) => {
     return;
   }
 
-  // Transform the cart items to include productId and other details
+
   const cartItems = cart.map(item => ({
     productId: item.id,
     price: item.price,

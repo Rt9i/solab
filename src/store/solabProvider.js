@@ -5,7 +5,8 @@ import {enStrings, heStrings, arStrings} from '../res/strings';
 import {Alert} from 'react-native';
 import ScreenNames from '../../routes/ScreenNames';
 import {useNavigation} from '@react-navigation/native';
-import { updateUserCart } from '../res/api';
+import {updateUserCart} from '../res/api';
+import getCategoryItemsData from '../res/Data';
 
 const SolabProvider = ({children}) => {
   const [cart, setCart] = useState([]);
@@ -16,14 +17,51 @@ const SolabProvider = ({children}) => {
   const [strings, setStrings] = useState(heStrings);
   const [selectedIcons, setSelectedIcons] = useState();
   const [search, setSearch] = useState('');
+  const [filteredItemsState, setFilteredItemsState] = useState([]);
+  const [keywords, setKeywords] = useState([]);
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
+  const [selectedCategory, setSelectedCategory] = useState('food');
   const debounceTimeout = useRef(null);
   const translations = {
     en: enStrings,
     he: heStrings,
     ar: arStrings,
+  };
+  const getFilteredItemsForRow = (rowValue) => {
+    const isSearchActive = search.length > 0;
+
+    const filteredItems = getCategoryItemsData.filter(item => {
+      const matchesSearch = isSearchActive
+        ? search.some(keyword =>
+            item.searchKeys?.some(key =>
+              key.toLowerCase().includes(keyword)
+            )
+          )
+        : true;
+
+      const matchesCategory =
+        item.category?.includes(selectedCategory) &&
+        item.category?.includes(rowValue);
+
+      const matchesPetType = item.petType?.includes(selectedIcons);
+
+      // If search is active, return items matching search and rowValue
+      if (isSearchActive) {
+        return matchesSearch && item.category?.includes(rowValue);
+      }
+
+      // Otherwise, return items matching category, rowValue, and petType
+      return matchesCategory && matchesPetType;
+    });
+
+    // Ensure uniqueness of items by their ID
+    return filteredItems.reduce((acc, item) => {
+      if (!acc.find(existingItem => existingItem.id === item.id)) {
+        acc.push(item);
+      }
+      return acc;
+    }, []);
   };
   useEffect(() => {
     const saveCartWithDebounce = async () => {
@@ -325,6 +363,13 @@ const SolabProvider = ({children}) => {
     clearAsyncStorage,
     saveUserProducts,
     setUser,
+    filteredItemsState,
+    setFilteredItemsState,
+    keywords,
+    setKeywords,
+    getFilteredItemsForRow,
+    selectedCategory,
+    setSelectedCategory,
   };
 
   return (

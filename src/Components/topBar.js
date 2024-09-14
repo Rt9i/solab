@@ -1,13 +1,22 @@
 import React, {useContext, useRef} from 'react';
-import {View, StyleSheet, TouchableOpacity, Image, Text, TextInput} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Text,
+  TextInput,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import ScreenNames from '../../routes/ScreenNames';
 import Images from '../assets/images/images';
 import SolabContext from '../store/solabContext';
 
+
 const TopBar = () => {
   const navigation = useNavigation();
-  const {cart, search, setSearch} = useContext(SolabContext);
+  const {cart, search, setSearch, setFilteredItemsState, getFilteredItemsForRow} =
+    useContext(SolabContext);
 
   // Create a reference for the TextInput
   const searchInputRef = useRef(null);
@@ -60,8 +69,19 @@ const TopBar = () => {
   );
 
   const handleSearchChange = text => {
-    setSearch(text);
+    // Split the search text into an array of keywords
+    const keywords = text.trim().toLowerCase().split(/\s+/); 
+  
+    // Update the search keywords in the context
+    setSearch(keywords);
+  
+    // Ensure you pass the correct `rowValue` if needed
+    // Update the filtered items based on new keywords
+    setFilteredItemsState(rowValue => getFilteredItemsForRow(rowValue));
   };
+  
+  
+  
 
   const clearSearch = () => {
     setSearch('');
@@ -81,19 +101,25 @@ const TopBar = () => {
         {settingsBox()}
       </View>
       <View style={styles.searchContainer}>
-        <TouchableOpacity style={styles.searchIconContainer} onPress={openSearch}>
+        <TouchableOpacity
+          style={styles.searchIconContainer}
+          onPress={openSearch}>
           <Image source={Images.search()} style={styles.searchIcon} />
         </TouchableOpacity>
+
         <TextInput
-          ref={searchInputRef} // Attach the ref here
+          ref={searchInputRef}
           style={styles.searchInput}
           placeholder="Search..."
           placeholderTextColor="gray"
           value={search}
           onChangeText={handleSearchChange}
         />
+
         {search.length > 0 && (
-          <TouchableOpacity onPress={clearSearch} style={styles.clearIconContainer}>
+          <TouchableOpacity
+            onPress={clearSearch}
+            style={styles.clearIconContainer}>
             <Image source={Images.clear()} style={styles.clearIcon} />
           </TouchableOpacity>
         )}
@@ -121,7 +147,6 @@ const styles = StyleSheet.create({
   leftContainer: {
     flexDirection: 'row',
     flex: 1,
- 
   },
   touch: {
     width: 50,
@@ -131,7 +156,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     justifyContent: 'center',
-    
+
     left: -10,
   },
   img: {
