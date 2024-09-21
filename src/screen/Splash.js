@@ -1,27 +1,30 @@
-import { Image, StyleSheet, View } from 'react-native';
-import React, { useContext, useEffect } from 'react';
+import {Image, StyleSheet, View} from 'react-native';
+import React, {useContext, useEffect} from 'react';
 import ScreenNames from '../../routes/ScreenNames';
 import Images from '../assets/images/images';
-import { getUserProducts } from '../res/api'; // Import the function
+import {getUserProducts} from '../res/api'; // Import the function
 import SolabContext from '../store/solabContext';
 
-const Splash = (props) => {
-  const { user, saveUserProducts } = useContext(SolabContext);
+const Splash = props => {
+  const {user, saveUserProducts, setCart} = useContext(SolabContext);
   const currentUserId = user ? user._id : null;
 
   useEffect(() => {
-    if (currentUserId) {
-      // Fetch user products and update context
-      getUserProducts(currentUserId).then((response) => {
-        if (response.products) {
-          saveUserProducts(response.products); // Save products to context
-        }
-      }).catch(error => {
-        console.error('Error fetching user products:', error);
-      });
-    }
 
-    // Navigate to home screen
+    const fetchAndSaveUserProducts = async () => {
+      try {
+        if (currentUserId) {
+          const response = await getUserProducts(currentUserId);
+          saveUserProducts(response);
+        }
+      } catch (error) {
+        console.error('Error fetching user products:', error);
+      }
+    };
+    fetchAndSaveUserProducts();
+
+
+
     const navigateHome = () => {
       props.navigation.navigate(ScreenNames.splash);
       setTimeout(() => {
@@ -29,7 +32,6 @@ const Splash = (props) => {
       }, 500);
     };
     navigateHome();
-
   }, [currentUserId]);
 
   return (

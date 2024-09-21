@@ -1,5 +1,5 @@
 import React, {useContext, useState, useRef, useMemo} from 'react';
-import {View, StyleSheet, ScrollView, Animated} from 'react-native';
+import {View, StyleSheet, ScrollView, Animated, Image} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import TopBar from '../Components/topBar';
 import SolabContext from '../store/solabContext';
@@ -13,17 +13,14 @@ import Sizes from '../res/sizes';
 import {useNavigation} from '@react-navigation/native';
 
 import data from '../res/Data';
+import Images from '../assets/images/images';
 
 const CatsStore = props => {
   const navigation = useNavigation();
   const [displayMode, setDisplayMode] = useState('row');
   const [optionsVisible, setOptionsVisible] = useState(false);
-  const {
-    selectedIcons,
-    search,
-    setSelectedCategory,
-    selectedCategory,
-  } = useContext(SolabContext);
+  const {selectedIcons, search, setSelectedCategory, selectedCategory} =
+    useContext(SolabContext);
 
   const scrollY = useRef(new Animated.Value(0)).current;
   const [showScrollUp, setShowScrollUp] = useState(false);
@@ -31,7 +28,7 @@ const CatsStore = props => {
 
   const getFilteredItemsForRow = useMemo(
     () => rowValue => {
-      console.log(`Filtering for rowValue: ${rowValue}`); // Debug log
+      // console.log(`Filtering for rowValue: ${rowValue}`);
       const isSearchActive = search.length > 0;
 
       const filteredItems = data.filter(item => {
@@ -64,7 +61,7 @@ const CatsStore = props => {
         return acc;
       }, []);
 
-      console.log(`Unique Items:`, uniqueItems); // Debug log
+      // console.log(`Unique Items:`, uniqueItems);
 
       return uniqueItems;
     },
@@ -100,7 +97,7 @@ const CatsStore = props => {
     <View style={styles.itemContainer}>
       <CatsStoreItems
         salePrice={item.salePrice}
-        saleAmmount={item.saleAmmount}
+        saleAmount={item.saleAmount}
         kg={item.kg}
         key={item.id}
         brand={item.brand}
@@ -144,7 +141,7 @@ const CatsStore = props => {
     {Treats: 'treats'},
     {bowl: 'bowl'},
   ];
-
+ 
   return (
     <LinearGradient
       colors={['#6CCAFF', '#6CCAFF', '#004C99']}

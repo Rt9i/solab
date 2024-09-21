@@ -16,7 +16,7 @@ import SolabContext from '../store/solabContext';
 //
 //     'treats',
 //   ]
-const data = [ 
+const data = [
   {
     id: 'toy1',
     price: 15,
@@ -1376,7 +1376,7 @@ const data = [
     category: ['food', 'firstRow'],
     searchKeys: ['cat'],
     petType: ['cat'],
-  },  
+  },
   {
     id: 'Food100',
     price: 100,
@@ -1457,7 +1457,8 @@ const data = [
     taste: 'chicken',
     img: Images.meraChicken(),
     dis: 'doorlsChicken',
-    category: ['food', 'thirdRow'],   searchKeys: ['toy'],
+    category: ['food', 'thirdRow'],
+    searchKeys: ['toy'],
     petType: ['cat'],
   },
   {
@@ -1467,7 +1468,8 @@ const data = [
     taste: 'chicken',
     img: Images.meraSensetiveAdultChicken(),
     dis: 'doorlsChicken',
-    category: ['food', 'thirdRow'],searchKeys: ['toy'],
+    category: ['food', 'thirdRow'],
+    searchKeys: ['toy'],
     petType: ['cat'],
   },
   {
@@ -1477,7 +1479,8 @@ const data = [
     taste: 'beef',
     img: Images.mongeBeef(),
     dis: 'doorlsChicken',
-    category: ['food', 'fourthRow'],searchKeys: ['fire'],
+    category: ['food', 'fourthRow'],
+    searchKeys: ['fire'],
     petType: ['cat'],
   },
   {
@@ -1487,7 +1490,8 @@ const data = [
     taste: 'chicken',
     img: Images.mongeChicken(),
     dis: 'doorlsChicken',
-    category: ['food', 'fourthRow'],searchKeys: ['fire'],
+    category: ['food', 'fourthRow'],
+    searchKeys: ['fire'],
     petType: ['cat'],
   },
   {
@@ -2261,9 +2265,9 @@ const data = [
     category: ['secondRow', 'meat'],
   },
   {
-    saleAmmount: 4,
-    salePrice: 10,
     id: 'meat1',
+    saleAmount: 4,
+    salePrice: 10,
     price: 5,
     brand: 'premio',
     taste: 'Beef',

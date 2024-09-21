@@ -33,8 +33,8 @@ const LoginForm = () => {
   const {saveUser, clearAsyncStorage} = useContext(SolabContext);
 
   const handleLogin = async () => {
+    if (loading) return; 
     setErrors({});
-
     if (!phoneNumber || !password) {
       setErrors({
         phoneNumber: !phoneNumber ? 'Phone number is required' : '',
@@ -42,34 +42,31 @@ const LoginForm = () => {
       });
       return;
     }
-
     if (password.length <= 4) {
-      setErrors({password: 'Password must be longer than 4 characters'});
+      setErrors({ password: 'Password must be longer than 4 characters' });
       return;
     }
-
     setLoading(true);
-
+    
     try {
       const response = await logIn(phoneNumber, password);
       console.log('Login response:', response);
-
+  
       if (response.auth && response.user) {
         await clearAsyncStorage();
         await saveUser(response.user);
-
-        // Removed fetching user products
         navigation.navigate('Splash');
       } else {
         handleError(response.errorMessage, 'login');
       }
     } catch (error) {
       console.error('Login error:', error);
-      setErrors({phoneNumber: 'Phone number or password is wrong'});
+      setErrors({ phoneNumber: 'Phone number or password is wrong' });
     } finally {
       setLoading(false);
     }
   };
+  
 
   const handleRegister = async () => {
     setErrors({});

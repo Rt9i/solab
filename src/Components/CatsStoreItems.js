@@ -33,7 +33,7 @@ const CatsStoreItems = ({selectedCategory, displayMode, ...props}) => {
     quantity,
     category,
     kg,
-    saleAmmount,
+    saleAmount,
     salePrice,
     petType,
   } = props;
@@ -92,15 +92,16 @@ const CatsStoreItems = ({selectedCategory, displayMode, ...props}) => {
         </View>
       </View>
 
-      {saleAmmount && (
+      {saleAmount && (
         <View style={styles.sale}>
           <View style={styles.saleLabel}>
             <Text style={styles.saleText}>
-              {saleAmmount} = {salePrice} {strings.priceTag}
+              {saleAmount} = {salePrice} {strings.priceTag}
             </Text>
           </View>
         </View>
       )}
+      
     </View>
   );
 };

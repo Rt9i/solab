@@ -11,7 +11,7 @@ export const getAllUsers = async () => {
     throw error;
   }
 };
-export const getUserProfile = async (userId) => {
+export const getUserProfile = async userId => {
   try {
     const response = await appFetch(`${mainURL}/getUserByID/${userId}`);
     return response;
@@ -21,58 +21,33 @@ export const getUserProfile = async (userId) => {
   }
 };
 
+export const updateUserProducts = async (userId, cart) => {
+  if (!userId) return console.error('User ID is undefined');
 
-export const updateUserCart = async (userId, cart) => {
-  if (!userId) {
-    console.error('User ID is undefined');
-    return;
-  }
-
-
-  const cartItems = cart.map(item => ({
-    productId: item.id,
-    price: item.price,
-    brand: item.brand,
-    taste: item.taste,
-    img: item.img,
-    dis: item.dis,
-    category: item.category,
-    petType: item.petType,
-    quantity: item.quantity,
-    saleAmmount: item.saleAmmount,
-    salePrice: item.salePrice,
+  // Spread and filter out undefined values
+  const cleanCart = cart.map(item => ({
+    ...item,
+    productId: item.productId || item.id,  // Ensure productId is used instead of id
   }));
 
-  const payload = { cartItems };
-  console.log('Payload to be sent:', JSON.stringify(payload));
+  const payload = {
+    _id: userId, 
+    updated: { products: cleanCart }
+  };
+
+  console.log('Cart sent to server:', JSON.stringify(payload));
 
   try {
     const response = await fetch(`${mainURL}/updateUserProducts/${userId}`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
 
-    // Log the raw response text
-    const text = await response.text();
-    console.log('Server response:', text);
-
-    let result;
-    try {
-      result = JSON.parse(text);
-    } catch (e) {
-      console.error('Failed to parse JSON:', e);
-      throw new Error('Response is not valid JSON');
-    }
+    const result = await response.json();
 
     if (!response.ok) {
-      console.error(
-        'Failed to update cart on server:',
-        result.errorMessage || result,
-      );
+      console.error('Failed to update cart on server:', result.errorMessage || result);
     } else {
       console.log('Cart updated on server successfully');
     }
@@ -82,42 +57,27 @@ export const updateUserCart = async (userId, cart) => {
 };
 
 
-export const loadCart = async userId => {
-  if (!userId) {
-    console.error('User ID is undefined or invalid');
-    return;
-  }
 
-  try {
-    const response = await appFetch(`/getUserProducts/${userId}`, 'GET');
-    return response.products || []; // Extract products directly from response
-  } catch (error) {
-    console.error('Failed to load cart from server:', error);
-    throw error;
-  }
-};
 
 export const getUserProducts = async userId => {
   try {
-    // Ensure `userId` is a valid ObjectId string
     if (!/^[0-9a-fA-F]{24}$/.test(userId)) {
       throw new Error('Invalid ObjectId format');
     }
-    
+
     const response = await appFetch(`/getUserProducts/${userId}`, 'GET');
-    
+
     // Check if the response has the `products` field
     if (!response.products) {
       throw new Error('Products not found in response');
     }
-    
+
     return response.products; // Return the products array
   } catch (error) {
     console.error('Failed to fetch user products:', error);
     throw error;
   }
 };
-
 
 export const getUserByID = async id => {
   try {
@@ -140,7 +100,6 @@ export const logIn = async (phoneNumber, password) => {
     throw error;
   }
 };
-
 
 export const createUser = async (userName, phoneNumber, password) => {
   try {
@@ -166,8 +125,6 @@ export const createUser = async (userName, phoneNumber, password) => {
   }
 };
 
-
-
 const appFetch = async (route, method = 'GET', body = null) => {
   const url = `${mainURL}${route}`;
 
@@ -188,14 +145,18 @@ const appFetch = async (route, method = 'GET', body = null) => {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('HTTP Error:', response.status, response.statusText, errorText);
+      console.error(
+        'HTTP Error:',
+        response.status,
+        response.statusText,
+        errorText,
+      );
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     const textResponse = await response.text();
     console.log('Response:', textResponse);
 
-    // Check if response is empty before parsing
     if (textResponse) {
       try {
         const jsonResponse = JSON.parse(textResponse);
@@ -212,4 +173,3 @@ const appFetch = async (route, method = 'GET', body = null) => {
     throw error;
   }
 };
-

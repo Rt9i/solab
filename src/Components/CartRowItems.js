@@ -6,17 +6,33 @@ import ScreenNames from '../../routes/ScreenNames';
 import SolabContext from '../store/solabContext';
 import Images from '../assets/images/images';
 
+
 const CartRowItems = props => {
   const {strings} = useContext(SolabContext);
   const Item = {...props};
   const {brand, price, img, id} = props;
-  const {addItemToCart, removeItemFromCart, checkRemoveItem,addItem} =
+  const {addItemToCart, removeItemFromCart, checkRemoveItem, addItem} =
     useContext(SolabContext);
   const navigation = useNavigation();
 
   const onCardPress = () => {
     navigation.navigate(ScreenNames.ProductScreen, {data: Item});
   };
+
+  // const resolveImage = (img) => {
+  //   if (typeof img === 'number') {
+  //     const imageFunction = Images[Object.keys(Images)[img]]; // Get the image function if img is a number
+  //     return imageFunction ? imageFunction() : null; // Call the function to get the image reference
+  //   }
+  //   return img; // If img is already a reference or key, return it as is
+  // };
+
+  // const imageSource = resolveImage(img); 
+
+  // if (!imageSource) {
+  //   console.warn('Invalid image source', img);
+  // }
+
 
   return (
     <View style={styles.container}>
@@ -29,7 +45,22 @@ const CartRowItems = props => {
         textStyle={{textDecorationLine: 'none'}}
       />
       <TouchableOpacity onPress={onCardPress} style={styles.photo}>
-        <Image source={img} style={styles.img} />
+        <View style={styles.imgCont}>
+          <Image
+            source={img} 
+            style={styles.img}
+          />
+
+          {Item.saleAmount && (
+            <View style={styles.sale}>
+              <View style={styles.saleLabel}>
+                <Text style={styles.saleText}>
+                  {Item.saleAmount} = {Item.salePrice} {strings.priceTag}
+                </Text>
+              </View>
+            </View>
+          )}
+        </View>
       </TouchableOpacity>
 
       <View style={styles.details}>
@@ -50,14 +81,6 @@ const CartRowItems = props => {
                 <Text style={styles.buttonText}>-</Text>
               </TouchableOpacity>
             </View>
-
-            {/* <View style={styles.trashCan}>
-              <TouchableOpacity
-                onPress={() => checkRemoveItem(id)}
-                style={styles.removeButton}>
-                <Image source={Images.trashCan()} style={styles.image} />
-              </TouchableOpacity>
-            </View> */}
           </View>
         </View>
       </View>
@@ -68,6 +91,39 @@ const CartRowItems = props => {
 export default CartRowItems;
 
 const styles = StyleSheet.create({
+  imgCont: {
+    flex: 1,
+
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  saleLabel: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  saleText: {
+    color: 'white',
+    fontSize: 12,
+    textAlign: 'center',
+    fontFamily: 'bigFont',
+  },
+  sale: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    top: -2,
+    width: 60,
+    height: 20,
+    backgroundColor: 'rgba(217, 83, 79,1)',
+
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    overflow: 'hidden',
+    zIndex: 1,
+  },
   cont: {
     flexDirection: 'row',
     marginTop: 50,
@@ -100,14 +156,15 @@ const styles = StyleSheet.create({
     height: 160,
   },
   photo: {
-    flex: 1,
+    height: 120,
+    width: 100,
     borderRadius: 10,
     overflow: 'hidden',
     marginRight: 10,
   },
   img: {
-    width: 100,
-    height: 100,
+    flex: 1,
+
     resizeMode: 'contain',
   },
   details: {

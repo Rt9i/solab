@@ -10,12 +10,12 @@ const Home = props => {
   
   // Function to navigate and set selectedIcons
   const navigateStore = value => {
-    setSelectedIcons(value); // Set selectedIcons to 'cat' or 'dog'
+    setSelectedIcons(value); 
     props.navigation.navigate(ScreenNames.catsStore);
   };
 
   // Function to render each food item
-  const renderFoodItem = (
+  const renderUi = (
     foodType,
     imageSource,
     buttonText,
@@ -37,14 +37,14 @@ const Home = props => {
 
   return (
     <View style={styles.container}>
-      {renderFoodItem(
+      {renderUi(
         'dog',
         Images.dog(),
         'Dog Food',
         ['#808080', '#000000', '#000000'],
         styles.dogButtonText,
       )}
-      {renderFoodItem(
+      {renderUi(
         'cat',
         Images.cat(),
         'Cat Food',

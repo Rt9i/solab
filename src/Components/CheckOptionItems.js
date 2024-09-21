@@ -16,7 +16,7 @@ const CheckOptionItems = ({
 
     const { brands, setBrands } = useContext(SolabContext);
     const navigation = useNavigation();
-    // console.log(brands)
+  
     const brandsInData = () => {
         const filteredBrands = getCategoryItemsData.filter(item => item.category.includes(selectedCategory));
         return new Set(filteredBrands.map(item => item.brand));

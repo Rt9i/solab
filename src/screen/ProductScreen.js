@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Alert,
   Image,
@@ -12,14 +12,15 @@ import { useNavigation } from '@react-navigation/native';
 import SolabContext from '../store/solabContext';
 import LinearGradient from 'react-native-linear-gradient';
 
+
 const ProductScreen = (props) => {
   const navigation = useNavigation();
   const product = props.route.params.data;
-  const { addItemToCart } = useContext(SolabContext);
+  const { addItemToCart, cart, user } = useContext(SolabContext); // Ensure cart is fetched from context
   const [quantity, setQuantity] = useState('1');
   const { strings } = useContext(SolabContext);
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     const quantityInt = parseInt(quantity);
 
     if (isNaN(quantityInt) || quantityInt <= 0) {
@@ -28,9 +29,19 @@ const ProductScreen = (props) => {
     }
 
     const item = { ...product, quantity: quantityInt };
-    addItemToCart(item, item.id);
-    navigation.goBack();
+
+    try {
+
+      addItemToCart(item, item.id); 
+
+      navigation.goBack();
+    } catch (error) {
+      console.error('Error updating cart:', error);
+    }
   };
+
+
+ 
 
   return (
     <View style={styles.container}>
