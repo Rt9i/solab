@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, {useContext, useEffect, useMemo, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -13,11 +13,11 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import SolabContext from '../store/solabContext';
 import CartRowItems from '../Components/CartRowItems';
 import Images from '../assets/images/images';
-import { updateUserProducts } from '../res/api';
+import {updateUserProducts} from '../res/api';
 
 const Cart = props => {
-  const { strings, user } = useContext(SolabContext);
-  const { cart, removeItemFromCart, setCart } = useContext(SolabContext);
+  const {strings, user} = useContext(SolabContext);
+  const {cart, removeItemFromCart, setCart} = useContext(SolabContext);
   const [displayMode, setDisplayMode] = useState('row');
   const [selectedItems, setSelectedItems] = useState([]);
   const [isSelectAll, setIsSelectAll] = useState(false);
@@ -25,7 +25,7 @@ const Cart = props => {
   const [previousCartState, setPreviousCartState] = useState([]);
 
   const debounceTimeout = useRef(null);
-console.log("cart: ", cart)
+  // console.log("cart: ", cart)
 
   // const getUserProductMap = () => {
   //   if (!user?.products) return {};
@@ -56,8 +56,8 @@ console.log("cart: ", cart)
   //   if (user?.products) {
   //     updateCartWithUserProducts();
   //   }
-  // }, [user?.products]); 
-  
+  // }, [user?.products]);
+
   // Clear the cart and update the user's products on the server
   const clearCart = async () => {
     setCart([]);
@@ -71,10 +71,10 @@ console.log("cart: ", cart)
       'Clear Cart',
       'Are you sure you want to clear your cart?',
       [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Clear', onPress: clearCart, style: 'destructive' },
+        {text: 'Cancel', style: 'cancel'},
+        {text: 'Clear', onPress: clearCart, style: 'destructive'},
       ],
-      { cancelable: true }
+      {cancelable: true},
     );
   };
 
@@ -83,14 +83,18 @@ console.log("cart: ", cart)
     let total = 0;
 
     cart.forEach(item => {
-      const { saleAmount, salePrice, price, quantity } = item;
+      const {saleAmount, salePrice, price, quantity} = item;
 
       const saleAmountNum = Number(saleAmount) || 0;
       const salePriceNum = Number(salePrice) || 0;
       const priceNum = Number(price) || 0;
       const quantityNum = Number(quantity) || 0;
 
-      if (saleAmountNum > 0 && salePriceNum > 0 && quantityNum >= saleAmountNum) {
+      if (
+        saleAmountNum > 0 &&
+        salePriceNum > 0 &&
+        quantityNum >= saleAmountNum
+      ) {
         const numSales = Math.floor(quantityNum / saleAmountNum);
         const remainingQuantity = quantityNum % saleAmountNum;
         const totalSalePrice = numSales * salePriceNum;
@@ -112,27 +116,40 @@ console.log("cart: ", cart)
   // Update select all state based on selected items
   useEffect(() => {
     setIsSelectAll(
-      cart.length > 0 && cart.every(item => selectedItems.includes(item.id))
+      cart.length > 0 &&
+        cart.every(item => selectedItems.includes(item.id || item.productId)),
     );
   }, [selectedItems, cart]);
 
   // Handle checkbox change
-  const handleCheckBoxChange = (isChecked, id) => {
+  const handleCheckBoxChange = (isChecked, itemId) => {
+    console.log(`Toggling item: ${itemId}`); // Log the toggled item ID
+    
     setSelectedItems(prevSelectedItems => {
       const newItems = isChecked
-        ? [...prevSelectedItems, id]
-        : prevSelectedItems.filter(itemId => itemId !== id);
-
+        ? [...prevSelectedItems, itemId] // Add itemId
+        : prevSelectedItems.filter(selectedId => selectedId !== itemId); // Remove itemId
+  
+      console.log(`Selected Items: ${newItems}`); // Log selected items
       return newItems;
     });
   };
+  
+  
+  
+  
 
   // Remove selected items from cart and update on server
   const removeSelectedItems = async () => {
-    const newCart = cart.filter(item => !selectedItems.includes(item.id));
+    const newCart = cart.filter(item => {
+      const itemId = item.id || item.productId; // Determine the id to use
+      return !selectedItems.includes(itemId);
+    });
+
     setCart(newCart);
     setSelectedItems([]);
     setIsSelectAll(false);
+
     if (user && user._id) {
       await updateUserProducts(user._id, newCart);
     }
@@ -141,20 +158,22 @@ console.log("cart: ", cart)
   // Handle select all items
   const handleSelectAll = () => {
     if (isSelectAll) {
-      setSelectedItems([]);
+      setSelectedItems([]); // Deselect all
     } else {
-      const allItemIds = cart.map(item => item.id);
+      const allItemIds = cart.map(item => item.id || item.productId); // Collect all IDs
+      console.log('cart rn: ', allItemIds);
+
       setSelectedItems(allItemIds);
     }
   };
 
   // Render each cart item
-  const renderCart = ({ item }) => (
+  const renderCart = ({item}) => (
     <CartRowItems
       {...item}
-      id={item.id}
+      id={item.id || item.productId}
       hideImage={true}
-      isSelected={selectedItems.includes(item.id)}
+      isSelected={selectedItems.includes(item.id || item.productId)}
       onCheckBoxChange={handleCheckBoxChange}
     />
   );
@@ -167,9 +186,11 @@ console.log("cart: ", cart)
     return null;
   };
 
-
   useEffect(() => {
-    if (user?.id && JSON.stringify(cart) !== JSON.stringify(previousCartState)) {
+    if (
+      user?.id &&
+      JSON.stringify(cart) !== JSON.stringify(previousCartState)
+    ) {
       const updateCart = async () => {
         try {
           await updateUserProducts(user.id, cart);
@@ -187,8 +208,7 @@ console.log("cart: ", cart)
     <LinearGradient
       colors={['#6CCAFF', '#6CCAFF', '#004C99']}
       locations={[0, 0.1, 1]}
-      style={styles.container}
-    >
+      style={styles.container}>
       <View style={styles.header}>
         <View style={styles.headerContent}>
           <Text style={styles.totalPrice}>
@@ -202,14 +222,13 @@ console.log("cart: ", cart)
             isChecked={isSelectAll}
             onPress={handleSelectAll}
             fillColor="black"
-            iconStyle={{ borderColor: 'red' }}
-            textStyle={{ textDecorationLine: 'none' }}
+            iconStyle={{borderColor: 'red'}}
+            textStyle={{textDecorationLine: 'none'}}
             text={strings.selectAll}
           />
           <TouchableOpacity
             style={styles.cleartouch}
-            onPress={removeSelectedItems}
-          >
+            onPress={removeSelectedItems}>
             <Image source={Images.trashCan()} style={styles.trashCan} />
           </TouchableOpacity>
         </View>
@@ -218,7 +237,7 @@ console.log("cart: ", cart)
       <FlatList
         data={cart}
         renderItem={renderCart}
-        keyExtractor={(item) => item.id || item.productId}
+        keyExtractor={item => item.id || item.productId}
         ListEmptyComponent={emptyCartMessage}
         contentContainerStyle={
           cart.length === 0 ? styles.emptyCartContainer : undefined
@@ -263,7 +282,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: 'white',
     textShadowColor: 'grey',
-    textShadowOffset: { width: 1, height: 1 },
+    textShadowOffset: {width: 1, height: 1},
     textShadowRadius: 1,
   },
   selectedDisplay: {

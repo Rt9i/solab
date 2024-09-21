@@ -141,7 +141,7 @@ const CatsStore = props => {
     {Treats: 'treats'},
     {bowl: 'bowl'},
   ];
- 
+
   return (
     <LinearGradient
       colors={['#6CCAFF', '#6CCAFF', '#004C99']}

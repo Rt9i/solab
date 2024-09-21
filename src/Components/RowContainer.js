@@ -1,12 +1,5 @@
 import React, { useContext, useEffect, useRef, memo } from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  FlatList,
-  Dimensions,
-} from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import ScreenNames from '../../routes/ScreenNames';
 import SolabContext from '../store/solabContext';
@@ -17,7 +10,7 @@ const RenderItem = memo(({ item, renderItem }) => renderItem({ item }));
 const RowContainer = ({ items, renderItem, text, selectedCategory }) => {
   const navigation = useNavigation();
   const flatListRef = useRef();
-  const { selectedIcons } = useContext(SolabContext);
+  const { selectedIcons, scrollToTop } = useContext(SolabContext);
 
   const onSeeAllPress = () => {
     navigation.navigate(ScreenNames.seeAll, { items, renderItem });
@@ -28,6 +21,12 @@ const RowContainer = ({ items, renderItem, text, selectedCategory }) => {
       flatListRef.current.scrollToOffset({ offset: 0, animated: true });
     }
   }, [selectedCategory, selectedIcons]);
+
+  useEffect(() => {
+    if (scrollToTop && flatListRef.current) {
+      flatListRef.current.scrollToOffset({ offset: 0, animated: true });
+    }
+  }, [scrollToTop]);
 
   if (!items?.length) {
     return null;
@@ -91,7 +90,5 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(176, 196, 222, 0.7)',
     color: 'black',
   },
-  itemsContainer: {
-    
-  },
+  itemsContainer: {},
 });

@@ -12,11 +12,16 @@ import ScreenNames from '../../routes/ScreenNames';
 import Images from '../assets/images/images';
 import SolabContext from '../store/solabContext';
 
-
 const TopBar = () => {
+  const {triggerScrollToTop} = useContext(SolabContext);
   const navigation = useNavigation();
-  const {cart, search, setSearch, setFilteredItemsState, getFilteredItemsForRow} =
-    useContext(SolabContext);
+  const {
+    cart,
+    search,
+    setSearch,
+    setFilteredItemsState,
+    getFilteredItemsForRow,
+  } = useContext(SolabContext);
 
   // Create a reference for the TextInput
   const searchInputRef = useRef(null);
@@ -69,22 +74,23 @@ const TopBar = () => {
   );
 
   const handleSearchChange = text => {
-    // Split the search text into an array of keywords
-    const keywords = text.trim().toLowerCase().split(/\s+/); 
-  
-    // Update the search keywords in the context
-    setSearch(keywords);
-  
-    // Ensure you pass the correct `rowValue` if needed
-    // Update the filtered items based on new keywords
-    setFilteredItemsState(rowValue => getFilteredItemsForRow(rowValue));
+    const keywords = text.trim().toLowerCase().split(/\s+/);
+
+    // Only update search and filtered items if there's text
+    if (text.length > 0) {
+      triggerScrollToTop();
+      setSearch(keywords);
+      setFilteredItemsState(rowValue => getFilteredItemsForRow(rowValue));
+    } else {
+      setSearch('');
+      setFilteredItemsState([]); // Or however you want to reset the filtered items
+    }
   };
-  
-  
-  
 
   const clearSearch = () => {
-    setSearch('');
+    triggerScrollToTop();
+    setSearch(''); // Clear the search text
+    setFilteredItemsState([]); // Clear the filtered items
   };
 
   // Function to focus the search input

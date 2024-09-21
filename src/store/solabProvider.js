@@ -24,9 +24,7 @@ const SolabProvider = ({children}) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('food');
   const debounceTimeout = useRef(null);
-
-
-  
+  const [scrollToTop, setScrollToTop] = useState(false);
 
   // console.log(user.products);
 
@@ -34,6 +32,10 @@ const SolabProvider = ({children}) => {
     en: enStrings,
     he: heStrings,
     ar: arStrings,
+  };
+
+  const triggerScrollToTop = () => {
+    setScrollToTop(prev => !prev); 
   };
   const getFilteredItemsForRow = rowValue => {
     const isSearchActive = search.length > 0;
@@ -142,7 +144,7 @@ const SolabProvider = ({children}) => {
   }, []);
 
   const saveUser = useCallback(async userData => {
-    // save the user to the provider and async storage 
+    // save the user to the provider and async storage
     try {
       setUser(userData);
       await AsyncStorage.setItem('user', JSON.stringify(userData));
@@ -265,28 +267,29 @@ const SolabProvider = ({children}) => {
     },
     [cart],
   );
-const saveUserProducts = (fetchedItems) => {
-  setCart((prevCart) => {
-    const newItems = fetchedItems.map(item => ({
-      ...item,
-      productId: item.productId || item.id,
-    }));
+  const saveUserProducts = fetchedItems => {
+    setCart(prevCart => {
+      const newItems = fetchedItems.map(item => ({
+        ...item,
+        productId: item.productId || item.id,
+      }));
 
-    // Ensure no duplicates
-    const updatedCart = [...prevCart];
-    newItems.forEach(newItem => {
-      if (!updatedCart.some(cartItem => cartItem.productId === newItem.productId)) {
-        updatedCart.push(newItem);
-      }
+      // Ensure no duplicates
+      const updatedCart = [...prevCart];
+      newItems.forEach(newItem => {
+        if (
+          !updatedCart.some(
+            cartItem => cartItem.productId === newItem.productId,
+          )
+        ) {
+          updatedCart.push(newItem);
+        }
+      });
+
+      console.log('Updated cart:', updatedCart);
+      return updatedCart;
     });
-
-    console.log('Updated cart:', updatedCart);
-    return updatedCart;
-  });
-};
-
-  
-  
+  };
 
   const contextValue = {
     cart,
@@ -322,6 +325,9 @@ const saveUserProducts = (fetchedItems) => {
     getFilteredItemsForRow,
     selectedCategory,
     setSelectedCategory,
+    scrollToTop,
+    setScrollToTop,
+    triggerScrollToTop,
   };
 
   return (
