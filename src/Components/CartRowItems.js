@@ -6,6 +6,33 @@ import ScreenNames from '../../routes/ScreenNames';
 import SolabContext from '../store/solabContext';
 import Images from '../assets/images/images';
 
+const createImageMapping = images => {
+  const mapping = {};
+  Object.keys(images).forEach((key, index) => {
+    mapping[index] = key; // Map the index to the key
+  });
+  // console.log('Image Mapping:', mapping);
+  return mapping;
+};
+
+// Usage
+const imageMapping = createImageMapping(Images);
+
+const resolveImage = imgIndex => {
+  // Convert imgIndex to a number
+  const index = parseInt(imgIndex, 10);
+
+  // Check if index is valid
+  if (isNaN(index) || !imageMapping[index]) {
+    // console.warn('Invalid image index', imgIndex);
+    return null;
+  }
+
+  const imgKey = imageMapping[index]; // Get the key from the mapping
+  const imageFunction = Images[imgKey];
+
+  return imageFunction ? imageFunction() : null;
+};
 
 const CartRowItems = props => {
   const {strings} = useContext(SolabContext);
@@ -19,21 +46,11 @@ const CartRowItems = props => {
     navigation.navigate(ScreenNames.ProductScreen, {data: Item});
   };
 
-  // const resolveImage = (img) => {
-  //   if (typeof img === 'number') {
-  //     const imageFunction = Images[Object.keys(Images)[img]]; // Get the image function if img is a number
-  //     return imageFunction ? imageFunction() : null; // Call the function to get the image reference
-  //   }
-  //   return img; // If img is already a reference or key, return it as is
-  // };
+  const imageSource = resolveImage(img);
 
-  // const imageSource = resolveImage(img); 
-
-  // if (!imageSource) {
-  //   console.warn('Invalid image source', img);
-  // }
-
-
+  if (!imageSource) {
+    console.warn('Invalid image source', img); // Warn if the image isn't found
+  }
   return (
     <View style={styles.container}>
       <BouncyCheckbox
@@ -46,10 +63,8 @@ const CartRowItems = props => {
       />
       <TouchableOpacity onPress={onCardPress} style={styles.photo}>
         <View style={styles.imgCont}>
-          <Image
-            source={img} 
-            style={styles.img}
-          />
+          {/* {use the imageSource to fix the warning *note* it doesnt get the right img it needs a fix } */}
+          <Image source={img} style={styles.img} />
 
           {Item.saleAmount && (
             <View style={styles.sale}>

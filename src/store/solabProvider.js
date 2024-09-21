@@ -198,6 +198,7 @@ const SolabProvider = ({children}) => {
 
     setCart(updatedCart);
   };
+
   const addItemToCart = useCallback(
     (item, itemId) => {
       const existingItemIndex = cart.findIndex(item => item.id === itemId);

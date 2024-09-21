@@ -23,7 +23,7 @@ const MainNavigation = ({initialRouteName}) => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName={initialRouteName}>
         
-      {/* <Stack.Screen name={ScreenNames.workerHome} component={WorkersHome} /> */}
+      <Stack.Screen name={ScreenNames.workerHome} component={WorkersHome} />
         <Stack.Screen
           name={ScreenNames.login}
           component={Login}

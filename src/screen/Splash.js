@@ -1,38 +1,49 @@
 import {Image, StyleSheet, View} from 'react-native';
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import ScreenNames from '../../routes/ScreenNames';
 import Images from '../assets/images/images';
-import {getUserProducts} from '../res/api'; // Import the function
+import {getUserByID, getUserProducts} from '../res/api'; // Import the function
 import SolabContext from '../store/solabContext';
 
 const Splash = props => {
-  const {user, saveUserProducts, setCart} = useContext(SolabContext);
+  const {user, setUser, saveUserProducts} = useContext(SolabContext);
   const currentUserId = user ? user._id : null;
+  const [hasNavigated, setHasNavigated] = useState(false); // State to track navigation
 
   useEffect(() => {
-
-    const fetchAndSaveUserProducts = async () => {
+    const updateUserAndFetchProducts = async () => {
       try {
+        // Update user
+        const newUser = await getUserByID(user._id);
+        setUser(newUser);
+        console.log('====================================');
+        console.log('user rn bro', newUser);
+        console.log('====================================');
+
+        // Fetch and save user products after updating the user
         if (currentUserId) {
           const response = await getUserProducts(currentUserId);
           saveUserProducts(response);
         }
+
+        // Navigate based on user role
+        if (!hasNavigated) {
+          if (newUser.role === 'client') {
+            props.navigation.replace(ScreenNames.home);
+          } else if (newUser.role === 'worker') {
+            props.navigation.replace(ScreenNames.workerHome);
+          }
+          setHasNavigated(true); // Set the navigation flag
+        }
       } catch (error) {
-        console.error('Error fetching user products:', error);
+        console.error('Error fetching user or products:', error);
       }
     };
-    fetchAndSaveUserProducts();
 
-
-
-    const navigateHome = () => {
-      props.navigation.navigate(ScreenNames.splash);
-      setTimeout(() => {
-        props.navigation.replace(ScreenNames.home);
-      }, 500);
-    };
-    navigateHome();
-  }, [currentUserId]);
+    if (currentUserId && !hasNavigated) {
+      updateUserAndFetchProducts();
+    }
+  }, [currentUserId, hasNavigated]); // Remove user from dependencies
 
   return (
     <View style={styles.container}>
