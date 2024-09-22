@@ -5,10 +5,9 @@ import {enStrings, heStrings, arStrings} from '../res/strings';
 import {Alert} from 'react-native';
 import ScreenNames from '../../routes/ScreenNames';
 import {useNavigation} from '@react-navigation/native';
-import {updateUserProducts} from '../res/api';
+import {updateUserProducts, saveProductsToDatabase} from '../res/api';
 import getCategoryItemsData from '../res/Data';
 import Images from '../assets/images/images';
-
 const SolabProvider = ({children}) => {
   const [cart, setCart] = useState([]);
   const [isItemAdded, setIsItemAdded] = useState(false);
@@ -33,9 +32,31 @@ const SolabProvider = ({children}) => {
     he: heStrings,
     ar: arStrings,
   };
+  useEffect(() => {
+    const saveData = async () => {
+      try {
+        await saveProductsToDatabase({
+          id: 'meat1',
+          saleAmount: 4,
+          salePrice: 10,
+          price: 5,
+          brand: 'premio',
+          taste: 'Beef',
+          img: Images.premioDeliCatBeef(),
+          dis: 'meaty',
+          category: ['meat', 'thirdRow'],
+          petType: ['cat'],
+        });
+      } catch (error) {
+        console.error('Failed to save product to data base :', error);
+      }
+    };
+
+    saveData();
+  }, []);
 
   const triggerScrollToTop = () => {
-    setScrollToTop(prev => !prev); 
+    setScrollToTop(prev => !prev);
   };
   const getFilteredItemsForRow = rowValue => {
     const isSearchActive = search.length > 0;

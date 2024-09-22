@@ -56,6 +56,27 @@ export const updateUserProducts = async (userId, cart) => {
   }
 };
 
+export const saveProductsToDatabase = async (data) => {
+  try {
+    const response = await fetch(`${mainURL}/saveProducts`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ items: data }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to save products: ${response.statusText}`);
+    }
+
+    const result = await response.json();
+    console.log("Products saved successfully:", result);
+  } catch (e) {
+    console.error("Error saving products:", e);
+  }
+};
+
 
 
 
