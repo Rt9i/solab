@@ -35,7 +35,7 @@ const CartRowItems = props => {
       />
       <TouchableOpacity onPress={onCardPress} style={styles.photo}>
         <View style={styles.imgCont}>
-          <Image source={{uri: img}} style={styles.img} />
+          <Image source={img} style={styles.img} />
 
           {Item.saleAmount && (
             <View style={styles.sale}>

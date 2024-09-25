@@ -19,54 +19,69 @@ const CatsStore = props => {
   const navigation = useNavigation();
   const [displayMode, setDisplayMode] = useState('row');
   const [optionsVisible, setOptionsVisible] = useState(false);
-  const {selectedIcons, search, setSelectedCategory, selectedCategory,data} =
+  const {selectedIcons, search, setSelectedCategory, selectedCategory, data} =
     useContext(SolabContext);
 
   const scrollY = useRef(new Animated.Value(0)).current;
   const [showScrollUp, setShowScrollUp] = useState(false);
   const scrollViewRef = useRef(null);
+  const getFilteredItemsForRow = rowValue => {
 
-  const getFilteredItemsForRow = useMemo(
-    () => rowValue => {
-      const isSearchActive = search.length > 0;
+    const filteredItems = data.filter(item =>
+      item.category.includes(rowValue) &&
+      item.category.includes(selectedCategory)
+    );
+  
+    // Ensure uniqueness of items by their ID
+    const uniqueItems = filteredItems.reduce((acc, item) => {
+      if (!acc.find(existingItem => existingItem.id === item.id)) {
+        acc.push(item);
+      }
+      return acc;
+    }, []);
+  
+    return uniqueItems;
+  };
+  
 
-      const filteredItems = data.filter(item => {
-   
+  // const getFilteredItemsForRow = useMemo(
+  //   () => rowValue => {
+  //     const isSearchActive = search.length > 0;
 
-        const matchesSearch = isSearchActive
-          ? search.some(keyword =>
-              item.searchKeys?.some(key => key.toLowerCase().includes(keyword)),
-            )
-          : true;
+  //     const filteredItems = data.filter(item => {
+  //       const matchesSearch = isSearchActive
+  //         ? search.some(keyword =>
+  //             item.searchKeys?.some(key => key.toLowerCase().includes(keyword)),
+  //           )
+  //         : true;
 
-        const matchesCategory =
-          item.category?.includes(selectedCategory) &&
-          item.category?.includes(rowValue);
+  //       const matchesCategory =
+  //         item.category?.includes(selectedCategory) &&
+  //         item.category?.includes(rowValue);
 
-        const matchesPetType = item.petType?.includes(selectedIcons);
+  //       const matchesPetType = item.petType?.includes(selectedIcons);
 
-        // If search is active, return items matching search and rowValue
-        if (isSearchActive) {
-          return matchesSearch && item.category?.includes(rowValue);
-        }
+  //       // If search is active, return items matching search and rowValue
+  //       if (isSearchActive) {
+  //         return matchesSearch && item.category?.includes(rowValue);
+  //       }
 
-        // Otherwise, return items matching category, rowValue, and petType
-        return matchesCategory && matchesPetType;
-      });
+  //       // Otherwise, return items matching category, rowValue, and petType
+  //       return matchesCategory && matchesPetType;
+  //     });
 
-      // Ensure uniqueness of items by their ID
-      const uniqueItems = filteredItems.reduce((acc, item) => {
-        if (!acc.find(existingItem => existingItem.id === item.id)) {
-          acc.push(item);
-        }
-        return acc;
-      }, []);
+  //     // Ensure uniqueness of items by their ID
+  //     const uniqueItems = filteredItems.reduce((acc, item) => {
+  //       if (!acc.find(existingItem => existingItem.id === item.id)) {
+  //         acc.push(item);
+  //       }
+  //       return acc;
+  //     }, []);
 
-     
-      return uniqueItems;
-    },
-    [search, selectedCategory, selectedIcons, data],
-  );
+  //     return uniqueItems;
+  //   },
+  //   [search, selectedCategory, selectedIcons, data],
+  // );
 
   const rows = useMemo(
     () => [
@@ -83,28 +98,31 @@ const CatsStore = props => {
     ],
     [],
   );
-  const renderItem = ({item}) => (
-    <View style={styles.itemContainer}>
-      <CatsStoreItems
-        salePrice={item.salePrice}
-        saleAmount={item.saleAmount}
-        kg={item.kg}
-        key={item.id}
-        brand={item.brand}
-        taste={item.taste}
-        img={item.img}
-        dis={item.dis}
-        price={item.price}
-        id={item.id}
-        quantity={item.quantity}
-        displayMode={displayMode}
-        selectedCategory={selectedCategory}
-        category={item.category}
-        petType={item.petType}
-        name={item.name}
-      />
-    </View>
-  );
+  const renderItem = ({item}) => {
+ 
+    return (
+      <View style={styles.itemContainer}>
+        <CatsStoreItems
+          salePrice={item.salePrice}
+          saleAmount={item.saleAmount}
+          kg={item.kg}
+          key={item.id}
+          brand={item.brand}
+          taste={item.taste}
+          img={{uri: item.img}}
+          dis={item.dis}
+          price={item.price}
+          id={item.id}
+          quantity={item.quantity}
+          displayMode={displayMode}
+          selectedCategory={selectedCategory}
+          category={item.category}
+          petType={item.petType}
+          name={item.name}
+        />
+      </View>
+    );
+  };
 
   const onCategoryPress = val => {
     setSelectedCategory(val);

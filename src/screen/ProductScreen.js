@@ -48,7 +48,7 @@ const ProductScreen = (props) => {
       <LinearGradient
         colors={['#ffffff', '#f0f0f0', '#e0e0e0']}
         style={styles.gradient}>
-        <Image source={{ uri:product.img}} style={styles.image} />
+        <Image source={product.img} style={styles.image} />
 
         <View style={styles.inputContainer}>
           <TextInput

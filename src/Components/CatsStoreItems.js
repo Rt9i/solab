@@ -62,7 +62,7 @@ const CatsStoreItems = ({selectedCategory, displayMode, ...props}) => {
       <View style={styles.items}>
         <TouchableOpacity onPress={onCardPress} activeOpacity={0.6}>
           <Image
-           source={{ uri: props.img }}
+           source={img}
             style={[
               styles.img,
               selectedCategory === 'catMeat' ? meatImg : null,

@@ -8,6 +8,9 @@ import SolabContext from '../store/solabContext';
 const RenderItem = memo(({item, renderItem}) => renderItem({item}));
 
 const RowContainer = ({items, renderItem, text, selectedCategory}) => {
+  console.log('====================================');
+  console.log("items: ",items);
+  console.log('====================================');
   const navigation = useNavigation();
   const flatListRef = useRef();
   const {selectedIcons, scrollToTop} = useContext(SolabContext);
