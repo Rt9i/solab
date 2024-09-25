@@ -1,5 +1,5 @@
 const Images = {
-  whiteLogo: () => require('./photos/whiteLogo.jpg'),
+  whiteLogo: () => require('./photos/whiteLogo.png'),
   dog: () => require('./photos/dog.png'),
   logout: () => require('./photos/logout.png'),
   profileIcon: () => require('./photos/profileIcon.png'),
@@ -17,7 +17,7 @@ const Images = {
   spray: () => require('./photos/spray.png'),
   leash: () => require('./photos/leash.png'),
   treats: () => require('./photos/treats.png'),
-  nature: () => require('./photos/nature.jpg'),
+
   home: () => require('./photos/home.png'),
   dogIcon: () => require('./photos/dogIcon.png'),
   catIcon: () => require('./photos/catIcon.png'),
@@ -267,7 +267,7 @@ const Images = {
   LitterSmell: () => require('./photos/LitterSmell.png'),
   LitterSmell2: () => require('./photos/LitterSmell2.png'),
   twoArrows: () => require('./photos/twoArrows.png'),
-  saleTest: () => require('./photos/saleTest.jpg'),
+
   AdroolsChicken: () => require('./photos/AdroolsChicken.png'),
   ApremioSupremeChicken: () => require('./photos/ApremioSupremeChicken.png'),
   droolsPupyChiken: () => require('./photos/droolsPupyChiken.png'),
@@ -377,5 +377,6 @@ const Images = {
   pads: () => require('./photos/pads.png'),
   menu: () => require('./photos/menu.png'),
   languageIcon: () => require('./photos/languageIcon.png'),
+  saleTest: () => require('./photos/saleTest.png'),
 };
 export default Images;

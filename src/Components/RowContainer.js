@@ -1,30 +1,30 @@
-import React, { useContext, useEffect, useRef, memo } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, FlatList } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, {useContext, useEffect, useRef, memo} from 'react';
+import {View, StyleSheet, Text, TouchableOpacity, FlatList} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import ScreenNames from '../../routes/ScreenNames';
 import SolabContext from '../store/solabContext';
 
 // Memoize the renderItem function to prevent unnecessary re-renders
-const RenderItem = memo(({ item, renderItem }) => renderItem({ item }));
+const RenderItem = memo(({item, renderItem}) => renderItem({item}));
 
-const RowContainer = ({ items, renderItem, text, selectedCategory }) => {
+const RowContainer = ({items, renderItem, text, selectedCategory}) => {
   const navigation = useNavigation();
   const flatListRef = useRef();
-  const { selectedIcons, scrollToTop } = useContext(SolabContext);
+  const {selectedIcons, scrollToTop} = useContext(SolabContext);
 
   const onSeeAllPress = () => {
-    navigation.navigate(ScreenNames.seeAll, { items, renderItem });
+    navigation.navigate(ScreenNames.seeAll, {items, renderItem});
   };
 
   useEffect(() => {
     if (flatListRef.current) {
-      flatListRef.current.scrollToOffset({ offset: 0, animated: true });
+      flatListRef.current.scrollToOffset({offset: 0, animated: true});
     }
   }, [selectedCategory, selectedIcons]);
 
   useEffect(() => {
     if (scrollToTop && flatListRef.current) {
-      flatListRef.current.scrollToOffset({ offset: 0, animated: true });
+      flatListRef.current.scrollToOffset({offset: 0, animated: true});
     }
   }, [scrollToTop]);
 
@@ -43,8 +43,10 @@ const RowContainer = ({ items, renderItem, text, selectedCategory }) => {
       <FlatList
         ref={flatListRef}
         data={items}
-        renderItem={({ item }) => <RenderItem item={item} renderItem={renderItem} />}
-        keyExtractor={(item) => item.id.toString()}
+        renderItem={({item}) => (
+          <RenderItem item={item} renderItem={renderItem} />
+        )}
+        keyExtractor={item => item.id || item.productId.toString()}
         horizontal
         showsHorizontalScrollIndicator={false}
         initialNumToRender={10}

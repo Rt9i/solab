@@ -8,6 +8,8 @@ import {useNavigation} from '@react-navigation/native';
 import {updateUserProducts, saveProductsToDatabase} from '../res/api';
 import getCategoryItemsData from '../res/Data';
 import Images from '../assets/images/images';
+import data from '../res/Data';
+import axios from 'axios';
 const SolabProvider = ({children}) => {
   const [cart, setCart] = useState([]);
   const [isItemAdded, setIsItemAdded] = useState(false);
@@ -24,36 +26,32 @@ const SolabProvider = ({children}) => {
   const [selectedCategory, setSelectedCategory] = useState('food');
   const debounceTimeout = useRef(null);
   const [scrollToTop, setScrollToTop] = useState(false);
+  const [updatedData, setUpdatedData] = useState([]);
+  const [data, setData] = useState([]);
 
-  // console.log(user.products);
+
 
   const translations = {
     en: enStrings,
     he: heStrings,
     ar: arStrings,
   };
-  useEffect(() => {
-    const saveData = async () => {
-      try {
-        await saveProductsToDatabase({
-          id: 'meat1',
-          saleAmount: 4,
-          salePrice: 10,
-          price: 5,
-          brand: 'premio',
-          taste: 'Beef',
-          img: Images.premioDeliCatBeef(),
-          dis: 'meaty',
-          category: ['meat', 'thirdRow'],
-          petType: ['cat'],
-        });
-      } catch (error) {
-        console.error('Failed to save product to data base :', error);
-      }
-    };
 
-    saveData();
-  }, []);
+
+  // useEffect(() => {
+  //   const saveData = async () => {
+  //     try {
+  //       console.log('====================================');
+  //       console.log('SAAVING');
+  //       console.log('====================================');
+  //       await saveProductsToDatabase(data);
+  //     } catch (error) {
+  //       console.error('Failed to save product to data base :', error);
+  //     }
+  //   };
+
+  //   saveData();
+  // }, []);
 
   const triggerScrollToTop = () => {
     setScrollToTop(prev => !prev);
@@ -349,6 +347,10 @@ const SolabProvider = ({children}) => {
     scrollToTop,
     setScrollToTop,
     triggerScrollToTop,
+    updatedData,
+    setUpdatedData,
+    data,
+    setData,
   };
 
   return (

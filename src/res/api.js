@@ -27,12 +27,12 @@ export const updateUserProducts = async (userId, cart) => {
   // Spread and filter out undefined values
   const cleanCart = cart.map(item => ({
     ...item,
-    productId: item.productId || item.id,  // Ensure productId is used instead of id
+    productId: item.productId || item.id, // Ensure productId is used instead of id
   }));
 
   const payload = {
-    _id: userId, 
-    updated: { products: cleanCart }
+    _id: userId,
+    updated: {products: cleanCart},
   };
 
   console.log('Cart sent to server:', JSON.stringify(payload));
@@ -40,14 +40,17 @@ export const updateUserProducts = async (userId, cart) => {
   try {
     const response = await fetch(`${mainURL}/updateUserProducts/${userId}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(payload),
     });
 
     const result = await response.json();
 
     if (!response.ok) {
-      console.error('Failed to update cart on server:', result.errorMessage || result);
+      console.error(
+        'Failed to update cart on server:',
+        result.errorMessage || result,
+      );
     } else {
       console.log('Cart updated on server successfully');
     }
@@ -55,28 +58,6 @@ export const updateUserProducts = async (userId, cart) => {
     console.error('Failed to update cart on server:', error);
   }
 };
-
-export const saveProductsToDatabase = async (data) => {
-  try {
-    const response = await fetch(`${mainURL}/saveProducts`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ items: data }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to save products: ${response.statusText}`);
-    }
-
-    const result = await response.json();
-    console.log("Products saved successfully:", result);
-  } catch (e) {
-    console.error("Error saving products:", e);
-  }
-};
-
 
 
 
@@ -145,6 +126,129 @@ export const createUser = async (userName, phoneNumber, password) => {
     throw error; // Rethrow the error to handle it properly where the function is called
   }
 };
+
+
+// to add new items to the data base 
+export const saveProductsToDatabase = async data => {
+  try {
+    // Map through the data to add the productId field
+    const itemsWithProductId = data.map(item => ({
+      ...item,
+      productId: item.id, // Assign the id to productId
+    }));
+
+    const response = await fetch(`${mainURL}/saveProductsToDatabase`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({items: itemsWithProductId}),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text(); // Read the text response for debugging
+      throw new Error(`Failed to save products: ${errorText}`);
+    }
+
+    const result = await response.json();
+    console.log('Products saved successfully:', result);
+  } catch (e) {
+    console.error('Error saving products:', e);
+  }
+};
+
+// Function to get all items from the database
+export const getDataFromDataBase = async () => {
+  try {
+    const response = await fetch(`${mainURL}/getDataFromDataBase`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Failed to fetch data: ${errorText}`);
+    }
+
+    const items = await response.json();
+    return items; // Return the fetched items
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    throw error;
+  }
+};
+
+export const getItemInDataBase = async (id) => {
+  try {
+    const response = await fetch(`${mainURL}/getItemInDatabase`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id }), // Sending ID in body
+    });
+
+    const item = await response.json();
+    if (!response.ok) {
+      throw new Error(`Failed to get item: ${item.error}`);
+    }
+
+    return item; // Return the item
+  } catch (e) {
+    console.error("Error fetching item:", e);
+    throw e;
+  }
+};
+
+// setItemInDataBase to modify an existed item to the data base
+
+export const setItemInDataBase = async (id, newItemData) => {
+  try {
+    const response = await fetch(`${mainURL}/setItemInDatabase`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id, newItemData }), 
+    });
+
+    const updatedItem = await response.json();
+    if (!response.ok) {
+      throw new Error(`Failed to update item: ${updatedItem.error}`);
+    }
+
+    return updatedItem; // Return the updated item
+  } catch (e) {
+    console.error("Error updating item:", e);
+    throw e;
+  }
+};
+
+export const removeItemFromDatabase = async (id) => {
+  try {
+    const response = await fetch(`${mainURL}/removeItemFromDatabase`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id }), // Send the id in the body
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Failed to delete item: ${errorText}`);
+    }
+
+    const result = await response.json();
+    return result; // Return the result of the deletion
+  } catch (error) {
+    console.error('Error deleting item:', error);
+    throw error;
+  }
+};
+
 
 const appFetch = async (route, method = 'GET', body = null) => {
   const url = `${mainURL}${route}`;

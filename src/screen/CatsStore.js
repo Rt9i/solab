@@ -12,14 +12,14 @@ import CatsStoreItems from '../Components/CatsStoreItems';
 import Sizes from '../res/sizes';
 import {useNavigation} from '@react-navigation/native';
 
-import data from '../res/Data';
+// import data from '../res/Data';
 import Images from '../assets/images/images';
 
 const CatsStore = props => {
   const navigation = useNavigation();
   const [displayMode, setDisplayMode] = useState('row');
   const [optionsVisible, setOptionsVisible] = useState(false);
-  const {selectedIcons, search, setSelectedCategory, selectedCategory} =
+  const {selectedIcons, search, setSelectedCategory, selectedCategory,data} =
     useContext(SolabContext);
 
   const scrollY = useRef(new Animated.Value(0)).current;
@@ -28,10 +28,11 @@ const CatsStore = props => {
 
   const getFilteredItemsForRow = useMemo(
     () => rowValue => {
-      // console.log(`Filtering for rowValue: ${rowValue}`);
       const isSearchActive = search.length > 0;
 
       const filteredItems = data.filter(item => {
+   
+
         const matchesSearch = isSearchActive
           ? search.some(keyword =>
               item.searchKeys?.some(key => key.toLowerCase().includes(keyword)),
@@ -61,8 +62,7 @@ const CatsStore = props => {
         return acc;
       }, []);
 
-      // console.log(`Unique Items:`, uniqueItems);
-
+     
       return uniqueItems;
     },
     [search, selectedCategory, selectedIcons, data],
@@ -83,16 +83,6 @@ const CatsStore = props => {
     ],
     [],
   );
-
-  const renderRow = ({item}) => (
-    <RowContainer
-      row={item}
-      items={getFilteredItemsForRow(item.items)}
-      renderItem={renderItem}
-      selectedCategory={selectedCategory}
-    />
-  );
-
   const renderItem = ({item}) => (
     <View style={styles.itemContainer}>
       <CatsStoreItems
