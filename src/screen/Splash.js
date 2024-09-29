@@ -11,18 +11,18 @@ const Splash = (props) => {
   const hasFetchedData = useRef(false); 
 
   useEffect(() => {
-    // const fetchData = async () => {
-    //   if (hasFetchedData.current) return; 
-    //   hasFetchedData.current = true; 
+    const fetchData = async () => {
+      if (hasFetchedData.current) return; 
+      hasFetchedData.current = true; 
 
-    //   try {
-    //     const result = await getDataFromDataBase();
-    //     setData(result); 
-    //     // console.log('Data fetched:', result);
-    //   } catch (error) {
-    //     console.error('Error fetching data:', error);
-    //   }
-    // };
+      try {
+        const result = await getDataFromDataBase();
+        setData(result); 
+        // console.log('Data fetched:', result);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
 
     const updateUserAndFetchProducts = async () => {
       if (!currentUserId) return;
@@ -45,7 +45,7 @@ const Splash = (props) => {
     };
 
     if (currentUserId) {
-      // fetchData(); 
+      fetchData(); 
       updateUserAndFetchProducts(); // Update user and fetch products
     }
   }, [currentUserId]);

@@ -12,7 +12,7 @@ import CatsStoreItems from '../Components/CatsStoreItems';
 import Sizes from '../res/sizes';
 import {useNavigation} from '@react-navigation/native';
 
-// import data from '../res/Data';
+
 import Images from '../assets/images/images';
 
 const CatsStore = props => {
@@ -21,85 +21,57 @@ const CatsStore = props => {
   const [optionsVisible, setOptionsVisible] = useState(false);
   const {selectedIcons, search, setSelectedCategory, selectedCategory, data} =
     useContext(SolabContext);
-
   const scrollY = useRef(new Animated.Value(0)).current;
   const [showScrollUp, setShowScrollUp] = useState(false);
   const scrollViewRef = useRef(null);
-  const getFilteredItemsForRow = rowValue => {
+  // console.log('====================================');
+  // console.log(data);
+  // console.log('====================================');
 
-    const filteredItems = data.filter(item =>
-      item.category.includes(rowValue) &&
-      item.category.includes(selectedCategory)
-    );
-  
-    // Ensure uniqueness of items by their ID
-    const uniqueItems = filteredItems.reduce((acc, item) => {
-      if (!acc.find(existingItem => existingItem.id === item.id)) {
-        acc.push(item);
-      }
-      return acc;
-    }, []);
-  
-    return uniqueItems;
-  };
-  
+const getFilteredItemsForRow = useMemo(
+  () => rowValue => {
+    const isSearchActive = search.length > 0;
+    const filteredItems = data.filter(item => {
+      const matchesSearch = isSearchActive
+        ? search.some(keyword =>
+            item.searchKeys?.some(key =>
+              key.toLowerCase().includes(keyword.toLowerCase()),
+            )
+          )
+        : true;
+      const matchesCategory = selectedCategory
+        ? item.category?.includes(selectedCategory)
+        : true;
+      const matchesRowValue = rowValue
+        ? item.category.includes(rowValue)
+        : true;
+      const matchesPetType = selectedIcons.length
+        ? item.petType?.some(pet => selectedIcons.includes(pet))
+        : true;
+      return matchesSearch && matchesCategory && matchesRowValue && matchesPetType;
+    });
+    return filteredItems; 
+  },
+  [search, selectedCategory, selectedIcons, data],
+);
 
-  // const getFilteredItemsForRow = useMemo(
-  //   () => rowValue => {
-  //     const isSearchActive = search.length > 0;
-
-  //     const filteredItems = data.filter(item => {
-  //       const matchesSearch = isSearchActive
-  //         ? search.some(keyword =>
-  //             item.searchKeys?.some(key => key.toLowerCase().includes(keyword)),
-  //           )
-  //         : true;
-
-  //       const matchesCategory =
-  //         item.category?.includes(selectedCategory) &&
-  //         item.category?.includes(rowValue);
-
-  //       const matchesPetType = item.petType?.includes(selectedIcons);
-
-  //       // If search is active, return items matching search and rowValue
-  //       if (isSearchActive) {
-  //         return matchesSearch && item.category?.includes(rowValue);
-  //       }
-
-  //       // Otherwise, return items matching category, rowValue, and petType
-  //       return matchesCategory && matchesPetType;
-  //     });
-
-  //     // Ensure uniqueness of items by their ID
-  //     const uniqueItems = filteredItems.reduce((acc, item) => {
-  //       if (!acc.find(existingItem => existingItem.id === item.id)) {
-  //         acc.push(item);
-  //       }
-  //       return acc;
-  //     }, []);
-
-  //     return uniqueItems;
-  //   },
-  //   [search, selectedCategory, selectedIcons, data],
-  // );
 
   const rows = useMemo(
     () => [
-      {items: 'firstRow', id: 1},
-      {items: 'secondRow', id: 2},
-      {items: 'thirdRow', id: 3},
-      {items: 'fourthRow', id: 4},
-      {items: 'fifthRow', id: 5},
-      {items: 'sixthRow', id: 6},
-      {items: 'seventhRow', id: 7},
-      {items: 'eigthRow', id: 8},
-      {items: 'ninthRow', id: 9},
-      {items: 'tenthRow', id: 10},
+      {rows: 'firstRow', id: 1},
+      {rows: 'secondRow', id: 2},
+      {rows: 'thirdRow', id: 3},
+      {rows: 'fourthRow', id: 4},
+      {rows: 'fifthRow', id: 5},
+      {rows: 'sixthRow', id: 6},
+      {rows: 'seventhRow', id: 7},
+      {rows: 'eigthRow', id: 8},
+      {rows: 'ninthRow', id: 9},
+      {rows: 'tenthRow', id: 10},
     ],
     [],
   );
   const renderItem = ({item}) => {
- 
     return (
       <View style={styles.itemContainer}>
         <CatsStoreItems
@@ -112,7 +84,7 @@ const CatsStore = props => {
           img={{uri: item.img}}
           dis={item.dis}
           price={item.price}
-          id={item.id}
+          productId={item.productId}
           quantity={item.quantity}
           displayMode={displayMode}
           selectedCategory={selectedCategory}
@@ -175,15 +147,20 @@ const CatsStore = props => {
           />
         </View>
 
-        {rows.map(row => (
-          <RowContainer
-            key={row.id}
-            row={row}
-            items={getFilteredItemsForRow(row.items)}
-            renderItem={renderItem}
-            selectedCategory={selectedCategory}
-          />
-        ))}
+        {rows.map(row => {
+          const filteredItems = getFilteredItemsForRow(row.rows);
+          // console.log('Row ID:', row.id, 'Filtered Items:', filteredItems);
+
+          return (
+            <RowContainer
+              key={row.id}
+              row={row}
+              items={filteredItems}
+              renderItem={renderItem}
+              selectedCategory={selectedCategory}
+            />
+          );
+        })}
       </ScrollView>
 
       <BottomBar />

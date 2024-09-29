@@ -13,7 +13,7 @@ import SolabContext from '../store/solabContext';
 import Images from '../assets/images/images';
 import AddOrLess from './AddOrLess';
 
-const CatsStoreItems = ({selectedCategory, displayMode, ...props}) => {
+const CatsStoreItems = ({selectedCategory, ...props}) => {
   const {strings, changeLanguage} = useContext(SolabContext);
   const meatImg = {
     resizeMode: 'contain',
@@ -29,7 +29,7 @@ const CatsStoreItems = ({selectedCategory, displayMode, ...props}) => {
     img,
     hideImage,
     dis,
-    id,
+    productId,
     quantity,
     category,
     kg,
@@ -42,20 +42,25 @@ const CatsStoreItems = ({selectedCategory, displayMode, ...props}) => {
   const {isItemAdded, setIsItemAdded} = useContext(SolabContext);
   const {removeItem} = useContext(SolabContext);
 
-  useEffect(() => {
-    const isInCart = cart.some(item => item.id === id);
-    setIsAddedToCart(isInCart);
-  }, [cart]);
+  // useEffect(() => {
+  //   const isInCart = cart.some(item => item.productId === id);
+  //   console.log("isincarto: ",isInCart);
+  //   setIsAddedToCart(isInCart);
+  // }, [cart]);
 
   const onCardPress = () => {
     const Item = {...props};
+    console.log('====================================');
+    console.log('produt id man :', productId);
+
+    console.log('====================================');
     navigation.navigate(ScreenNames.ProductScreen, {data: Item});
   };
 
-  const addToShop = () => {
-    const Item = {...props};
-    addItem(Item, Item.id);
-  };
+  // const addToShop = () => {
+  //   const Item = {...props};
+  //   addItem(Item, Item.productId);
+  // };
 
   return (
     <View style={styles.itemWidth}>

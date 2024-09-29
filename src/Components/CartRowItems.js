@@ -15,13 +15,16 @@ const CartRowItems = props => {
   const navigation = useNavigation();
 
   const onCardPress = () => {
+    console.log('Navigating with Item:', Item);
     navigation.navigate(ScreenNames.ProductScreen, {data: Item});
   };
-  useEffect(() => {
-    console.log('====================================');
-    console.log('img in cartrow: ', img);
-    console.log('====================================');
-  }, [Item]);
+
+  // useEffect(() => {
+  //   console.log('====================================');
+  //   console.log('item  in cartrow: ', Item);
+  //   console.log('====================================');
+  // }, [Item]);
+
 
   return (
     <View style={styles.container}>
@@ -35,7 +38,10 @@ const CartRowItems = props => {
       />
       <TouchableOpacity onPress={onCardPress} style={styles.photo}>
         <View style={styles.imgCont}>
-          <Image source={img} style={styles.img} />
+          <Image
+            source={typeof img === 'string' ? {uri: img} : img}
+            style={styles.img}
+          />
 
           {Item.saleAmount && (
             <View style={styles.sale}>
@@ -150,7 +156,8 @@ const styles = StyleSheet.create({
   },
   img: {
     flex: 1,
-
+    width: 250,
+    height: 250,
     resizeMode: 'contain',
   },
   details: {

@@ -58,27 +58,6 @@ const Cart = props => {
   //   }
   // }, [user?.products]);
 
-  // Clear the cart and update the user's products on the server
-  const clearCart = async () => {
-    setCart([]);
-    if (user && user._id) {
-      await updateUserProducts(user._id, []);
-    }
-  };
-
-  const alertClear = () => {
-    Alert.alert(
-      'Clear Cart',
-      'Are you sure you want to clear your cart?',
-      [
-        {text: 'Cancel', style: 'cancel'},
-        {text: 'Clear', onPress: clearCart, style: 'destructive'},
-      ],
-      {cancelable: true},
-    );
-  };
-
-  // Calculate the total price of items in the cart
   const calculateTotalPrice = () => {
     let total = 0;
 
@@ -113,7 +92,6 @@ const Cart = props => {
     calculateTotalPrice();
   }, [cart]);
 
-  // Update select all state based on selected items
   useEffect(() => {
     setIsSelectAll(
       cart.length > 0 &&
@@ -124,20 +102,16 @@ const Cart = props => {
   // Handle checkbox change
   const handleCheckBoxChange = (isChecked, itemId) => {
     console.log(`Toggling item: ${itemId}`); // Log the toggled item ID
-    
+
     setSelectedItems(prevSelectedItems => {
       const newItems = isChecked
         ? [...prevSelectedItems, itemId] // Add itemId
         : prevSelectedItems.filter(selectedId => selectedId !== itemId); // Remove itemId
-  
+
       console.log(`Selected Items: ${newItems}`); // Log selected items
       return newItems;
     });
   };
-  
-  
-  
-  
 
   // Remove selected items from cart and update on server
   const removeSelectedItems = async () => {
@@ -167,7 +141,6 @@ const Cart = props => {
     }
   };
 
-  // Render each cart item
   const renderCart = ({item}) => (
     <CartRowItems
       {...item}
@@ -175,6 +148,8 @@ const Cart = props => {
       hideImage={true}
       isSelected={selectedItems.includes(item.id || item.productId)}
       onCheckBoxChange={handleCheckBoxChange}
+      img={item.img}
+      key={item.productId} 
     />
   );
 
@@ -185,24 +160,30 @@ const Cart = props => {
     }
     return null;
   };
+  // useEffect(() => {
+  //   let isMounted = true;
 
-  useEffect(() => {
-    if (
-      user?.id &&
-      JSON.stringify(cart) !== JSON.stringify(previousCartState)
-    ) {
-      const updateCart = async () => {
-        try {
-          await updateUserProducts(user.id, cart);
-          setPreviousCartState(cart); // Update previous cart state
-        } catch (error) {
-          console.error('Error updating cart on server:', error);
-        }
-      };
+  //   if (
+  //     user?.id &&
+  //     JSON.stringify(cart) !== JSON.stringify(previousCartState)
+  //   ) {
+  //     const updateCart = async () => {
+  //       try {
+  //         if (isMounted) {
+  //           await updateUserProducts(user.id, cart);
+  //           setPreviousCartState(cart);
+  //         }
+  //       } catch (error) {
+  //         console.error('Error updating cart on server:', error);
+  //       }
+  //     };
+  //     updateCart();
+  //   }
 
-      updateCart();
-    }
-  }, [cart, user?.id]);
+  //   return () => {
+  //     isMounted = false;
+  //   };
+  // }, [cart, user?.id]);
 
   return (
     <LinearGradient

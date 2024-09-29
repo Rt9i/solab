@@ -11,14 +11,7 @@ const WorkersHome = () => {
   const [loading, setLoading] = useState(false);
   const [savedData, setSavedData] = useState([]);
 
-  // const getFunctionKey = index => {
-  //   const imageKeys = Object.keys(Images);
-  //   const functionName = imageKeys[index];
-  //   const path = `../assets/images/photos/${functionName}.png`;
-  //   return path;
-  // };
   const getFunctionKey = img => {
-    // Loop through the Images object to find the matching function
     for (const [functionName, func] of Object.entries(Images)) {
       if (func() === img) {
         const imageUri = Image.resolveAssetSource(func()).uri;
@@ -29,44 +22,43 @@ const WorkersHome = () => {
         return {functionName, imageUri};
       }
     }
-
     console.log('Image function not found');
-    return null; // or handle the case when the function is not found
+    return null;
   };
 
-  // Example of how to use it in useEffect
   useEffect(() => {
-    const targetItem = data.find(item => item.id === 'meat1');
-
-    const {functionName, imageUri} = getFunctionKey(targetItem.img);
-    console.log('Image function name for meat1:', functionName);
-    console.log('Image URI for meat1:', imageUri);
-    
     const uploadImages = async () => {
       const uploadPromises = data.map(async item => {
         console.log('====================================');
         console.log(item);
         console.log('====================================');
-        const path = getFunctionKey(item.img);
-        const uploadedImageUrl = await uploadImage(path);
-
+  
+        // Use getFunctionKey to retrieve the function name and image URI
+        const { functionName, imageUri } = getFunctionKey(item.img);
+  
+        // Upload the image URI and get the uploaded image URL
+        const uploadedImageUrl = await uploadImage(imageUri);
+  
         return {
           ...item,
-          img: uploadedImageUrl,
+          img: uploadedImageUrl, // Update the item with the uploaded image URL
         };
       });
-
+  
+      // Wait for all uploads to complete
       const itemsWithImageUrls = await Promise.all(uploadPromises);
       setSavedData(itemsWithImageUrls);
-
+  
       console.log('====================================');
-      console.log('saved data rn:', savedData);
+      console.log('saved data rn:', itemsWithImageUrls); // log the saved data here
       console.log('====================================');
-      // await saveProductsToDatabase(itemsWithImageUrls);
+  
+      await saveProductsToDatabase(itemsWithImageUrls);
     };
-
+  
     // uploadImages();
-  }, []);
+  }, [data]); // Include `data` in the dependency array if it can change
+  
 
   const uploadImage = async imageUri => {
     const data = new FormData();

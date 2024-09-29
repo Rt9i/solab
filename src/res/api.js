@@ -24,11 +24,12 @@ export const getUserProfile = async userId => {
 export const updateUserProducts = async (userId, cart) => {
   if (!userId) return console.error('User ID is undefined');
 
-  // Spread and filter out undefined values
   const cleanCart = cart.map(item => ({
     ...item,
-    productId: item.productId || item.id, // Ensure productId is used instead of id
+    productId: item.productId || item.id,
+    img: typeof item.img === 'string' ? item.img : item.img?.uri
   }));
+  
 
   const payload = {
     _id: userId,
@@ -54,8 +55,8 @@ export const updateUserProducts = async (userId, cart) => {
     } else {
       console.log('Cart updated on server successfully');
     }
-  } catch (error) {
-    console.error('Failed to update cart on server:', error);
+  } catch (e) {
+   e
   }
 };
 
@@ -74,12 +75,16 @@ export const getUserProducts = async userId => {
       throw new Error('Products not found in response');
     }
 
+    // Log the products that we received
+    console.log('Fetched user products:', response.products);
+
     return response.products; // Return the products array
   } catch (error) {
     console.error('Failed to fetch user products:', error);
     throw error;
   }
 };
+
 
 export const getUserByID = async id => {
   try {
@@ -187,7 +192,7 @@ export const getItemInDataBase = async (id) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id }), // Sending ID in body
+      body: JSON.stringify({ id }), 
     });
 
     const item = await response.json();

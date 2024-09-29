@@ -4,13 +4,9 @@ import {useNavigation} from '@react-navigation/native';
 import ScreenNames from '../../routes/ScreenNames';
 import SolabContext from '../store/solabContext';
 
-// Memoize the renderItem function to prevent unnecessary re-renders
 const RenderItem = memo(({item, renderItem}) => renderItem({item}));
 
 const RowContainer = ({items, renderItem, text, selectedCategory}) => {
-  console.log('====================================');
-  console.log("items: ",items);
-  console.log('====================================');
   const navigation = useNavigation();
   const flatListRef = useRef();
   const {selectedIcons, scrollToTop} = useContext(SolabContext);
@@ -47,11 +43,12 @@ const RowContainer = ({items, renderItem, text, selectedCategory}) => {
         ref={flatListRef}
         data={items}
         renderItem={({item}) => (
+          // console.log('Logging the item id:', item.productId),
           <RenderItem item={item} renderItem={renderItem} />
         )}
-        keyExtractor={item => item.id || item.productId.toString()}
+        keyExtractor={item => item.productId}
         horizontal
-        showsHorizontalScrollIndicator={false}
+        showsHorizontalScrollIndicator={true}
         initialNumToRender={10}
         maxToRenderPerBatch={5}
         windowSize={10}
@@ -60,6 +57,7 @@ const RowContainer = ({items, renderItem, text, selectedCategory}) => {
     </View>
   );
 };
+
 
 export default RowContainer;
 
