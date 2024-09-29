@@ -18,7 +18,7 @@ const SolabProvider = ({children}) => {
   const [language, setLanguage] = useState('he');
   const [strings, setStrings] = useState(heStrings);
   const [selectedIcons, setSelectedIcons] = useState();
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState([]);
   const [filteredItemsState, setFilteredItemsState] = useState([]);
   const [keywords, setKeywords] = useState([]);
   const [user, setUser] = useState(null);
@@ -90,9 +90,9 @@ const SolabProvider = ({children}) => {
   };
 
   useEffect(() => {
-    console.log('====================================');
-    console.log('carrttt', cart);
-    console.log('====================================');
+    // console.log('====================================');
+    // console.log('carrttt', cart);
+    // console.log('====================================');
     const saveCartWithDebounce = async () => {
       if (debounceTimeout.current) {
         clearTimeout(debounceTimeout.current);

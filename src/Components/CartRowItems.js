@@ -15,15 +15,11 @@ const CartRowItems = props => {
   const navigation = useNavigation();
 
   const onCardPress = () => {
-    console.log('Navigating with Item:', Item);
+    
     navigation.navigate(ScreenNames.ProductScreen, {data: Item});
   };
 
-  // useEffect(() => {
-  //   console.log('====================================');
-  //   console.log('item  in cartrow: ', Item);
-  //   console.log('====================================');
-  // }, [Item]);
+
 
 
   return (

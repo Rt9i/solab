@@ -50,10 +50,6 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
 
   const onCardPress = () => {
     const Item = {...props};
-    console.log('====================================');
-    console.log('produt id man :', productId);
-
-    console.log('====================================');
     navigation.navigate(ScreenNames.ProductScreen, {data: Item});
   };
 

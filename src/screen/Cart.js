@@ -101,7 +101,7 @@ const Cart = props => {
 
   // Handle checkbox change
   const handleCheckBoxChange = (isChecked, itemId) => {
-    console.log(`Toggling item: ${itemId}`); // Log the toggled item ID
+    console.log(`Toggling item: ${itemId}`); 
 
     setSelectedItems(prevSelectedItems => {
       const newItems = isChecked

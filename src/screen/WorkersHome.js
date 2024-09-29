@@ -70,8 +70,7 @@ const WorkersHome = () => {
     data.append('upload_preset', 'ml_default');
 
     try {
-      const response = await fetch(
-        'https://api.cloudinary.com/v1_1/dzzazhwjk/image/upload',
+      const response = await fetch('https://api.cloudinary.com/v1_1/dzzazhwjk/image/upload',
         {
           method: 'POST',
           body: data,
