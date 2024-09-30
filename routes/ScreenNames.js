@@ -13,6 +13,7 @@ const ScreenNames = {
   seeAll: 'seeAll',
   html: 'html',
   workerHome: 'WorkerHome',
+  StaffHome:'StaffHome',
 };
 
 export default ScreenNames;

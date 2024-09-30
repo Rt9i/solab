@@ -24,42 +24,38 @@ export const getUserProfile = async userId => {
 export const updateUserProducts = async (userId, cart) => {
   if (!userId) return console.error('User ID is undefined');
 
+  // Clean the cart to ensure proper formatting
   const cleanCart = cart.map(item => ({
     ...item,
     productId: item.productId || item.id,
-    img: typeof item.img === 'string' ? item.img : item.img?.uri
+    img: typeof item.img === 'string' ? item.img : item.img?.uri  // Ensure img is correctly formatted
   }));
-  
 
   const payload = {
     _id: userId,
-    updated: {products: cleanCart},
+    updated: { products: cleanCart },  // Send cleanCart instead of cart
   };
 
-  console.log('Cart sent to server:', JSON.stringify(payload));
+  console.log('Payload being sent to server:', JSON.stringify(payload));
 
   try {
     const response = await fetch(`${mainURL}/updateUserProducts/${userId}`, {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
 
     const result = await response.json();
 
     if (!response.ok) {
-      console.error(
-        'Failed to update cart on server:',
-        result.errorMessage || result,
-      );
+      console.error('Failed to update cart on server:', result.errorMessage || result);
     } else {
       console.log('Cart updated on server successfully');
     }
   } catch (e) {
-   e
+    console.error('Error occurred:', e.message || e);
   }
 };
-
 
 
 export const getUserProducts = async userId => {

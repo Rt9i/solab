@@ -38,6 +38,8 @@ const Splash = (props) => {
           props.navigation.replace(ScreenNames.home);
         } else if (newUser.role === 'worker') {
           props.navigation.replace(ScreenNames.workerHome);
+        }else if (newUser.role === 'staff'){
+          props.navigation.replace(ScreenNames.home)
         }
       } catch (error) {
         console.error('Error fetching user or products:', error);
