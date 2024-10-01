@@ -14,7 +14,7 @@ import Images from '../assets/images/images';
 import AddOrLess from './AddOrLess';
 
 const CatsStoreItems = ({selectedCategory, ...props}) => {
-  const {strings, changeLanguage} = useContext(SolabContext);
+  const {strings, changeLanguage, user} = useContext(SolabContext);
   const meatImg = {
     resizeMode: 'contain',
     height: 110,
@@ -33,6 +33,7 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
     quantity,
     category,
     kg,
+    searchKeys,
     saleAmount,
     salePrice,
     petType,
@@ -59,11 +60,12 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
   // };
 
   return (
-    <View style={styles.itemWidth}>
+    <View
+      style={user.role === 'staff' ? styles.itemWidthStaff : styles.itemWidth}>
       <View style={styles.items}>
         <TouchableOpacity onPress={onCardPress} activeOpacity={0.6}>
           <Image
-           source={img}
+            source={img}
             style={[
               styles.img,
               selectedCategory === 'catMeat' ? meatImg : null,
@@ -82,7 +84,14 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
             {kg && <Text style={styles.bottomtxt4}>{` ${kg} kg`}</Text>}
           </View>
         </View>
-
+        {user.role === 'staff' && (
+          <TouchableOpacity onPress={()=> navigation.navigate(ScreenNames.editProduct, props)}>
+           
+            <View style={{width: 50, height: 50, }}>
+              <Image source={Images.edit()} style={styles.edit} />
+            </View>
+          </TouchableOpacity>
+        )}
         <View style={styles.center}>
           <TouchableOpacity activeOpacity={0.7} onPress={onCardPress}>
             <View style={styles.cart}>
@@ -102,7 +111,6 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
           </View>
         </View>
       )}
-      
     </View>
   );
 };
@@ -110,6 +118,20 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
 export default CatsStoreItems;
 
 const styles = StyleSheet.create({
+  itemWidthStaff: {
+    width: 140,
+    height: 300,
+    marginBottom: 2,
+    borderRadius: 5,
+    overflow: 'hidden',
+  },
+  edit: {
+    resizeMode: 'contain',
+    height: 30,
+    width: 30,
+    zIndex: 1,
+    position: 'absolute',
+  },
   center: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -168,7 +190,6 @@ const styles = StyleSheet.create({
   items: {
     flex: 1,
     borderRadius: 5,
-    flexDirection: 'column',
     backgroundColor: 'rgba(20, 70, 200, 0.1)',
     shadowColor: 'black',
     shadowOffset: {width: 0, height: 0.1},

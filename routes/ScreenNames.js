@@ -14,6 +14,7 @@ const ScreenNames = {
   html: 'html',
   workerHome: 'WorkerHome',
   StaffHome:'StaffHome',
+  editProduct:'EditProduct'
 };
 
 export default ScreenNames;

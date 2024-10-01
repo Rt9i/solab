@@ -14,6 +14,7 @@ import SeeAllProducts from '../src/screen/SeeAllProducts';
 import ScreenNames from './ScreenNames';
 import WorkersHome from '../src/screen/WorkersHome';
 import staffHome from '../src/screen/StaffHome';
+import EditProduct from '../src/screen/EditProduct';
 
 
 
@@ -24,6 +25,7 @@ const MainNavigation = ({initialRouteName}) => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName={initialRouteName}>
+      <Stack.Screen name={ScreenNames.editProduct} component={EditProduct} />
       <Stack.Screen name={ScreenNames.StaffHome} component={staffHome} />
       <Stack.Screen name={ScreenNames.workerHome} component={WorkersHome} />
         <Stack.Screen

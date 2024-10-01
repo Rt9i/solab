@@ -1,10 +1,14 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Button, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import { useNavigation } from '@react-navigation/native'
+import ScreenNames from '../../routes/ScreenNames'
 
 const WorkersHome = () => {
+  nav = useNavigation()
   return (
     <View>
       <Text>WorkersHome</Text>
+     
     </View>
   )
 }

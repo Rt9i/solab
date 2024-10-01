@@ -12,50 +12,23 @@ import CatsStoreItems from '../Components/CatsStoreItems';
 import Sizes from '../res/sizes';
 import {useNavigation} from '@react-navigation/native';
 
-
 import Images from '../assets/images/images';
 
 const CatsStore = props => {
   const navigation = useNavigation();
   const [displayMode, setDisplayMode] = useState('row');
   const [optionsVisible, setOptionsVisible] = useState(false);
-  const {selectedIcons, search, setSelectedCategory, selectedCategory, data} =
-    useContext(SolabContext);
+  const {
+    selectedIcons,
+    search,
+    setSelectedCategory,
+    selectedCategory,
+    data,
+    getFilteredItemsForRow,
+  } = useContext(SolabContext);
   const scrollY = useRef(new Animated.Value(0)).current;
   const [showScrollUp, setShowScrollUp] = useState(false);
   const scrollViewRef = useRef(null);
-  // console.log('====================================');
-  // console.log(data);
-  // console.log('====================================');
-
-const getFilteredItemsForRow = useMemo(
-  () => rowValue => {
-    const isSearchActive = search.length > 0;
-    const filteredItems = data.filter(item => {
-      const matchesSearch = isSearchActive
-        ? search.some(keyword =>
-            item.searchKeys?.some(key =>
-              key.toLowerCase().includes(keyword.toLowerCase()),
-            )
-          )
-        : true;
-      const matchesCategory = selectedCategory
-        ? item.category?.includes(selectedCategory)
-        : true;
-      const matchesRowValue = rowValue
-        ? item.category.includes(rowValue)
-        : true;
-      const matchesPetType = selectedIcons.length
-        ? item.petType?.some(pet => selectedIcons.includes(pet))
-        : true;
-      return matchesSearch && matchesCategory && matchesRowValue && matchesPetType;
-    });
-    return filteredItems; 
-  },
-  [search, selectedCategory, selectedIcons, data],
-);
-
-
   const rows = useMemo(
     () => [
       {rows: 'firstRow', id: 1},
@@ -91,6 +64,7 @@ const getFilteredItemsForRow = useMemo(
           category={item.category}
           petType={item.petType}
           name={item.name}
+          searchKeys={item.searchKeys}
         />
       </View>
     );

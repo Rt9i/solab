@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback, useRef} from 'react';
+import React, {useEffect, useState, useCallback, useRef, useMemo} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SolabContext from './solabContext';
 import {enStrings, heStrings, arStrings} from '../res/strings';
@@ -53,41 +53,32 @@ const SolabProvider = ({children}) => {
   const triggerScrollToTop = () => {
     setScrollToTop(prev => !prev);
   };
-  const getFilteredItemsForRow = rowValue => {
-    const isSearchActive = search.length > 0;
-
-    const filteredItems = getCategoryItemsData.filter(item => {
-      const matchesSearch = isSearchActive
-        ? search.some(keyword =>
-            item.searchKeys?.some(key => key.toLowerCase().includes(keyword)),
-          )
-        : true;
-
-      const matchesCategory =
-        item.category?.includes(selectedCategory) &&
-        item.category?.includes(rowValue);
-
-      const matchesPetType = item.petType?.includes(selectedIcons);
-
-      // If search is active, return items matching search and rowValue
-      if (isSearchActive) {
-        return matchesSearch && item.category?.includes(rowValue);
-      }
-
-      // Otherwise, return items matching category, rowValue, and petType
-      return matchesCategory && matchesPetType;
-    });
-
-    // Ensure uniqueness of items by their ID
-    return filteredItems.reduce((acc, item) => {
-      if (
-        !acc.find(existingItem => existingItem.productId === item.productId)
-      ) {
-        acc.push(item);
-      }
-      return acc;
-    }, []);
-  };
+  const getFilteredItemsForRow = useMemo(
+    () => rowValue => {
+      const isSearchActive = search.length > 0;
+      const filteredItems = data.filter(item => {
+        const matchesSearch = isSearchActive
+          ? search.some(keyword =>
+              item.searchKeys?.some(key =>
+                key.toLowerCase().includes(keyword.toLowerCase()),
+              )
+            )
+          : true;
+        const matchesCategory = selectedCategory
+          ? item.category?.includes(selectedCategory)
+          : true;
+        const matchesRowValue = rowValue
+          ? item.category.includes(rowValue)
+          : true;
+        const matchesPetType = selectedIcons.length
+          ? item.petType?.some(pet => selectedIcons.includes(pet))
+          : true;
+        return matchesSearch && matchesCategory && matchesRowValue && matchesPetType;
+      });
+      return filteredItems; 
+    },
+    [search, selectedCategory, selectedIcons, data],
+  );
 
   useEffect(() => {
     // console.log('====================================');
