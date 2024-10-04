@@ -48,6 +48,7 @@ const CatsStore = props => {
     return (
       <View style={styles.itemContainer}>
         <CatsStoreItems
+          _id={item._id}
           salePrice={item.salePrice}
           saleAmount={item.saleAmount}
           kg={item.kg}

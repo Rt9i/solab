@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import React, {
   useContext,
@@ -18,8 +20,14 @@ import Sizes from '../res/sizes';
 import CatsBarItems from '../Components/CatsBarItems';
 import SolabContext from '../store/solabContext';
 import SearchKeys from '../Components/SearchKeys';
+import Images from '../assets/images/images';
+import {
+  getDataFromDataBase,
+  getItemInDataBase,
+  setItemInDataBase,
+} from '../res/api';
+import {useNavigation} from '@react-navigation/native';
 
-// Static arrays moved outside the component for optimization
 const cat = [
   {Food: 'food', id: 1},
   {Meat: 'meat', id: 2},
@@ -54,14 +62,15 @@ const EditProduct = props => {
     img,
     category = [],
     kg = 0,
+    petType,
     saleAmount = 0,
     salePrice = 0,
     searchKeys = [],
+    _id,
   } = props.route.params || {};
 
-  const {strings} = useContext(SolabContext);
+  const {strings, setData} = useContext(SolabContext);
 
-  // Simplified state initialization
   const [brandState, setBrandState] = useState(brand);
   const [nameState, setNameState] = useState(name);
   const [tasteState, setTasteState] = useState(taste);
@@ -71,14 +80,59 @@ const EditProduct = props => {
   const [saleAmountState, setSaleAmountState] = useState(saleAmount);
   const [salePriceState, setSalePriceState] = useState(salePrice);
   const [searchKeysState, setSearchKeysState] = useState(searchKeys);
-  const [petTypeState, setPetTypeState] = useState([]);
+  const [petTypeState, setPetTypeState] = useState(petType || []);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [row, setRow] = useState('');
+  const [loading, setLoading] = useState(false);
+  const nav = useNavigation();
+  const goback = () => {
+    nav.goBack();
+  };
+  const assignValues = async () => {
+    console.log('ID:', _id);
+    if (petTypeState.length > 0) {
+      try {
+        setLoading(true);
+        const item = await getItemInDataBase(_id);
+        console.log('Fetched item:', item);
+
+        const newItemData = {
+          brand: brandState,
+          name: nameState,
+          taste: tasteState,
+          price: priceState,
+          img: img.uri,
+          category: categoryState,
+          kg: kgState,
+          saleAmount: saleAmountState,
+          salePrice: salePriceState,
+          searchKeys: searchKeysState,
+          petType: petTypeState,
+        };
+
+        console.log('new data: ', newItemData);
+
+        const updatedItem = await setItemInDataBase(_id, newItemData);
+        const result = await getDataFromDataBase();
+        setLoading(false);
+        setData(result);
+        goback();
+        console.log('Updated item:', updatedItem);
+      } catch (e) {
+        console.error('Error updating item:', e);
+      }
+    } else {
+      Alert.alert('Input Required', 'Please select a pet type.');
+    }
+
+    return null;
+  };
+
   console.log('====================================');
-  // console.log('Props:', JSON.stringify(props, null, 2));
-  console.log('petTypeState: ', petTypeState);
-  console.log('row: ', row);
-  console.log('categoryState: ', categoryState);
+
+  // console.log('taste: ', taste);
+  // console.log('row: ', row);
+  // console.log('categoryState: ', categoryState);
   console.log('====================================');
 
   const findRowAndCategory = useCallback(() => {
@@ -102,7 +156,7 @@ const EditProduct = props => {
       });
     });
 
-    setSelectedCategory(matchedCategory.toLowerCase()); // Ensure it is set in lowercase
+    setSelectedCategory(matchedCategory.toLowerCase());
     setRow(matchedRow);
   }, [categoryState]);
 
@@ -127,48 +181,48 @@ const EditProduct = props => {
     [],
   );
 
-  const petType = () => {
+  const petTypes = () => {
     const pets = [
-      { name: 'Cat', id: 1 },
-      { name: 'Dog', id: 2 },
+      {name: 'cat', id: 1},
+      {name: 'dog', id: 2},
     ];
-  
+
     const togglePetType = pet => {
       setPetTypeState(prevState => {
         if (prevState.includes(pet)) {
-          // If pet type already exists, remove it
           return prevState.filter(item => item !== pet);
         } else {
-          // Otherwise, add it
           return [...prevState, pet];
         }
       });
     };
-  
+
     return (
       <View style={styles.petTypeContainer}>
         <Text style={styles.label}>Pet Type</Text>
         {pets.map(item => {
-          const isSelected = petTypeState.includes(item.name); // Check if pet is selected
-  
+          const isSelected = petTypeState.includes(item.name);
+
           return (
             <TouchableOpacity
               key={item.id}
-              style={[
-                styles.inputWrapper,
-                { backgroundColor: isSelected ? 'green' : 'white' } // Change background color conditionally
-              ]}
-              onPress={() => togglePetType(item.name)} // Call toggle function on press
-            >
-              <Text style={styles.input}>{item.name}</Text>
+              style={styles.inputWrapper}
+              onPress={() => togglePetType(item.name)}>
+              <Text style={styles.input}>
+                {item.name}{' '}
+                {isSelected && (
+                  <Image source={Images.roundCheckMark()} style={styles.icon} />
+                )}
+              </Text>
             </TouchableOpacity>
           );
         })}
-        <Text style={styles.selectedPetsText}>Selected Pets: {petTypeState.join(', ')}</Text>
+        <Text style={styles.selectedPetsText}>
+          Selected Pets: {petTypeState.join(', ')}
+        </Text>
       </View>
     );
   };
-  
 
   const inputs = () => (
     <View style={styles.inputContainer}>
@@ -197,6 +251,7 @@ const EditProduct = props => {
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
         />
+
         <View style={styles.price}>
           {handleInput('Weight (kg)', kgState, setKgState, 'numeric')}
         </View>
@@ -221,12 +276,10 @@ const EditProduct = props => {
           setSearchKeysArray={setSearchKeysState}
         />
 
-        {petType()}
+        {petTypes()}
       </View>
     </View>
   );
-
-  const handleSaveChanges = () => {};
 
   return (
     <ScrollView style={styles.scrollView}>
@@ -234,11 +287,19 @@ const EditProduct = props => {
         <Text style={styles.header}>Edit Product</Text>
         <Image source={img} style={styles.img} />
         {inputs()}
-        <TouchableOpacity
-          style={styles.savechanges}
-          onPress={handleSaveChanges}>
-          <Text style={styles.txt}>Save Changes</Text>
-        </TouchableOpacity>
+
+        {loading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#0000ff" />
+            <Text>Saving changes...</Text>
+          </View>
+        ) : (
+          <TouchableOpacity
+            style={styles.savechanges}
+            onPress={() => assignValues()}>
+            <Text style={styles.txt}>Save Changes</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </ScrollView>
   );
@@ -247,6 +308,19 @@ const EditProduct = props => {
 export default EditProduct;
 
 const styles = StyleSheet.create({
+  icon: {
+    width: 20,
+    height: 20,
+  },
+  notSelected: {
+    backgroundColor: 'white',
+  },
+  selected: {
+    backgroundColor: 'green',
+  },
+  selectedPetsText: {
+    color: 'black',
+  },
   price: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -268,7 +342,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   inputWrapper: {
-    marginRight: 8,
+    flexWrap: 'wrap',
+    justifyContent: 'flex-start',
   },
   label: {
     color: '#000',
@@ -299,6 +374,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   input: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+
     color: 'black',
     height: 40,
     borderColor: 'gray',

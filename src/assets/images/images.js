@@ -34,5 +34,6 @@ const Images = {
   languageIcon: () => require('./photos/languageIcon.png'),
   twoArrows: () => require('./photos/twoArrows.png'),
   edit: () => require('./photos/edit.png'),
+  roundCheckMark: () => require('./photos/roundCheckMark.png'),
 };
 export default Images;

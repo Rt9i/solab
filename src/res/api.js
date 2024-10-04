@@ -181,27 +181,29 @@ export const getDataFromDataBase = async () => {
   }
 };
 
-export const getItemInDataBase = async (id) => {
+export const getItemInDataBase = async (_id) => {
   try {
-    const response = await fetch(`${mainURL}/getItemInDatabase`, {
+    const response = await fetch(`${mainURL}/getItemInDataBase`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id }), 
+      body: JSON.stringify({ _id }), // Sending _id in the body
     });
 
-    const item = await response.json();
+    const item = await response.json(); // Parse the response as JSON
+
     if (!response.ok) {
-      throw new Error(`Failed to get item: ${item.error}`);
+      throw new Error(`Failed to get item: ${item.error || 'Unknown error'}`);
     }
 
     return item; // Return the item
   } catch (e) {
     console.error("Error fetching item:", e);
-    throw e;
+    throw e; // Rethrow to allow handling by the caller
   }
 };
+
 
 // setItemInDataBase to modify an existed item to the data base
 
@@ -216,16 +218,18 @@ export const setItemInDataBase = async (id, newItemData) => {
     });
 
     const updatedItem = await response.json();
+    
     if (!response.ok) {
-      throw new Error(`Failed to update item: ${updatedItem.error}`);
+      throw new Error(`Failed to update item: ${updatedItem.error || 'Unknown error'}`); // Provide more context
     }
 
     return updatedItem; // Return the updated item
   } catch (e) {
-    console.error("Error updating item:", e);
-    throw e;
+    console.error("Error updating item:", e.message); // Log the error message
+    throw e; // Rethrow the error
   }
 };
+
 
 export const removeItemFromDatabase = async (id) => {
   try {

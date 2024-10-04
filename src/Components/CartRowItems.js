@@ -1,26 +1,20 @@
 import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
-import React, {useContext, useEffect} from 'react';
+import React, {useContext} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import BouncyCheckbox from 'react-native-bouncy-checkbox'; // Make sure to install this package if you haven't
+import BouncyCheckbox from 'react-native-bouncy-checkbox'; // Ensure this package is installed
 import ScreenNames from '../../routes/ScreenNames';
 import SolabContext from '../store/solabContext';
-import Images from '../assets/images/images';
 
 const CartRowItems = props => {
   const {strings} = useContext(SolabContext);
   const Item = {...props};
   const {brand, price, img, id} = props;
-  const {addItemToCart, removeItemFromCart, checkRemoveItem, addItem} =
-    useContext(SolabContext);
+  const {addItem, removeItemFromCart} = useContext(SolabContext);
   const navigation = useNavigation();
 
   const onCardPress = () => {
-    
     navigation.navigate(ScreenNames.ProductScreen, {data: Item});
   };
-
-
-
 
   return (
     <View style={styles.container}>
@@ -38,14 +32,11 @@ const CartRowItems = props => {
             source={typeof img === 'string' ? {uri: img} : img}
             style={styles.img}
           />
-
           {Item.saleAmount && (
             <View style={styles.sale}>
-              <View style={styles.saleLabel}>
-                <Text style={styles.saleText}>
-                  {Item.saleAmount} = {Item.salePrice} {strings.priceTag}
-                </Text>
-              </View>
+              <Text style={styles.saleText}>
+                {Item.saleAmount} = {Item.salePrice} {strings.priceTag}
+              </Text>
             </View>
           )}
         </View>
@@ -55,20 +46,14 @@ const CartRowItems = props => {
         <View>
           <Text style={styles.brand}>{brand}</Text>
           <Text style={styles.price}>{`${price} ${strings.priceTag}`}</Text>
-          <View style={styles.cont}>
-            <View style={styles.quantityContainer}>
-              <TouchableOpacity
-                onPress={() => addItem(Item, id)}
-                style={styles.button}>
-                <Text style={styles.buttonText}>+</Text>
-              </TouchableOpacity>
-              <Text style={styles.quantity}>{props.quantity}</Text>
-              <TouchableOpacity
-                onPress={() => removeItemFromCart(Item, id)}
-                style={styles.button}>
-                <Text style={styles.buttonText}>-</Text>
-              </TouchableOpacity>
-            </View>
+          <View style={styles.quantityContainer}>
+            <TouchableOpacity onPress={() => addItem(Item,Item._id )} style={styles.button}>
+              <Text style={styles.buttonText}>+</Text>
+            </TouchableOpacity>
+            <Text style={styles.quantity}>{props.quantity}</Text>
+            <TouchableOpacity onPress={() => removeItemFromCart(Item, Item._id)} style={styles.button}>
+              <Text style={styles.buttonText}>-</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -79,55 +64,6 @@ const CartRowItems = props => {
 export default CartRowItems;
 
 const styles = StyleSheet.create({
-  imgCont: {
-    flex: 1,
-
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  saleLabel: {
-    width: '100%',
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  saleText: {
-    color: 'white',
-    fontSize: 12,
-    textAlign: 'center',
-    fontFamily: 'bigFont',
-  },
-  sale: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-    top: -2,
-    width: 60,
-    height: 20,
-    backgroundColor: 'rgba(217, 83, 79,1)',
-
-    justifyContent: 'center',
-    alignItems: 'center',
-
-    overflow: 'hidden',
-    zIndex: 1,
-  },
-  cont: {
-    flexDirection: 'row',
-    marginTop: 50,
-  },
-  trashCan: {
-    flexDirection: 'row-reverse',
-  },
-  image: {
-    width: 20,
-    height: 20,
-    resizeMode: 'contain',
-  },
-  box: {
-    height: 30,
-    width: 30,
-  },
   container: {
     flexDirection: 'row',
     backgroundColor: '#fff',
@@ -142,6 +78,31 @@ const styles = StyleSheet.create({
     width: '95%',
     alignSelf: 'center',
     height: 160,
+  },
+  imgCont: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  sale: {
+    position: 'absolute',
+    top: -2,
+    width: 60,
+    height: 20,
+    backgroundColor: 'rgba(217, 83, 79,1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
+    zIndex: 1,
+  },
+  saleText: {
+    color: 'white',
+    fontSize: 12,
+    textAlign: 'center',
+  },
+  box: {
+    height: 30,
+    width: 30,
   },
   photo: {
     height: 120,
@@ -191,16 +152,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#000',
-  },
-  removeButton: {
-    width: 25,
-    backgroundColor: '#f5f5f5',
-    padding: 5,
-    borderRadius: 5,
-    alignItems: 'center',
-  },
-  removeButtonText: {
-    fontSize: 14,
-    color: '#f00',
   },
 });

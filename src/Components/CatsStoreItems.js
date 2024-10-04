@@ -22,6 +22,7 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
 
   const navigation = useNavigation();
   const {
+    _id,
     brand,
     name,
     taste,
@@ -58,6 +59,10 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
   //   const Item = {...props};
   //   addItem(Item, Item.productId);
   // };
+  const handleEditProducts = () => {
+    navigation.navigate(ScreenNames.editProduct, props);
+  };
+  console.log('kg value:', kg);
 
   return (
     <View
@@ -79,15 +84,16 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
           </View>
 
           <View style={styles.priceContainer}>
-            <Text
-              style={styles.bottomtxt2}>{`${price} ${strings.priceTag}`}</Text>
-            {kg && <Text style={styles.bottomtxt4}>{` ${kg} kg`}</Text>}
+            <Text style={styles.bottomtxt2}>
+              {`${price} ${strings.priceTag}`}
+            </Text>
+            {kg !== 0 && <Text style={styles.bottomtxt4}>{`${kg} kg`}</Text>}
           </View>
+     
         </View>
         {user.role === 'staff' && (
-          <TouchableOpacity onPress={()=> navigation.navigate(ScreenNames.editProduct, props)}>
-           
-            <View style={{width: 50, height: 50, }}>
+          <TouchableOpacity onPress={() => handleEditProducts()}>
+            <View style={{width: 50, height: 50}}>
               <Image source={Images.edit()} style={styles.edit} />
             </View>
           </TouchableOpacity>
