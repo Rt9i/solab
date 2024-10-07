@@ -62,7 +62,6 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
   const handleEditProducts = () => {
     navigation.navigate(ScreenNames.editProduct, props);
   };
-  console.log('kg value:', kg);
 
   return (
     <View
@@ -89,15 +88,17 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
             </Text>
             {kg !== 0 && <Text style={styles.bottomtxt4}>{`${kg} kg`}</Text>}
           </View>
-     
         </View>
-        {user.role === 'staff' && (
+        {user.role === 'staff' ? (
           <TouchableOpacity onPress={() => handleEditProducts()}>
             <View style={{width: 50, height: 50}}>
               <Image source={Images.edit()} style={styles.edit} />
             </View>
           </TouchableOpacity>
+        ) : (
+          console.log('User is not staff')
         )}
+
         <View style={styles.center}>
           <TouchableOpacity activeOpacity={0.7} onPress={onCardPress}>
             <View style={styles.cart}>
@@ -108,7 +109,7 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
         </View>
       </View>
 
-      {saleAmount && (
+      {saleAmount > 0 && (
         <View style={styles.sale}>
           <View style={styles.saleLabel}>
             <Text style={styles.saleText}>

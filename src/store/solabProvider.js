@@ -28,6 +28,7 @@ const SolabProvider = ({children}) => {
   const [scrollToTop, setScrollToTop] = useState(false);
   const [updatedData, setUpdatedData] = useState([]);
   const [data, setData] = useState([]);
+  console.log('User:', user);
 
   const translations = {
     en: enStrings,
