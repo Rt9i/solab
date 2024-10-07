@@ -28,13 +28,42 @@ const SolabProvider = ({children}) => {
   const [scrollToTop, setScrollToTop] = useState(false);
   const [updatedData, setUpdatedData] = useState([]);
   const [data, setData] = useState([]);
+  console.log('User:', user);
 
   const translations = {
     en: enStrings,
     he: heStrings,
     ar: arStrings,
   };
+  const pets = [
+    {name: 'cat', id: 1, txt: strings.cat},
+    {name: 'dog', id: 2, txt: strings.dog},
+  ];
+  const rows =  [
+      {rows: 'firstRow', id: 1},
+      {rows: 'secondRow', id: 2},
+      {rows: 'thirdRow', id: 3},
+      {rows: 'fourthRow', id: 4},
+      {rows: 'fifthRow', id: 5},
+      {rows: 'sixthRow', id: 6},
+      {rows: 'seventhRow', id: 7},
+      {rows: 'eigthRow', id: 8},
+      {rows: 'ninthRow', id: 9},
+      {rows: 'tenthRow', id: 10},
+    ]
+    
 
+  const cat = [
+    {Food: 'food'},
+    {Meat: 'meat'},
+    {Accessories: 'accessories'},
+    {Clothes: 'clothes'},
+    {Sprays: 'sprays'},
+    {Toilet: 'toilet'},
+    {Perfume: 'perfume'},
+    {Treats: 'treats'},
+    {bowl: 'bowl'},
+  ];
   // useEffect(() => {
   //   const saveData = async () => {
   //     try {
@@ -375,6 +404,9 @@ const SolabProvider = ({children}) => {
     setUpdatedData,
     data,
     setData,
+    rows,
+    cat,
+    pets,
   };
 
   return (

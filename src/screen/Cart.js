@@ -24,40 +24,6 @@ const Cart = props => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [previousCartState, setPreviousCartState] = useState([]);
 
-  const debounceTimeout = useRef(null);
-  // console.log("cart: ", cart)
-
-  // const getUserProductMap = () => {
-  //   if (!user?.products) return {};
-  //   return user.products.reduce((acc, item) => {
-  //     acc[item.productId] = item.quantity;
-  //     return acc;
-  //   }, {});
-  // };
-
-  // Update cart items based on user products
-  // const updateCartWithUserProducts = () => {
-  //   const userProductMap = getUserProductMap();
-
-  //   const updatedCart = cart
-  //     .map(item => {
-  //       const newQuantity = userProductMap[item.id];
-  //       if (newQuantity) {
-  //         return { ...item, quantity: newQuantity };
-  //       }
-  //       return item;
-  //     })
-  //     .filter(item => userProductMap[item.id]);
-
-  //   setCart(updatedCart);
-  // };
-
-  // useEffect(() => {
-  //   if (user?.products) {
-  //     updateCartWithUserProducts();
-  //   }
-  // }, [user?.products]);
-
   const calculateTotalPrice = () => {
     let total = 0;
 
@@ -87,54 +53,53 @@ const Cart = props => {
     setTotalPrice(total);
   };
 
-  // Update the cart whenever it changes
   useEffect(() => {
     calculateTotalPrice();
   }, [cart]);
 
   useEffect(() => {
     setIsSelectAll(
-      cart.length > 0 &&
-        cart.every(item => selectedItems.includes(item.id || item.productId)),
+      cart.length > 0 && cart.every(item => selectedItems.includes(item._id)),
     );
   }, [selectedItems, cart]);
 
-  // Handle checkbox change
   const handleCheckBoxChange = (isChecked, itemId) => {
-    console.log(`Toggling item: ${itemId}`); 
+    console.log(`Toggling item: ${itemId}`);
 
     setSelectedItems(prevSelectedItems => {
       const newItems = isChecked
-        ? [...prevSelectedItems, itemId] // Add itemId
-        : prevSelectedItems.filter(selectedId => selectedId !== itemId); // Remove itemId
+        ? [...prevSelectedItems, itemId]
+        : prevSelectedItems.filter(selectedId => selectedId !== itemId);
 
-      console.log(`Selected Items: ${newItems}`); // Log selected items
+      console.log(`Selected Items: ${newItems}`);
       return newItems;
     });
   };
 
-  // Remove selected items from cart and update on server
   const removeSelectedItems = async () => {
-    const newCart = cart.filter(item => {
-      const itemId = item.id || item.productId; // Determine the id to use
-      return !selectedItems.includes(itemId);
-    });
+    if (selectedItems.length > 0) {
+      const newCart = cart.filter(item => {
+        const itemId = item._id;
+        return !selectedItems.includes(itemId);
+      });
 
-    setCart(newCart);
-    setSelectedItems([]);
-    setIsSelectAll(false);
+      setCart(newCart);
+      setSelectedItems([]);
+      setIsSelectAll(false);
 
-    if (user && user._id) {
-      await updateUserProducts(user._id, newCart);
+      if (user && user._id) {
+        await updateUserProducts(user._id, newCart);
+      }
+    } else {
+      console.log('cart is empty');
     }
   };
 
-  // Handle select all items
   const handleSelectAll = () => {
     if (isSelectAll) {
       setSelectedItems([]); // Deselect all
     } else {
-      const allItemIds = cart.map(item => item.id || item.productId); // Collect all IDs
+      const allItemIds = cart.map(item => item._id);
       console.log('cart rn: ', allItemIds);
 
       setSelectedItems(allItemIds);
@@ -144,12 +109,12 @@ const Cart = props => {
   const renderCart = ({item}) => (
     <CartRowItems
       {...item}
-      id={item.id || item.productId}
+      id={item._id}
       hideImage={true}
-      isSelected={selectedItems.includes(item.id || item.productId)}
+      isSelected={selectedItems.includes(item._id)}
       onCheckBoxChange={handleCheckBoxChange}
       img={item.img}
-      key={item.productId} 
+      key={item.productId}
     />
   );
 
@@ -160,30 +125,6 @@ const Cart = props => {
     }
     return null;
   };
-  // useEffect(() => {
-  //   let isMounted = true;
-
-  //   if (
-  //     user?.id &&
-  //     JSON.stringify(cart) !== JSON.stringify(previousCartState)
-  //   ) {
-  //     const updateCart = async () => {
-  //       try {
-  //         if (isMounted) {
-  //           await updateUserProducts(user.id, cart);
-  //           setPreviousCartState(cart);
-  //         }
-  //       } catch (error) {
-  //         console.error('Error updating cart on server:', error);
-  //       }
-  //     };
-  //     updateCart();
-  //   }
-
-  //   return () => {
-  //     isMounted = false;
-  //   };
-  // }, [cart, user?.id]);
 
   return (
     <LinearGradient
@@ -197,28 +138,31 @@ const Cart = props => {
           </Text>
         </View>
 
-        <View style={styles.selectedDisplay}>
-          <BouncyCheckbox
-            style={styles.allTouch}
-            isChecked={isSelectAll}
-            onPress={handleSelectAll}
-            fillColor="black"
-            iconStyle={{borderColor: 'red'}}
-            textStyle={{textDecorationLine: 'none'}}
-            text={strings.selectAll}
-          />
-          <TouchableOpacity
-            style={styles.cleartouch}
-            onPress={removeSelectedItems}>
-            <Image source={Images.trashCan()} style={styles.trashCan} />
-          </TouchableOpacity>
-        </View>
+        {cart.length > 0 && (
+          <View style={styles.selectedDisplay}>
+            <BouncyCheckbox
+              style={styles.allTouch}
+              isChecked={isSelectAll}
+              onPress={handleSelectAll}
+              fillColor="black"
+              iconStyle={{borderColor: 'red'}}
+              textStyle={{textDecorationLine: 'none'}}
+              text={strings.selectAll}
+            />
+
+            <TouchableOpacity
+              style={styles.cleartouch}
+              onPress={removeSelectedItems}>
+              <Image source={Images.trashCan()} style={styles.trashCan} />
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
 
       <FlatList
         data={cart}
         renderItem={renderCart}
-        keyExtractor={item => item.id || item.productId}
+        keyExtractor={item => item._id}
         ListEmptyComponent={emptyCartMessage}
         contentContainerStyle={
           cart.length === 0 ? styles.emptyCartContainer : undefined
@@ -248,7 +192,8 @@ const styles = StyleSheet.create({
   trashCan: {
     width: 30,
     height: 30,
-    tintColor: '#D9534F', // Red color for the trash can
+    tintColor: '#D9534F',
+    right: 5,
   },
   totalPrice: {
     fontSize: 15,

@@ -25,25 +25,13 @@ const CatsStore = props => {
     selectedCategory,
     data,
     getFilteredItemsForRow,
+    cat,
+    rows
   } = useContext(SolabContext);
   const scrollY = useRef(new Animated.Value(0)).current;
   const [showScrollUp, setShowScrollUp] = useState(false);
   const scrollViewRef = useRef(null);
-  const rows = useMemo(
-    () => [
-      {rows: 'firstRow', id: 1},
-      {rows: 'secondRow', id: 2},
-      {rows: 'thirdRow', id: 3},
-      {rows: 'fourthRow', id: 4},
-      {rows: 'fifthRow', id: 5},
-      {rows: 'sixthRow', id: 6},
-      {rows: 'seventhRow', id: 7},
-      {rows: 'eigthRow', id: 8},
-      {rows: 'ninthRow', id: 9},
-      {rows: 'tenthRow', id: 10},
-    ],
-    [],
-  );
+
   const renderItem = ({item}) => {
     return (
       <View style={styles.itemContainer}>
@@ -85,17 +73,7 @@ const CatsStore = props => {
     scrollViewRef.current.scrollTo({x: 0, y: 0, animated: true});
   };
 
-  const cat = [
-    {Food: 'food'},
-    {Meat: 'meat'},
-    {Accessories: 'accessories'},
-    {Clothes: 'clothes'},
-    {Sprays: 'sprays'},
-    {Toilet: 'toilet'},
-    {Perfume: 'perfume'},
-    {Treats: 'treats'},
-    {bowl: 'bowl'},
-  ];
+
 
   return (
     <LinearGradient

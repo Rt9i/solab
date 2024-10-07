@@ -8,7 +8,7 @@ import SolabContext from '../store/solabContext';
 const CartRowItems = props => {
   const {strings} = useContext(SolabContext);
   const Item = {...props};
-  const {brand, price, img, id} = props;
+  const {brand, price, img, _id} = props;
   const {addItem, removeItemFromCart} = useContext(SolabContext);
   const navigation = useNavigation();
 
@@ -21,7 +21,7 @@ const CartRowItems = props => {
       <BouncyCheckbox
         style={styles.box}
         isChecked={props.isSelected}
-        onPress={val => props.onCheckBoxChange(val, id)}
+        onPress={val => props.onCheckBoxChange(val, _id)}
         fillColor="black"
         iconStyle={{borderColor: 'blue'}}
         textStyle={{textDecorationLine: 'none'}}
