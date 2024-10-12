@@ -350,6 +350,87 @@ const EditProduct = props => {
 export default EditProduct;
 
 const styles = StyleSheet.create({
+  sale: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    borderWidth: 1,
+    borderColor: 'red',
+    borderRadius: 30,
+    backgroundColor: 'white',
+
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+
+  modalBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Dim background
+  },
+  modalContainer: {
+    width: '80%',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5, // Android shadow
+  },
+  modalTitle: {
+    color: 'black',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  modalMessage: {
+    fontSize: 16,
+    marginBottom: 20,
+    textAlign: 'center',
+    color: '#333',
+  },
+  modalButton: {
+    backgroundColor: '#2196F3',
+    borderRadius: 5,
+    padding: 10,
+    elevation: 2, // For shadow effect on Android
+  },
+  modalButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 16,
+  },
+  rowItem: {
+    padding: 10,
+    margin: 5,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ccc',
+  },
+  selectedRow: {
+    borderColor: 'green',
+  },
+  notSelectedRow: {
+    backgroundColor: 'white',
+    borderColor: 'gray',
+  },
+  rowText: {
+    fontSize: 16,
+    color: 'black',
+  },
   icon: {
     width: 20,
     height: 20,
@@ -390,6 +471,7 @@ const styles = StyleSheet.create({
   label: {
     color: '#000',
     fontWeight: 'bold',
+
   },
   savechanges: {
     backgroundColor: 'lightblue',
