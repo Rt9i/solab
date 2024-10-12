@@ -5247,9 +5247,9 @@ flow-enums-runtime@^0.0.6:
   integrity sha512-3PYnM29RFXwvAN6Pc/scUfkI7RwhQ/xqyLUyPNlXUp9S40zI8nup9tUSrTLSVnWGBN38FNiGWbwZOB6uR4OGdw==
 
 flow-parser@0.*:
-  version "0.248.0"
-  resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.248.0.tgz#1cf96ec7868071414a68165105deaa1e9eb49c43"
-  integrity sha512-IJVGA/PgRFNvTWBxqG7PKO0ZjX7wdTEz9yk3Xb8nPuCNdcqVphaK1cGhb1CS56Rniu2RPtOA5L0smNoQHRjM+w==
+  version "0.248.1"
+  resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.248.1.tgz#0de3af63d27970d145a02d2c9e0e7e698fb6e92d"
+  integrity sha512-fkCfVPelbTzSVp+jVwSvEyc+I4WG8MNhRG/EWSZZTlgHAMEdhXJaFEbfErXxMktboMhVGchvEFhWxkzNGM1m2A==
 
 follow-redirects@^1.15.6:
   version "1.15.9"

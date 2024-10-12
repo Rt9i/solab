@@ -8,10 +8,6 @@ import {
   Image,
   Alert,
   ActivityIndicator,
-  FlatList,
-  Modal,
-  PermissionsAndroid,
-  Linking,
 } from 'react-native';
 import React, {
   useContext,
@@ -65,262 +61,13 @@ const EditProduct = props => {
   const [row, setRow] = useState('');
   const [selectedRow, setSelectedRow] = useState('');
   const [loading, setLoading] = useState(false);
-  const [isAuthorized, setIsAuthorized] = useState(false);
-
-  const [selectedImage, setSelectedImage] = useState('');
-
-  const [showModal, setShowModal] = useState(false);
-  const [showreqModal, setShowreqModal] = useState(false);
-
-  const [errorMessage, setErrorMessage] = useState('');
   const nav = useNavigation();
   const goback = () => {
     nav.goBack();
   };
-  // console.log('====================================');
-  // console.log('saleAmountState:', saleAmountState);
-  // console.log('salePriceState:', salePriceState);
-  // console.log('category:', categoryState);
-  // console.log('row:', row);
-  // console.log('selectedCategory:', selectedCategory);
-  // console.log('====================================');
-  let options = {
-    title: 'Select Image',
-    customButtons: [
-      {name: 'customOptionKey', title: 'Choose Photo from Custom Option'},
-    ],
-    storageOptions: {
-      skipBackup: true,
-      path: 'images',
-    },
-  };
-
-  // chooseImage = () => {
-  //   ImagePicker.showImagePicker(options, (response) => {
-  //       console.log('Response = ', response);
-
-  //       if (response.didCancel) {
-  //           console.log('User cancelled image picker');
-  //       } else if (response.error) {
-  //           console.log('ImagePicker Error: ', response.error);
-  //       } else {
-  //           const source = { uri: response.uri };
-  //           this.setState({
-  //               filePath: response,
-  //               fileData: response.data,
-  //               fileUri: response.uri
-  //           });
-  //       }
-  //   });
-  // }
-
-  const openGallery = async () => {
-    const result = await launchImageLibrary(options);
-    console.log('Response = ', result);
-
-    if (result.didCancel) {
-      console.log('User cancelled image picker');
-    } else if (result.error) {
-      console.log('ImagePicker Error: ', result.error);
-    } else {
-      const source = {uri: result.assets[0].uri};
-      setSelectedImage(source.uri);
-    }
-  };
-
-  const checkPermission = async () => {
-    const granted = await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-    );
-    return granted;
-  };
-  const requestGalleryPermission = async () => {
-    try {
-      const cameraGranted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.CAMERA,
-        {
-          title: 'Camera Permission',
-          message: 'This app needs access to your camera to take pictures.',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      );
-
-      const storageGranted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-        {
-          title: 'Storage Permission',
-          message: 'This app needs access to your storage to open the gallery.',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      );
-
-      if (
-        cameraGranted === PermissionsAndroid.RESULTS.GRANTED &&
-        storageGranted === PermissionsAndroid.RESULTS.GRANTED
-      ) {
-        console.log('Camera and storage permissions granted');
-        return true; // All permissions granted
-      } else {
-        console.log('Camera or storage permission denied');
-        return false; // At least one permission denied
-      }
-    } catch (err) {
-      console.warn(err);
-      return false; // Handle error
-    }
-  };
-
-  const onAccept = async () => {
-    // Request Camera Permission
-    const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.CAMERA,
-      {
-        title: 'Camera Permission',
-        message: 'This app needs access to your camera.',
-        buttonNeutral: 'Ask Me Later',
-        buttonNegative: 'Cancel',
-        buttonPositive: 'OK',
-      },
-    );
-  
-    // Request Storage Permission
-    const storageGranted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-      {
-        title: 'Storage Permission',
-        message: 'This app needs access to your gallery to continue.',
-        buttonNeutral: 'Ask Me Later',
-        buttonNegative: 'Cancel',
-        buttonPositive: 'OK',
-      },
-    );
-    
-    console.log('storageGranted: ', storageGranted);
-  
-    // Check for Camera Permission
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      console.log('Permission granted! You can access the camera.');
-      // Take action to open the camera or related functionality
-    } else if (granted === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
-      console.log('Camera permission set to "Never Ask Again"!');
-      Alert.alert(
-        'Permission Required',
-        'Camera permission is required for this feature. Please enable it in your app settings.',
-        [
-          { text: 'Cancel', style: 'cancel' },
-          { text: 'Go to Settings', onPress: () => Linking.openSettings() },
-        ]
-      );
-      return;
-    } else {
-      console.log('Camera permission denied!');
-    }
-  
-    // Check for Storage Permission
-    if (storageGranted === PermissionsAndroid.RESULTS.GRANTED) {
-      console.log('Storage permission granted! You can access the gallery.');
-      // Open the gallery or related functionality
-    } else if (storageGranted === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
-      console.log('Storage permission set to "Never Ask Again"!');
-      Alert.alert(
-        'Permission Required',
-        'Gallery access permission is required for this feature. Please enable it in your app settings.',
-        [
-          { text: 'Cancel', style: 'cancel' },
-          { text: 'Go to Settings', onPress: () => Linking.openSettings() },
-        ]
-      );
-      return;
-    } else {
-      console.log('Storage permission denied!');
-    }
-  };
-  
-
-  const onCancel = () => {
-    setShowreqModal(false);
-  };
-  const PermissionRequestModal = () => {
-    return (
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={showreqModal}
-        onRequestClose={onCancel}>
-        <View style={styles.modalBackground}>
-          <View style={styles.modalContainer}>
-            <Text style={styles.modalMessage}>
-              Can we have permission to get to your gallery?
-            </Text>
-
-            <View style={styles.row}>
-              <TouchableOpacity
-                style={styles.modalButton}
-                onPress={
-                  () => onAccept()
-                  // Linking.openSettings()
-                }>
-                <Text style={styles.modalButtonText}>Accept</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.modalButton}
-                onPress={() => onCancel()}>
-                <Text style={styles.modalButtonText}>Cancel</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
-    );
-  };
-
-  const CustomAlert = ({message}) => (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={showModal}
-      onRequestClose={() => setShowModal(false)}>
-      <View style={styles.modalBackground}>
-        <View style={styles.modalContainer}>
-          <Text style={styles.modalTitle}>Input Required</Text>
-          <Text style={styles.modalMessage}>{message}</Text>
-          <TouchableOpacity
-            style={styles.modalButton}
-            onPress={() => setShowModal(false)}>
-            <Text style={styles.modalButtonText}>Close</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </Modal>
-  );
-  const updateItem = async () => {
-    let isMounted = true;
-
-    if (isMounted) {
-      let missingFields = [];
-      if (!brandState) missingFields.push(strings.brand);
-      if (!priceState) missingFields.push(strings.Price);
-      if (!selectedCategory) missingFields.push(strings.category);
-      if (!row) missingFields.push(strings.row);
-      if (petTypeState.length === 0) missingFields.push(strings.petType);
-
-      if (parseFloat(saleAmountState) > parseFloat(salePriceState)) {
-        setErrorMessage(strings.amountError);
-        setShowModal(true);
-        return;
-      }
-
-      if (missingFields.length > 0) {
-        setErrorMessage(`${strings.fillthefield}: ${missingFields.join(', ')}`);
-        setShowModal(true);
-        return;
-      }
-
+  const assignValues = async () => {
+    console.log('ID:', _id);
+    if (petTypeState.length > 0) {
       try {
         setLoading(true);
         const item = await getItemInDataBase(_id);
@@ -347,42 +94,19 @@ const EditProduct = props => {
         console.error('Error updating item:', e);
         setLoading(false);
       }
-    }
-
-    return () => {
-      isMounted = false; // cleanup
-    };
-  };
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      const permissionGranted = await checkPermission();
-      setIsAuthorized(permissionGranted);
-
-      if (permissionGranted) {
-        console.log('Permission granted');
-      } else {
-        console.log('Permission not granted');
-      }
-    };
-
-    checkAuth();
-  }, []);
-
-  const addTheItem = async () => {
-    try {
-    } catch (e) {
-      e;
-    }
-  };
-
-  const assignValues = async () => {
-    if (_id) {
-      updateItem();
     } else {
-      addTheItem();
+      Alert.alert('Input Required', 'Please select a pet type.');
     }
+
+    return null;
   };
+
+  console.log('====================================');
+
+  // console.log('taste: ', taste);
+  // console.log('row: ', row);
+  // console.log('categoryState: ', categoryState);
+  console.log('====================================');
 
   const findRowAndCategory = useCallback(() => {
     let matchedCategory = '';
@@ -432,6 +156,11 @@ const EditProduct = props => {
   );
 
   const petTypes = () => {
+    const pets = [
+      {name: 'cat', id: 1},
+      {name: 'dog', id: 2},
+    ];
+
     const togglePetType = pet => {
       setPetTypeState(prevState => {
         if (prevState.includes(pet)) {
@@ -549,24 +278,22 @@ const EditProduct = props => {
             'numeric',
           )}
         </View>
-        <View>
-          <Text style={styles.txt}>{strings.sale}</Text>
-          <View style={styles.sale}>
-            {handleInput(
-              strings.amount,
-              saleAmountState,
-              setSaleAmountState,
-              'numeric',
-            )}
-            <Text style={styles.txt}>=</Text>
-            {handleInput(
-              strings.Price + strings.priceTag,
-              salePriceState,
-              setSalePriceState,
-              'numeric',
-            )}
-          </View>
+
+        <View style={styles.row}>
+          {handleInput(
+            'Sale Amount',
+            saleAmountState,
+            setSaleAmountState,
+            'numeric',
+          )}
+          {handleInput(
+            'Sale Price',
+            salePriceState,
+            setSalePriceState,
+            'numeric',
+          )}
         </View>
+
         <SearchKeys
           searchKeysArray={searchKeysState}
           setSearchKeysArray={setSearchKeysState}
@@ -597,12 +324,10 @@ const EditProduct = props => {
   return (
     <ScrollView style={styles.scrollView}>
       <View style={styles.container}>
-        <Text style={styles.header}>{strings.editProduct}</Text>
-
-        {image()}
+        <Text style={styles.header}>Edit Product</Text>
+        <Image source={img} style={styles.img} />
         {inputs()}
-        <CustomAlert message={errorMessage} />
-        <PermissionRequestModal />
+
         {loading ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="#0000ff" />
@@ -623,87 +348,6 @@ const EditProduct = props => {
 export default EditProduct;
 
 const styles = StyleSheet.create({
-  sale: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    borderWidth: 1,
-    borderColor: 'red',
-    borderRadius: 30,
-    backgroundColor: 'white',
-
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-
-  modalBackground: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Dim background
-  },
-  modalContainer: {
-    width: '80%',
-    backgroundColor: 'white',
-    borderRadius: 10,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5, // Android shadow
-  },
-  modalTitle: {
-    color: 'black',
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 15,
-    textAlign: 'center',
-  },
-  modalMessage: {
-    fontSize: 16,
-    marginBottom: 20,
-    textAlign: 'center',
-    color: '#333',
-  },
-  modalButton: {
-    backgroundColor: '#2196F3',
-    borderRadius: 5,
-    padding: 10,
-    elevation: 2, // For shadow effect on Android
-  },
-  modalButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-    fontSize: 16,
-  },
-  rowItem: {
-    padding: 10,
-    margin: 5,
-    borderRadius: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#ccc',
-  },
-  selectedRow: {
-    borderColor: 'green',
-  },
-  notSelectedRow: {
-    backgroundColor: 'white',
-    borderColor: 'gray',
-  },
-  rowText: {
-    fontSize: 16,
-    color: 'black',
-  },
   icon: {
     width: 20,
     height: 20,
