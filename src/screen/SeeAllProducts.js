@@ -20,7 +20,7 @@ const SeeAllProducts = ({ route }) => {
 export default SeeAllProducts;
 
 const styles = StyleSheet.create({
-  
+
   container: {
     flex: 1,
     paddingVertical: 20,

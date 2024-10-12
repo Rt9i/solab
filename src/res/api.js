@@ -22,13 +22,13 @@ export const getUserProfile = async userId => {
 };
 
 export const updateUserProducts = async (userId, cart) => {
-  if (!userId) return console.error('User ID is undefined');
+  if (!userId) {return console.error('User ID is undefined');}
 
   // Clean the cart to ensure proper formatting
   const cleanCart = cart.map(item => ({
     ...item,
     productId: item.productId || item.id,
-    img: typeof item.img === 'string' ? item.img : item.img?.uri  // Ensure img is correctly formatted
+    img: typeof item.img === 'string' ? item.img : item.img?.uri,  // Ensure img is correctly formatted
   }));
 
   const payload = {
@@ -129,7 +129,7 @@ export const createUser = async (userName, phoneNumber, password) => {
 };
 
 
-// to add new items to the data base 
+// to add new items to the data base
 export const saveProductsToDatabase = async data => {
   try {
     // Map through the data to add the productId field
@@ -199,7 +199,7 @@ export const getItemInDataBase = async (_id) => {
 
     return item; // Return the item
   } catch (e) {
-    console.error("Error fetching item:", e);
+    console.error('Error fetching item:', e);
     throw e; // Rethrow to allow handling by the caller
   }
 };
@@ -214,18 +214,18 @@ export const setItemInDataBase = async (id, newItemData) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id, newItemData }), 
+      body: JSON.stringify({ id, newItemData }),
     });
 
     const updatedItem = await response.json();
-    
+
     if (!response.ok) {
       throw new Error(`Failed to update item: ${updatedItem.error || 'Unknown error'}`); // Provide more context
     }
 
     return updatedItem; // Return the updated item
   } catch (e) {
-    console.error("Error updating item:", e.message); // Log the error message
+    console.error('Error updating item:', e.message); // Log the error message
     throw e; // Rethrow the error
   }
 };

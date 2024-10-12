@@ -17,7 +17,7 @@ const SearchKeys = ({searchKeysArray, setSearchKeysArray}) => {
       setSearchKeysArray([...searchKeysArray, searchKeyInput.trim()]);
       setSearchKeyInput(''); // Clear input
     }
-  };    
+  };
   // Remove search key
   const handleRemoveSearchKey = keyToRemove => {
     setSearchKeysArray(searchKeysArray.filter(key => key !== keyToRemove));

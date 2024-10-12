@@ -76,7 +76,7 @@ export default CartItems;
 
 const styles = StyleSheet.create({
   Xtouch: {
-    height: 50
+    height: 50,
 
   },
   xtxt: {
@@ -254,4 +254,4 @@ const styles = StyleSheet.create({
     width: 100,
     height: 160,
   },
-})
+});

@@ -1,6 +1,6 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { useNavigation } from '@react-navigation/native'
+import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { useNavigation } from '@react-navigation/native';
 const dogsStoreItems = props => {
   const { brand, name, price } = props;
 
@@ -12,10 +12,10 @@ const dogsStoreItems = props => {
     <View>
       <Text>StoreItems</Text>
     </View>
-  )
-}
+  );
+};
 
 
-export default dogsStoreItems
+export default dogsStoreItems;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});

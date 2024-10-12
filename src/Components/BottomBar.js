@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     height: 30,
   },
   bottomBar: {
-    
+
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',

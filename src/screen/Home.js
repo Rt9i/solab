@@ -7,10 +7,10 @@ import SolabContext from '../store/solabContext';
 
 const Home = props => {
   const {setSelectedIcons} = useContext(SolabContext);
-  
+
   // Function to navigate and set selectedIcons
   const navigateStore = value => {
-    setSelectedIcons(value); 
+    setSelectedIcons(value);
     props.navigation.navigate(ScreenNames.catsStore);
   };
 

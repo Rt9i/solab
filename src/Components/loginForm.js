@@ -33,7 +33,7 @@ const LoginForm = () => {
   const {saveUser, clearAsyncStorage} = useContext(SolabContext);
 
   const handleLogin = async () => {
-    if (loading) return; 
+    if (loading) {return;}
     setErrors({});
     if (!phoneNumber || !password) {
       setErrors({
@@ -47,11 +47,11 @@ const LoginForm = () => {
       return;
     }
     setLoading(true);
-    
+
     try {
       const response = await logIn(phoneNumber, password);
       console.log('Login response:', response);
-  
+
       if (response.auth && response.user) {
         await clearAsyncStorage();
         await saveUser(response.user);
@@ -66,17 +66,17 @@ const LoginForm = () => {
       setLoading(false);
     }
   };
-  
+
 
   const handleRegister = async () => {
     setErrors({});
     setLoading(true);
-  
+
     try {
       // Sending the actual registration request to createUser
       const response = await createUser(userName, phoneNumber, password);
       console.log('CreateUser response:', response);
-  
+
       if (response.user) {
         Alert.alert(
           'Success',

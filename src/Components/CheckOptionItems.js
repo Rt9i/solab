@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList, ScrollView, Alert } from 'react-native';
 import getCategoryItemsData from '../res/Data';
-import BouncyCheckbox from "react-native-bouncy-checkbox";
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import SolabContext from '../store/solabContext';
 import strings from '../res/strings';
 import { useNavigation } from '@react-navigation/native';
@@ -16,7 +16,7 @@ const CheckOptionItems = ({
 
     const { brands, setBrands } = useContext(SolabContext);
     const navigation = useNavigation();
-  
+
     const brandsInData = () => {
         const filteredBrands = getCategoryItemsData.filter(item => item.category.includes(selectedCategory));
         return new Set(filteredBrands.map(item => item.brand));
@@ -32,32 +32,32 @@ const CheckOptionItems = ({
         mappedBrands.unshift({ brand: 'All', check: true });
         setOptionsVisible(false);
         setBrands(mappedBrands);
-    }
+    };
 
     useEffect(() => {
         const unsubscribeFocus = navigation.addListener('focus', () => {
-           onFocuseHandler()
+           onFocuseHandler();
         });
-    
+
         const unsubscribeBlur = navigation.addListener('blur', () => {
-            setOptionsVisible(false); 
+            setOptionsVisible(false);
         });
-    
+
         return () => {
             unsubscribeFocus();
             unsubscribeBlur();
         };
     }, [navigation, selectedCategory]);
 
-    
+
     const selectedBrandsOnCategory = () => {
         const brandsArray = [...brandsInData()];
 
-        return setSelectedBrands(brandsArray)
-    }
+        return setSelectedBrands(brandsArray);
+    };
     useEffect(() => {
-        selectedBrandsOnCategory()
-    }, [selectedCategory, allSelected])
+        selectedBrandsOnCategory();
+    }, [selectedCategory, allSelected]);
 
     const checkedItems = () => {
         const brandsArray = [...brandsInData()];
@@ -109,9 +109,9 @@ const CheckOptionItems = ({
                 text={brand.brand}
                 isChecked={brand.check}
                 fillColor="black"
-                onPress={(val) => onCheckBoxPress(val, index)} />
+                onPress={(val) => onCheckBoxPress(val, index)} />;
 
-        })
+        });
     };
 
     const handleToggleOptions = () => {
@@ -119,14 +119,14 @@ const CheckOptionItems = ({
     };
 
     useEffect(() => {
-        setBrands(checkedItems())
+        setBrands(checkedItems());
 
-    }, [selectedCategory])
+    }, [selectedCategory]);
 
     useEffect(() => {
-        getFilteredItems()
-        brandsInData()
-    }, [selectedCategory])
+        getFilteredItems();
+        brandsInData();
+    }, [selectedCategory]);
     return (
         <View style={styles.checkcontainer}>
             <TouchableOpacity onPress={handleToggleOptions} activeOpacity={0.8}>
@@ -140,7 +140,7 @@ const CheckOptionItems = ({
 
         </View>
     );
-}
+};
 
 
 
@@ -201,4 +201,4 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         zIndex: 1,
     },
-})
+});

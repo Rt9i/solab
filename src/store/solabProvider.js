@@ -50,8 +50,8 @@ const SolabProvider = ({children}) => {
       {rows: 'eigthRow', id: 8},
       {rows: 'ninthRow', id: 9},
       {rows: 'tenthRow', id: 10},
-    ]
-    
+    ];
+
 
   const cat = [
     {Food: 'food'},
@@ -85,7 +85,7 @@ const SolabProvider = ({children}) => {
   const getFilteredItemsForRow = useMemo(
     () => rowValue => {
       const isSearchActive = search.length > 0;
-  
+
       const filteredItems = data.filter(item => {
         const matchesSearch = isSearchActive
           ? search.some(keyword =>
@@ -94,27 +94,27 @@ const SolabProvider = ({children}) => {
               )
             )
           : true;
-  
+
         const matchesCategory = !isSearchActive && selectedCategory
           ? item.category?.includes(selectedCategory)
-          : true;  
-  
+          : true;
+
         const matchesRowValue = rowValue
           ? item.category.includes(rowValue)
           : true;
-  
+
         const matchesPetType = selectedIcons.length
           ? item.petType?.some(pet => selectedIcons.includes(pet))
           : true;
-  
+
         return matchesSearch && matchesCategory && matchesRowValue && matchesPetType;
       });
-  
-      return filteredItems; 
+
+      return filteredItems;
     },
     [search, selectedCategory, selectedIcons, data],
   );
-  
+
 
   useEffect(() => {
     // console.log('====================================');
@@ -251,20 +251,20 @@ const SolabProvider = ({children}) => {
   const addItemToCart = useCallback(
     (item) => {
       console.log('====================================');
-      console.log("Item ID:", item._id); // Log the item's ID
+      console.log('Item ID:', item._id); // Log the item's ID
       console.log('====================================');
-  
+
       // Ensure the item has an _id
       if (!item._id) {
-        console.error("Item is missing an _id");
+        console.error('Item is missing an _id');
         return; // Prevent adding an invalid item
       }
-  
+
       const updatedCart = [...cart];
-  
+
       // Find the existing item by _id
       const existingItemIndex = updatedCart.findIndex(cartItem => cartItem._id === item._id);
-  
+
       // Update the quantity if it exists, otherwise add the item
       if (existingItemIndex !== -1) {
         updatedCart[existingItemIndex].quantity += item.quantity || 1; // Use item.quantity or default to 1
@@ -272,14 +272,14 @@ const SolabProvider = ({children}) => {
         updatedCart.push({ ...item, quantity: item.quantity || 1 }); // Add the item with a quantity
         setIsItemAdded(true); // Set flag to indicate an item was added
       }
-  
+
       setCart(updatedCart); // Update the cart state
     },
     [cart] // Dependency array
   );
-  
-  
-  
+
+
+
 
   const checkRemoveItem = useCallback(itemId => {
     Alert.alert('Remove Item', 'Are you sure you want to remove this item?', [
@@ -310,11 +310,11 @@ const SolabProvider = ({children}) => {
         cartItem => cartItem._id === itemId // Change to use _id
       );
       const updatedCart = [...cart];
-  
+
       // Check if the item exists in the cart
       if (existingItemIndex !== -1) {
         const existingItem = updatedCart[existingItemIndex];
-  
+
         // If quantity is 1, confirm removal
         if (existingItem.quantity === 1) {
           Alert.alert(
@@ -335,14 +335,14 @@ const SolabProvider = ({children}) => {
           // Decrease the quantity of the existing item
           updatedCart[existingItemIndex].quantity--;
         }
-  
+
         // Update the cart state
         setCart(updatedCart);
       }
     },
     [cart] // Dependency array
   );
-  
+
   const saveUserProducts = fetchedItems => {
     setCart(prevCart => {
       const newItems = fetchedItems.map(item => ({

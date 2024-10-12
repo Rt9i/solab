@@ -325,6 +325,7 @@ const EditProduct = props => {
     <ScrollView style={styles.scrollView}>
       <View style={styles.container}>
         <Text style={styles.header}>Edit Product</Text>
+
         <Image source={img} style={styles.img} />
         {inputs()}
 

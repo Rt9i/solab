@@ -1,6 +1,6 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import BouncyCheckbox from "react-native-bouncy-checkbox";
+import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
 const CheckBox = (props) => {
 
 
@@ -8,11 +8,11 @@ const CheckBox = (props) => {
 
         <BouncyCheckbox text={props.text} onPress={(val) => props.onCheckBoxChange?.(val)} />
 
-    )
-}
+    );
+};
 
-export default CheckBox
+export default CheckBox;
 
 const styles = StyleSheet.create({
 
-}) 
+});

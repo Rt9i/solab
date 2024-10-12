@@ -7,7 +7,7 @@ import SolabContext from '../store/solabContext';
 
 const DisplayItem = ({ setDisplayMode, displayMode }) => {
   const { strings, changeLanguage } = useContext(SolabContext);
-  
+
   const setDisplay = () => {
     const updatedMode = displayMode === 'row' ? 'column' : 'row';
     setDisplayMode(updatedMode);

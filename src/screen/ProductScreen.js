@@ -35,7 +35,7 @@ const ProductScreen = ({ route }) => {
     <View style={styles.container}>
       <LinearGradient colors={['#ffffff', '#f0f0f0', '#e0e0e0']} style={styles.gradient}>
         <Image
-          source={isValidUrl(product.img) ? { uri: product.img } : product.img} 
+          source={isValidUrl(product.img) ? { uri: product.img } : product.img}
           style={styles.image}
         />
         <View style={styles.inputContainer}>

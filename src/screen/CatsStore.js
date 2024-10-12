@@ -26,7 +26,7 @@ const CatsStore = props => {
     data,
     getFilteredItemsForRow,
     cat,
-    rows
+    rows,
   } = useContext(SolabContext);
   const scrollY = useRef(new Animated.Value(0)).current;
   const [showScrollUp, setShowScrollUp] = useState(false);

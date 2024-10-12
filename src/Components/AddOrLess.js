@@ -1,17 +1,17 @@
-import { StyleSheet, Text, Touchable, TouchableOpacity, View, Image } from 'react-native'
-import React, { useContext, useEffect, useState } from 'react'
+import { StyleSheet, Text, Touchable, TouchableOpacity, View, Image } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
 import SolabContext from '../store/solabContext';
 
 const AddOrLess = ({ itemId, Item, quantity }) => {
     const { checkRemoveItem, removeItemFromCart, addItem, cart } = useContext(SolabContext);
- 
+
 
 
     const getItemFromCart = () => {
-        const itemFromCart = cart.find(item => item.id == itemId)
+        const itemFromCart = cart.find(item => item.id == itemId);
 
-        return itemFromCart?.quantity
-    }
+        return itemFromCart?.quantity;
+    };
 
 
 
@@ -47,7 +47,7 @@ const AddOrLess = ({ itemId, Item, quantity }) => {
 };
 
 
-export default AddOrLess
+export default AddOrLess;
 
 const styles = StyleSheet.create({
     plusMinusInput: {
