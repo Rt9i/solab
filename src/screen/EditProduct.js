@@ -133,7 +133,7 @@ const EditProduct = props => {
   // };
 
   const onAccept = async () => {
-    Linking.openSettings()
+    Linking.openSettings();
   };
 
   const onCancel = () => {
@@ -266,7 +266,9 @@ const EditProduct = props => {
 
   const assignValues = async () => {
     const {missingFields, newItemData} = validateAndCreateItemData();
+    console.log('assign');
 
+    // Check for missing fields
     if (missingFields.length > 0) {
       const newErrorMessage = `${strings.fillthefield}: ${missingFields.join(', ')}`;
       if (errorMessage !== newErrorMessage) {
@@ -278,20 +280,23 @@ const EditProduct = props => {
 
     try {
       setLoading(true);
+
       const item = await getItemInDataBase(_id);
-
       const updatedItem = await setItemInDataBase(_id, newItemData);
-      const result = await getDataFromDataBase();
 
-      if (isMountedRef.current) {
-        setData(result);
-      }
+      const result = await getDataFromDataBase();
+      setData(result);
+
+      console.log('Data set successfully, navigating back');
+      nav.goBack();
     } catch (e) {
+      // Log the error and display an error message
       console.error('Error updating item:', e);
+      setErrorMessage('Failed to update item.');
+      setShowModal(true);
     } finally {
-      if (isMountedRef.current) {
-        setLoading(false);
-      }
+      // End loading
+      setLoading(false);
     }
   };
 
@@ -499,34 +504,30 @@ const EditProduct = props => {
     </View>
   );
   const requestGalleryPermission = async () => {
-    const permissions = [
-      PermissionsAndroid.PERMISSIONS.CAMERA,
-      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-    ];
-
-    const results = await Promise.all(
-      permissions.map(permission =>
-        PermissionsAndroid.request(permission, {
-          title: `${permission} Permission`,
-          message: `This app needs access to your ${permission.toLowerCase()}.`,
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        {
+          title: 'Storage Permission',
+          message: 'This app needs access to your storage to open the gallery.',
           buttonPositive: 'OK',
-        }),
-      ),
-    );
-
-    return results.every(
-      result => result === PermissionsAndroid.RESULTS.GRANTED,
-    );
+        },
+      );
+      return granted === PermissionsAndroid.RESULTS.GRANTED;
+    } catch (err) {
+      console.warn(err);
+      return false;
+    }
   };
 
   // Use this function to request permissions where needed
 
   const handleImagePress = async () => {
     setShowreqModal(true);
-  
+
     try {
       const permissionGranted = await requestGalleryPermission();
-      
+
       if (permissionGranted) {
         // If permission is granted, open the gallery
         openGallery();
@@ -536,11 +537,8 @@ const EditProduct = props => {
       }
     } catch (error) {
       console.error('Error requesting permission:', error);
-   
     }
   };
-  
-  
 
   const image = () => {
     return (
