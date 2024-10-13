@@ -20,7 +20,7 @@ const enStrings = {
   name: 'name',
   price: 'price',
   brand: 'brand',
-  
+
   addToCart: 'Add to cart',
   enterNumber: 'Enter number',
   catsStore: 'Cat',
@@ -45,6 +45,7 @@ const enStrings = {
   perfume: 'Perfume',
   bowl: 'Bowl',
   clearCart: 'Clear cart',
+  image: 'image',
 };
 
 const heStrings = {
@@ -94,6 +95,7 @@ const heStrings = {
   price: 'מחיר',
   amount: 'כמות',
   amountError: 'הכמות גבוהה מהמחיר',
+  image: 'תמונה',
 };
 
 const arStrings = {
@@ -144,6 +146,7 @@ const arStrings = {
   category: 'فئة',
   fillthefield: 'يرجى ملء الصفات التالية',
   amount: 'كميه',
+  image: 'صوره',
 };
 
 export {enStrings, heStrings, arStrings};

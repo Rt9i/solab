@@ -36,7 +36,7 @@ export const updateUserProducts = async (userId, cart) => {
     updated: { products: cleanCart },  // Send cleanCart instead of cart
   };
 
-  console.log('Payload being sent to server:', JSON.stringify(payload));
+  // console.log('Payload being sent to server:', JSON.stringify(payload));
 
   try {
     const response = await fetch(`${mainURL}/updateUserProducts/${userId}`, {
@@ -50,7 +50,7 @@ export const updateUserProducts = async (userId, cart) => {
     if (!response.ok) {
       console.error('Failed to update cart on server:', result.errorMessage || result);
     } else {
-      console.log('Cart updated on server successfully');
+      // console.log('Cart updated on server successfully');
     }
   } catch (e) {
     console.error('Error occurred:', e.message || e);
@@ -72,7 +72,7 @@ export const getUserProducts = async userId => {
     }
 
     // Log the products that we received
-    console.log('Fetched user products:', response.products);
+    // console.log('Fetched user products:', response.products);
 
     return response.products; // Return the products array
   } catch (error) {

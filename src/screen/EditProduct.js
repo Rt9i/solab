@@ -9,6 +9,9 @@ import {
   Alert,
   ActivityIndicator,
   FlatList,
+  Modal,
+  Linking,
+  PermissionsAndroid,
 } from 'react-native';
 import React, {
   useContext,
@@ -25,6 +28,7 @@ import Images from '../assets/images/images';
 import {
   getDataFromDataBase,
   getItemInDataBase,
+  saveProductsToDatabase,
   setItemInDataBase,
 } from '../res/api';
 import {useNavigation} from '@react-navigation/native';
@@ -59,6 +63,9 @@ const EditProduct = props => {
   const [searchKeysState, setSearchKeysState] = useState(searchKeys);
   const [petTypeState, setPetTypeState] = useState(petType);
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [showreqModal, setShowreqModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const [row, setRow] = useState('');
   const [selectedRow, setSelectedRow] = useState('');
   const [loading, setLoading] = useState(false);
@@ -66,40 +73,226 @@ const EditProduct = props => {
   const goback = () => {
     nav.goBack();
   };
-  const assignValues = async () => {
-    console.log('ID:', _id);
-    if (petTypeState.length > 0) {
+  const openGallery = async () => {
+    const result = await launchImageLibrary(options);
+    console.log('Response = ', result);
+
+    if (result.didCancel) {
+      console.log('User cancelled image picker');
+    } else if (result.error) {
+      console.log('ImagePicker Error: ', result.error);
+    } else {
+      const source = {uri: result.assets[0].uri};
+      setSelectedImage(source.uri);
+    }
+  };
+  const checkPermission = async () => {
+    const granted = await PermissionsAndroid.check(
+      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+    );
+    return granted;
+  };
+  // const requestGalleryPermission = async () => {
+  //   try {
+  //     const cameraGranted = await PermissionsAndroid.request(
+  //       PermissionsAndroid.PERMISSIONS.CAMERA,
+  //       {
+  //         title: 'Camera Permission',
+  //         message: 'This app needs access to your camera to take pictures.',
+  //         buttonNeutral: 'Ask Me Later',
+  //         buttonNegative: 'Cancel',
+  //         buttonPositive: 'OK',
+  //       },
+  //     );
+
+  //     const storageGranted = await PermissionsAndroid.request(
+  //       PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+  //       {
+  //         title: 'Storage Permission',
+  //         message: 'This app needs access to your storage to open the gallery.',
+  //         buttonNeutral: 'Ask Me Later',
+  //         buttonNegative: 'Cancel',
+  //         buttonPositive: 'OK',
+  //       },
+  //     );
+
+  //     if (
+  //       cameraGranted === PermissionsAndroid.RESULTS.GRANTED &&
+  //       storageGranted === PermissionsAndroid.RESULTS.GRANTED
+  //     ) {
+  //       console.log('Camera and storage permissions granted');
+  //       return true; // All permissions granted
+  //     } else {
+  //       console.log('Camera or storage permission denied');
+  //       return false; // At least one permission denied
+  //     }
+  //   } catch (err) {
+  //     console.warn(err);
+  //     return false; // Handle error
+  //   }
+  // };
+
+  const onAccept = async () => {
+    Linking.openSettings()
+  };
+
+  const onCancel = () => {
+    setShowreqModal(false);
+  };
+  const PermissionRequestModal = () => {
+    return (
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={showreqModal}
+        onRequestClose={onCancel}>
+        <View style={styles.modalBackground}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalMessage}>
+              Can we have permission to get to your gallery?
+            </Text>
+
+            <View style={styles.row}>
+              <TouchableOpacity
+                style={styles.modalButton}
+                onPress={
+                  () => onAccept()
+                  // Linking.openSettings()
+                }>
+                <Text style={styles.modalButtonText}>Accept</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.modalButton}
+                onPress={() => onCancel()}>
+                <Text style={styles.modalButtonText}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+    );
+  };
+
+  const CustomAlert = ({message}) => (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={showModal}
+      onRequestClose={() => setShowModal(false)}>
+      <View style={styles.modalBackground}>
+        <View style={styles.modalContainer}>
+          <Text style={styles.modalTitle}>Input Required</Text>
+          <Text style={styles.modalMessage}>{message}</Text>
+          <TouchableOpacity
+            style={styles.modalButton}
+            onPress={() => setShowModal(false)}>
+            <Text style={styles.modalButtonText}>Close</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
+  );
+
+  const validateAndCreateItemData = () => {
+    let missingFields = [];
+    if (img == Images.photo()) missingFields.push(strings.image);
+    if (!brandState) missingFields.push(strings.brand);
+    if (!priceState) missingFields.push(strings.Price);
+    if (!selectedCategory) missingFields.push(strings.category);
+    if (!row) missingFields.push(strings.row);
+    if (petTypeState.length === 0) missingFields.push(strings.petType);
+
+    return {
+      missingFields,
+      newItemData: {
+        brand: brandState,
+        name: nameState,
+        taste: tasteState,
+        price: priceState,
+        img: img.uri,
+        category: [selectedCategory, row],
+        kg: kgState,
+        saleAmount: saleAmountState,
+        salePrice: salePriceState,
+        searchKeys: searchKeysState,
+        petType: petTypeState,
+        availableStock: 0,
+      },
+    };
+  };
+
+  const addItem = async () => {
+    let isMounted = true;
+
+    if (isMounted) {
+      const {missingFields, newItemData} = validateAndCreateItemData();
+
+      if (parseFloat(saleAmountState) > parseFloat(salePriceState)) {
+        setErrorMessage(strings.amountError);
+        setShowModal(true);
+        return;
+      }
+
+      if (missingFields.length > 0) {
+        setErrorMessage(`${strings.fillthefield}: ${missingFields.join(', ')}`);
+        setShowModal(true);
+        return;
+      }
+
       try {
         setLoading(true);
-        const item = await getItemInDataBase(_id);
-        const newItemData = {
-          brand: brandState,
-          name: nameState,
-          taste: tasteState,
-          price: priceState,
-          img: img.uri,
-          category: [selectedCategory, row],
-          kg: kgState,
-          saleAmount: saleAmountState,
-          salePrice: salePriceState,
-          searchKeys: searchKeysState,
-          petType: petTypeState,
-        };
-        const updatedItem = await setItemInDataBase(_id, newItemData);
-        const result = await getDataFromDataBase();
+        const response = await saveProductsToDatabase({items: [newItemData]});
 
-        setLoading(false);
-        setData(result);
-        goback();
+        if (response && response.data) {
+          console.log('Products saved successfully:', response.data.products);
+          const result = await getDataFromDataBase();
+          setData(result);
+          goback();
+        }
       } catch (e) {
-        console.error('Error updating item:', e);
+        console.error('Error adding item:', e);
+        setErrorMessage('Failed to add item.');
+        setShowModal(true);
+      } finally {
         setLoading(false);
       }
-    } else {
-      Alert.alert('Input Required', 'Please select a pet type.');
     }
 
-    return null;
+    return () => {
+      isMounted = false; // Cleanup
+    };
+  };
+
+  const assignValues = async () => {
+    const {missingFields, newItemData} = validateAndCreateItemData();
+
+    if (missingFields.length > 0) {
+      const newErrorMessage = `${strings.fillthefield}: ${missingFields.join(', ')}`;
+      if (errorMessage !== newErrorMessage) {
+        setErrorMessage(newErrorMessage);
+        setShowModal(true);
+      }
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const item = await getItemInDataBase(_id);
+
+      const updatedItem = await setItemInDataBase(_id, newItemData);
+      const result = await getDataFromDataBase();
+
+      if (isMountedRef.current) {
+        setData(result);
+      }
+    } catch (e) {
+      console.error('Error updating item:', e);
+    } finally {
+      if (isMountedRef.current) {
+        setLoading(false);
+      }
+    }
   };
 
   console.log('====================================');
@@ -305,13 +498,50 @@ const EditProduct = props => {
       </View>
     </View>
   );
-  const handleImagePress = () => {
-    if (isAuthorized) {
-      openGallery();
-    } else {
-      setShowreqModal(true);
+  const requestGalleryPermission = async () => {
+    const permissions = [
+      PermissionsAndroid.PERMISSIONS.CAMERA,
+      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+    ];
+
+    const results = await Promise.all(
+      permissions.map(permission =>
+        PermissionsAndroid.request(permission, {
+          title: `${permission} Permission`,
+          message: `This app needs access to your ${permission.toLowerCase()}.`,
+          buttonPositive: 'OK',
+        }),
+      ),
+    );
+
+    return results.every(
+      result => result === PermissionsAndroid.RESULTS.GRANTED,
+    );
+  };
+
+  // Use this function to request permissions where needed
+
+  const handleImagePress = async () => {
+    setShowreqModal(true);
+  
+    try {
+      const permissionGranted = await requestGalleryPermission();
+      
+      if (permissionGranted) {
+        // If permission is granted, open the gallery
+        openGallery();
+      } else {
+        // Handle the case where permission is denied
+        console.log('Permission denied!');
+      }
+    } catch (error) {
+      console.error('Error requesting permission:', error);
+   
     }
   };
+  
+  
+
   const image = () => {
     return (
       <TouchableOpacity onPress={() => handleImagePress()}>
@@ -327,9 +557,10 @@ const EditProduct = props => {
       <View style={styles.container}>
         <Text style={styles.header}>Edit Product</Text>
 
-        <Image source={img} style={styles.img} />
+        {image()}
         {inputs()}
-
+        <PermissionRequestModal />
+        <CustomAlert message={errorMessage} />
         {loading ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="#0000ff" />
@@ -338,7 +569,7 @@ const EditProduct = props => {
         ) : (
           <TouchableOpacity
             style={styles.savechanges}
-            onPress={() => assignValues()}>
+            onPress={() => (_id ? assignValues() : addItem())}>
             <Text style={styles.txt}>{strings.saveChanges}</Text>
           </TouchableOpacity>
         )}
@@ -471,7 +702,6 @@ const styles = StyleSheet.create({
   label: {
     color: '#000',
     fontWeight: 'bold',
-
   },
   savechanges: {
     backgroundColor: 'lightblue',
