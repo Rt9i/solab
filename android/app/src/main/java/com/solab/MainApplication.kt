@@ -45,6 +45,7 @@ class MainApplication : Application(), ReactApplication {
     }
     ReactNativeFlipper.initializeFlipper(this, reactNativeHost.reactInstanceManager)
     ApplicationLifecycleDispatcher.onApplicationCreate(this)
+    
   }
 
   override fun onConfigurationChanged(newConfig: Configuration) {

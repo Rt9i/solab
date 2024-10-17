@@ -12,6 +12,7 @@ import {
   Modal,
   Linking,
   PermissionsAndroid,
+  Platform,
 } from 'react-native';
 import React, {
   useContext,
@@ -73,7 +74,80 @@ const EditProduct = props => {
   const goback = () => {
     nav.goBack();
   };
+
+  const options = {
+    mediaType: 'photo',
+    quality: 1,
+  };
+
+  const checkGalleryPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+      );
+      return granted; // Return true if permission is already granted
+    } catch (err) {
+      console.warn(err);
+      return false; // Return false in case of an error
+    }
+  };
+  const showPermissionDeniedAlert = () => {
+    Alert.alert(
+      'Permission Denied',
+      'You need to give storage permission to use this feature. Please enable it in app settings.',
+      [
+        {text: 'Cancel', style: 'cancel'},
+        {
+          text: 'Go to Settings',
+          onPress: () => {
+            // Redirect to app settings
+            Linking.openSettings();
+          },
+        },
+      ],
+      {cancelable: false},
+    );
+  };
+
+  
+  async function requestStoragePermissions() {
+    try {
+      if (Platform.OS === 'android') {
+        const granted = await PermissionsAndroid.requestMultiple([
+          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        ]);
+
+        if (
+          granted['android.permission.READ_EXTERNAL_STORAGE'] ===
+            PermissionsAndroid.RESULTS.GRANTED &&
+          granted['android.permission.WRITE_EXTERNAL_STORAGE'] ===
+            PermissionsAndroid.RESULTS.GRANTED
+        ) {
+          console.log('You can access external storage');
+        } else {
+          console.log('Permission got denied');
+        }
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  }
+
+  useEffect(() => {
+    requestStoragePermissions();
+  }, []);
   const openGallery = async () => {
+    const permissionGranted = await requestStoragePermissions();
+
+    if (!permissionGranted) {
+      Alert.alert(
+        'Permission denied',
+        'You need to enable storage permissions.',
+      );
+      return; // Exit the function if permission is not granted
+    }
+
     const result = await launchImageLibrary(options);
     console.log('Response = ', result);
 
@@ -86,51 +160,6 @@ const EditProduct = props => {
       setSelectedImage(source.uri);
     }
   };
-  const checkPermission = async () => {
-    const granted = await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-    );
-    return granted;
-  };
-  // const requestGalleryPermission = async () => {
-  //   try {
-  //     const cameraGranted = await PermissionsAndroid.request(
-  //       PermissionsAndroid.PERMISSIONS.CAMERA,
-  //       {
-  //         title: 'Camera Permission',
-  //         message: 'This app needs access to your camera to take pictures.',
-  //         buttonNeutral: 'Ask Me Later',
-  //         buttonNegative: 'Cancel',
-  //         buttonPositive: 'OK',
-  //       },
-  //     );
-
-  //     const storageGranted = await PermissionsAndroid.request(
-  //       PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-  //       {
-  //         title: 'Storage Permission',
-  //         message: 'This app needs access to your storage to open the gallery.',
-  //         buttonNeutral: 'Ask Me Later',
-  //         buttonNegative: 'Cancel',
-  //         buttonPositive: 'OK',
-  //       },
-  //     );
-
-  //     if (
-  //       cameraGranted === PermissionsAndroid.RESULTS.GRANTED &&
-  //       storageGranted === PermissionsAndroid.RESULTS.GRANTED
-  //     ) {
-  //       console.log('Camera and storage permissions granted');
-  //       return true; // All permissions granted
-  //     } else {
-  //       console.log('Camera or storage permission denied');
-  //       return false; // At least one permission denied
-  //     }
-  //   } catch (err) {
-  //     console.warn(err);
-  //     return false; // Handle error
-  //   }
-  // };
 
   const onAccept = async () => {
     Linking.openSettings();
@@ -139,6 +168,7 @@ const EditProduct = props => {
   const onCancel = () => {
     setShowreqModal(false);
   };
+
   const PermissionRequestModal = () => {
     return (
       <Modal
@@ -503,30 +533,12 @@ const EditProduct = props => {
       </View>
     </View>
   );
-  const requestGalleryPermission = async () => {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-        {
-          title: 'Storage Permission',
-          message: 'This app needs access to your storage to open the gallery.',
-          buttonPositive: 'OK',
-        },
-      );
-      return granted === PermissionsAndroid.RESULTS.GRANTED;
-    } catch (err) {
-      console.warn(err);
-      return false;
-    }
-  };
-
-  // Use this function to request permissions where needed
 
   const handleImagePress = async () => {
     setShowreqModal(true);
 
     try {
-      const permissionGranted = await requestGalleryPermission();
+      const permissionGranted = await requestStoragePermissions();
 
       if (permissionGranted) {
         // If permission is granted, open the gallery

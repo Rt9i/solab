@@ -1,4 +1,4 @@
-import {Button, StyleSheet, Text, View} from 'react-native';
+import {Button, PermissionsAndroid, StyleSheet, Text, View} from 'react-native';
 import React, {useContext} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import ScreenNames from '../../routes/ScreenNames';
@@ -15,6 +15,7 @@ const StaffHome = props => {
   const navEditProducts = () => {
     props.navigation.navigate(ScreenNames.editProduct);
   };
+
   return (
     <View>
       <Text>StaffHome</Text>

@@ -1,5 +1,5 @@
-import React, { useEffect, useContext, useState, useCallback } from 'react';
-import { StyleSheet, View, ActivityIndicator } from 'react-native';
+import React, {useEffect, useContext, useState, useCallback} from 'react';
+import {StyleSheet, View, ActivityIndicator} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MainNavigation from './routes/nav';
 import SolabProvider from './src/store/solabProvider';
@@ -7,7 +7,7 @@ import SolabContext from './src/store/solabContext';
 import ScreenNames from './routes/ScreenNames';
 
 const AppContent = () => {
-  const { saveUser } = useContext(SolabContext);
+  const {saveUser} = useContext(SolabContext);
   const [initialRoute, setInitialRoute] = useState<string | null>(null);
 
   const checkAuth = useCallback(async () => {

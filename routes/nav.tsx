@@ -13,21 +13,23 @@ import ProductScreen from '../src/screen/ProductScreen';
 import SeeAllProducts from '../src/screen/SeeAllProducts';
 import ScreenNames from './ScreenNames';
 import WorkersHome from '../src/screen/WorkersHome';
-import staffHome from '../src/screen/StaffHome';
+import StaffHome from '../src/screen/StaffHome';
 import EditProduct from '../src/screen/EditProduct';
 
-
-
+// Define prop types for MainNavigation
+interface MainNavigationProps {
+  initialRouteName: string; // You can change the type if needed (e.g., string literal for allowed routes)
+}
 
 const Stack = createNativeStackNavigator();
 
-const MainNavigation = ({initialRouteName}) => {
+const MainNavigation: React.FC<MainNavigationProps> = ({initialRouteName}) => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName={initialRouteName}>
-      <Stack.Screen name={ScreenNames.editProduct} component={EditProduct} />
-      <Stack.Screen name={ScreenNames.StaffHome} component={staffHome} />
-      <Stack.Screen name={ScreenNames.workerHome} component={WorkersHome} />
+        <Stack.Screen name={ScreenNames.editProduct} component={EditProduct} />
+        <Stack.Screen name={ScreenNames.StaffHome} component={StaffHome} />
+        <Stack.Screen name={ScreenNames.workerHome} component={WorkersHome} />
         <Stack.Screen
           name={ScreenNames.login}
           component={Login}
@@ -38,8 +40,6 @@ const MainNavigation = ({initialRouteName}) => {
           component={Splash}
           options={{headerShown: false}}
         />
-
-
         <Stack.Screen
           name={ScreenNames.home}
           component={Home}
