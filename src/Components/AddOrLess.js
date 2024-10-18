@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     },
     minus: {
 
-        fontFamily: 'bigFont',
+        // fontFamily: 'bigFont',
         fontSize: 25,
         alignContent: 'center',
         backgroundColor: 'red',
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         borderTopLeftRadius: 10,
         borderBottomLeftRadius: 10,
-        fontFamily: 'bigFont',
+        // fontFamily: 'bigFont',
         fontSize: 25,
         alignContent: 'center',
         backgroundColor: 'green',
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
         height: 40,
     },
     dis: {
-        fontFamily: 'bigFont',
+        // fontFamily: 'bigFont',
         fontSize: 10,
         width: 180,
     },
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'grey',
         textAlignVertical: 'center',
         backgroundColor: 'grey',
-        fontFamily: 'bigFont',
+        // fontFamily: 'bigFont',
         borderWidth: 1,
         color: 'black',
     },

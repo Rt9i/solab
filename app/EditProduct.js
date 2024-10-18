@@ -21,21 +21,22 @@ import React, {
   useState,
   useCallback,
 } from 'react';
-import Sizes from '../res/sizes';
-import CatsBarItems from '../Components/CatsBarItems';
-import SolabContext from '../store/solabContext';
-import SearchKeys from '../Components/SearchKeys';
-import Images from '../assets/images/images';
+import Sizes from '../src/res/sizes';
+import CatsBarItems from '../src/Components/CatsBarItems';
+import SolabContext from '../src/store/solabContext';
+import SearchKeys from '../src/Components/SearchKeys';
+import Images from '@/src/assets/images/images';
 import {
   getDataFromDataBase,
   getItemInDataBase,
   saveProductsToDatabase,
   setItemInDataBase,
-} from '../res/api';
-import {useNavigation} from '@react-navigation/native';
+} from '../src/res/api';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {launchImageLibrary} from 'react-native-image-picker';
 
-const EditProduct = props => {
+const EditProduct = () => {
+  const route = useRoute(); // Use the hook to get the route
   const {
     brand = '',
     name = '',
@@ -49,7 +50,7 @@ const EditProduct = props => {
     salePrice = 0,
     searchKeys = [],
     _id,
-  } = props.route.params || {};
+  } = route.params || {}; // Get params from the route
 
   const {strings, setData, cat, rows, pets} = useContext(SolabContext);
 

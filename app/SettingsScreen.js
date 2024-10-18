@@ -8,11 +8,11 @@ import {
   Platform,
   UIManager,
 } from 'react-native';
-import SolabContext from '../store/solabContext';
+import SolabContext from '../src/store/solabContext';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Images from '../assets/images/images';
-import ScreenNames from '../../routes/ScreenNames';
+import Images from '../src/assets/images/images';
+import ScreenNames from '../routes/ScreenNames';
 
 if (Platform.OS === 'android') {
   UIManager.setLayoutAnimationEnabledExperimental(true);

@@ -1,15 +1,76 @@
+// app/_layout.tsx
+import React, {useEffect, useContext, useState, useCallback} from 'react';
+import {StyleSheet, View, ActivityIndicator} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {DarkTheme, DefaultTheme, ThemeProvider} from '@react-navigation/native';
-import {useFonts} from 'expo-font';
 import {Stack} from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import {useEffect} from 'react';
-
-import Animated from 'react-native-reanimated';
-
+import {useFonts} from 'expo-font';
 import {useColorScheme} from '@/hooks/useColorScheme';
+import SolabProvider from '../src/store/solabProvider';
+import SolabContext from '../src/store/solabContext';
+import ScreenNames from '../routes/ScreenNames';
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
+
+function AppContent() {
+  const {saveUser} = useContext(SolabContext);
+  const [initialRoute, setInitialRoute] = useState<string | null>(null);
+
+  const checkAuth = useCallback(async () => {
+    try {
+      const savedUser = await AsyncStorage.getItem('user');
+      if (savedUser) {
+        saveUser(JSON.parse(savedUser));
+        setInitialRoute('splash'); // Redirect to splash if authenticated
+      } else {
+        setInitialRoute('login'); // Redirect to login if not authenticated
+      }
+    } catch (error) {
+      console.log('Failed to load user from storage:', error);
+      setInitialRoute('login'); // Fallback to login on error
+    }
+  }, [saveUser]);
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  if (initialRoute === null) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="#007bff" />
+      </View>
+    );
+  }
+
+  return (
+    <Stack initialRouteName={initialRoute}>
+      <Stack.Screen name="Login" options={{headerShown: false}} />
+      <Stack.Screen name="Splash" options={{headerShown: false}} />
+      <Stack.Screen name="Home" options={{headerShown: false}} />
+      <Stack.Screen name="StaffHome" />
+      <Stack.Screen name="WorkersHome" />
+      <Stack.Screen name="EditProduct" />
+      <Stack.Screen name="SettingsScreen" />
+      <Stack.Screen name="Cart" />
+      <Stack.Screen name="Profile" />
+      <Stack.Screen name="CatsStore" options={{headerShown: false}} />
+      <Stack.Screen
+        name="ProductScreen"
+        options={{
+          headerTitle: '',
+          headerStyle: {backgroundColor: 'white'},
+          headerTintColor: '#000000',
+          headerTitleAlign: 'center',
+        }}
+      />
+      <Stack.Screen name="SeeAllProducts" />
+      <Stack.Screen name="index" />
+      <Stack.Screen name="+not-found" />
+    </Stack>
+  );
+}
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -28,12 +89,19 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="index" />
-        <Stack.Screen name="home" />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </ThemeProvider>
+    <SolabProvider>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <AppContent />
+      </ThemeProvider>
+    </SolabProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f8f9fa',
+  },
+});

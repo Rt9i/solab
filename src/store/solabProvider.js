@@ -30,6 +30,7 @@ const SolabProvider = ({children}) => {
   const [data, setData] = useState([]);
   console.log('User:', user);
 
+
   const translations = {
     en: enStrings,
     he: heStrings,

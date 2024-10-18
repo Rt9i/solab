@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import SolabContext from '../store/solabContext';
+import SolabContext from '../src/store/solabContext';
 import LinearGradient from 'react-native-linear-gradient';
 
 const ProductScreen = ({ route }) => {

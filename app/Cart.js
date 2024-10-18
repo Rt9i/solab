@@ -10,10 +10,10 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import SolabContext from '../store/solabContext';
-import CartRowItems from '../Components/CartRowItems';
-import Images from '../assets/images/images';
-import {updateUserProducts} from '../res/api';
+import SolabContext from '../src/store/solabContext';
+import CartRowItems from '../src/Components/CartRowItems';
+import Images from '../src/assets/images/images';
+import {updateUserProducts} from '../src/res/api';
 
 const Cart = props => {
   const {strings, user} = useContext(SolabContext);
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
   emptyText: {
     textAlign: 'center',
     color: 'white',
-    fontFamily: 'PassionOne-Bold',
+    // fontFamily: 'PassionOne-Bold',
     fontSize: 40,
     opacity: 0.2,
     width: 250,

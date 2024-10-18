@@ -1,18 +1,18 @@
 import React, {useContext, useState, useRef, useMemo} from 'react';
 import {View, StyleSheet, ScrollView, Animated, Image} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import TopBar from '../Components/topBar';
-import SolabContext from '../store/solabContext';
-import RowContainer from '../Components/RowContainer';
-import BottomBar from '../Components/BottomBar';
-import ScrollUp from '../Components/scrollUp';
-import CatsBarItems from '../Components/CatsBarItems';
-import Swipe from '../Components/Swipe';
-import CatsStoreItems from '../Components/CatsStoreItems';
-import Sizes from '../res/sizes';
+import { LinearGradient } from 'expo-linear-gradient';
+import TopBar from '../src/Components/topBar';
+import SolabContext from '../src/store/solabContext';
+import RowContainer from '../src/Components/RowContainer';
+import BottomBar from '../src/Components/BottomBar';
+import ScrollUp from '../src/Components/scrollUp';
+import CatsBarItems from '../src/Components/CatsBarItems';
+import Swipe from '../src/Components/Swipe';
+import CatsStoreItems from '../src/Components/CatsStoreItems';
+import Sizes from '../src/res/sizes';
 import {useNavigation} from '@react-navigation/native';
 
-import Images from '../assets/images/images';
+import Images from '../src/assets/images/images';
 
 const CatsStore = props => {
   const navigation = useNavigation();

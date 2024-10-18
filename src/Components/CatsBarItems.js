@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
   },
   categoryText: {
     color: 'black',
-    fontFamily: 'smallFont',
+    // fontFamily: 'smallFont',
     backgroundColor: '#84a1d2',
     fontSize: 12,
     height: 20,

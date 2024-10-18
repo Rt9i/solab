@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 import {View, Text, StyleSheet, Image, FlatList} from 'react-native';
-import SolabContext from '../store/solabContext';
-import Images from '../assets/images/images';
+import SolabContext from '../src/store/solabContext';
+import Images from '../src/assets/images/images';
 
 const ProfileScreen = () => {
   const {user} = useContext(SolabContext);

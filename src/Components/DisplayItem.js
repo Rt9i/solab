@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   displaytxt: {
-    fontFamily: 'bigFont',
+    // fontFamily: 'bigFont',
     color: 'white',
     textAlign: 'center',
     textShadowColor: 'black',
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
 
   smalltxt: {
     fontSize: 6,
-    fontFamily: 'smallFont',
+    // fontFamily: 'smallFont',
   },
   columnbox1: {
     flexDirection: 'row',

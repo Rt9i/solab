@@ -79,14 +79,14 @@ const styles = StyleSheet.create({
   seeAllText: {
     padding: 2,
     borderWidth: 0.3,
-    fontFamily: 'smallFont',
+    // fontFamily: 'smallFont',
     justifyContent: 'center',
     textAlign: 'center',
     borderRadius: 10,
     color: 'black',
   },
   headerText: {
-    fontFamily: 'bigFont',
+    // fontFamily: 'bigFont',
     textAlign: 'center',
     borderWidth: 1,
     borderRadius: 10,

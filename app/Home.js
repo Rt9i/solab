@@ -1,17 +1,18 @@
 import React, {useContext} from 'react';
 import {TouchableOpacity, Image, StyleSheet, Text, View} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import Images from '../assets/images/images';
-import ScreenNames from '../../routes/ScreenNames';
-import SolabContext from '../store/solabContext';
+import {useNavigation, useRouter} from 'expo-router'; // Import useRouter from expo-router
+import Images from '../src/assets/images/images';
+import SolabContext from '../src/store/solabContext';
+import {LinearGradient} from 'expo-linear-gradient';
 
-const Home = props => {
+const Home = () => {
+  const router = useRouter(); // Initialize the router
   const {setSelectedIcons} = useContext(SolabContext);
-
+  const nav = useNavigation();
   // Function to navigate and set selectedIcons
   const navigateStore = value => {
     setSelectedIcons(value);
-    props.navigation.navigate(ScreenNames.catsStore);
+    nav.navigate('CatsStore'); // Use router.push() for navigation
   };
 
   // Function to render each food item

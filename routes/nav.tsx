@@ -2,19 +2,19 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import Splash from '../src/screen/Splash';
-import Login from '../src/screen/Login';
+import Splash from '../app/Splash';
+import Login from '../app/Login';
 import Home from '../src/screen/Home';
-import SettingsScreen from '../src/screen/SettingsScreen';
-import Cart from '../src/screen/Cart';
-import Profile from '../src/screen/Profile';
-import CatsStore from '../src/screen/CatsStore';
-import ProductScreen from '../src/screen/ProductScreen';
-import SeeAllProducts from '../src/screen/SeeAllProducts';
+import SettingsScreen from '../app/SettingsScreen';
+import Cart from '../app/Cart';
+import Profile from '../app/Profile';
+import CatsStore from '../app/CatsStore';
+import ProductScreen from '../app/ProductScreen';
+import SeeAllProducts from '../app/SeeAllProducts';
 import ScreenNames from './ScreenNames';
-import WorkersHome from '../src/screen/WorkersHome';
-import StaffHome from '../src/screen/StaffHome';
-import EditProduct from '../src/screen/EditProduct';
+import WorkersHome from '../app/WorkersHome';
+import StaffHome from '../app/StaffHome';
+import EditProduct from '../app/EditProduct';
 
 // Define prop types for MainNavigation
 interface MainNavigationProps {

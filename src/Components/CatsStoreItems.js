@@ -52,7 +52,7 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
 
   const onCardPress = () => {
     const Item = {...props};
-    navigation.navigate(ScreenNames.ProductScreen, {data: Item});
+    navigation.navigate('ProductScreen', {data: Item});
   };
 
   // const addToShop = () => {
@@ -60,7 +60,7 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
   //   addItem(Item, Item.productId);
   // };
   const handleEditProducts = () => {
-    navigation.navigate(ScreenNames.editProduct, props);
+    navigation.navigate('EditProduct', props);
   };
 
   return (
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 12,
     textAlign: 'center',
-    fontFamily: 'bigFont',
+    // fontFamily: 'bigFont',
     transform: [{rotate: '-45deg'}],
   },
   row: {
@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
   bottomtxt1: {
     fontSize: 10,
     textAlignVertical: 'center',
-    fontFamily: 'bigFont',
+    // fontFamily: 'bigFont',
     color: 'black',
   },
   priceContainer: {
@@ -235,13 +235,13 @@ const styles = StyleSheet.create({
   bottomtxt2: {
     fontSize: 12,
     textAlignVertical: 'center',
-    fontFamily: 'bigFont',
+    // fontFamily: 'bigFont',
     color: 'black',
   },
   bottomtxt4: {
     fontSize: 12,
     textAlignVertical: 'center',
-    fontFamily: 'bigFont',
+    // fontFamily: 'bigFont',
     color: 'black',
     marginLeft: 5,
   },

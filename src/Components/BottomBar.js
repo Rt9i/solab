@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 12,
     marginTop: 2,
-    fontFamily: 'bigFont',
+    // fontFamily: 'bigFont',
   },
 });
 
