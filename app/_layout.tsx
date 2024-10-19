@@ -1,6 +1,6 @@
 // app/_layout.tsx
 import React, {useEffect, useContext, useState, useCallback} from 'react';
-import {StyleSheet, View, ActivityIndicator} from 'react-native';
+import {StyleSheet, View, ActivityIndicator, Text} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {DarkTheme, DefaultTheme, ThemeProvider} from '@react-navigation/native';
 import {Stack} from 'expo-router';
@@ -36,16 +36,8 @@ function AppContent() {
     checkAuth();
   }, [checkAuth]);
 
-  if (initialRoute === null) {
-    return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color="#007bff" />
-      </View>
-    );
-  }
-
   return (
-    <Stack initialRouteName={initialRoute}>
+    <Stack>
       <Stack.Screen name="Login" options={{headerShown: false}} />
       <Stack.Screen name="Splash" options={{headerShown: false}} />
       <Stack.Screen name="Home" options={{headerShown: false}} />
@@ -100,8 +92,7 @@ export default function RootLayout() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+
     backgroundColor: '#f8f9fa',
   },
 });

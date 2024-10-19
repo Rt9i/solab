@@ -1,18 +1,32 @@
 // app/index.tsx
-import { Button, StyleSheet, Text, View, ActivityIndicator } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import {
+  Button,
+  StyleSheet,
+  Text,
+  View,
+  ActivityIndicator,
+  Image,
+  ScrollView,
+} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
 
-import SolabContext from "../src/store/solabContext";
-import { getUserByID, getUserProducts, getDataFromDataBase } from "../src/res/api";
-import { useRouter } from "expo-router";
+import SolabContext from '../src/store/solabContext';
+import {
+  getUserByID,
+  getUserProducts,
+  getDataFromDataBase,
+} from '../src/res/api';
+import {useRouter} from 'expo-router';
+import Images from '@/src/assets/images/images';
+import Sizes from '@/src/res/sizes';
 
 const Index = () => {
   const nav = useRouter();
-  const { setUser, saveUserProducts, setData } = useContext(SolabContext);
+  const {setUser, saveUserProducts, setData} = useContext(SolabContext);
   const currentUserId = useContext(SolabContext).user?._id;
-  const [loading, setLoading] = useState(true); // State to manage loading
-
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
+    setLoading(true);
     const fetchData = async () => {
       try {
         const result = await getDataFromDataBase();
@@ -41,7 +55,6 @@ const Index = () => {
         const response = await getUserProducts(currentUserId);
         saveUserProducts(response);
 
-        // Navigate based on user role
         switch (newUser.role) {
           case 'client':
             nav.replace('Home'); // Navigate to Home if client
@@ -72,20 +85,19 @@ const Index = () => {
     }
   }, [currentUserId]);
 
-  // Show loading indicator while processing
-  if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#007bff" />
-      </View>
-    );
-  }
-
   // If the user is not authenticated, show the index view
   return (
     <View style={styles.container}>
-
-      <Button title="Go to Splash" onPress={() => nav.replace('Splash')} />
+      <View style={styles.loadingContainer}>
+        <Image source={Images.whiteLogo()} style={styles.image} />
+        {loading && (
+          <ActivityIndicator
+            size="large"
+            color="#007bff"
+            style={styles.loader}
+          />
+        )}
+      </View>
     </View>
   );
 };
@@ -95,14 +107,20 @@ export default Index;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
+  },
+  loadingContainer: {
     alignItems: 'center',
     justifyContent: 'center',
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'white',
+  image: {
+    width: 400,
+    height: 400,
+    resizeMode: 'contain',
+  },
+  loader: {
+    marginTop: 20,
   },
 });
