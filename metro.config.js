@@ -1,7 +1,7 @@
 const { getDefaultConfig } = require('expo/metro-config');
 const { mergeConfig } = require('@react-native/metro-config');
 
-// Set the EXPO_ROUTER_APP_ROOT environment variable to point to your 'app' folder
+
 process.env.EXPO_ROUTER_APP_ROOT = "app";
 
 const config = {

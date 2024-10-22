@@ -1,6 +1,15 @@
 import React, {useContext, useState, useRef, useMemo} from 'react';
-import {View, StyleSheet, ScrollView, Animated, Image} from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Animated,
+  Image,
+  SafeAreaView,
+  StatusBar,
+  Platform,
+} from 'react-native';
+import {LinearGradient} from 'expo-linear-gradient';
 import TopBar from '../src/Components/topBar';
 import SolabContext from '../src/store/solabContext';
 import RowContainer from '../src/Components/RowContainer';
@@ -73,60 +82,73 @@ const CatsStore = props => {
     scrollViewRef.current.scrollTo({x: 0, y: 0, animated: true});
   };
 
-
-
   return (
-    <LinearGradient
-      colors={['#6CCAFF', '#6CCAFF', '#004C99']}
-      locations={[0, 0.1, 1]}
-      style={styles.container}>
-      <TopBar />
-      <ScrollView
-        style={styles.scroll}
-        contentContainerStyle={{minHeight: Sizes.screenHeight}}
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
-        ref={scrollViewRef}>
-        <View style={styles.sale}>
-          <Swipe />
-        </View>
+    <SafeAreaView style={styles.safeArea}>
+      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
+      <LinearGradient
+        colors={['#6CCAFF', '#6CCAFF', '#004C99']}
+        locations={[0, 0.1, 1]}
+        style={styles.container}>
+        <TopBar />
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={{minHeight: Sizes.screenHeight}}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
+          ref={scrollViewRef}>
+          <View style={styles.sale}>
+            <Swipe />
+          </View>
 
-        <View style={styles.catsBarItemsContainer}>
-          <CatsBarItems
-            style={styles.CatsBarItems}
-            selectedCategory={selectedCategory}
-            setSelectedCategory={onCategoryPress}
-            Array={cat}
-          />
-        </View>
-
-        {rows.map(row => {
-          const filteredItems = getFilteredItemsForRow(row.rows);
-          // console.log('Row ID:', row.id, 'Filtered Items:', filteredItems);
-
-          return (
-            <RowContainer
-              key={row.id}
-              row={row}
-              items={filteredItems}
-              renderItem={renderItem}
+          <View style={styles.catsBarItemsContainer}>
+            <CatsBarItems
+              style={styles.CatsBarItems}
               selectedCategory={selectedCategory}
+              setSelectedCategory={onCategoryPress}
+              Array={cat}
             />
-          );
-        })}
-      </ScrollView>
+          </View>
 
-      <BottomBar />
-      {showScrollUp && (
-        <ScrollUp scrollViewRef={scrollViewRef} onPress={handleScrollUpPress} />
-      )}
-    </LinearGradient>
+          {rows.map(row => {
+            const filteredItems = getFilteredItemsForRow(row.rows);
+            // console.log('Row ID:', row.id, 'Filtered Items:', filteredItems);
+
+            return (
+              <RowContainer
+                key={row.id}
+                row={row}
+                items={filteredItems}
+                renderItem={renderItem}
+                selectedCategory={selectedCategory}
+              />
+            );
+          })}
+        </ScrollView>
+
+        <BottomBar />
+        {showScrollUp && (
+          <ScrollUp
+            scrollViewRef={scrollViewRef}
+            onPress={handleScrollUpPress}
+          />
+        )}
+      </LinearGradient>
+    </SafeAreaView>
   );
 };
 
 export default CatsStore;
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#fff',
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0, 
+  },
+  gradient: {
+    flex: 1,
+    padding: 16,
+  },
   container: {
     flex: 1,
     backgroundColor: '#6CCAFF',

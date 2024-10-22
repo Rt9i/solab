@@ -13,6 +13,7 @@ import {
   Linking,
   PermissionsAndroid,
   Platform,
+  Button,
 } from 'react-native';
 import React, {
   useContext,
@@ -29,11 +30,14 @@ import Images from '@/src/assets/images/images';
 import {
   getDataFromDataBase,
   getItemInDataBase,
+  removeItemFromDatabase,
   saveProductsToDatabase,
   setItemInDataBase,
 } from '../src/res/api';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {launchImageLibrary} from 'react-native-image-picker';
+import * as MediaLibrary from 'expo-media-library';
+import * as ImagePicker from 'expo-image-picker';
 
 const EditProduct = () => {
   const route = useRoute(); // Use the hook to get the route
@@ -46,13 +50,14 @@ const EditProduct = () => {
     category = [],
     kg = 0,
     petType = [],
-    saleAmount = 0,
-    salePrice = 0,
+    saleAmount = null,
+    salePrice = null,
     searchKeys = [],
     _id,
   } = route.params || {}; // Get params from the route
 
   const {strings, setData, cat, rows, pets} = useContext(SolabContext);
+console.log(_id);
 
   const [brandState, setBrandState] = useState(brand);
   const [nameState, setNameState] = useState(name);
@@ -71,97 +76,92 @@ const EditProduct = () => {
   const [row, setRow] = useState('');
   const [selectedRow, setSelectedRow] = useState('');
   const [loading, setLoading] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
   const nav = useNavigation();
   const goback = () => {
     nav.goBack();
   };
-
-  const options = {
-    mediaType: 'photo',
-    quality: 1,
-  };
-
-  const checkGalleryPermission = async () => {
-    try {
-      const granted = await PermissionsAndroid.check(
-        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-      );
-      return granted; // Return true if permission is already granted
-    } catch (err) {
-      console.warn(err);
-      return false; // Return false in case of an error
+  const getFileTypeFromUri = uri => {
+    const extension = uri.split('.').pop(); // Get the last part after the last dot
+    switch (extension) {
+      case 'jpg':
+      case 'jpeg':
+        return 'image/jpeg';
+      case 'png':
+        return 'image/png';
+      case 'gif':
+        return 'image/gif';
+      case 'bmp':
+        return 'image/bmp';
+      // Add more cases as needed for other file types
+      default:
+        return 'application/octet-stream'; // Fallback for unknown types
     }
   };
-  const showPermissionDeniedAlert = () => {
-    Alert.alert(
-      'Permission Denied',
-      'You need to give storage permission to use this feature. Please enable it in app settings.',
-      [
-        {text: 'Cancel', style: 'cancel'},
+
+  const uploadImage = async imageUri => {
+    const data = new FormData();
+
+    const mimeType = getFileTypeFromUri(selectedImage);
+
+    data.append('file', {
+      uri: imageUri,
+      type: mimeType, // Use the detected MIME type
+      name: 'my_image' + Date.now() + '.' + mimeType.split('/')[1], // Create a unique name
+    });
+    data.append('upload_preset', 'ml_default'); // Your Cloudinary upload preset
+
+    try {
+      const response = await fetch(
+        'https://api.cloudinary.com/v1_1/dzzazhwjk/image/upload',
         {
-          text: 'Go to Settings',
-          onPress: () => {
-            // Redirect to app settings
-            Linking.openSettings();
-          },
+          method: 'POST',
+          body: data,
         },
-      ],
-      {cancelable: false},
-    );
+      );
+
+      const jsonResponse = await response.json();
+
+      if (response.ok) {
+        console.log('Uploaded image URL:', jsonResponse.secure_url);
+        return jsonResponse.secure_url; // Return the uploaded image URL
+      } else {
+        console.error('Upload failed:', jsonResponse.error.message);
+      }
+    } catch (error) {
+      console.error('Upload failed:', error);
+    }
   };
 
-  
-  async function requestStoragePermissions() {
-    try {
-      if (Platform.OS === 'android') {
-        const granted = await PermissionsAndroid.requestMultiple([
-          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-        ]);
+  const requestMediaPermissions = async () => {
+    const {status} = await MediaLibrary.requestPermissionsAsync();
+    return status; // Return the status directly
+  };
 
-        if (
-          granted['android.permission.READ_EXTERNAL_STORAGE'] ===
-            PermissionsAndroid.RESULTS.GRANTED &&
-          granted['android.permission.WRITE_EXTERNAL_STORAGE'] ===
-            PermissionsAndroid.RESULTS.GRANTED
-        ) {
-          console.log('You can access external storage');
-        } else {
-          console.log('Permission got denied');
-        }
-      }
-    } catch (err) {
-      console.warn(err);
-    }
-  }
-
-  useEffect(() => {
-    requestStoragePermissions();
-  }, []);
   const openGallery = async () => {
-    const permissionGranted = await requestStoragePermissions();
+    // Define options for the image picker
+    const options = {
+      mediaTypes: ImagePicker.MediaTypeOptions.Images, // Limit to images only
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    };
 
-    if (!permissionGranted) {
-      Alert.alert(
-        'Permission denied',
-        'You need to enable storage permissions.',
-      );
-      return; // Exit the function if permission is not granted
-    }
-
-    const result = await launchImageLibrary(options);
+    // Launch the image library
+    const result = await ImagePicker.launchImageLibraryAsync(options);
     console.log('Response = ', result);
 
-    if (result.didCancel) {
+    if (result.canceled) {
       console.log('User cancelled image picker');
-    } else if (result.error) {
-      console.log('ImagePicker Error: ', result.error);
-    } else {
+    } else if (result.assets) {
       const source = {uri: result.assets[0].uri};
       setSelectedImage(source.uri);
+      console.log('Selected image: ', source.uri);
+    } else {
+      console.log('ImagePicker Error: ', result.error);
     }
   };
-
   const onAccept = async () => {
     Linking.openSettings();
   };
@@ -205,31 +205,40 @@ const EditProduct = () => {
     );
   };
 
-  const CustomAlert = ({message}) => (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={showModal}
-      onRequestClose={() => setShowModal(false)}>
-      <View style={styles.modalBackground}>
-        <View style={styles.modalContainer}>
-          <Text style={styles.modalTitle}>Input Required</Text>
-          <Text style={styles.modalMessage}>{message}</Text>
-          <TouchableOpacity
-            style={styles.modalButton}
-            onPress={() => setShowModal(false)}>
-            <Text style={styles.modalButtonText}>Close</Text>
-          </TouchableOpacity>
+  const CustomAlert = ({message}) => {
+    console.log('message is: ', message);
+
+    return (
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={showModal}
+        onRequestClose={() => setShowModal(false)}>
+        <View style={styles.modalBackground}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>Input Required</Text>
+            <Text style={styles.modalMessage}>{message}</Text>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => setShowModal(false)}>
+              <Text style={styles.modalButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    </Modal>
-  );
+      </Modal>
+    );
+  };
 
   const validateAndCreateItemData = () => {
     let missingFields = [];
-    if (img == Images.photo()) missingFields.push(strings.image);
+
+    // Check for each required field
+    if (selectedImage == null && img === Images.photo()) {
+      console.log('selected img: ', selectedImage);
+      missingFields.push(strings.image);
+    }
     if (!brandState) missingFields.push(strings.brand);
-    if (!priceState) missingFields.push(strings.Price);
+    if (!priceState) missingFields.push(strings.price);
     if (!selectedCategory) missingFields.push(strings.category);
     if (!row) missingFields.push(strings.row);
     if (petTypeState.length === 0) missingFields.push(strings.petType);
@@ -241,7 +250,7 @@ const EditProduct = () => {
         name: nameState,
         taste: tasteState,
         price: priceState,
-        img: img.uri,
+        img: selectedImage || img.uri,
         category: [selectedCategory, row],
         kg: kgState,
         saleAmount: saleAmountState,
@@ -253,65 +262,137 @@ const EditProduct = () => {
     };
   };
 
+  // const addItem = async () => {
+  //   let isMounted = true;
+
+  //   if (isMounted) {
+  //     const {missingFields, newItemData} = validateAndCreateItemData();
+
+  //     // Check for price validation
+  //     if (parseFloat(saleAmountState) > parseFloat(salePriceState)) {
+  //       setErrorMessage(strings.amountError);
+  //       setShowModal(true);
+  //       return;
+  //     }
+
+  //     // Check for missing fields
+  //     if (missingFields.length > 0) {
+  //       setErrorMessage(`${strings.fillthefield}: ${missingFields.join(', ')}`);
+  //       setShowModal(true);
+  //       return;
+  //     }
+
+  //     try {
+  //       setLoading(true);
+
+  //       // Upload the image and get the URL
+  //       const imageUrl = await uploadImage(selectedImage);
+
+  //       // Update newItemData with the uploaded image URL
+  //       const updatedNewItemData = {
+  //         ...newItemData,
+  //         img: imageUrl, // Use the uploaded image URL
+  //       };
+
+  //       console.log('Updated New Item Data:', updatedNewItemData); // Log to check
+
+  //       // Save the product to the database with the updated item data
+  //       const response = await saveProductsToDatabase({
+  //         items: [updatedNewItemData], // Make sure you're sending an array of items
+  //       });
+
+  //       console.log('Response from saveProductsToDatabase:', response); // Log the response
+
+  //       if (response && response.data) {
+  //         console.log('Products saved successfully:', response.data.products);
+  //         const result = await getDataFromDataBase();
+  //         setData(result);
+  //         goback();
+  //       }
+  //     } catch (e) {
+  //       console.error('Error adding item:', e);
+  //       setErrorMessage('Failed to add item.');
+  //       setShowModal(true);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   }
+
+  //   return () => {
+  //     isMounted = false; // Cleanup
+  //   };
+  // };
   const addItem = async () => {
-    let isMounted = true;
-
-    if (isMounted) {
-      const {missingFields, newItemData} = validateAndCreateItemData();
-
-      if (parseFloat(saleAmountState) > parseFloat(salePriceState)) {
-        setErrorMessage(strings.amountError);
-        setShowModal(true);
-        return;
-      }
-
-      if (missingFields.length > 0) {
-        setErrorMessage(`${strings.fillthefield}: ${missingFields.join(', ')}`);
-        setShowModal(true);
-        return;
-      }
-
-      try {
-        setLoading(true);
-        const response = await saveProductsToDatabase({items: [newItemData]});
-
-        if (response && response.data) {
-          console.log('Products saved successfully:', response.data.products);
-          const result = await getDataFromDataBase();
-          setData(result);
-          goback();
-        }
-      } catch (e) {
-        console.error('Error adding item:', e);
-        setErrorMessage('Failed to add item.');
-        setShowModal(true);
-      } finally {
-        setLoading(false);
-      }
+    const {missingFields, newItemData} = validateAndCreateItemData();
+    if (parseFloat(saleAmountState) > parseFloat(salePriceState)) {
+      setErrorMessage(strings.amountError);
+      setShowModal(true);
+      return;
     }
 
-    return () => {
-      isMounted = false; // Cleanup
-    };
+    // Check for missing fields
+    if (missingFields.length > 0) {
+      setErrorMessage(`${strings.fillthefield}: ${missingFields.join(', ')}`);
+      setShowModal(true);
+      return;
+    }
+    try {
+      setLoading(true);
+      const imageUrl = await uploadImage(selectedImage);
+
+      const updatedNewItemData = {
+        ...newItemData,
+        img: imageUrl,
+      };
+
+      console.log('Updated New Item Data:', updatedNewItemData); // Log to check
+
+      const response = await saveProductsToDatabase([updatedNewItemData]); // Ensure it's an array
+
+      console.log('Response from saveProductsToDatabase:', response); // Log the response
+
+      if (response) {
+        console.log('Products saved successfully:', response.products);
+
+        setData(result);
+        goback();
+      }
+      const result = await getDataFromDataBase();
+    } catch (e) {
+      console.error('Error adding item:', e);
+      setErrorMessage('Failed to add item.');
+      setShowModal(true);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const assignValues = async () => {
     const {missingFields, newItemData} = validateAndCreateItemData();
-    console.log('assign');
 
-    // Check for missing fields
+    console.log('Assigning Values:', newItemData);
+    setShowModal(true);
+
+    // Check for sale amount and price
+    if (parseFloat(saleAmountState) > parseFloat(salePriceState)) {
+      setErrorMessage(strings.amountError);
+      setShowModal(true);
+      return;
+    }
+
+    // Handle missing fields
     if (missingFields.length > 0) {
       const newErrorMessage = `${strings.fillthefield}: ${missingFields.join(', ')}`;
+      // Update the error message only if it has changed
       if (errorMessage !== newErrorMessage) {
         setErrorMessage(newErrorMessage);
         setShowModal(true);
       }
-      return;
+      return; // Exit early if there are missing fields
     }
 
     try {
       setLoading(true);
-
       const item = await getItemInDataBase(_id);
       const updatedItem = await setItemInDataBase(_id, newItemData);
 
@@ -331,12 +412,12 @@ const EditProduct = () => {
     }
   };
 
-  console.log('====================================');
+  // console.log('====================================');
 
   // console.log('taste: ', taste);
   // console.log('row: ', row);
   // console.log('categoryState: ', categoryState);
-  console.log('====================================');
+  // console.log('====================================');
 
   const findRowAndCategory = useCallback(() => {
     let matchedCategory = '';
@@ -462,7 +543,7 @@ const EditProduct = () => {
               </TouchableOpacity>
             );
           }}
-          keyExtractor={item => item.id.toString()}
+          keyExtractor={item => item._id}
           horizontal={true}
         />
         <Text style={styles.selectedPetsText}>
@@ -534,42 +615,122 @@ const EditProduct = () => {
       </View>
     </View>
   );
-
   const handleImagePress = async () => {
-    setShowreqModal(true);
+    console.log('Image pressed');
 
     try {
-      const permissionGranted = await requestStoragePermissions();
+      const permissionGranted = await requestMediaPermissions();
+      console.log('Permission status: ', permissionGranted);
 
-      if (permissionGranted) {
+      if (permissionGranted === 'granted') {
         // If permission is granted, open the gallery
         openGallery();
       } else {
-        // Handle the case where permission is denied
+        // If permission is denied
+        setShowreqModal(true); // Show your request modal
         console.log('Permission denied!');
       }
     } catch (error) {
       console.error('Error requesting permission:', error);
     }
   };
-
   const image = () => {
     return (
       <TouchableOpacity onPress={() => handleImagePress()}>
         <View>
-          <Image source={img} style={styles.img} />
+          {selectedImage ? (
+            <Image source={{uri: selectedImage}} style={styles.img} />
+          ) : (
+            <Image source={img} style={styles.img} />
+          )}
         </View>
       </TouchableOpacity>
     );
   };
+  const testing = async () => {
+    const testData = {
+      availableStock: 0,
+      brand: 'Test Brand',
+      category: ['meat', 'secondRow'],
+      img: 'https://res.cloudinary.com/dzzazhwjk/image/upload/v1729631392/my_image1729631390831_gsu81g.jpg',
+      kg: 0,
+      name: 'Test Name',
+      petType: ['cat'],
+      price: 16,
+      saleAmount: 0,
+      salePrice: 0,
+      searchKeys: [],
+      taste: 'Test Taste',
+    };
 
+    try {
+      const response = await saveProductsToDatabase({items: [testData]});
+      console.log('Response from saving test data:', response);
+    } catch (error) {
+      console.error('Error response: ', error);
+    }
+  };
+
+  const handleDel = () => {
+    // Show the modal when the delete action is triggered
+    setModalVisible(true);
+  };
+
+  const confirmDelete = async () => {
+    try {
+      const deleting = await removeItemFromDatabase(_id);
+      console.log('Product deleted');
+    } catch (e) {}
+
+    setModalVisible(false); // Close the modal
+  };
+
+  const cancelDelete = () => {
+    setModalVisible(false); // Close the modal without deleting
+  };
+  const deleteModal = () => {
+    return (
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={cancelDelete} // Close modal on back button press
+      >
+        <View style={styles.modalBackground}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalMessage}>{strings.delMessage}</Text>
+
+            <View style={styles.row}>
+              <TouchableOpacity
+                style={styles.modalButton}
+                onPress={confirmDelete}>
+                <Text style={styles.modalButtonText}>Yes</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.modalButton}
+                onPress={cancelDelete}>
+                <Text style={styles.modalButtonText}>No</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+    );
+  };
   return (
     <ScrollView style={styles.scrollView}>
       <View style={styles.container}>
-        <Text style={styles.header}>Edit Product</Text>
+        <View style={styles.row}>
+          <Text style={styles.header}>Edit Product</Text>
+          <TouchableOpacity onPress={() => handleDel()}>
+            <Image source={Images.trashCan()} style={styles.trash} />
+          </TouchableOpacity>
+        </View>
 
         {image()}
         {inputs()}
+        {deleteModal()}
         <PermissionRequestModal />
         <CustomAlert message={errorMessage} />
         {loading ? (
@@ -580,6 +741,7 @@ const EditProduct = () => {
         ) : (
           <TouchableOpacity
             style={styles.savechanges}
+            // onPress={() => {testing();}}
             onPress={() => (_id ? assignValues() : addItem())}>
             <Text style={styles.txt}>{strings.saveChanges}</Text>
           </TouchableOpacity>
@@ -592,6 +754,45 @@ const EditProduct = () => {
 export default EditProduct;
 
 const styles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+
+  modalButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 16,
+  },
+  modcont: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+  },
+
+  modalContent: {
+    width: 300,
+    padding: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalText: {
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  trash: {
+    width: 40,
+    height: 40,
+  },
   sale: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -692,8 +893,9 @@ const styles = StyleSheet.create({
   },
   img: {
     resizeMode: 'contain',
-    height: 200,
+    height: 300,
     width: 200,
+    backgroundColor: 'grey',
   },
   scrollView: {
     flex: 1,

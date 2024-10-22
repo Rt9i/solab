@@ -58,7 +58,7 @@ function AppContent() {
         }}
       />
       <Stack.Screen name="SeeAllProducts" />
-      <Stack.Screen name="index" />
+      <Stack.Screen name="index" options={{headerShown: false}} />
       <Stack.Screen name="+not-found" />
     </Stack>
   );

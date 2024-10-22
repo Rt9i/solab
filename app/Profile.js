@@ -1,10 +1,12 @@
-import React, {useContext} from 'react';
-import {View, Text, StyleSheet, Image, FlatList} from 'react-native';
+import React, { useContext } from 'react';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import SolabContext from '../src/store/solabContext';
 import Images from '../src/assets/images/images';
+import { FlashList } from '@shopify/flash-list';
+import Sizes from '@/src/res/sizes';
 
 const ProfileScreen = () => {
-  const {user} = useContext(SolabContext);
+  const { user } = useContext(SolabContext);
 
   if (!user) {
     return (
@@ -14,30 +16,26 @@ const ProfileScreen = () => {
     );
   }
 
-  // Log user data for debugging
-  console.log('User data:', user);
-
-  // Check if products exist and are correctly formatted
-  const products = user.products || [];
-  console.log('Products:', products);
-
+  const products = user.products || []; 
   return (
     <View style={styles.container}>
       <Image source={Images.profileIcon()} style={styles.profileImage} />
       <Text style={styles.userName}>{user.userName || 'User Name'}</Text>
       <Text style={styles.userPhone}>{user.phoneNumber || 'Phone Number'}</Text>
 
-      {/* Render list of products */}
-      {products.length > 0 ? (
-        <FlatList
+      <View style={{ flex: 1, width: Sizes.screenWidth }}>
+        <FlashList
+          // Removed style={{ flex: 1 }} from FlashList
           data={products}
-          keyExtractor={item => item.productId.toString()}
-          renderItem={({item}) => (
+          estimatedItemSize={85} // Set estimated item size
+          contentContainerStyle={{ paddingBottom: 2 }}
+          keyExtractor={item => item._id} // Ensure items have a unique _id
+          renderItem={({ item }) => (
             <View style={styles.productContainer}>
-              <Image source={{uri: item.img}} style={styles.productImage} />
+              <Image source={{ uri: item.img }} style={styles.productImage} />
               <View style={styles.productDetails}>
                 <Text style={styles.productName}>
-                  {item.productName || 'Product Name'}
+                  {item.brand || 'Product Name'}
                 </Text>
                 <Text style={styles.productPrice}>
                   ${item.price || 'Price'}
@@ -46,9 +44,7 @@ const ProfileScreen = () => {
             </View>
           )}
         />
-      ) : (
-        <Text style={styles.noProductsText}>No products found</Text>
-      )}
+      </View>
     </View>
   );
 };
@@ -84,7 +80,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 8,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
@@ -106,10 +102,6 @@ const styles = StyleSheet.create({
   productPrice: {
     fontSize: 14,
     color: '#666',
-  },
-  noProductsText: {
-    fontSize: 18,
-    color: '#999',
   },
   errorText: {
     fontSize: 18,

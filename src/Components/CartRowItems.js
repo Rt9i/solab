@@ -13,7 +13,7 @@ const CartRowItems = props => {
   const navigation = useNavigation();
 
   const onCardPress = () => {
-    navigation.navigate(ScreenNames.ProductScreen, {data: Item});
+    navigation.navigate('ProductScreen', {data: Item});
   };
 
   return (
@@ -32,13 +32,15 @@ const CartRowItems = props => {
             source={typeof img === 'string' ? {uri: img} : img}
             style={styles.img}
           />
-          {Item.saleAmount && (
-            <View style={styles.sale}>
-              <Text style={styles.saleText}>
-                {Item.saleAmount} = {Item.salePrice} {strings.priceTag}
+          <Text>
+            {Item.saleAmount && (
+              <View style={styles.sale}>
+                <Text style={styles.saleText}>
+                {` ${Item.saleAmount}`} = {`${Item.salePrice} ${strings.priceTag}`}
               </Text>
-            </View>
-          )}
+              </View>
+            )}
+          </Text>
         </View>
       </TouchableOpacity>
 
@@ -47,11 +49,15 @@ const CartRowItems = props => {
           <Text style={styles.brand}>{brand}</Text>
           <Text style={styles.price}>{`${price} ${strings.priceTag}`}</Text>
           <View style={styles.quantityContainer}>
-            <TouchableOpacity onPress={() => addItem(Item,Item._id )} style={styles.button}>
+            <TouchableOpacity
+              onPress={() => addItem(Item, Item._id)}
+              style={styles.button}>
               <Text style={styles.buttonText}>+</Text>
             </TouchableOpacity>
             <Text style={styles.quantity}>{props.quantity}</Text>
-            <TouchableOpacity onPress={() => removeItemFromCart(Item, Item._id)} style={styles.button}>
+            <TouchableOpacity
+              onPress={() => removeItemFromCart(Item, Item._id)}
+              style={styles.button}>
               <Text style={styles.buttonText}>-</Text>
             </TouchableOpacity>
           </View>

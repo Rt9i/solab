@@ -3,7 +3,7 @@ import {View, StyleSheet, Text, TouchableOpacity, FlatList} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import ScreenNames from '../../routes/ScreenNames';
 import SolabContext from '../store/solabContext';
-
+import {FlashList} from '@shopify/flash-list';
 const RenderItem = memo(({item, renderItem}) => renderItem({item}));
 
 const RowContainer = ({items, renderItem, text, selectedCategory}) => {
@@ -39,25 +39,24 @@ const RowContainer = ({items, renderItem, text, selectedCategory}) => {
         </TouchableOpacity>
         {text && <Text style={styles.headerText}>{text}</Text>}
       </View>
-      <FlatList
+      <FlashList
         ref={flatListRef}
         data={items}
         renderItem={({item}) => (
-          // console.log('Logging the item id:', item.productId),
           <RenderItem item={item} renderItem={renderItem} />
         )}
-        keyExtractor={item => item.productId}
+        keyExtractor={item => item._id}
         horizontal
         showsHorizontalScrollIndicator={true}
         initialNumToRender={10}
         maxToRenderPerBatch={5}
         windowSize={10}
         contentContainerStyle={styles.itemsContainer}
+        estimatedItemSize={140}
       />
     </View>
   );
 };
-
 
 export default RowContainer;
 

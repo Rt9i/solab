@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, {useContext, useState} from 'react';
 import {
   Alert,
   Image,
@@ -8,15 +8,18 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import SolabContext from '../src/store/solabContext';
-import LinearGradient from 'react-native-linear-gradient';
+import {LinearGradient} from 'expo-linear-gradient';
 
-const ProductScreen = ({ route }) => {
+const ProductScreen = () => {
   const navigation = useNavigation();
-  const { data: product } = route.params;
-  const { addItemToCart, strings } = useContext(SolabContext);
+  const route = useRoute(); // Get the route params
+
+  const {data: product} = route.params;
+  const {addItemToCart, strings} = useContext(SolabContext);
   const [quantity, setQuantity] = useState('1');
+  console.log('product img : ', product.img);
 
   const handleAddToCart = () => {
     const quantityInt = parseInt(quantity);
@@ -25,19 +28,27 @@ const ProductScreen = ({ route }) => {
       return;
     }
 
-    addItemToCart({ ...product, quantity: quantityInt }, product.productId);
+    addItemToCart({...product, quantity: quantityInt});
+
     navigation.goBack();
   };
 
-  const isValidUrl = (string) => /^(https?:\/\/)/.test(string); // Simple regex for URL check
-
+  const isValidUrl = string => /^(https?:\/\/)/.test(string); // Simple regex for URL check
+  const imageSource = product?.img?.uri || product?.img;
   return (
     <View style={styles.container}>
-      <LinearGradient colors={['#ffffff', '#f0f0f0', '#e0e0e0']} style={styles.gradient}>
+      <LinearGradient
+        colors={['#ffffff', '#f0f0f0', '#e0e0e0']}
+        style={styles.gradient}>
         <Image
-          source={isValidUrl(product.img) ? { uri: product.img } : product.img}
           style={styles.image}
+          source={{
+            uri: imageSource,
+          }}
+          contentFit="contain"
+          transition={1000}
         />
+
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
@@ -47,7 +58,9 @@ const ProductScreen = ({ route }) => {
             placeholder={strings.enterNumber}
             placeholderTextColor="#888"
           />
-          <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
+          <TouchableOpacity
+            style={styles.addToCartButton}
+            onPress={handleAddToCart}>
             <Text style={styles.addToCartText}>{strings.addToCart}</Text>
           </TouchableOpacity>
         </View>
@@ -77,7 +90,7 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     borderWidth: 1,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.3,
     shadowRadius: 4,
   },

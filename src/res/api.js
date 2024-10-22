@@ -22,18 +22,20 @@ export const getUserProfile = async userId => {
 };
 
 export const updateUserProducts = async (userId, cart) => {
-  if (!userId) {return console.error('User ID is undefined');}
+  if (!userId) {
+    return console.error('User ID is undefined');
+  }
 
   // Clean the cart to ensure proper formatting
   const cleanCart = cart.map(item => ({
     ...item,
-    productId: item.productId || item.id,
-    img: typeof item.img === 'string' ? item.img : item.img?.uri,  // Ensure img is correctly formatted
+    productId: '',
+    img: typeof item.img === 'string' ? item.img : item.img?.uri, // Ensure img is correctly formatted
   }));
 
   const payload = {
     _id: userId,
-    updated: { products: cleanCart },  // Send cleanCart instead of cart
+    updated: {products: cleanCart}, // Send cleanCart instead of cart
   };
 
   // console.log('Payload being sent to server:', JSON.stringify(payload));
@@ -41,14 +43,17 @@ export const updateUserProducts = async (userId, cart) => {
   try {
     const response = await fetch(`${mainURL}/updateUserProducts/${userId}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(payload),
     });
 
     const result = await response.json();
 
     if (!response.ok) {
-      console.error('Failed to update cart on server:', result.errorMessage || result);
+      console.error(
+        'Failed to update cart on server:',
+        result.errorMessage || result,
+      );
     } else {
       // console.log('Cart updated on server successfully');
     }
@@ -56,7 +61,6 @@ export const updateUserProducts = async (userId, cart) => {
     console.error('Error occurred:', e.message || e);
   }
 };
-
 
 export const getUserProducts = async userId => {
   try {
@@ -80,7 +84,6 @@ export const getUserProducts = async userId => {
     throw error;
   }
 };
-
 
 export const getUserByID = async id => {
   try {
@@ -128,24 +131,16 @@ export const createUser = async (userName, phoneNumber, password) => {
   }
 };
 
-
-// to add new items to the data base
 export const saveProductsToDatabase = async data => {
   try {
-    // Map through the data to add the productId field
-    const itemsWithProductId = data.map(item => ({
-      ...item,
-      productId: item.id, // Assign the id to productId
-    }));
-
     const response = await fetch(`${mainURL}/saveProductsToDatabase`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({items: itemsWithProductId}),
+      
+      body: JSON.stringify({items: data}), // Use the original data without modifications
     });
-
     if (!response.ok) {
       const errorText = await response.text(); // Read the text response for debugging
       throw new Error(`Failed to save products: ${errorText}`);
@@ -181,14 +176,14 @@ export const getDataFromDataBase = async () => {
   }
 };
 
-export const getItemInDataBase = async (_id) => {
+export const getItemInDataBase = async _id => {
   try {
     const response = await fetch(`${mainURL}/getItemInDataBase`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ _id }), // Sending _id in the body
+      body: JSON.stringify({_id}), // Sending _id in the body
     });
 
     const item = await response.json(); // Parse the response as JSON
@@ -204,7 +199,6 @@ export const getItemInDataBase = async (_id) => {
   }
 };
 
-
 // setItemInDataBase to modify an existed item to the data base
 
 export const setItemInDataBase = async (id, newItemData) => {
@@ -214,13 +208,15 @@ export const setItemInDataBase = async (id, newItemData) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id, newItemData }),
+      body: JSON.stringify({id, newItemData}),
     });
 
     const updatedItem = await response.json();
 
     if (!response.ok) {
-      throw new Error(`Failed to update item: ${updatedItem.error || 'Unknown error'}`); // Provide more context
+      throw new Error(
+        `Failed to update item: ${updatedItem.error || 'Unknown error'}`,
+      ); // Provide more context
     }
 
     return updatedItem; // Return the updated item
@@ -230,15 +226,14 @@ export const setItemInDataBase = async (id, newItemData) => {
   }
 };
 
-
-export const removeItemFromDatabase = async (id) => {
+export const removeItemFromDatabase = async id => {
   try {
     const response = await fetch(`${mainURL}/removeItemFromDatabase`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id }), // Send the id in the body
+      body: JSON.stringify({id}), // Send the id in the body
     });
 
     if (!response.ok) {
@@ -253,7 +248,6 @@ export const removeItemFromDatabase = async (id) => {
     throw error;
   }
 };
-
 
 const appFetch = async (route, method = 'GET', body = null) => {
   const url = `${mainURL}${route}`;

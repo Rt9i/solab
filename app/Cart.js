@@ -8,7 +8,7 @@ import {
   Image,
   Alert,
 } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
+import { LinearGradient } from 'expo-linear-gradient';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import SolabContext from '../src/store/solabContext';
 import CartRowItems from '../src/Components/CartRowItems';
