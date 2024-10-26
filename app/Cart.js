@@ -8,7 +8,7 @@ import {
   Image,
   Alert,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import {LinearGradient} from 'expo-linear-gradient';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import SolabContext from '../src/store/solabContext';
 import CartRowItems from '../src/Components/CartRowItems';
@@ -140,15 +140,18 @@ const Cart = props => {
 
         {cart.length > 0 && (
           <View style={styles.selectedDisplay}>
-            <BouncyCheckbox
-              style={styles.allTouch}
-              isChecked={isSelectAll}
-              onPress={handleSelectAll}
-              fillColor="black"
-              iconStyle={{borderColor: 'red'}}
-              textStyle={{textDecorationLine: 'none'}}
-              text={strings.selectAll}
-            />
+            <View style={styles.boxCont}>
+              <TouchableOpacity
+                onPress={handleSelectAll}
+                style={styles.touchableOpacity}>
+                <BouncyCheckbox
+                  isChecked={isSelectAll}
+                  fillColor="black"
+                  checkIconColor="white"
+                />
+                <Text style={styles.selectAll}>{strings.selectAll}</Text>
+              </TouchableOpacity>
+            </View>
 
             <TouchableOpacity
               style={styles.cleartouch}
@@ -173,9 +176,28 @@ const Cart = props => {
 };
 
 const styles = StyleSheet.create({
+  touchableOpacity: {
+    flexDirection: 'row',
+    width: 100,
+    backgroundColor: 'grey',
+    alignItems: 'center',
+    alignContent: 'center',
+  
+  },
+  boxCont: {
+    flexDirection: 'row',
+
+    borderWidth: 0.2,
+    borderRadius: 10,
+    padding: 5,
+  },
+  selectAll: {
+    fontWeight: 'bold',
+  
+  },
   allTouch: {
-    width: 30,
-    height: 30,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   header: {
     padding: 10,

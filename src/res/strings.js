@@ -16,10 +16,10 @@ const enStrings = {
   category: 'Category',
   fillthefield: 'Please fill out the following fields',
   Brand: 'Brand',
-  amountError: 'amount is higher than price',
+  amountError: ' sale amount is higher than  sale price',
   name: 'name',
   brand: 'brand',
-
+  delMessage: 'do you want to dellete the item?',
   addToCart: 'Add to cart',
   enterNumber: 'Enter number',
   catsStore: 'Cat',
@@ -45,6 +45,7 @@ const enStrings = {
   bowl: 'Bowl',
   clearCart: 'Clear cart',
   image: 'image',
+  selectAll: 'Select All',
 };
 
 const heStrings = {
@@ -73,7 +74,7 @@ const heStrings = {
   bowl: 'קערה',
   clearCart: 'נקה עגלה',
   fillthefield: 'אנא מלא את השדות הבאים',
-
+  delMessage: 'האם אתה רוצה למחוק את הפריט?',
   selectedpets: 'חיות מחמד שנבחרו',
   row: 'שורה',
   selectedRow: 'שורה נבחרת',
@@ -93,13 +94,14 @@ const heStrings = {
   name: 'שם',
   price: 'מחיר',
   amount: 'כמות',
-  amountError: 'הכמות גבוהה מהמחיר',
+  amountError: 'כמות המכירה גבוהה יותר ממחיר המכירה',
   image: 'תמונה',
+  selectAll: 'בחר הכל',
 };
 
 const arStrings = {
-  amountError: 'الكمية أكبر من السعر',
-
+  amountError: 'كمية التخفيض أكبر من سعر التخفيض',
+  delMessage: 'هل تريد حذف الغرض',
   addToCart: 'أضف إلى السلة',
   enterNumber: 'أدخل رقم',
   catsStore: 'قط',
@@ -146,6 +148,7 @@ const arStrings = {
   fillthefield: 'يرجى ملء الصفات التالية',
   amount: 'كميه',
   image: 'صوره',
+  selectAll: 'اختر الكل',
 };
 
 export {enStrings, heStrings, arStrings};

@@ -49,7 +49,7 @@ const CatsStore = props => {
           salePrice={item.salePrice}
           saleAmount={item.saleAmount}
           kg={item.kg}
-          key={item.id}
+          key={item._id}
           brand={item.brand}
           taste={item.taste}
           img={{uri: item.img}}

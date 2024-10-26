@@ -57,7 +57,7 @@ const EditProduct = () => {
   } = route.params || {}; // Get params from the route
 
   const {strings, setData, cat, rows, pets} = useContext(SolabContext);
-console.log(_id);
+  console.log(_id);
 
   const [brandState, setBrandState] = useState(brand);
   const [nameState, setNameState] = useState(name);
@@ -75,6 +75,7 @@ console.log(_id);
   const [errorMessage, setErrorMessage] = useState('');
   const [row, setRow] = useState('');
   const [selectedRow, setSelectedRow] = useState('');
+  const [delLoading, setDelLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -83,7 +84,7 @@ console.log(_id);
     nav.goBack();
   };
   const getFileTypeFromUri = uri => {
-    const extension = uri.split('.').pop(); // Get the last part after the last dot
+    const extension = uri.split('.').pop();
     switch (extension) {
       case 'jpg':
       case 'jpeg':
@@ -94,11 +95,21 @@ console.log(_id);
         return 'image/gif';
       case 'bmp':
         return 'image/bmp';
-      // Add more cases as needed for other file types
+
       default:
-        return 'application/octet-stream'; // Fallback for unknown types
+        return 'application/octet-stream';
     }
   };
+
+  const time = Date.now();
+  const formattedTime = new Date(time).toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+  
+  console.log('Current time is:', formattedTime);
+  
+  
 
   const uploadImage = async imageUri => {
     const data = new FormData();
@@ -108,7 +119,7 @@ console.log(_id);
     data.append('file', {
       uri: imageUri,
       type: mimeType, // Use the detected MIME type
-      name: 'my_image' + Date.now() + '.' + mimeType.split('/')[1], // Create a unique name
+      name: 'my_image' + Date.now() + '.' + mimeType.split('/')[1],
     });
     data.append('upload_preset', 'ml_default'); // Your Cloudinary upload preset
 
@@ -136,7 +147,7 @@ console.log(_id);
 
   const requestMediaPermissions = async () => {
     const {status} = await MediaLibrary.requestPermissionsAsync();
-    return status; // Return the status directly
+    return status;
   };
 
   const openGallery = async () => {
@@ -144,7 +155,7 @@ console.log(_id);
     const options = {
       mediaTypes: ImagePicker.MediaTypeOptions.Images, // Limit to images only
       allowsEditing: true,
-      aspect: [4, 3],
+
       quality: 1,
     };
 
@@ -262,66 +273,6 @@ console.log(_id);
     };
   };
 
-  // const addItem = async () => {
-  //   let isMounted = true;
-
-  //   if (isMounted) {
-  //     const {missingFields, newItemData} = validateAndCreateItemData();
-
-  //     // Check for price validation
-  //     if (parseFloat(saleAmountState) > parseFloat(salePriceState)) {
-  //       setErrorMessage(strings.amountError);
-  //       setShowModal(true);
-  //       return;
-  //     }
-
-  //     // Check for missing fields
-  //     if (missingFields.length > 0) {
-  //       setErrorMessage(`${strings.fillthefield}: ${missingFields.join(', ')}`);
-  //       setShowModal(true);
-  //       return;
-  //     }
-
-  //     try {
-  //       setLoading(true);
-
-  //       // Upload the image and get the URL
-  //       const imageUrl = await uploadImage(selectedImage);
-
-  //       // Update newItemData with the uploaded image URL
-  //       const updatedNewItemData = {
-  //         ...newItemData,
-  //         img: imageUrl, // Use the uploaded image URL
-  //       };
-
-  //       console.log('Updated New Item Data:', updatedNewItemData); // Log to check
-
-  //       // Save the product to the database with the updated item data
-  //       const response = await saveProductsToDatabase({
-  //         items: [updatedNewItemData], // Make sure you're sending an array of items
-  //       });
-
-  //       console.log('Response from saveProductsToDatabase:', response); // Log the response
-
-  //       if (response && response.data) {
-  //         console.log('Products saved successfully:', response.data.products);
-  //         const result = await getDataFromDataBase();
-  //         setData(result);
-  //         goback();
-  //       }
-  //     } catch (e) {
-  //       console.error('Error adding item:', e);
-  //       setErrorMessage('Failed to add item.');
-  //       setShowModal(true);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   }
-
-  //   return () => {
-  //     isMounted = false; // Cleanup
-  //   };
-  // };
   const addItem = async () => {
     const {missingFields, newItemData} = validateAndCreateItemData();
     if (parseFloat(saleAmountState) > parseFloat(salePriceState)) {
@@ -348,16 +299,10 @@ console.log(_id);
       console.log('Updated New Item Data:', updatedNewItemData); // Log to check
 
       const response = await saveProductsToDatabase([updatedNewItemData]); // Ensure it's an array
-
-      console.log('Response from saveProductsToDatabase:', response); // Log the response
-
-      if (response) {
-        console.log('Products saved successfully:', response.products);
-
-        setData(result);
-        goback();
-      }
       const result = await getDataFromDataBase();
+      setData(result);
+      goback();
+      console.log('Response from saveProductsToDatabase:', response);
     } catch (e) {
       console.error('Error adding item:', e);
       setErrorMessage('Failed to add item.');
@@ -412,13 +357,6 @@ console.log(_id);
     }
   };
 
-  // console.log('====================================');
-
-  // console.log('taste: ', taste);
-  // console.log('row: ', row);
-  // console.log('categoryState: ', categoryState);
-  // console.log('====================================');
-
   const findRowAndCategory = useCallback(() => {
     let matchedCategory = '';
     let matchedRow = '';
@@ -460,6 +398,7 @@ console.log(_id);
           value={state !== null && state !== undefined ? state.toString() : ''}
           onChangeText={setState}
           keyboardType={keyboardType}
+          returnKeyType="done"
         />
       </View>
     ),
@@ -509,12 +448,27 @@ console.log(_id);
       </View>
     );
   };
-  const renderRows = () => {
-    const toggleRow = (val, id) => {
-      setRow(val);
-      setSelectedRow(id);
-    };
+  const toggleRow = (val, id) => {
+    setRow(val);
+    setSelectedRow(id);
+  };
+  const rowItem = (item, isSelected) => (
+    <TouchableOpacity
+       style={[
+        styles.rowItem,
+        isSelected ? styles.selectedRow : styles.notSelectedRow,
+      ]}
+      onPress={() => toggleRow(item.rows, item.id)}>
+      <Text style={styles.rowText}>
+        {item.id}
+        {isSelected && (
+          <Image source={Images.roundCheckMark()} style={styles.icon} />
+        )}
+      </Text>
+    </TouchableOpacity>
+  );
 
+  const renderRows = () => {
     return (
       <View style={styles.petTypeContainer}>
         <Text style={styles.label}>{strings.row}</Text>
@@ -522,28 +476,9 @@ console.log(_id);
           data={rows}
           renderItem={({item}) => {
             const isSelected = row === item.rows;
-
-            return (
-              <TouchableOpacity
-                key={item.id}
-                style={[
-                  styles.rowItem,
-                  isSelected ? styles.selectedRow : styles.notSelectedRow,
-                ]}
-                onPress={() => toggleRow(item.rows, item.id)}>
-                <Text style={styles.rowText}>
-                  {item.id}{' '}
-                  {isSelected && (
-                    <Image
-                      source={Images.roundCheckMark()}
-                      style={styles.icon}
-                    />
-                  )}
-                </Text>
-              </TouchableOpacity>
-            );
+            return rowItem(item, isSelected); // Return rowItem here
           }}
-          keyExtractor={item => item._id}
+          keyExtractor={item => item.id.toString()} // Ensure keyExtractor returns a string
           horizontal={true}
         />
         <Text style={styles.selectedPetsText}>
@@ -592,23 +527,24 @@ console.log(_id);
 
         <View style={styles.row}>
           {handleInput(
-            'Sale Amount',
+            strings.saleAmount,
             saleAmountState,
             setSaleAmountState,
             'numeric',
           )}
           {handleInput(
-            'Sale Price',
+            strings.salePrice,
             salePriceState,
             setSalePriceState,
             'numeric',
           )}
         </View>
-
-        <SearchKeys
-          searchKeysArray={searchKeysState}
-          setSearchKeysArray={setSearchKeysState}
-        />
+        <View style={styles.search}>
+          <SearchKeys
+            searchKeysArray={searchKeysState}
+            setSearchKeysArray={setSearchKeysState}
+          />
+        </View>
 
         {petTypes()}
         {renderRows()}
@@ -647,29 +583,6 @@ console.log(_id);
       </TouchableOpacity>
     );
   };
-  const testing = async () => {
-    const testData = {
-      availableStock: 0,
-      brand: 'Test Brand',
-      category: ['meat', 'secondRow'],
-      img: 'https://res.cloudinary.com/dzzazhwjk/image/upload/v1729631392/my_image1729631390831_gsu81g.jpg',
-      kg: 0,
-      name: 'Test Name',
-      petType: ['cat'],
-      price: 16,
-      saleAmount: 0,
-      salePrice: 0,
-      searchKeys: [],
-      taste: 'Test Taste',
-    };
-
-    try {
-      const response = await saveProductsToDatabase({items: [testData]});
-      console.log('Response from saving test data:', response);
-    } catch (error) {
-      console.error('Error response: ', error);
-    }
-  };
 
   const handleDel = () => {
     // Show the modal when the delete action is triggered
@@ -678,8 +591,13 @@ console.log(_id);
 
   const confirmDelete = async () => {
     try {
+      setDelLoading(true);
       const deleting = await removeItemFromDatabase(_id);
       console.log('Product deleted');
+      const result = await getDataFromDataBase();
+      setData(result);
+      setDelLoading(false);
+      goback();
     } catch (e) {}
 
     setModalVisible(false); // Close the modal
@@ -699,20 +617,25 @@ console.log(_id);
         <View style={styles.modalBackground}>
           <View style={styles.modalContainer}>
             <Text style={styles.modalMessage}>{strings.delMessage}</Text>
+            {delLoading ? (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#0000ff" />
+              </View>
+            ) : (
+              <View style={styles.row}>
+                <TouchableOpacity
+                  style={styles.modalButton}
+                  onPress={confirmDelete}>
+                  <Text style={styles.modalButtonText}>Yes</Text>
+                </TouchableOpacity>
 
-            <View style={styles.row}>
-              <TouchableOpacity
-                style={styles.modalButton}
-                onPress={confirmDelete}>
-                <Text style={styles.modalButtonText}>Yes</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.modalButton}
-                onPress={cancelDelete}>
-                <Text style={styles.modalButtonText}>No</Text>
-              </TouchableOpacity>
-            </View>
+                <TouchableOpacity
+                  style={styles.modalButton}
+                  onPress={cancelDelete}>
+                  <Text style={styles.modalButtonText}>No</Text>
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
         </View>
       </Modal>
@@ -754,6 +677,12 @@ console.log(_id);
 export default EditProduct;
 
 const styles = StyleSheet.create({
+  search: {
+    flex: 1,
+    backgroundColor: 'white',
+    elevation: 10,
+    borderRadius: 10,
+  },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -895,7 +824,6 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     height: 300,
     width: 200,
-    backgroundColor: 'grey',
   },
   scrollView: {
     flex: 1,
