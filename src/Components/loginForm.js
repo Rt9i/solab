@@ -11,8 +11,9 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {logIn, createUser} from '../res/api';
-import {useNavigation} from '@react-navigation/native';
+
 import SolabContext from '../store/solabContext';
+import {useNavigation} from 'expo-router';
 
 const LoginForm = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -33,7 +34,9 @@ const LoginForm = () => {
   const {saveUser, clearAsyncStorage} = useContext(SolabContext);
 
   const handleLogin = async () => {
-    if (loading) {return;}
+    if (loading) {
+      return;
+    }
     setErrors({});
     if (!phoneNumber || !password) {
       setErrors({
@@ -43,7 +46,7 @@ const LoginForm = () => {
       return;
     }
     if (password.length <= 4) {
-      setErrors({ password: 'Password must be longer than 4 characters' });
+      setErrors({password: 'Password must be longer than 4 characters'});
       return;
     }
     setLoading(true);
@@ -55,25 +58,23 @@ const LoginForm = () => {
       if (response.auth && response.user) {
         await clearAsyncStorage();
         await saveUser(response.user);
-        navigation.navigate('Splash');
+        navigation.navigate('index');
       } else {
         handleError(response.errorMessage, 'login');
       }
     } catch (error) {
       console.error('Login error:', error);
-      setErrors({ phoneNumber: 'Phone number or password is wrong' });
+      setErrors({phoneNumber: 'Phone number or password is wrong'});
     } finally {
       setLoading(false);
     }
   };
-
-
+ 
   const handleRegister = async () => {
     setErrors({});
     setLoading(true);
 
     try {
-      // Sending the actual registration request to createUser
       const response = await createUser(userName, phoneNumber, password);
       console.log('CreateUser response:', response);
 
@@ -89,7 +90,9 @@ const LoginForm = () => {
       }
     } catch (error) {
       console.error('Register error:', error);
-      setErrors({password: 'An error occurred during registration. Please try again.'});
+      setErrors({
+        password: 'An error occurred during registration. Please try again.',
+      });
     } finally {
       setLoading(false);
     }

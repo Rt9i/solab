@@ -1,4 +1,11 @@
-import React, {useContext, useEffect, useMemo, useRef, useState} from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   View,
   Text,
@@ -14,16 +21,17 @@ import SolabContext from '../src/store/solabContext';
 import CartRowItems from '../src/Components/CartRowItems';
 import Images from '../src/assets/images/images';
 import {updateUserProducts} from '../src/res/api';
+import CustomModal from '@/src/Components/customModal';
 
 const Cart = props => {
-  const {strings, user} = useContext(SolabContext);
+  const {strings, user, language} = useContext(SolabContext);
   const {cart, removeItemFromCart, setCart} = useContext(SolabContext);
   const [displayMode, setDisplayMode] = useState('row');
   const [selectedItems, setSelectedItems] = useState([]);
   const [isSelectAll, setIsSelectAll] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
   const [previousCartState, setPreviousCartState] = useState([]);
-
+  const [modalVisible, setModalVisible] = useState(false);
   const calculateTotalPrice = () => {
     let total = 0;
 
@@ -95,16 +103,15 @@ const Cart = props => {
     }
   };
 
-  const handleSelectAll = () => {
+  const handleSelectAll = useCallback(() => {
     if (isSelectAll) {
-      setSelectedItems([]); // Deselect all
+      setSelectedItems([]);
     } else {
       const allItemIds = cart.map(item => item._id);
-      console.log('cart rn: ', allItemIds);
-
       setSelectedItems(allItemIds);
     }
-  };
+    setIsSelectAll(!isSelectAll);
+  }, [isSelectAll, cart]);
 
   const renderCart = ({item}) => (
     <CartRowItems
@@ -126,6 +133,21 @@ const Cart = props => {
     return null;
   };
 
+  const showRemoveModal = () => {
+    if (selectedItems.length > 0) {
+      setModalVisible(true);
+    } else {
+      console.log('No items selected for removal.');
+    }
+  };
+  const confirmRemove = () => {
+    removeSelectedItems();
+    setModalVisible(false);
+  };
+
+  const cancelRemove = () => {
+    setModalVisible(false);
+  };
   return (
     <LinearGradient
       colors={['#6CCAFF', '#6CCAFF', '#004C99']}
@@ -140,28 +162,40 @@ const Cart = props => {
 
         {cart.length > 0 && (
           <View style={styles.selectedDisplay}>
-            <View style={styles.boxCont}>
-              <TouchableOpacity
-                onPress={handleSelectAll}
-                style={styles.touchableOpacity}>
+            <TouchableOpacity onPress={handleSelectAll} activeOpacity={1}>
+              <View style={styles.insideCheck}>
+                {(language === 'ar' || language === 'he') && (
+                  <Text style={styles.selectAll}>{strings.selectAll}</Text>
+                )}
                 <BouncyCheckbox
                   isChecked={isSelectAll}
+                  onPress={handleSelectAll}
                   fillColor="black"
                   checkIconColor="white"
+                  style={{marginRight: -15}}
                 />
-                <Text style={styles.selectAll}>{strings.selectAll}</Text>
-              </TouchableOpacity>
-            </View>
+
+                {language == 'en' && (
+                  <Text style={styles.selectAll}>{strings.selectAll}</Text>
+                )}
+              </View>
+            </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.cleartouch}
-              onPress={removeSelectedItems}>
+              onPress={() => showRemoveModal()}>
               <Image source={Images.trashCan()} style={styles.trashCan} />
             </TouchableOpacity>
           </View>
         )}
       </View>
-
+      <CustomModal
+        message={strings.delMessage}
+        visible={modalVisible}
+        onConfirm={confirmRemove}
+        onCancel={cancelRemove}
+        loading={false}
+      />
       <FlatList
         data={cart}
         renderItem={renderCart}
@@ -176,24 +210,22 @@ const Cart = props => {
 };
 
 const styles = StyleSheet.create({
-  touchableOpacity: {
+  insideCheck: {
+    justifyContent: 'space-evenly',
     flexDirection: 'row',
     width: 100,
-    backgroundColor: 'grey',
-    alignItems: 'center',
-    alignContent: 'center',
-  
-  },
-  boxCont: {
-    flexDirection: 'row',
-
-    borderWidth: 0.2,
     borderRadius: 10,
-    padding: 5,
+    borderWidth: 0.2,
+    padding: 3,
+  },
+
+  boxCont: {
+    width: 120,
   },
   selectAll: {
+    textAlign: 'center',
+    textAlignVertical: 'center',
     fontWeight: 'bold',
-  
   },
   allTouch: {
     flexDirection: 'row',
@@ -212,10 +244,11 @@ const styles = StyleSheet.create({
   },
   cleartouch: {},
   trashCan: {
+    flex: 1,
     width: 30,
     height: 30,
     tintColor: '#D9534F',
-    right: 5,
+    resizeMode: 'contain',
   },
   totalPrice: {
     fontSize: 15,
@@ -236,8 +269,9 @@ const styles = StyleSheet.create({
   selectedDisplay: {
     marginTop: 10,
     flexDirection: 'row',
-    alignItems: 'center',
+
     justifyContent: 'space-between',
+
     marginHorizontal: 30,
   },
   emptyText: {

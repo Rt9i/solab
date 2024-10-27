@@ -28,7 +28,7 @@ const SettingsScreen = () => {
   const currentUserId = user ? user._id : null;
 
   // Debugging logs
-  console.log('Current user:', user);
+  // console.log('Current user:', user);
   console.log('Current user ID:', currentUserId);
 
   const settings = [
@@ -83,7 +83,7 @@ const SettingsScreen = () => {
 
   const handleLogOut = () => {
     logout();
-    navigation.navigate(ScreenNames.login);
+    navigation.navigate('Login');
   };
 
   const renderSettings = () => {

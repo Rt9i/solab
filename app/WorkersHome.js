@@ -6,11 +6,10 @@ import ScreenNames from '../routes/ScreenNames';
 const WorkersHome = () => {
   nav = useNavigation();
   const navEditProducts = () => {
-    nav.navigate(ScreenNames.editProduct);
+    nav.navigate('editProduct');
   };
   return (
     <View>
-
       <Text>WorkersHome</Text>
     </View>
   );

@@ -19,12 +19,8 @@ import CatsBarItems from '../src/Components/CatsBarItems';
 import Swipe from '../src/Components/Swipe';
 import CatsStoreItems from '../src/Components/CatsStoreItems';
 import Sizes from '../src/res/sizes';
-import {useNavigation} from '@react-navigation/native';
-
-import Images from '../src/assets/images/images';
 
 const CatsStore = props => {
-  const navigation = useNavigation();
   const [displayMode, setDisplayMode] = useState('row');
   const [optionsVisible, setOptionsVisible] = useState(false);
   const {
@@ -46,6 +42,7 @@ const CatsStore = props => {
       <View style={styles.itemContainer}>
         <CatsStoreItems
           _id={item._id}
+          availableStock={item.availableStock}
           salePrice={item.salePrice}
           saleAmount={item.saleAmount}
           kg={item.kg}
@@ -109,12 +106,12 @@ const CatsStore = props => {
             />
           </View>
 
-          {rows.map(row => {
+          {rows.map((row, index) => {
             const filteredItems = getFilteredItemsForRow(row.rows);
-            // console.log('Row ID:', row.id, 'Filtered Items:', filteredItems);
 
             return (
               <RowContainer
+                index={index + 1}
                 key={row.id}
                 row={row}
                 items={filteredItems}
@@ -143,7 +140,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0, 
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   gradient: {
     flex: 1,

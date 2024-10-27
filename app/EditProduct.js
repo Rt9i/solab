@@ -42,6 +42,8 @@ import * as ImagePicker from 'expo-image-picker';
 const EditProduct = () => {
   const route = useRoute(); // Use the hook to get the route
   const {
+    availableStock = 0,
+    dis = '',
     brand = '',
     name = '',
     taste = '',
@@ -56,9 +58,12 @@ const EditProduct = () => {
     _id,
   } = route.params || {}; // Get params from the route
 
-  const {strings, setData, cat, rows, pets} = useContext(SolabContext);
+  const {strings, setData, cat, rows, pets, language} =
+    useContext(SolabContext);
   console.log(_id);
-
+  const [availableStockState, setAvailableStockState] =
+    useState(availableStock);
+  const [disState, setDisState] = useState(dis);
   const [brandState, setBrandState] = useState(brand);
   const [nameState, setNameState] = useState(name);
   const [tasteState, setTasteState] = useState(taste);
@@ -104,12 +109,10 @@ const EditProduct = () => {
   const time = Date.now();
   const formattedTime = new Date(time).toLocaleTimeString([], {
     hour: '2-digit',
-    minute: '2-digit'
+    minute: '2-digit',
   });
-  
+
   console.log('Current time is:', formattedTime);
-  
-  
 
   const uploadImage = async imageUri => {
     const data = new FormData();
@@ -243,7 +246,6 @@ const EditProduct = () => {
   const validateAndCreateItemData = () => {
     let missingFields = [];
 
-    // Check for each required field
     if (selectedImage == null && img === Images.photo()) {
       console.log('selected img: ', selectedImage);
       missingFields.push(strings.image);
@@ -268,7 +270,7 @@ const EditProduct = () => {
         salePrice: salePriceState,
         searchKeys: searchKeysState,
         petType: petTypeState,
-        availableStock: 0,
+        availableStock: availableStockState,
       },
     };
   };
@@ -316,7 +318,6 @@ const EditProduct = () => {
     const {missingFields, newItemData} = validateAndCreateItemData();
 
     console.log('Assigning Values:', newItemData);
-    setShowModal(true);
 
     // Check for sale amount and price
     if (parseFloat(saleAmountState) > parseFloat(salePriceState)) {
@@ -391,6 +392,7 @@ const EditProduct = () => {
     (label, state, setState, keyboardType = 'default') => (
       <View style={styles.inputWrapper}>
         <Text style={styles.label}>{label}</Text>
+
         <TextInput
           style={styles.input}
           placeholder={label}
@@ -399,6 +401,8 @@ const EditProduct = () => {
           onChangeText={setState}
           keyboardType={keyboardType}
           returnKeyType="done"
+          multiline={true} // Allow multiple lines
+          textAlignVertical="top" // Start text at the top
         />
       </View>
     ),
@@ -454,7 +458,7 @@ const EditProduct = () => {
   };
   const rowItem = (item, isSelected) => (
     <TouchableOpacity
-       style={[
+      style={[
         styles.rowItem,
         isSelected ? styles.selectedRow : styles.notSelectedRow,
       ]}
@@ -491,6 +495,14 @@ const EditProduct = () => {
   const inputs = () => (
     <View style={styles.inputContainer}>
       <View style={styles.row}>
+        {handleInput(
+          ` ${strings.inStock}`,
+          availableStockState,
+          text => setAvailableStockState(parseFloat(text) || ''),
+          'numeric',
+        )}
+      </View>
+      <View style={styles.row}>
         {handleInput(strings.taste, tasteState, setTasteState)}
         {handleInput(strings.brand, brandState, setBrandState)}
       </View>
@@ -505,16 +517,18 @@ const EditProduct = () => {
       </View>
 
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>{strings.category}</Text>
-        <CatsBarItems
-          Array={cat.map((item, index) => ({
-            ...item,
-            key: item.id,
-          }))}
-          style={styles.CatsBarItems}
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-        />
+        <View style={styles.elevation}>
+          <Text style={styles.label}>{strings.category}</Text>
+          <CatsBarItems
+            Array={cat.map((item, index) => ({
+              ...item,
+              key: item.id,
+            }))}
+            style={styles.CatsBarItems}
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+          />
+        </View>
 
         <View style={styles.price}>
           {handleInput(
@@ -539,11 +553,22 @@ const EditProduct = () => {
             'numeric',
           )}
         </View>
-        <View style={styles.search}>
-          <SearchKeys
-            searchKeysArray={searchKeysState}
-            setSearchKeysArray={setSearchKeysState}
-          />
+
+        <View>
+          <Text style={language == 'en' ? styles.meow : {textAlign: 'right'}}>
+            {strings.searchKeys}
+          </Text>
+          <View style={styles.search}>
+            <Image source={Images.search()} style={styles.image} />
+            <SearchKeys
+              searchKeysArray={searchKeysState}
+              setSearchKeysArray={setSearchKeysState}
+            />
+          </View>
+        </View>
+
+        <View style={styles.dis}>
+          {handleInput(strings.dis, disState, setDisState)}
         </View>
 
         {petTypes()}
@@ -641,47 +666,89 @@ const EditProduct = () => {
       </Modal>
     );
   };
-  return (
-    <ScrollView style={styles.scrollView}>
-      <View style={styles.container}>
-        <View style={styles.row}>
-          <Text style={styles.header}>Edit Product</Text>
-          <TouchableOpacity onPress={() => handleDel()}>
-            <Image source={Images.trashCan()} style={styles.trash} />
-          </TouchableOpacity>
-        </View>
 
-        {image()}
-        {inputs()}
-        {deleteModal()}
-        <PermissionRequestModal />
-        <CustomAlert message={errorMessage} />
-        {loading ? (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#0000ff" />
-            <Text>{strings.savingChanges}...</Text>
+  return (
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'white',
+      }}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={{flexGrow: 1, paddingBottom: 100}}>
+        <View style={styles.container}>
+          <View style={styles.row}>
+            <Text style={styles.header}>Edit Product</Text>
+            <TouchableOpacity onPress={() => handleDel()}>
+              <Image source={Images.trashCan()} style={styles.trash} />
+            </TouchableOpacity>
           </View>
-        ) : (
-          <TouchableOpacity
-            style={styles.savechanges}
-            // onPress={() => {testing();}}
-            onPress={() => (_id ? assignValues() : addItem())}>
-            <Text style={styles.txt}>{strings.saveChanges}</Text>
-          </TouchableOpacity>
-        )}
-      </View>
-    </ScrollView>
+
+          {image()}
+          {inputs()}
+          {deleteModal()}
+          <PermissionRequestModal />
+          <CustomAlert message={errorMessage} />
+        </View>
+      </ScrollView>
+
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#0000ff" />
+          <Text>{strings.savingChanges}...</Text>
+        </View>
+      ) : (
+        <TouchableOpacity
+          style={styles.savechanges}
+          // onPress={() => {testing();}}
+          onPress={() => (_id ? assignValues() : addItem())}>
+          <Text style={styles.txt}>{strings.saveChanges}</Text>
+        </TouchableOpacity>
+      )}
+    </View>
   );
 };
 
 export default EditProduct;
 
 const styles = StyleSheet.create({
+  meow: {
+    fontWeight: 'bold',
+    textAlign: 'left  ',
+  },
+  image: {
+    position: 'absolute',
+    right: 1,
+    top: 5,
+    height: 30,
+    width: 30,
+  },
+  petTypeContainer: {
+    backgroundColor: 'white',
+    elevation: 14,
+    marginTop: 25,
+  },
+  elevation: {
+    elevation: 10,
+    backgroundColor: 'white',
+  },
+  dis: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 200,
+    width: '100%', // Make sure this is a percentage or fixed value
+    padding: 10, // Add some padding if needed
+    backgroundColor: 'white',
+    elevation: 10,
+  },
   search: {
     flex: 1,
     backgroundColor: 'white',
     elevation: 10,
     borderRadius: 10,
+    flexDirection: 'row',
   },
   row: {
     flexDirection: 'row',
@@ -817,6 +884,8 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   price: {
+    width: '100%',
+    height: 100,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -826,7 +895,9 @@ const styles = StyleSheet.create({
     width: 200,
   },
   scrollView: {
-    flex: 1,
+    width: Sizes.screenWidth,
+    height: Sizes.screenHeight,
+    paddingBottom: 100,
   },
   inputContainer: {
     width: '100%',
@@ -847,14 +918,14 @@ const styles = StyleSheet.create({
   savechanges: {
     backgroundColor: 'lightblue',
     padding: 10,
-
+    position: 'absolute',
     borderRadius: 30,
 
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.25,
     shadowRadius: 3.84, // Radius of the shadow
-
+    bottom: 5,
     // Shadow for Android (via elevation)
     elevation: 5,
   },
@@ -877,6 +948,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   input: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     textAlign: 'center',

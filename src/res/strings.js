@@ -1,4 +1,7 @@
 const enStrings = {
+  searchKeys: 'search keys',
+  inStock: 'In Stock',
+  dis: 'description',
   selectedpets: 'selected pets',
   row: 'row',
   selectedRow: 'selected row',
@@ -97,9 +100,14 @@ const heStrings = {
   amountError: 'כמות המכירה גבוהה יותר ממחיר המכירה',
   image: 'תמונה',
   selectAll: 'בחר הכל',
+  dis: 'תיאור',
+  inStock: 'זמין במלאי',
+  searchKeys: 'מילות חיפוש',
 };
 
 const arStrings = {
+  inStock: 'متوفر',
+  dis: 'وصف',
   amountError: 'كمية التخفيض أكبر من سعر التخفيض',
   delMessage: 'هل تريد حذف الغرض',
   addToCart: 'أضف إلى السلة',
@@ -149,6 +157,7 @@ const arStrings = {
   amount: 'كميه',
   image: 'صوره',
   selectAll: 'اختر الكل',
+  searchKeys: 'مفاتيح البحث',
 };
 
 export {enStrings, heStrings, arStrings};

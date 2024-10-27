@@ -28,8 +28,10 @@ const SolabProvider = ({children}) => {
   const [scrollToTop, setScrollToTop] = useState(false);
   const [updatedData, setUpdatedData] = useState([]);
   const [data, setData] = useState([]);
-  console.log('User:', user);
 
+  useEffect(() => {
+    console.log('User:', user);
+  }, []);
 
   const translations = {
     en: enStrings,
@@ -40,19 +42,18 @@ const SolabProvider = ({children}) => {
     {name: 'cat', id: 1, txt: strings.cat},
     {name: 'dog', id: 2, txt: strings.dog},
   ];
-  const rows =  [
-      {rows: 'firstRow', id: 1},
-      {rows: 'secondRow', id: 2},
-      {rows: 'thirdRow', id: 3},
-      {rows: 'fourthRow', id: 4},
-      {rows: 'fifthRow', id: 5},
-      {rows: 'sixthRow', id: 6},
-      {rows: 'seventhRow', id: 7},
-      {rows: 'eigthRow', id: 8},
-      {rows: 'ninthRow', id: 9},
-      {rows: 'tenthRow', id: 10},
-    ];
-
+  const rows = [
+    {rows: 'firstRow', id: 1},
+    {rows: 'secondRow', id: 2},
+    {rows: 'thirdRow', id: 3},
+    {rows: 'fourthRow', id: 4},
+    {rows: 'fifthRow', id: 5},
+    {rows: 'sixthRow', id: 6},
+    {rows: 'seventhRow', id: 7},
+    {rows: 'eigthRow', id: 8},
+    {rows: 'ninthRow', id: 9},
+    {rows: 'tenthRow', id: 10},
+  ];
 
   const cat = [
     {Food: 'food'},
@@ -92,13 +93,14 @@ const SolabProvider = ({children}) => {
           ? search.some(keyword =>
               item.searchKeys?.some(key =>
                 key.toLowerCase().includes(keyword.toLowerCase()),
-              )
+              ),
             )
           : true;
 
-        const matchesCategory = !isSearchActive && selectedCategory
-          ? item.category?.includes(selectedCategory)
-          : true;
+        const matchesCategory =
+          !isSearchActive && selectedCategory
+            ? item.category?.includes(selectedCategory)
+            : true;
 
         const matchesRowValue = rowValue
           ? item.category.includes(rowValue)
@@ -108,14 +110,15 @@ const SolabProvider = ({children}) => {
           ? item.petType?.some(pet => selectedIcons.includes(pet))
           : true;
 
-        return matchesSearch && matchesCategory && matchesRowValue && matchesPetType;
+        return (
+          matchesSearch && matchesCategory && matchesRowValue && matchesPetType
+        );
       });
 
       return filteredItems;
     },
     [search, selectedCategory, selectedIcons, data],
   );
-
 
   useEffect(() => {
     // console.log('====================================');
@@ -127,12 +130,21 @@ const SolabProvider = ({children}) => {
       }
 
       debounceTimeout.current = setTimeout(async () => {
-        if (user?._id && cart && cart.length > 0) {
+        if (cart && cart.length > 0) {
           try {
-            await updateUserProducts(user._id, cart);
-            console.log('Cart sent to server:', cart);
+            if (user?._id) {
+              // User exists, save the cart to the server
+              await updateUserProducts(user._id, cart);
+              console.log('Cart sent to server:', cart);
+            } else {
+              await AsyncStorage.setItem('cart', JSON.stringify(cart));
+              console.log('Cart saved to AsyncStorage:', cart);
+            }
           } catch (error) {
-            console.error('Error updating cart on server:', error);
+            console.error(
+              'Error updating cart on server or saving to AsyncStorage:',
+              error,
+            );
           }
         }
       }, 1700);
@@ -146,6 +158,46 @@ const SolabProvider = ({children}) => {
       }
     };
   }, [cart]);
+
+  const saveCartToAsyncStorage = async cart => {
+    if (!cart) {
+      console.log('No cart data to save');
+      return; // Exit if the cart is undefined or null
+    }
+
+    try {
+      const cartString = JSON.stringify(cart);
+      await AsyncStorage.setItem('cart', cartString);
+      console.log('Cart saved to AsyncStorage:', cartString);
+    } catch (error) {
+      console.error('Error saving cart to AsyncStorage:', error);
+    }
+  };
+
+  const loadCartFromAsyncStorage = async () => {
+    try {
+      const cartData = await AsyncStorage.getItem('cart');
+      if (cartData) {
+        const cart = JSON.parse(cartData);
+        console.log('Loaded cart from AsyncStorage:', cart);
+        setCart(cart); // Set the cart state with the parsed data
+      }
+    } catch (error) {
+      console.error('Error loading cart from AsyncStorage:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (!user) {
+      saveCartToAsyncStorage(cart); // Pass the current cart to the function
+    }
+  }, [cart, user]); // Add 'user' to the dependency array to trigger on user state change
+
+  useEffect(() => {
+    if (user) {
+      loadCartFromAsyncStorage(); // Load cart from AsyncStorage if the user is logged in
+    }
+  }, [user]); // This will run when the user state changes
 
   const changeLanguage = useCallback(async lang => {
     try {
@@ -192,7 +244,8 @@ const SolabProvider = ({children}) => {
   }, []);
 
   const saveUser = useCallback(async userData => {
-    // save the user to the provider and async storage
+    console.log('user data:', userData);
+
     try {
       setUser(userData);
       await AsyncStorage.setItem('user', JSON.stringify(userData));
@@ -205,7 +258,6 @@ const SolabProvider = ({children}) => {
 
   const clearAsyncStorage = useCallback(async () => {
     try {
-      // Log before clearing
       const userBefore = await AsyncStorage.getItem('user');
       const cartBefore = await AsyncStorage.getItem('cart');
       console.log('Before clearing:', {userBefore, cartBefore});
@@ -223,16 +275,17 @@ const SolabProvider = ({children}) => {
   }, []);
 
   const logout = useCallback(async () => {
+    console.log('In logout');
     try {
-      await clearAsyncStorage(); // Ensure AsyncStorage is cleared
-      setUser(null); // Clear user state
-      setCart([]); // Clear cart state
-      setIsAuthenticated(false); // Update authentication state
+      await clearAsyncStorage();
+      setUser(null);
+      setCart([]);
+      setIsAuthenticated(false);
       console.log('Logged out successfully');
     } catch (error) {
       console.log('Failed to log out:', error);
     }
-  }, [clearAsyncStorage]);
+  }, []);
 
   const addItem = (item, itemId) => {
     const existingItemIndex = cart.findIndex(item => item._id === itemId);
@@ -250,7 +303,7 @@ const SolabProvider = ({children}) => {
   };
 
   const addItemToCart = useCallback(
-    (item) => {
+    item => {
       console.log('====================================');
       console.log('Item ID:', item._id); // Log the item's ID
       console.log('====================================');
@@ -264,23 +317,22 @@ const SolabProvider = ({children}) => {
       const updatedCart = [...cart];
 
       // Find the existing item by _id
-      const existingItemIndex = updatedCart.findIndex(cartItem => cartItem._id === item._id);
+      const existingItemIndex = updatedCart.findIndex(
+        cartItem => cartItem._id === item._id,
+      );
 
       // Update the quantity if it exists, otherwise add the item
       if (existingItemIndex !== -1) {
         updatedCart[existingItemIndex].quantity += item.quantity || 1; // Use item.quantity or default to 1
       } else {
-        updatedCart.push({ ...item, quantity: item.quantity || 1 }); // Add the item with a quantity
+        updatedCart.push({...item, quantity: item.quantity || 1}); // Add the item with a quantity
         setIsItemAdded(true); // Set flag to indicate an item was added
       }
 
       setCart(updatedCart); // Update the cart state
     },
-    [cart] // Dependency array
+    [cart], // Dependency array
   );
-
-
-
 
   const checkRemoveItem = useCallback(itemId => {
     Alert.alert('Remove Item', 'Are you sure you want to remove this item?', [
@@ -308,7 +360,7 @@ const SolabProvider = ({children}) => {
     (item, itemId) => {
       // Find the existing item index using _id
       const existingItemIndex = cart.findIndex(
-        cartItem => cartItem._id === itemId // Change to use _id
+        cartItem => cartItem._id === itemId, // Change to use _id
       );
       const updatedCart = [...cart];
 
@@ -330,7 +382,7 @@ const SolabProvider = ({children}) => {
                 text: 'Remove',
                 onPress: () => removeItem(itemId), // Call removeItem with itemId
               },
-            ]
+            ],
           );
         } else {
           // Decrease the quantity of the existing item
@@ -341,7 +393,7 @@ const SolabProvider = ({children}) => {
         setCart(updatedCart);
       }
     },
-    [cart] // Dependency array
+    [cart], // Dependency array
   );
 
   const saveUserProducts = fetchedItems => {
@@ -408,6 +460,7 @@ const SolabProvider = ({children}) => {
     rows,
     cat,
     pets,
+    language,
   };
 
   return (

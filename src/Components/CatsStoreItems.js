@@ -22,6 +22,7 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
 
   const navigation = useNavigation();
   const {
+    availableStock,
     _id,
     brand,
     name,
@@ -65,8 +66,18 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
 
   return (
     <View
-      style={user.role === 'staff' ? styles.itemWidthStaff : styles.itemWidth}>
+      style={user?.role === 'staff' ? styles.itemWidthStaff : styles.itemWidth}>
       <View style={styles.items}>
+        {user?.role == 'staff' && (
+          <View style={styles.stock}>
+            <Text style={styles.stocktext}>{availableStock}</Text>
+          </View>
+        )}
+        {availableStock == 0 && (
+          <View style={styles.notavailableStock}>
+            <Text style={styles.stockTxt}>Out of Stock</Text>
+          </View>
+        )}
         <TouchableOpacity onPress={onCardPress} activeOpacity={0.6}>
           <Image
             source={img}
@@ -89,16 +100,15 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
             {kg !== 0 && <Text style={styles.bottomtxt4}>{`${kg} kg`}</Text>}
           </View>
         </View>
-        {user.role === 'staff' ? (
-          <TouchableOpacity onPress={() => handleEditProducts()}>
+        {user?.role === 'staff' && (
+          <TouchableOpacity
+            onPress={() => handleEditProducts()}
+            style={styles.editButtonContainer}>
             <View style={{width: 50, height: 50}}>
               <Image source={Images.edit()} style={styles.edit} />
             </View>
           </TouchableOpacity>
-        ) : (
-          console.log('User is not staff')
         )}
-
         <View style={styles.center}>
           <TouchableOpacity activeOpacity={0.7} onPress={onCardPress}>
             <View style={styles.cart}>
@@ -125,6 +135,44 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
 export default CatsStoreItems;
 
 const styles = StyleSheet.create({
+  stocktext: {
+    borderWidth: 1,
+    padding: 5,
+    borderRadius: 5,
+    backgroundColor: 'white',
+    elevation: 16,
+  },
+  stock: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  editButtonContainer: {
+    zIndex: 5,
+    width: 30,
+    height: 30,
+    marginBottom: 15,
+  },
+  stockTxt: {
+    borderWidth: 1,
+    width: '100%',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    padding: 5,
+    borderRadius: 10,
+    textAlign: 'center',
+  },
+  notavailableStock: {
+    position: 'absolute',
+    top: 0, // Adjust as necessary
+    left: 0, // Adjust as necessary
+    right: 0, // Ensure it stretches across the parent
+    bottom: 0, // Ensure it stretches across the parent
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    zIndex: 1, // High zIndex to appear on top
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
   itemWidthStaff: {
     width: 140,
     height: 300,
@@ -142,7 +190,10 @@ const styles = StyleSheet.create({
   center: {
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex: 4, // Higher than the notavailableStock
+    position: 'relative', // Ensure it has positioning context
   },
+
   sale: {
     position: 'absolute',
     top: 10,
@@ -186,6 +237,7 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     resizeMode: 'contain',
+    zIndex: 20,
   },
   itemWidth: {
     width: 140,
@@ -265,6 +317,7 @@ const styles = StyleSheet.create({
     width: 120,
     alignItems: 'center',
     bottom: 10,
+    zIndex: 20,
   },
   carttxt: {
     fontSize: 12,

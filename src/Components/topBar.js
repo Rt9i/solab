@@ -66,7 +66,7 @@ const TopBar = () => {
   );
 
   const arrow = () => (
-    <TouchableOpacity onPress={goBack} style={styles.touch}>
+    <TouchableOpacity onPress={() => goBack()} style={styles.touch}>
       <View style={styles.arrow}>
         <Image source={Images.arrow()} style={styles.image} />
       </View>

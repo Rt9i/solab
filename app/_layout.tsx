@@ -17,29 +17,29 @@ function AppContent() {
   const {saveUser} = useContext(SolabContext);
   const [initialRoute, setInitialRoute] = useState<string | null>(null);
 
-  const checkAuth = useCallback(async () => {
-    try {
-      const savedUser = await AsyncStorage.getItem('user');
-      if (savedUser) {
-        saveUser(JSON.parse(savedUser));
-        setInitialRoute('splash'); // Redirect to splash if authenticated
-      } else {
-        setInitialRoute('login'); // Redirect to login if not authenticated
-      }
-    } catch (error) {
-      console.log('Failed to load user from storage:', error);
-      setInitialRoute('login'); // Fallback to login on error
-    }
-  }, [saveUser]);
+  // const checkAuth = useCallback(async () => {
+  //   try {
+  //     const savedUser = await AsyncStorage.getItem('user');
+  //     if (savedUser) {
+  //       saveUser(JSON.parse(savedUser));
+  //       setInitialRoute('splash');
+  //     } else {
+  //       setInitialRoute('login'); // Redirect to login if not authenticated
+  //     }
+  //   } catch (error) {
+  //     console.log('Failed to load user from storage:', error);
+  //     setInitialRoute('login'); // Fallback to login on error
+  //   }
+  // }, [saveUser]);
 
-  useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+  // useEffect(() => {
+  //   checkAuth();
+  // }, [checkAuth]);
 
   return (
     <Stack>
       <Stack.Screen name="Login" options={{headerShown: false}} />
-      <Stack.Screen name="Splash" options={{headerShown: false}} />
+      {/* <Stack.Screen name="Splash" options={{headerShown: false}} /> */}
       <Stack.Screen name="Home" options={{headerShown: false}} />
       <Stack.Screen name="StaffHome" />
       <Stack.Screen name="WorkersHome" />

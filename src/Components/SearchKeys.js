@@ -44,7 +44,7 @@ const SearchKeys = ({searchKeysArray, setSearchKeysArray}) => {
         placeholderTextColor="#7D7D7D"
         returnKeyType="done"
       />
-      <View style={searchKeysArray?.length > 0 ? {} : {height:30}}>
+      <View style={searchKeysArray?.length > 0 ? {} : {height: 30}}>
         <FlashList
           data={searchKeysArray}
           renderItem={renderItem}
@@ -60,7 +60,9 @@ const SearchKeys = ({searchKeysArray, setSearchKeysArray}) => {
 export default SearchKeys;
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    flex: 1,
+  },
   input: {
     height: 40,
     borderColor: 'gray',

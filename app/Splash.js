@@ -1,91 +1,95 @@
-import {Image, StyleSheet, View} from 'react-native';
-import React, {useContext, useEffect, useRef} from 'react';
-import ScreenNames from '../routes/ScreenNames';
-import Images from '../src/assets/images/images';
-import {
-  getUserByID,
-  getUserProducts,
-  getDataFromDataBase,
-} from '../src/res/api';
-import SolabContext from '../src/store/solabContext';
+// import {Image, StyleSheet, View} from 'react-native';
+// import React, {useContext, useEffect, useRef} from 'react';
+// import ScreenNames from '../routes/ScreenNames';
+// import Images from '../src/assets/images/images';
+// import {
+//   getUserByID,
+//   getUserProducts,
+//   getDataFromDataBase,
+// } from '../src/res/api';
+// import SolabContext from '../src/store/solabContext';
+// import {useNavigation} from 'expo-router';
 
-const Splash = props => {
-  const {setUser, saveUserProducts, setData} = useContext(SolabContext);
-  const currentUserId = useContext(SolabContext).user?._id;
-  const hasFetchedData = useRef(false);
+// const Splash = props => {
+//   const {setUser, saveUserProducts, setData, user} = useContext(SolabContext);
+//   const currentUserId = user?._id;
+//   const hasFetchedData = useRef(false);
+//   const nav = useNavigation();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (hasFetchedData.current) {
-        return;
-      }
-      hasFetchedData.current = true;
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       if (hasFetchedData.current) return;
+//       hasFetchedData.current = true;
 
-      try {
-        const result = await getDataFromDataBase();
-        setData(result);
-        // console.log('Data fetched:', result);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
+//       try {
+//         const result = await getDataFromDataBase();
+//         setData(result);
+//       } catch (error) {
+//         console.error('Error fetching data:', error);
+//       }
+//     };
 
-    const updateUserAndFetchProducts = async () => {
-      if (!currentUserId) {
-        return;
-      }
+//     const updateUserAndFetchProducts = async () => {
+//       if (!currentUserId) {
+//         nav.replace('Login'); // Navigate to Login if no current user ID
+//         console.log('working');
 
-      try {
-        const newUser = await getUserByID(currentUserId);
-        // Check if newUser is valid
-        if (!newUser || !newUser.role) {
-          console.error('User data is invalid:', newUser);
-          return;
-        }
+//         return;
+//       }
 
-        setUser(newUser);
+//       try {
+//         const newUser = await getUserByID(currentUserId);
 
-        const response = await getUserProducts(currentUserId);
-        saveUserProducts(response);
+//         if (!newUser) {
+//           console.error('User data is invalid:', newUser);
+//           nav.navigate('Login'); // Navigate to Login if the user is invalid
+//           return;
+//         }
 
-        // Check if newUser.role is defined before using it
-        if (newUser.role === 'client') {
-          props.navigation.replace('home');
-        } else if (newUser.role === 'worker') {
-          props.navigation.replace('workerHome');
-        } else if (newUser.role === 'staff') {
-          props.navigation.replace('StaffHome');
-        }
-      } catch (error) {
-        console.error('Error fetching user or products:', error);
-      }
-    };
+//         setUser(newUser);
+//         const response = await getUserProducts(currentUserId);
+//         saveUserProducts(response);
 
-    if (currentUserId) {
-      fetchData();
-      updateUserAndFetchProducts(); // Update user and fetch products
-    }
-  }, [currentUserId]);
+//         if (newUser.role === 'client') {
+//           nav.replace('home');
+//         } else if (newUser.role === 'worker') {
+//           nav.replace('workerHome');
+//         } else if (newUser.role === 'staff') {
+//           nav.replace('StaffHome');
+//         }
+//       } catch (error) {
+//         console.error('Error fetching user or products:', error);
+//         nav.navigate('Login'); // Navigate to Login on error
+//       }
+//     };
 
-  return (
-    <View style={styles.container}>
-      <Image source={Images.whiteLogo()} style={styles.image} />
-    </View>
-  );
-};
+//     if (currentUserId) {
+//       fetchData();
+//       updateUserAndFetchProducts();
+//     } else {
+//       nav.navigate('Login'); // Navigate to Login if user is missing
+//     }
+//   }, [currentUserId]);
 
-export default Splash;
+//   return (
+//     <View style={styles.container}>
+//       <Image source={Images.whiteLogo()} style={styles.image} />
+//     </View>
+//   );
+// };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'black',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  image: {
-    flex: 1,
-    width: 500,
-    resizeMode: 'contain',
-  },
-});
+// export default Splash;
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: 'black',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+//   image: {
+//     flex: 1,
+//     width: 500,
+//     resizeMode: 'contain',
+//   },
+// });
