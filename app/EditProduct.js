@@ -38,6 +38,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {launchImageLibrary} from 'react-native-image-picker';
 import * as MediaLibrary from 'expo-media-library';
 import * as ImagePicker from 'expo-image-picker';
+import CustomModal from '@/src/Components/customModal';
 
 const EditProduct = () => {
   const route = useRoute(); // Use the hook to get the route
@@ -56,7 +57,9 @@ const EditProduct = () => {
     salePrice = null,
     searchKeys = [],
     _id,
-  } = route.params || {}; // Get params from the route
+  } = route.params || {};
+
+  console.log('category is: ', category);
 
   const {strings, setData, cat, rows, pets, language} =
     useContext(SolabContext);
@@ -75,6 +78,7 @@ const EditProduct = () => {
   const [searchKeysState, setSearchKeysState] = useState(searchKeys);
   const [petTypeState, setPetTypeState] = useState(petType);
   const [selectedCategory, setSelectedCategory] = useState('');
+
   const [showreqModal, setShowreqModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -88,6 +92,40 @@ const EditProduct = () => {
   const goback = () => {
     nav.goBack();
   };
+
+  const validateAndCreateItemData = () => {
+    let missingFields = [];
+
+    if (selectedImage == null && img === Images.photo()) {
+      console.log('selected img: ', selectedImage);
+      missingFields.push(strings.image);
+    }
+    if (!brandState) missingFields.push(strings.brand);
+    if (!priceState) missingFields.push(strings.price);
+    if (!selectedCategory) missingFields.push(strings.category);
+    if (!row) missingFields.push(strings.row);
+    if (petTypeState.length === 0) missingFields.push(strings.petType);
+
+    return {
+      missingFields,
+      newItemData: {
+        brand: brandState,
+        name: nameState,
+        taste: tasteState,
+        price: priceState,
+        img: selectedImage || img.uri,
+        category: [selectedCategory, row],
+        dis: disState,
+        kg: kgState,
+        saleAmount: saleAmountState,
+        salePrice: salePriceState,
+        searchKeys: searchKeysState,
+        petType: petTypeState,
+        availableStock: availableStockState,
+      },
+    };
+  };
+
   const getFileTypeFromUri = uri => {
     const extension = uri.split('.').pop();
     switch (extension) {
@@ -243,38 +281,6 @@ const EditProduct = () => {
     );
   };
 
-  const validateAndCreateItemData = () => {
-    let missingFields = [];
-
-    if (selectedImage == null && img === Images.photo()) {
-      console.log('selected img: ', selectedImage);
-      missingFields.push(strings.image);
-    }
-    if (!brandState) missingFields.push(strings.brand);
-    if (!priceState) missingFields.push(strings.price);
-    if (!selectedCategory) missingFields.push(strings.category);
-    if (!row) missingFields.push(strings.row);
-    if (petTypeState.length === 0) missingFields.push(strings.petType);
-
-    return {
-      missingFields,
-      newItemData: {
-        brand: brandState,
-        name: nameState,
-        taste: tasteState,
-        price: priceState,
-        img: selectedImage || img.uri,
-        category: [selectedCategory, row],
-        kg: kgState,
-        saleAmount: saleAmountState,
-        salePrice: salePriceState,
-        searchKeys: searchKeysState,
-        petType: petTypeState,
-        availableStock: availableStockState,
-      },
-    };
-  };
-
   const addItem = async () => {
     const {missingFields, newItemData} = validateAndCreateItemData();
     if (parseFloat(saleAmountState) > parseFloat(salePriceState)) {
@@ -389,20 +395,21 @@ const EditProduct = () => {
   }, [findRowAndCategory]);
 
   const handleInput = useCallback(
-    (label, state, setState, keyboardType = 'default') => (
+    (label, state, setState, keyboardType = 'default', styling) => (
       <View style={styles.inputWrapper}>
+        {console.log('style is: ', styling)}
         <Text style={styles.label}>{label}</Text>
 
         <TextInput
-          style={styles.input}
+          style={styling ? styling : styles.input}
           placeholder={label}
           placeholderTextColor="#7D7D7D"
           value={state !== null && state !== undefined ? state.toString() : ''}
           onChangeText={setState}
           keyboardType={keyboardType}
           returnKeyType="done"
-          multiline={true} // Allow multiple lines
-          textAlignVertical="top" // Start text at the top
+          multiline={true}
+          textAlignVertical="top"
         />
       </View>
     ),
@@ -568,7 +575,13 @@ const EditProduct = () => {
         </View>
 
         <View style={styles.dis}>
-          {handleInput(strings.dis, disState, setDisState)}
+          {handleInput(
+            strings.dis,
+            disState,
+            setDisState,
+            'default',
+            styles.disInput,
+          )}
         </View>
 
         {petTypes()}
@@ -631,41 +644,6 @@ const EditProduct = () => {
   const cancelDelete = () => {
     setModalVisible(false); // Close the modal without deleting
   };
-  const deleteModal = () => {
-    return (
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={cancelDelete} // Close modal on back button press
-      >
-        <View style={styles.modalBackground}>
-          <View style={styles.modalContainer}>
-            <Text style={styles.modalMessage}>{strings.delMessage}</Text>
-            {delLoading ? (
-              <View style={styles.loadingContainer}>
-                <ActivityIndicator size="large" color="#0000ff" />
-              </View>
-            ) : (
-              <View style={styles.row}>
-                <TouchableOpacity
-                  style={styles.modalButton}
-                  onPress={confirmDelete}>
-                  <Text style={styles.modalButtonText}>Yes</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={styles.modalButton}
-                  onPress={cancelDelete}>
-                  <Text style={styles.modalButtonText}>No</Text>
-                </TouchableOpacity>
-              </View>
-            )}
-          </View>
-        </View>
-      </Modal>
-    );
-  };
 
   return (
     <View
@@ -688,7 +666,14 @@ const EditProduct = () => {
 
           {image()}
           {inputs()}
-          {deleteModal()}
+
+          <CustomModal
+            message={strings.delMessage}
+            visible={modalVisible}
+            onConfirm={confirmDelete}
+            onCancel={cancelDelete}
+            loading={delLoading}
+          />
           <PermissionRequestModal />
           <CustomAlert message={errorMessage} />
         </View>
@@ -729,19 +714,23 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     elevation: 14,
     marginTop: 25,
+    borderRadius: 10,
   },
   elevation: {
     elevation: 10,
     backgroundColor: 'white',
+    borderRadius: 10,
   },
   dis: {
     justifyContent: 'center',
     alignItems: 'center',
     height: 200,
-    width: '100%', // Make sure this is a percentage or fixed value
-    padding: 10, // Add some padding if needed
+    width: '100%',
+    padding: 10,
     backgroundColor: 'white',
     elevation: 10,
+    marginTop: 15,
+    borderRadius: 10,
   },
   search: {
     flex: 1,
@@ -749,11 +738,6 @@ const styles = StyleSheet.create({
     elevation: 10,
     borderRadius: 10,
     flexDirection: 'row',
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
   },
 
   modalButtonText: {
@@ -885,7 +869,7 @@ const styles = StyleSheet.create({
   },
   price: {
     width: '100%',
-    height: 100,
+    height: 50,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -906,6 +890,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
+    height: 60,
   },
   inputWrapper: {
     flexWrap: 'wrap',
@@ -947,26 +932,36 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
   },
+  disInput: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+    width: 320,
+    color: 'black',
+    height: 55,
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 5,
+    backgroundColor: 'white',
+
+    elevation: 5,
+  },
   input: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     textAlign: 'center',
+    width: 100,
 
     color: 'black',
-    height: 40,
-    borderColor: 'gray',
+
+    borderColor: 'grey',
     borderWidth: 1,
     borderRadius: 5,
-    marginBottom: 10,
-    paddingHorizontal: 10,
 
+    height: 30,
     backgroundColor: 'white',
-
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
 
     elevation: 5,
   },

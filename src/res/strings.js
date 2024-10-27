@@ -1,4 +1,5 @@
 const enStrings = {
+  productAdded: 'Product added',
   searchKeys: 'search keys',
   inStock: 'In Stock',
   dis: 'description',
@@ -49,6 +50,8 @@ const enStrings = {
   clearCart: 'Clear cart',
   image: 'image',
   selectAll: 'Select All',
+  seeAllButton: 'See all',
+  itemaddsucces: 'Item added to cart successfully',
 };
 
 const heStrings = {
@@ -103,9 +106,14 @@ const heStrings = {
   dis: 'תיאור',
   inStock: 'זמין במלאי',
   searchKeys: 'מילות חיפוש',
+  seeAllButton: 'כל המוצרים',
+  productAdded: 'המוצר נוסף',
+  itemaddsucces: 'פריט נוסף לסל בהצלחה',
 };
 
 const arStrings = {
+  itemaddsucces: 'تم إضافة العنصر إلى السلة بنجاح',
+  productAdded: 'تم إضافة المنتج',
   inStock: 'متوفر',
   dis: 'وصف',
   amountError: 'كمية التخفيض أكبر من سعر التخفيض',
@@ -158,6 +166,7 @@ const arStrings = {
   image: 'صوره',
   selectAll: 'اختر الكل',
   searchKeys: 'مفاتيح البحث',
+  seeAllButton: 'كل المنتجات',
 };
 
 export {enStrings, heStrings, arStrings};

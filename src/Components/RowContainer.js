@@ -1,19 +1,32 @@
 import React, {useContext, useEffect, useRef, memo} from 'react';
-import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {View, StyleSheet, Text, TouchableOpacity, Image} from 'react-native';
+
 import ScreenNames from '../../routes/ScreenNames';
 import SolabContext from '../store/solabContext';
 import {FlashList} from '@shopify/flash-list';
+import {useNavigation} from 'expo-router';
+
+import Images from '../assets/images/images';
 
 const RenderItem = memo(({item, renderItem}) => renderItem({item}));
 
-const RowContainer = ({items, renderItem, text, selectedCategory, index}) => {
+const RowContainer = ({
+  items,
+  renderItem,
+  text,
+  selectedCategory,
+  index,
+  row,
+}) => {
   const navigation = useNavigation();
   const flatListRef = useRef();
-  const {selectedIcons, scrollToTop, user} = useContext(SolabContext);
+  const {selectedIcons, scrollToTop, user, strings} = useContext(SolabContext);
+
+
+  const category = [`${row}`];
 
   const onSeeAllPress = () => {
-    navigation.navigate('SeeAllProducts', {items, renderItem});
+    navigation.navigate('SeeAllProducts', {items});
   };
 
   useEffect(() => {
@@ -27,22 +40,33 @@ const RowContainer = ({items, renderItem, text, selectedCategory, index}) => {
       flatListRef.current.scrollToOffset({offset: 0, animated: true});
     }
   }, [scrollToTop]);
+  const navEdit = row => {
+    navigation.navigate('EditProduct', {category});
+  };
 
   return (
     <View style={styles.container}>
       {user?.role == 'staff' && (
-        <View style={styles.additem}>
-          <Text style={styles.plus}>+</Text>
-          <Text style={styles.plus}>{index}</Text>
-        </View>
+        <TouchableOpacity
+          onPress={() => navEdit(category)}
+          style={styles.additem}
+          activeOpacity={0.9}>
+          <View style={styles.additem}>
+            <Text style={styles.plus}>+</Text>
+            <Text style={styles.plus}>{index}</Text>
+          </View>
+        </TouchableOpacity>
       )}
+
       {items.length > 0 ? (
         <View>
           <View style={styles.header}>
             <TouchableOpacity
               onPress={onSeeAllPress}
               style={styles.seeAllButton}>
-              <Text style={styles.seeAllText}>See All -&gt;</Text>
+              <Text style={styles.seeAllText}>{strings.seeAllButton}</Text>
+              <Image source={Images.arrow()} style={styles.img} />
+              {/* Moved outside */}
             </TouchableOpacity>
 
             {text && <Text style={styles.headerText}>{text}</Text>}
@@ -70,6 +94,11 @@ const RowContainer = ({items, renderItem, text, selectedCategory, index}) => {
 };
 
 const styles = StyleSheet.create({
+  img: {
+    height: 20,
+    width: 20,
+    transform: [{rotate: '180deg'}],
+  },
   plus: {
     textAlign: 'center',
     fontSize: 24,
@@ -95,9 +124,7 @@ const styles = StyleSheet.create({
     marginBottom: 3,
   },
   seeAllButton: {
-    height: 20,
-  },
-  seeAllText: {
+    flexDirection: 'row',
     padding: 2,
     borderWidth: 0.3,
     justifyContent: 'center',
@@ -105,6 +132,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     color: 'black',
   },
+  seeAllText: {},
   headerText: {
     textAlign: 'center',
     borderWidth: 1,

@@ -80,9 +80,10 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
   },
   modalButton: {
+    height: 45,
     backgroundColor: '#2196F3',
     borderRadius: 5,
     padding: 10,
@@ -90,6 +91,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   modalButtonText: {
+    height: 60,
     color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',

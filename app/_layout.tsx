@@ -10,6 +10,7 @@ import {useColorScheme} from '@/hooks/useColorScheme';
 import SolabProvider from '../src/store/solabProvider';
 import SolabContext from '../src/store/solabContext';
 import ScreenNames from '../routes/ScreenNames';
+import Toast from 'react-native-toast-message';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -37,30 +38,32 @@ function AppContent() {
   // }, [checkAuth]);
 
   return (
-    <Stack>
-      <Stack.Screen name="Login" options={{headerShown: false}} />
-      {/* <Stack.Screen name="Splash" options={{headerShown: false}} /> */}
-      <Stack.Screen name="Home" options={{headerShown: false}} />
-      <Stack.Screen name="StaffHome" />
-      <Stack.Screen name="WorkersHome" />
-      <Stack.Screen name="EditProduct" />
-      <Stack.Screen name="SettingsScreen" />
-      <Stack.Screen name="Cart" />
-      <Stack.Screen name="Profile" />
-      <Stack.Screen name="CatsStore" options={{headerShown: false}} />
-      <Stack.Screen
-        name="ProductScreen"
-        options={{
-          headerTitle: '',
-          headerStyle: {backgroundColor: 'white'},
-          headerTintColor: '#000000',
-          headerTitleAlign: 'center',
-        }}
-      />
-      <Stack.Screen name="SeeAllProducts" />
-      <Stack.Screen name="index" options={{headerShown: false}} />
-      <Stack.Screen name="+not-found" />
-    </Stack>
+    <>
+      <Stack>
+        <Stack.Screen name="Login" options={{headerShown: false}} />
+        <Stack.Screen name="Home" options={{headerShown: false}} />
+        <Stack.Screen name="StaffHome" />
+        <Stack.Screen name="WorkersHome" />
+        <Stack.Screen name="EditProduct" />
+        <Stack.Screen name="SettingsScreen" />
+        <Stack.Screen name="Cart" />
+        <Stack.Screen name="Profile" />
+        <Stack.Screen name="CatsStore" options={{headerShown: false}} />
+        <Stack.Screen
+          name="ProductScreen"
+          options={{
+            headerTitle: '',
+            headerStyle: {backgroundColor: 'white'},
+            headerTintColor: '#000000',
+            headerTitleAlign: 'center',
+          }}
+        />
+        <Stack.Screen name="SeeAllProducts" />
+        <Stack.Screen name="index" options={{headerShown: false}} />
+        <Stack.Screen name="+not-found" />
+      </Stack>
+      <Toast ref={ref => Toast.setRef(ref)} />
+    </>
   );
 }
 

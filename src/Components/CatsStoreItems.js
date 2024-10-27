@@ -5,6 +5,7 @@ import {
   Text,
   View,
   Alert,
+  ScrollView,
 } from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -14,7 +15,7 @@ import Images from '../assets/images/images';
 import AddOrLess from './AddOrLess';
 
 const CatsStoreItems = ({selectedCategory, ...props}) => {
-  const {strings, changeLanguage, user} = useContext(SolabContext);
+  const {strings, changeLanguage, user, row} = useContext(SolabContext);
   const meatImg = {
     resizeMode: 'contain',
     height: 110,
@@ -40,11 +41,12 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
     salePrice,
     petType,
   } = props;
-  const {cart, setCart, handleAddItem, addItem} = useContext(SolabContext);
+  const {cart, setCart, handleAddItem, addItem, rows} =
+    useContext(SolabContext);
   const [isAddedToCart, setIsAddedToCart] = useState(false);
   const {isItemAdded, setIsItemAdded} = useContext(SolabContext);
   const {removeItem} = useContext(SolabContext);
-
+  const [showRows, setShowRows] = useState(false);
   // useEffect(() => {
   //   const isInCart = cart.some(item => item.productId === id);
   //   console.log("isincarto: ",isInCart);
@@ -63,71 +65,103 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
   const handleEditProducts = () => {
     navigation.navigate('EditProduct', props);
   };
-
+  const showRow = () => {
+    {
+      rows.map(item => {
+        return (
+          <View style={{backgroundColor: 'green', width: 50, height: 50}}>
+            <Text>{item.id}</Text>
+          </View>
+        );
+      });
+    }
+  };
+  const toggleShowRows = () => {
+    setShowRows(prev => !prev);
+  };
   return (
-    <View
-      style={user?.role === 'staff' ? styles.itemWidthStaff : styles.itemWidth}>
-      <View style={styles.items}>
-        {user?.role == 'staff' && (
-          <View style={styles.stock}>
-            <Text style={styles.stocktext}>{availableStock}</Text>
-          </View>
-        )}
-        {availableStock == 0 && (
-          <View style={styles.notavailableStock}>
-            <Text style={styles.stockTxt}>Out of Stock</Text>
-          </View>
-        )}
-        <TouchableOpacity onPress={onCardPress} activeOpacity={0.6}>
-          <Image
-            source={img}
-            style={[
-              styles.img,
-              selectedCategory === 'catMeat' ? meatImg : null,
-            ]}
-          />
-        </TouchableOpacity>
+    <View>
+      {/* {showRows && (
+        <View style={styles.rowsContainer}>
+          <ScrollView horizontal={true} width={60}>
+            {rows.map(item => (
+              <View key={item.id} style={styles.rowItem}>
+                <Text>{item.id}</Text>
+              </View>
+            ))}
+          </ScrollView>
+        </View>
+      )} */}
+      <View
+        style={
+          user?.role === 'staff' ? styles.itemWidthStaff : styles.itemWidth
+        }>
+        <View style={styles.items}>
+          {user?.role == 'staff' && (
+            <View style={styles.stock}>
+              <Text style={styles.stocktext}>{availableStock}</Text>
+              {/* <TouchableOpacity onPress={toggleShowRows}>
+                <Image source={Images.pen()} style={styles.icon} />
+              </TouchableOpacity> */}
+            </View>
+          )}
+          {availableStock == 0 && (
+            <View style={styles.notavailableStock}>
+              <Text style={styles.stockTxt}>Out of Stock</Text>
+            </View>
+          )}
+          <TouchableOpacity onPress={onCardPress} activeOpacity={0.6}>
+            <Image
+              source={img}
+              style={[
+                styles.img,
+                selectedCategory === 'catMeat' ? meatImg : null,
+              ]}
+            />
+          </TouchableOpacity>
 
-        <View style={styles.infoContainer}>
-          <View style={styles.bottomcontainer}>
-            <Text style={styles.bottomtxt1}>{` ${taste}`}</Text>
+          <View style={styles.infoContainer}>
+            <View style={styles.bottomcontainer}>
+              <Text style={styles.bottomtxt1}>{` ${taste}`}</Text>
+            </View>
+
+            <View style={styles.priceContainer}>
+              <Text style={styles.bottomtxt2}>
+                {`${price} ${strings.priceTag}`}
+              </Text>
+              {kg !== 0 && <Text style={styles.bottomtxt4}>{`${kg} kg`}</Text>}
+            </View>
           </View>
 
-          <View style={styles.priceContainer}>
-            <Text style={styles.bottomtxt2}>
-              {`${price} ${strings.priceTag}`}
-            </Text>
-            {kg !== 0 && <Text style={styles.bottomtxt4}>{`${kg} kg`}</Text>}
+          {user?.role === 'staff' && (
+            <TouchableOpacity
+              onPress={() => handleEditProducts()}
+              style={styles.editButtonContainer}>
+              <View style={{width: 50, height: 50}}>
+                <Image source={Images.edit()} style={styles.edit} />
+              </View>
+            </TouchableOpacity>
+          )}
+          <View style={styles.center}>
+            <TouchableOpacity activeOpacity={0.7} onPress={onCardPress}>
+              <View style={styles.cart}>
+                <Image source={Images.addCart()} style={styles.addCart} />
+                <Text style={styles.carttxt}>{strings.addToCart}</Text>
+              </View>
+            </TouchableOpacity>
           </View>
         </View>
-        {user?.role === 'staff' && (
-          <TouchableOpacity
-            onPress={() => handleEditProducts()}
-            style={styles.editButtonContainer}>
-            <View style={{width: 50, height: 50}}>
-              <Image source={Images.edit()} style={styles.edit} />
+
+        {saleAmount > 0 && (
+          <View style={styles.sale}>
+            <View style={styles.saleLabel}>
+              <Text style={styles.saleText}>
+                {saleAmount} = {salePrice} {strings.priceTag}
+              </Text>
             </View>
-          </TouchableOpacity>
+          </View>
         )}
-        <View style={styles.center}>
-          <TouchableOpacity activeOpacity={0.7} onPress={onCardPress}>
-            <View style={styles.cart}>
-              <Image source={Images.addCart()} style={styles.addCart} />
-              <Text style={styles.carttxt}>{strings.addToCart}</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
       </View>
-
-      {saleAmount > 0 && (
-        <View style={styles.sale}>
-          <View style={styles.saleLabel}>
-            <Text style={styles.saleText}>
-              {saleAmount} = {salePrice} {strings.priceTag}
-            </Text>
-          </View>
-        </View>
-      )}
     </View>
   );
 };
@@ -135,6 +169,25 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
 export default CatsStoreItems;
 
 const styles = StyleSheet.create({
+  rowsContainer: {
+    position: 'relative',
+    flexDirection: 'row',
+    padding: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    borderRadius: 5,
+
+    zIndex: 5,
+  },
+  rowItem: {
+    backgroundColor: 'white',
+    padding: 10,
+    marginBottom: 5,
+    borderRadius: 5,
+  },
+  icon: {
+    width: 30,
+    height: 30,
+  },
   stocktext: {
     borderWidth: 1,
     padding: 5,
@@ -143,9 +196,10 @@ const styles = StyleSheet.create({
     elevation: 16,
   },
   stock: {
+    zIndex: 4,
+    flexDirection: 'row',
     width: '100%',
     justifyContent: 'center',
-    alignItems: 'center',
   },
   editButtonContainer: {
     zIndex: 5,
@@ -163,12 +217,12 @@ const styles = StyleSheet.create({
   },
   notavailableStock: {
     position: 'absolute',
-    top: 0, // Adjust as necessary
-    left: 0, // Adjust as necessary
-    right: 0, // Ensure it stretches across the parent
-    bottom: 0, // Ensure it stretches across the parent
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.2)',
-    zIndex: 1, // High zIndex to appear on top
+    zIndex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },

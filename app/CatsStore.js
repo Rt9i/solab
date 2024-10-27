@@ -19,6 +19,7 @@ import CatsBarItems from '../src/Components/CatsBarItems';
 import Swipe from '../src/Components/Swipe';
 import CatsStoreItems from '../src/Components/CatsStoreItems';
 import Sizes from '../src/res/sizes';
+import Images from '@/src/assets/images/images';
 
 const CatsStore = props => {
   const [displayMode, setDisplayMode] = useState('row');
@@ -112,11 +113,11 @@ const CatsStore = props => {
             return (
               <RowContainer
                 index={index + 1}
-                key={row.id}
-                row={row}
-                items={filteredItems}
-                renderItem={renderItem}
-                selectedCategory={selectedCategory}
+                key={row.id} // Make sure row.id is unique for each key
+                row={row.rows}
+                items={filteredItems} // Ensure this is defined and valid
+                renderItem={renderItem} // Make sure renderItem is a valid function
+                selectedCategory={selectedCategory} // Ensure this prop is defined
               />
             );
           })}

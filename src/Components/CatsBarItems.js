@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import Images from '../assets/images/images';
 import SolabContext from '../store/solabContext';
+import Sizes from '../res/sizes';
 
 const CatsBarItems = ({selectedCategory, setSelectedCategory, Array}) => {
   const {strings, changeLanguage} = useContext(SolabContext);
@@ -64,8 +65,15 @@ const CatsBarItems = ({selectedCategory, setSelectedCategory, Array}) => {
 
   const renderBarItems = (category, index) => {
     const accessoriesStyle = {
-      borderWidth: 1,
+      color: 'black',
+      // fontFamily: 'smallFont',
+      backgroundColor: '#84a1d2',
       fontSize: 10,
+
+      padding: 3,
+      borderRadius: 10,
+      borderWidth: 1,
+      textAlign: 'center',
     };
 
     return (
@@ -93,7 +101,7 @@ const CatsBarItems = ({selectedCategory, setSelectedCategory, Array}) => {
           <Text
             style={[
               styles.categoryText,
-              category.id === 'catAccessories' ? accessoriesStyle : null,
+              category.id === 'accessories' ? accessoriesStyle : null,
             ]}>
             {category.name}
           </Text>
@@ -117,7 +125,7 @@ const CatsBarItems = ({selectedCategory, setSelectedCategory, Array}) => {
   const scrollToCategory = index => {
     // Calculate the width of each item in the FlatList
     const itemWidth = 79; // Width of each item, adjust as per your styles
-    const screenWidth = Dimensions.get('window').width;
+    const screenWidth = Sizes.screenWidth;
     const scrollToX = index * itemWidth - (screenWidth / 2 - itemWidth / 2); // Adjusted scroll position
 
     flatListRef.current.scrollToOffset({animated: true, offset: scrollToX});
@@ -160,8 +168,8 @@ const styles = StyleSheet.create({
     // fontFamily: 'smallFont',
     backgroundColor: '#84a1d2',
     fontSize: 12,
-    height: 20,
-    width: 60,
+    width: '100%',
+    padding: 2,
     borderRadius: 10,
     borderWidth: 1,
     textAlign: 'center',
