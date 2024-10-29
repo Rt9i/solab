@@ -9,7 +9,7 @@ import {useFonts} from 'expo-font';
 import {useColorScheme} from '@/hooks/useColorScheme';
 import SolabProvider from '../src/store/solabProvider';
 import SolabContext from '../src/store/solabContext';
-import ScreenNames from '../routes/ScreenNames';
+
 import Toast from 'react-native-toast-message';
 
 SplashScreen.preventAutoHideAsync();
@@ -39,7 +39,7 @@ function AppContent() {
 
   return (
     <>
-      <Stack>
+      <Stack initialRouteName={initialRoute || 'index'}>
         <Stack.Screen name="Login" options={{headerShown: false}} />
         <Stack.Screen name="Home" options={{headerShown: false}} />
         <Stack.Screen name="StaffHome" />
@@ -62,7 +62,7 @@ function AppContent() {
         <Stack.Screen name="index" options={{headerShown: false}} />
         <Stack.Screen name="+not-found" />
       </Stack>
-      <Toast ref={ref => Toast.setRef(ref)} />
+      <Toast />
     </>
   );
 }

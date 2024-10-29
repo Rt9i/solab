@@ -123,10 +123,10 @@ const CatsBarItems = ({selectedCategory, setSelectedCategory, Array}) => {
   );
 
   const scrollToCategory = index => {
-    // Calculate the width of each item in the FlatList
-    const itemWidth = 79; // Width of each item, adjust as per your styles
+   
+    const itemWidth = 79; 
     const screenWidth = Sizes.screenWidth;
-    const scrollToX = index * itemWidth - (screenWidth / 2 - itemWidth / 2); // Adjusted scroll position
+    const scrollToX = index * itemWidth - (screenWidth / 2 - itemWidth / 2); 
 
     flatListRef.current.scrollToOffset({animated: true, offset: scrollToX});
   };

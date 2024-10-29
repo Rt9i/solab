@@ -13,6 +13,7 @@ interface CustomModalProps {
   onConfirm?: () => void;
   onCancel: () => void;
   loading?: boolean;
+  itemId:String
 }
 
 const CustomModal: React.FC<CustomModalProps> = ({
@@ -21,6 +22,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
   onConfirm,
   onCancel,
   loading = false,
+  itemId=null,
 }) => {
   return (
     <Modal

@@ -9,12 +9,15 @@ const CartRowItems = props => {
   const {strings} = useContext(SolabContext);
   const Item = {...props};
   const {brand, price, img, _id} = props;
-  const {addItem, removeItemFromCart} = useContext(SolabContext);
+  const {addItem, removeItemFromCart, cart, setCart, setDelModal} =
+    useContext(SolabContext);
   const navigation = useNavigation();
 
   const onCardPress = () => {
     navigation.navigate('ProductScreen', {data: Item});
   };
+
+ 
 
   return (
     <View style={styles.container}>
@@ -36,8 +39,9 @@ const CartRowItems = props => {
             {Item.saleAmount && (
               <View style={styles.sale}>
                 <Text style={styles.saleText}>
-                {` ${Item.saleAmount}`} = {`${Item.salePrice} ${strings.priceTag}`}
-              </Text>
+                  {` ${Item.saleAmount}`} ={' '}
+                  {`${Item.salePrice} ${strings.priceTag}`}
+                </Text>
               </View>
             )}
           </Text>
@@ -56,7 +60,7 @@ const CartRowItems = props => {
             </TouchableOpacity>
             <Text style={styles.quantity}>{props.quantity}</Text>
             <TouchableOpacity
-              onPress={() => removeItemFromCart(Item, Item._id)}
+              onPress={() => removeItemFromCart(Item,Item._id)}
               style={styles.button}>
               <Text style={styles.buttonText}>-</Text>
             </TouchableOpacity>
@@ -83,7 +87,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     width: '95%',
     alignSelf: 'center',
-    height: 160,
+    height: 180,
   },
   imgCont: {
     flex: 1,

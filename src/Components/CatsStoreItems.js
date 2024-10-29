@@ -45,7 +45,7 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
     useContext(SolabContext);
   const [isAddedToCart, setIsAddedToCart] = useState(false);
   const {isItemAdded, setIsItemAdded} = useContext(SolabContext);
-  const {removeItem} = useContext(SolabContext);
+  
   const [showRows, setShowRows] = useState(false);
   // useEffect(() => {
   //   const isInCart = cart.some(item => item.productId === id);
@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
 
   itemWidthStaff: {
     width: 140,
-    height: 300,
+    height: 290,
     marginBottom: 2,
     borderRadius: 5,
     overflow: 'hidden',

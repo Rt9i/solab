@@ -4,12 +4,14 @@ import SolabContext from './solabContext';
 import {enStrings, heStrings, arStrings} from '../res/strings';
 import {Alert} from 'react-native';
 import ScreenNames from '../../routes/ScreenNames';
-import {useNavigation} from '@react-navigation/native';
+
 import {updateUserProducts, saveProductsToDatabase} from '../res/api';
 import getCategoryItemsData from '../res/Data';
 import Images from '../assets/images/images';
 import data from '../res/Data';
 import axios from 'axios';
+import CustomModal from '../Components/customModal';
+import {useNavigation} from 'expo-router';
 const SolabProvider = ({children}) => {
   const [cart, setCart] = useState([]);
   const [isItemAdded, setIsItemAdded] = useState(false);
@@ -17,7 +19,7 @@ const SolabProvider = ({children}) => {
   const [dogBrands, setDogBrands] = useState([]);
   const [language, setLanguage] = useState('he');
   const [strings, setStrings] = useState(heStrings);
-  const [selectedIcons, setSelectedIcons] = useState();
+  const [selectedIcons, setSelectedIcons] = useState([]);
   const [search, setSearch] = useState('');
   const [filteredItemsState, setFilteredItemsState] = useState([]);
   const [keywords, setKeywords] = useState([]);
@@ -28,10 +30,14 @@ const SolabProvider = ({children}) => {
   const [scrollToTop, setScrollToTop] = useState(false);
   const [updatedData, setUpdatedData] = useState([]);
   const [data, setData] = useState([]);
-
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedItemId, setSelectedItemId] = useState('');
+  const [delModal, setDelModal] = useState(false);
+  const nav = useNavigation();
   useEffect(() => {
     console.log('User:', user);
-  }, []);
+  }, [user]);
 
   const translations = {
     en: enStrings,
@@ -41,6 +47,7 @@ const SolabProvider = ({children}) => {
   const pets = [
     {name: 'cat', id: 1, txt: strings.cat},
     {name: 'dog', id: 2, txt: strings.dog},
+    // {name: 'bird', id: 3, txt: strings.dog},
   ];
   const rows = [
     {rows: 'firstRow', id: 1},
@@ -53,6 +60,7 @@ const SolabProvider = ({children}) => {
     {rows: 'eigthRow', id: 8},
     {rows: 'ninthRow', id: 9},
     {rows: 'tenthRow', id: 10},
+    {rows: 'eleventhRow', id: 11},
   ];
 
   const cat = [
@@ -66,20 +74,6 @@ const SolabProvider = ({children}) => {
     {Treats: 'treats'},
     {bowl: 'bowl'},
   ];
-  // useEffect(() => {
-  //   const saveData = async () => {
-  //     try {
-  //       console.log('====================================');
-  //       console.log('SAAVING');
-  //       console.log('====================================');
-  //       await saveProductsToDatabase(data);
-  //     } catch (error) {
-  //       console.error('Failed to save product to data base :', error);
-  //     }
-  //   };
-
-  //   saveData();
-  // }, []);
 
   const triggerScrollToTop = () => {
     setScrollToTop(prev => !prev);
@@ -121,19 +115,15 @@ const SolabProvider = ({children}) => {
   );
 
   useEffect(() => {
-    // console.log('====================================');
-    // console.log('carrttt', cart);
-    // console.log('====================================');
     const saveCartWithDebounce = async () => {
       if (debounceTimeout.current) {
         clearTimeout(debounceTimeout.current);
       }
 
       debounceTimeout.current = setTimeout(async () => {
-        if (cart && cart.length > 0) {
+        if (cart && cart.length >= 0) {
           try {
             if (user?._id) {
-              // User exists, save the cart to the server
               await updateUserProducts(user._id, cart);
               console.log('Cart sent to server:', cart);
             } else {
@@ -160,44 +150,46 @@ const SolabProvider = ({children}) => {
   }, [cart]);
 
   const saveCartToAsyncStorage = async cart => {
-    if (!cart) {
-      console.log('No cart data to save');
-      return; // Exit if the cart is undefined or null
-    }
+    if (user == null) {
+      if (!cart) {
+        console.log('No cart data to save');
+        return;
+      }
 
-    try {
-      const cartString = JSON.stringify(cart);
-      await AsyncStorage.setItem('cart', cartString);
-      console.log('Cart saved to AsyncStorage:', cartString);
-    } catch (error) {
-      console.error('Error saving cart to AsyncStorage:', error);
+      try {
+        const cartString = JSON.stringify(cart);
+        await AsyncStorage.setItem('cart', cartString);
+        console.log('Cart saved to AsyncStorage:', cartString);
+      } catch (error) {
+        console.error('Error saving cart to AsyncStorage:', error);
+      }
     }
   };
 
-  const loadCartFromAsyncStorage = async () => {
+  const loadCartFromAsyncStorage = useCallback(async () => {
     try {
       const cartData = await AsyncStorage.getItem('cart');
       if (cartData) {
         const cart = JSON.parse(cartData);
         console.log('Loaded cart from AsyncStorage:', cart);
-        setCart(cart); // Set the cart state with the parsed data
+        setCart(cart);
       }
     } catch (error) {
       console.error('Error loading cart from AsyncStorage:', error);
     }
-  };
+  }, []);
+
+  // useEffect(() => {
+  //   if (!user) {
+  //     saveCartToAsyncStorage(cart);
+  //   }
+  // }, [cart]);
 
   useEffect(() => {
-    if (!user) {
-      saveCartToAsyncStorage(cart); // Pass the current cart to the function
+    if (user == null) {
+      loadCartFromAsyncStorage();
     }
-  }, [cart, user]); // Add 'user' to the dependency array to trigger on user state change
-
-  useEffect(() => {
-    if (user) {
-      loadCartFromAsyncStorage(); // Load cart from AsyncStorage if the user is logged in
-    }
-  }, [user]); // This will run when the user state changes
+  }, []);
 
   const changeLanguage = useCallback(async lang => {
     try {
@@ -232,6 +224,8 @@ const SolabProvider = ({children}) => {
       try {
         const storedUser = await AsyncStorage.getItem('user');
         if (storedUser) {
+          console.log('getting user from async storage');
+
           setUser(JSON.parse(storedUser));
           setIsAuthenticated(true);
         }
@@ -277,62 +271,56 @@ const SolabProvider = ({children}) => {
   const logout = useCallback(async () => {
     console.log('In logout');
     try {
-      await clearAsyncStorage();
       setUser(null);
       setCart([]);
       setIsAuthenticated(false);
+      await clearAsyncStorage();
+      nav.navigate('index');
       console.log('Logged out successfully');
     } catch (error) {
       console.log('Failed to log out:', error);
     }
   }, []);
 
-  const addItem = (item, itemId) => {
-    const existingItemIndex = cart.findIndex(item => item._id === itemId);
-    const updatedCart = [...cart];
-
-    if (existingItemIndex !== -1) {
-      updatedCart[existingItemIndex].quantity++;
-    } else {
-      item.quantity = 1;
-      updatedCart.push(item);
-      setIsItemAdded(true);
-    }
-
-    setCart(updatedCart);
-  };
-
-  const addItemToCart = useCallback(
-    item => {
-      console.log('====================================');
-      console.log('Item ID:', item._id); // Log the item's ID
-      console.log('====================================');
-
-      // Ensure the item has an _id
-      if (!item._id) {
-        console.error('Item is missing an _id');
-        return; // Prevent adding an invalid item
-      }
-
+  const addItem = useCallback(
+    (item, itemId) => {
+      const existingItemIndex = cart.findIndex(item => item._id === itemId);
       const updatedCart = [...cart];
 
-      // Find the existing item by _id
-      const existingItemIndex = updatedCart.findIndex(
+      if (existingItemIndex !== -1) {
+        updatedCart[existingItemIndex].quantity++;
+      } else {
+        item.quantity = 1;
+        updatedCart.push(item);
+        setIsItemAdded(true);
+      }
+
+      setCart(updatedCart);
+    },
+    [cart],
+  );
+
+  const addItemToCart = useCallback(item => {
+    if (!item._id) {
+      console.error('Item is missing an _id');
+      return;
+    }
+
+    setCart(prevCart => {
+      const existingItemIndex = prevCart.findIndex(
         cartItem => cartItem._id === item._id,
       );
 
-      // Update the quantity if it exists, otherwise add the item
+      const updatedCart = [...prevCart];
       if (existingItemIndex !== -1) {
-        updatedCart[existingItemIndex].quantity += item.quantity || 1; // Use item.quantity or default to 1
+        updatedCart[existingItemIndex].quantity += item.quantity || 1;
       } else {
-        updatedCart.push({...item, quantity: item.quantity || 1}); // Add the item with a quantity
-        setIsItemAdded(true); // Set flag to indicate an item was added
+        updatedCart.push({...item, quantity: item.quantity || 1});
+        setIsItemAdded(true);
       }
-
-      setCart(updatedCart); // Update the cart state
-    },
-    [cart], // Dependency array
-  );
+      return updatedCart;
+    });
+  }, []);
 
   const checkRemoveItem = useCallback(itemId => {
     Alert.alert('Remove Item', 'Are you sure you want to remove this item?', [
@@ -351,14 +339,33 @@ const SolabProvider = ({children}) => {
     itemId => {
       const updatedCart = cart.filter(item => item._id !== itemId);
       setIsItemAdded(false);
+      setDelModal(false);
+      setSelectedItemId('');
       setCart(updatedCart);
     },
     [cart],
   );
 
+  const confirmDelete = async () => {
+    try {
+      setDelLoading(true);
+      const deleting = await removeItemFromDatabase(_id);
+      console.log('Product deleted');
+      const result = await getDataFromDataBase();
+      setData(result);
+      setDelLoading(false);
+      goback();
+    } catch (e) {}
+
+    setModalVisible(false); // Close the modal
+  };
+
+  const cancelDelete = () => {
+    setModalVisible(false); // Close the modal without deleting
+  };
+
   const removeItemFromCart = useCallback(
     (item, itemId) => {
-      // Find the existing item index using _id
       const existingItemIndex = cart.findIndex(
         cartItem => cartItem._id === itemId, // Change to use _id
       );
@@ -370,22 +377,10 @@ const SolabProvider = ({children}) => {
 
         // If quantity is 1, confirm removal
         if (existingItem.quantity === 1) {
-          Alert.alert(
-            'Remove Item',
-            'Are you sure you want to remove this item?',
-            [
-              {
-                text: 'Cancel',
-                style: 'cancel',
-              },
-              {
-                text: 'Remove',
-                onPress: () => removeItem(itemId), // Call removeItem with itemId
-              },
-            ],
-          );
+          // setCart(cart.filter(item => item._id !== itemId));
+          setSelectedItemId(itemId);
+          return setDelModal(true);
         } else {
-          // Decrease the quantity of the existing item
           updatedCart[existingItemIndex].quantity--;
         }
 
@@ -396,25 +391,28 @@ const SolabProvider = ({children}) => {
     [cart], // Dependency array
   );
 
-  const saveUserProducts = fetchedItems => {
-    setCart(prevCart => {
-      const newItems = fetchedItems.map(item => ({
-        ...item,
-      }));
+  const saveUserProducts = useCallback(
+    fetchedItems => {
+      setCart(prevCart => {
+        const newItems = fetchedItems.map(item => ({
+          ...item,
+        }));
 
-      // Ensure no duplicates
-      const updatedCart = [...prevCart];
-      newItems.forEach(newItem => {
-        // Check for duplicates using _id
-        if (!updatedCart.some(cartItem => cartItem._id === newItem._id)) {
-          updatedCart.push(newItem);
-        }
+        // Ensure no duplicates
+        const updatedCart = [...prevCart];
+        newItems.forEach(newItem => {
+          // Check for duplicates using _id
+          if (!updatedCart.some(cartItem => cartItem._id === newItem._id)) {
+            updatedCart.push(newItem);
+          }
+        });
+
+        console.log('Updated cart:', updatedCart);
+        return updatedCart;
       });
-
-      console.log('Updated cart:', updatedCart);
-      return updatedCart;
-    });
-  };
+    },
+    [setCart],
+  );
 
   const contextValue = {
     cart,
@@ -461,6 +459,10 @@ const SolabProvider = ({children}) => {
     cat,
     pets,
     language,
+    delModal,
+    setDelModal,
+    setSelectedItemId,
+    selectedItemId,
   };
 
   return (

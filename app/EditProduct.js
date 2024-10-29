@@ -159,8 +159,8 @@ const EditProduct = () => {
 
     data.append('file', {
       uri: imageUri,
-      type: mimeType, // Use the detected MIME type
-      name: 'my_image' + Date.now() + '.' + mimeType.split('/')[1],
+      type: mimeType,
+      name: 'my_image' + formattedTime + '.' + mimeType.split('/')[1],
     });
     data.append('upload_preset', 'ml_default'); // Your Cloudinary upload preset
 
@@ -417,17 +417,12 @@ const EditProduct = () => {
   );
 
   const petTypes = () => {
-    const pets = [
-      {name: 'cat', id: 1},
-      {name: 'dog', id: 2},
-    ];
-
-    const togglePetType = pet => {
+    const togglePetType = pets => {
       setPetTypeState(prevState => {
-        if (prevState.includes(pet)) {
-          return prevState.filter(item => item !== pet);
+        if (prevState.includes(pets)) {
+          return prevState.filter(item => item !== pets);
         } else {
-          return [...prevState, pet];
+          return [...prevState, pets];
         }
       });
     };
@@ -638,7 +633,7 @@ const EditProduct = () => {
       goback();
     } catch (e) {}
 
-    setModalVisible(false); // Close the modal
+    setModalVisible(false); 
   };
 
   const cancelDelete = () => {
@@ -659,9 +654,11 @@ const EditProduct = () => {
         <View style={styles.container}>
           <View style={styles.row}>
             <Text style={styles.header}>Edit Product</Text>
-            <TouchableOpacity onPress={() => handleDel()}>
-              <Image source={Images.trashCan()} style={styles.trash} />
-            </TouchableOpacity>
+            {_id && (
+              <TouchableOpacity onPress={() => handleDel()}>
+                <Image source={Images.trashCan()} style={styles.trash} />
+              </TouchableOpacity>
+            )}
           </View>
 
           {image()}

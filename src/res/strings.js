@@ -52,6 +52,7 @@ const enStrings = {
   selectAll: 'Select All',
   seeAllButton: 'See all',
   itemaddsucces: 'Item added to cart successfully',
+  selectAProduct: 'Please select a product',
 };
 
 const heStrings = {
@@ -109,9 +110,11 @@ const heStrings = {
   seeAllButton: 'כל המוצרים',
   productAdded: 'המוצר נוסף',
   itemaddsucces: 'פריט נוסף לסל בהצלחה',
+  selectAProduct: 'אנא בחר מוצר',
 };
 
 const arStrings = {
+  selectAProduct: 'الرجاء اختيار منتج',
   itemaddsucces: 'تم إضافة العنصر إلى السلة بنجاح',
   productAdded: 'تم إضافة المنتج',
   inStock: 'متوفر',

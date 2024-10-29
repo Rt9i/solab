@@ -81,9 +81,8 @@ const SettingsScreen = () => {
     },
   ];
 
-  const handleLogOut = () => {
+  const handleLogOut = async () => {
     logout();
-    navigation.navigate('Login');
   };
 
   const renderSettings = () => {

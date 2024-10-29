@@ -49,7 +49,7 @@ const Index = () => {
     if (!asyncUser) {
       await fetchData();
       console.log('User is null, navigating to Login');
-      nav.replace('Login');
+      nav.replace('/Home');
       return;
     }
 

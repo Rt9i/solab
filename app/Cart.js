@@ -22,20 +22,40 @@ import CartRowItems from '../src/Components/CartRowItems';
 import Images from '../src/assets/images/images';
 import {updateUserProducts} from '../src/res/api';
 import CustomModal from '@/src/Components/customModal';
+import Toast from 'react-native-toast-message';
 
 const Cart = props => {
-  const {strings, user, language} = useContext(SolabContext);
-  const {cart, removeItemFromCart, setCart} = useContext(SolabContext);
+  const {
+    strings,
+    user,
+    language,
+    cart,
+    removeItemFromCart,
+    setCart,
+    removeItem,
+    delModal,
+    setDelModal,
+    selectedItemId,
+  } = useContext(SolabContext);
   const [displayMode, setDisplayMode] = useState('row');
   const [selectedItems, setSelectedItems] = useState([]);
   const [isSelectAll, setIsSelectAll] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
   const [previousCartState, setPreviousCartState] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+
+  const getArray = () => {
+    if (selectedItems <= 0) {
+      return cart;
+    } else {
+      return selectedItems;
+    }
+  };
+
   const calculateTotalPrice = () => {
     let total = 0;
 
-    cart.forEach(item => {
+    getArray().forEach(item => {
       const {saleAmount, salePrice, price, quantity} = item;
 
       const saleAmountNum = Number(saleAmount) || 0;
@@ -63,32 +83,26 @@ const Cart = props => {
 
   useEffect(() => {
     calculateTotalPrice();
-  }, [cart]);
+  }, [selectedItems, removeItemFromCart, cart]);
 
-  useEffect(() => {
-    setIsSelectAll(
-      cart.length > 0 && cart.every(item => selectedItems.includes(item._id)),
-    );
-  }, [selectedItems, cart]);
-
-  const handleCheckBoxChange = (isChecked, itemId) => {
-    console.log(`Toggling item: ${itemId}`);
-
+  const handleCheckBoxChange = (isChecked, item) => {
     setSelectedItems(prevSelectedItems => {
-      const newItems = isChecked
-        ? [...prevSelectedItems, itemId]
-        : prevSelectedItems.filter(selectedId => selectedId !== itemId);
-
-      console.log(`Selected Items: ${newItems}`);
-      return newItems;
+      if (isChecked) {
+        return [...prevSelectedItems, item];
+      } else {
+        return prevSelectedItems.filter(
+          selectedItem => selectedItem._id !== item._id,
+        );
+      }
     });
   };
-
   const removeSelectedItems = async () => {
     if (selectedItems.length > 0) {
       const newCart = cart.filter(item => {
         const itemId = item._id;
-        return !selectedItems.includes(itemId);
+        console.log('id is: ', itemId);
+
+        return !selectedItems.some(item => item._id == itemId);
       });
 
       setCart(newCart);
@@ -107,19 +121,24 @@ const Cart = props => {
     if (isSelectAll) {
       setSelectedItems([]);
     } else {
-      const allItemIds = cart.map(item => item._id);
-      setSelectedItems(allItemIds);
+      setSelectedItems(cart);
     }
+
     setIsSelectAll(!isSelectAll);
   }, [isSelectAll, cart]);
+  useEffect(() => {
+    console.log('selected items: ', selectedItems);
+  }, [selectedItems]);
 
   const renderCart = ({item}) => (
     <CartRowItems
       {...item}
       id={item._id}
       hideImage={true}
-      isSelected={selectedItems.includes(item._id)}
-      onCheckBoxChange={handleCheckBoxChange}
+      isSelected={selectedItems.some(
+        selectedItem => selectedItem._id === item._id,
+      )}
+      onCheckBoxChange={isChecked => handleCheckBoxChange(isChecked, item)}
       img={item.img}
       key={item.productId}
     />
@@ -147,6 +166,44 @@ const Cart = props => {
 
   const cancelRemove = () => {
     setModalVisible(false);
+  };
+  const selectAproduct = () =>
+    Toast.show({
+      type: 'info',
+      text1: 'Please select a product',
+      position: 'top',
+      visibilityTime: 3000,
+    });
+
+  const checkOut = async () => {
+    const orderData = {
+      userId: user._id,
+      items: selectedItems,
+      totalPrice: totalPrice,
+    };
+    if (user?._id) {
+      try {
+        // await saveOrderToDatabase(orderData);
+        console.log('Order placed successfully:', orderData);
+
+        setCart([]);
+        setSelectedItems([]);
+      } catch (error) {
+        console.error('Error during checkout:', error);
+      }
+    } else {
+      console.log('man just login ');
+    }
+  };
+
+  const handleCardPress = () => {
+    if (selectedItems.length <= 0) {
+      selectAproduct();
+      return;
+    }
+    console.log('checking out ');
+
+    checkOut();
   };
   return (
     <LinearGradient
@@ -180,6 +237,11 @@ const Cart = props => {
                 )}
               </View>
             </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.cleartouch}
+              onPress={() => handleCardPress()}>
+              <Image source={Images.card()} style={styles.card} />
+            </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.cleartouch}
@@ -196,6 +258,12 @@ const Cart = props => {
         onCancel={cancelRemove}
         loading={false}
       />
+      <CustomModal
+        message={strings.delMessage}
+        visible={delModal}
+        onConfirm={item => removeItem(selectedItemId)}
+        onCancel={() => setDelModal(false)}
+      />
       <FlatList
         data={cart}
         renderItem={renderCart}
@@ -210,6 +278,10 @@ const Cart = props => {
 };
 
 const styles = StyleSheet.create({
+  card: {
+    width: 40,
+    height: 40,
+  },
   insideCheck: {
     justifyContent: 'space-evenly',
     flexDirection: 'row',

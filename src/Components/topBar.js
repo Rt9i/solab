@@ -6,14 +6,16 @@ import {
   Image,
   Text,
   TextInput,
+  Button,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+
 import ScreenNames from '../../routes/ScreenNames';
 import Images from '../assets/images/images';
 import SolabContext from '../store/solabContext';
+import {useNavigation} from 'expo-router';
 
 const TopBar = () => {
-  const {triggerScrollToTop} = useContext(SolabContext);
+  const {triggerScrollToTop, user} = useContext(SolabContext);
   const navigation = useNavigation();
   const {
     cart,
@@ -27,13 +29,15 @@ const TopBar = () => {
   const searchInputRef = useRef(null);
 
   const navigateToSettings = () => {
-    navigation.navigate(ScreenNames.settings);
+    navigation.navigate('SettingsScreen');
   };
 
   const navigateToCart = () => {
-    navigation.navigate(ScreenNames.cart);
+    navigation.navigate('Cart');
   };
-
+  const navLogin = () => {
+    navigation.navigate('Login');
+  };
   const goBack = () => {
     navigation.goBack();
   };
@@ -49,6 +53,16 @@ const TopBar = () => {
     </TouchableOpacity>
   );
 
+  const LoginBox = () => (
+    <TouchableOpacity
+      onPress={navLogin}
+      style={styles.touch}
+      activeOpacity={0.8}>
+      <View style={styles.cartContainer}>
+        <Text style={styles.login}>Login</Text>
+      </View>
+    </TouchableOpacity>
+  );
   const cartBox = () => (
     <TouchableOpacity
       onPress={navigateToCart}
@@ -130,12 +144,29 @@ const TopBar = () => {
           </TouchableOpacity>
         )}
       </View>
+      {!user && LoginBox()}
+
       {cartBox()}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  login: {
+    borderWidth: 1,
+    padding: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderRadius: 4,
+    borderColor: '#1877F2',
+    shadowColor: '#000', // shadow color
+    shadowOffset: {width: 10, height: 20}, // shadow offset
+    shadowOpacity: 0.2, // shadow opacity
+    shadowRadius: 4, // shadow radius for a soft look (iOS only)
+    elevation: 10, // shadow for Android
+  },
+
   arrow: {
     marginTop: 10,
   },
