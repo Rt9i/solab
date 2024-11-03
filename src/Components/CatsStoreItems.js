@@ -13,6 +13,7 @@ import ScreenNames from '../../routes/ScreenNames';
 import SolabContext from '../store/solabContext';
 import Images from '../assets/images/images';
 import AddOrLess from './AddOrLess';
+import Toast from 'react-native-toast-message';
 
 const CatsStoreItems = ({selectedCategory, ...props}) => {
   const {strings, changeLanguage, user, row} = useContext(SolabContext);
@@ -41,27 +42,29 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
     salePrice,
     petType,
   } = props;
-  const {cart, setCart, handleAddItem, addItem, rows} =
-    useContext(SolabContext);
+  const {cart, setCart, addItemToCart, rows} = useContext(SolabContext);
   const [isAddedToCart, setIsAddedToCart] = useState(false);
   const {isItemAdded, setIsItemAdded} = useContext(SolabContext);
-  
+
   const [showRows, setShowRows] = useState(false);
-  // useEffect(() => {
-  //   const isInCart = cart.some(item => item.productId === id);
-  //   console.log("isincarto: ",isInCart);
-  //   setIsAddedToCart(isInCart);
-  // }, [cart]);
 
   const onCardPress = () => {
     const Item = {...props};
     navigation.navigate('ProductScreen', {data: Item});
   };
 
-  // const addToShop = () => {
-  //   const Item = {...props};
-  //   addItem(Item, Item.productId);
-  // };
+  const addToShop = () => {
+    const Item = {...props};
+    addItemToCart(Item, Item.productId);
+    Toast.show({
+      type: 'success',
+
+      text1: strings.productAdded,
+      text2: strings.itemaddsucces + '!🎉',
+      position: 'top', // Show toast from the top
+      visibilityTime: 1000,
+    });
+  };
   const handleEditProducts = () => {
     navigation.navigate('EditProduct', props);
   };
@@ -105,11 +108,12 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
               </TouchableOpacity> */}
             </View>
           )}
-          {availableStock == 0 && (
+          {(availableStock === 0 || availableStock === null) && (
             <View style={styles.notavailableStock}>
               <Text style={styles.stockTxt}>Out of Stock</Text>
             </View>
           )}
+
           <TouchableOpacity onPress={onCardPress} activeOpacity={0.6}>
             <Image
               source={img}
@@ -143,7 +147,7 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
             </TouchableOpacity>
           )}
           <View style={styles.center}>
-            <TouchableOpacity activeOpacity={0.7} onPress={onCardPress}>
+            <TouchableOpacity activeOpacity={0.7} onPress={addToShop}>
               <View style={styles.cart}>
                 <Image source={Images.addCart()} style={styles.addCart} />
                 <Text style={styles.carttxt}>{strings.addToCart}</Text>

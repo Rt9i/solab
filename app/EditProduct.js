@@ -41,7 +41,7 @@ import * as ImagePicker from 'expo-image-picker';
 import CustomModal from '@/src/Components/customModal';
 
 const EditProduct = () => {
-  const route = useRoute(); // Use the hook to get the route
+  const route = useRoute();
   const {
     availableStock = 0,
     dis = '',
@@ -500,7 +500,7 @@ const EditProduct = () => {
         {handleInput(
           ` ${strings.inStock}`,
           availableStockState,
-          text => setAvailableStockState(parseFloat(text) || ''),
+          text => setAvailableStockState(text === '' ? '' : parseFloat(text)),
           'numeric',
         )}
       </View>
@@ -633,7 +633,7 @@ const EditProduct = () => {
       goback();
     } catch (e) {}
 
-    setModalVisible(false); 
+    setModalVisible(false);
   };
 
   const cancelDelete = () => {
@@ -675,20 +675,21 @@ const EditProduct = () => {
           <CustomAlert message={errorMessage} />
         </View>
       </ScrollView>
-
-      {loading ? (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#0000ff" />
-          <Text>{strings.savingChanges}...</Text>
-        </View>
-      ) : (
-        <TouchableOpacity
-          style={styles.savechanges}
-          // onPress={() => {testing();}}
-          onPress={() => (_id ? assignValues() : addItem())}>
-          <Text style={styles.txt}>{strings.saveChanges}</Text>
-        </TouchableOpacity>
-      )}
+      <View style={styles.cont}>
+        {loading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" />
+            <Text>{strings.savingChanges}...</Text>
+          </View>
+        ) : (
+          <TouchableOpacity
+            style={styles.savechanges}
+            // onPress={() => {testing();}}
+            onPress={() => (_id ? assignValues() : addItem())}>
+            <Text style={styles.txt}>{strings.saveChanges}</Text>
+          </TouchableOpacity>
+        )}
+      </View>
     </View>
   );
 };
@@ -696,6 +697,16 @@ const EditProduct = () => {
 export default EditProduct;
 
 const styles = StyleSheet.create({
+  cont: {
+    position: 'absolute',
+    bottom: 0,
+  },
+  loadingContainer: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    elevation: 10,
+  },
+  savingChanges: {},
   meow: {
     fontWeight: 'bold',
     textAlign: 'left  ',
@@ -900,15 +911,12 @@ const styles = StyleSheet.create({
   savechanges: {
     backgroundColor: 'lightblue',
     padding: 10,
-    position: 'absolute',
     borderRadius: 30,
-
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.25,
-    shadowRadius: 3.84, // Radius of the shadow
+    shadowRadius: 3.84, 
     bottom: 5,
-    // Shadow for Android (via elevation)
     elevation: 5,
   },
   container: {

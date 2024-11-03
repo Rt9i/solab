@@ -138,7 +138,7 @@ export const saveProductsToDatabase = async data => {
       headers: {
         'Content-Type': 'application/json',
       },
-      
+
       body: JSON.stringify({items: data}), // Use the original data without modifications
     });
     if (!response.ok) {
@@ -233,7 +233,7 @@ export const removeItemFromDatabase = async id => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({id}), // Send the id in the body
+      body: JSON.stringify({id}),
     });
 
     if (!response.ok) {
@@ -242,10 +242,30 @@ export const removeItemFromDatabase = async id => {
     }
 
     const result = await response.json();
-    return result; // Return the result of the deletion
+    return result;
   } catch (error) {
     console.error('Error deleting item:', error);
     throw error;
+  }
+};
+
+export const delUser = async _id => {
+  try {
+    const response = await fetch(`${mainURL}/delUser`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({_id}),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Failed to delete item: ${errorText}`);
+    }
+  } catch (e) {
+    console.error('Error deleting item:', e);
+    throw e;
   }
 };
 

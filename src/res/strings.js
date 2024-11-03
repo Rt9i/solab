@@ -1,4 +1,5 @@
 const enStrings = {
+  loginMessage: 'do you want to sign in?',
   productAdded: 'Product added',
   searchKeys: 'search keys',
   inStock: 'In Stock',
@@ -53,6 +54,7 @@ const enStrings = {
   seeAllButton: 'See all',
   itemaddsucces: 'Item added to cart successfully',
   selectAProduct: 'Please select a product',
+  delUser: 'do you want to dellete your account?',
 };
 
 const heStrings = {
@@ -111,9 +113,13 @@ const heStrings = {
   productAdded: 'המוצר נוסף',
   itemaddsucces: 'פריט נוסף לסל בהצלחה',
   selectAProduct: 'אנא בחר מוצר',
+  delUser: 'האם אתה רוצה למחוק את החשבון שלך?',
+  loginMessage: ' האם אתה רוצה להיכנס?',
 };
 
 const arStrings = {
+  loginMessage: 'هل تريد تسجيل الدخول؟',
+  delUser: 'هل تريد حذف حسابك؟',
   selectAProduct: 'الرجاء اختيار منتج',
   itemaddsucces: 'تم إضافة العنصر إلى السلة بنجاح',
   productAdded: 'تم إضافة المنتج',

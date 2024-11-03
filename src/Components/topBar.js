@@ -13,6 +13,7 @@ import ScreenNames from '../../routes/ScreenNames';
 import Images from '../assets/images/images';
 import SolabContext from '../store/solabContext';
 import {useNavigation} from 'expo-router';
+import Sizes from '../res/sizes';
 
 const TopBar = () => {
   const {triggerScrollToTop, user} = useContext(SolabContext);
@@ -58,7 +59,7 @@ const TopBar = () => {
       onPress={navLogin}
       style={styles.touch}
       activeOpacity={0.8}>
-      <View style={styles.cartContainer}>
+      <View style={styles.loginContainer}>
         <Text style={styles.login}>Login</Text>
       </View>
     </TouchableOpacity>
@@ -69,7 +70,7 @@ const TopBar = () => {
       style={styles.touch}
       activeOpacity={0.8}>
       <View style={styles.cartContainer}>
-        <Image source={Images.cart()} style={styles.img} resizeMode="contain" />
+        <Image source={Images.cart()} style={styles.img} />
         {cart.length > 0 && (
           <View style={styles.cartBadge}>
             <Text style={styles.cartBadgeText}>{cart.length}</Text>
@@ -80,7 +81,10 @@ const TopBar = () => {
   );
 
   const arrow = () => (
-    <TouchableOpacity onPress={() => goBack()} style={styles.touch}>
+    <TouchableOpacity
+      onPress={() => goBack()}
+      style={styles.touch}
+      activeOpacity={1}>
       <View style={styles.arrow}>
         <Image source={Images.arrow()} style={styles.image} />
       </View>
@@ -97,7 +101,7 @@ const TopBar = () => {
       setFilteredItemsState(rowValue => getFilteredItemsForRow(rowValue));
     } else {
       setSearch('');
-      setFilteredItemsState([]); // Or however you want to reset the filtered items
+      setFilteredItemsState([]);
     }
   };
 
@@ -107,7 +111,6 @@ const TopBar = () => {
     setFilteredItemsState([]); // Clear the filtered items
   };
 
-  // Function to focus the search input
   const openSearch = () => {
     if (searchInputRef.current) {
       searchInputRef.current.focus();
@@ -167,9 +170,7 @@ const styles = StyleSheet.create({
     elevation: 10, // shadow for Android
   },
 
-  arrow: {
-    marginTop: 10,
-  },
+  arrow: {},
   image: {
     height: 30,
     width: 30,
@@ -177,37 +178,43 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     paddingHorizontal: 5,
     backgroundColor: 'white',
     height: 60,
+    width: Sizes.screenWidth,
+
   },
   leftContainer: {
     flexDirection: 'row',
     flex: 1,
+    margin: 4,
   },
   touch: {
-    width: 50,
-    height: 50,
-  },
-  box: {
-    width: '100%',
-    height: '100%',
-    justifyContent: 'center',
-
-    left: -10,
-  },
-  img: {
-    width: '60%',
-    height: '60%',
-    resizeMode: 'contain',
-  },
-  cartContainer: {
-    position: 'relative',
-    width: '100%',
-    height: '100%',
+    flex:1,
     justifyContent: 'center',
     alignItems: 'center',
-    flex: 0,
+    width: 40,
+    height: 40,
+  },
+
+  box: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  img: {
+    width: 30,
+    height: 30,
+    resizeMode: 'contain',
+    margin: 5,
+  },
+  cartContainer: {
+    flex: 1,
+  },
+  loginContainer: {
+    flex: 1,
   },
   cartBadge: {
     position: 'absolute',
@@ -215,14 +222,14 @@ const styles = StyleSheet.create({
     top: 0,
     backgroundColor: 'red',
     borderRadius: 10,
-    width: 20,
-    height: 20,
+    width: 15,
+    height: 15,
     justifyContent: 'center',
     alignItems: 'center',
   },
   cartBadgeText: {
     color: 'white',
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: 'bold',
   },
   searchContainer: {

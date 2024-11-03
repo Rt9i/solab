@@ -36,9 +36,11 @@ const Cart = props => {
     delModal,
     setDelModal,
     selectedItemId,
+    selectedItems,
+    setSelectedItems,
   } = useContext(SolabContext);
   const [displayMode, setDisplayMode] = useState('row');
-  const [selectedItems, setSelectedItems] = useState([]);
+
   const [isSelectAll, setIsSelectAll] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
   const [previousCartState, setPreviousCartState] = useState([]);
@@ -82,8 +84,10 @@ const Cart = props => {
   };
 
   useEffect(() => {
+    console.log(selectedItemId);
+
     calculateTotalPrice();
-  }, [selectedItems, removeItemFromCart, cart]);
+  }, [cart, selectedItems]);
 
   const handleCheckBoxChange = (isChecked, item) => {
     setSelectedItems(prevSelectedItems => {
@@ -98,22 +102,23 @@ const Cart = props => {
   };
   const removeSelectedItems = async () => {
     if (selectedItems.length > 0) {
-      const newCart = cart.filter(item => {
-        const itemId = item._id;
-        console.log('id is: ', itemId);
+      // Filter out selected items from the cart
+      const newCart = cart.filter(
+        item =>
+          !selectedItems.some(selectedItem => selectedItem._id === item._id),
+      );
 
-        return !selectedItems.some(item => item._id == itemId);
-      });
-
+      // Update cart and clear selectedItems
       setCart(newCart);
-      setSelectedItems([]);
-      setIsSelectAll(false);
+      setSelectedItems([]); // Clear selected items after updating cart
+      setIsSelectAll(false); // Reset select-all
 
+      // Sync updated cart with backend if user is logged in
       if (user && user._id) {
         await updateUserProducts(user._id, newCart);
       }
     } else {
-      console.log('cart is empty');
+      console.log('No items selected for removal');
     }
   };
 
@@ -161,6 +166,7 @@ const Cart = props => {
   };
   const confirmRemove = () => {
     removeSelectedItems();
+    setSelectedItems([]);
     setModalVisible(false);
   };
 
@@ -181,29 +187,30 @@ const Cart = props => {
       items: selectedItems,
       totalPrice: totalPrice,
     };
-    if (user?._id) {
-      try {
-        // await saveOrderToDatabase(orderData);
-        console.log('Order placed successfully:', orderData);
 
-        setCart([]);
-        setSelectedItems([]);
-      } catch (error) {
-        console.error('Error during checkout:', error);
-      }
-    } else {
-      console.log('man just login ');
+    try {
+      // await saveOrderToDatabase(orderData);
+      console.log('Order placed successfully:', orderData);
+
+      setCart([]);
+      setSelectedItems([]);
+    } catch (error) {
+      console.error('Error during checkout:', error);
     }
   };
 
   const handleCardPress = () => {
+    if (!user) {
+      console.log('LOG IN RN');
+      return;
+    }
     if (selectedItems.length <= 0) {
       selectAproduct();
       return;
     }
     console.log('checking out ');
 
-    checkOut();
+    // checkOut();
   };
   return (
     <LinearGradient

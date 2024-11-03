@@ -9,39 +9,51 @@ import {
   UIManager,
 } from 'react-native';
 import SolabContext from '../src/store/solabContext';
-import {useNavigation} from '@react-navigation/native';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Images from '../src/assets/images/images';
 import ScreenNames from '../routes/ScreenNames';
+import CustomModal from '@/src/Components/customModal';
+import {delUser} from '@/src/res/api';
+import {useNavigation} from 'expo-router';
 
 if (Platform.OS === 'android') {
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
 const SettingsScreen = () => {
-  const {user, setUser, changeLanguage, logout, clearAsyncStorage} =
+  const {user, setUser, changeLanguage, logout, clearAsyncStorage, strings} =
     useContext(SolabContext);
   const navigation = useNavigation();
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
-
-  // Update to use _id instead of id
+  const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [confirm, setConfirm] = useState(null);
+  const [message, setMessage] = useState(null);
   const currentUserId = user ? user._id : null;
 
-  // Debugging logs
-  // console.log('Current user:', user);
   console.log('Current user ID:', currentUserId);
 
+  const noUser = () => {
+    setShowModal(false)
+    navigation.navigate('Login');
+  };
+
+  const handleProfilePress = () => {
+    if (currentUserId) {
+      navigation.navigate('Profile', {userId: currentUserId});
+    } else {
+      setMessage(strings.loginMessage)
+      setConfirm(() => noUser);
+      setShowModal(true);
+      console.log('User ID is not available');
+    }
+  };
   const settings = [
     {
       name: 'Profile',
       image: Images.profileIcon(),
-      onPress: () => {
-        if (currentUserId) {
-          navigation.navigate('Profile', {userId: currentUserId});
-        } else {
-          console.log('User ID is not available');
-        }
-      },
+      onPress: () => handleProfilePress(),
     },
     {
       name: 'Languages',
@@ -108,6 +120,29 @@ const SettingsScreen = () => {
     ));
   };
 
+  const handleDelete = () => {
+    setMessage(strings.delUser);
+    setConfirm(onConfirm);
+    setShowModal(true);
+  };
+
+  const onCancel = () => setShowModal(false);
+
+  const onConfirm = async () => {
+    try {
+      setLoading(true);
+      const res = await delUser(user._id);
+      if (res) {
+        logout();
+      }
+      console.log('res: ', res);
+      setLoading(false);
+      setShowModal(false);
+    } catch (e) {
+      e;
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.settingsList}>
@@ -115,10 +150,28 @@ const SettingsScreen = () => {
         {isLanguageOpen && (
           <View style={styles.languageContainer}>{renderLanguages()}</View>
         )}
-        <TouchableOpacity onPress={handleLogOut} style={styles.logoutButton}>
-          <Text style={styles.logoutText}>Logout</Text>
-        </TouchableOpacity>
+        {user && (
+          <View>
+            <TouchableOpacity
+              onPress={handleLogOut}
+              style={styles.logoutButton}>
+              <Text style={styles.logoutText}>Logout</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleDelete}
+              style={styles.logoutButton}>
+              <Text style={styles.logoutText}>Delete User</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
+      <CustomModal
+        message={message}
+        visible={showModal}
+        onCancel={onCancel}
+        onConfirm={confirm}
+        loading={loading}
+      />
     </View>
   );
 };

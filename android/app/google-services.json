@@ -1,26 +1,36 @@
 {
   "project_info": {
-    "project_number": "253100960092",
-    "project_id": "solab-eb3ba",
-    "storage_bucket": "solab-eb3ba.appspot.com"
+    "project_number": "516486248756",
+    "project_id": "solab-37417",
+    "storage_bucket": "solab-37417.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:253100960092:android:341da7583fca3689fcb999",
+        "mobilesdk_app_id": "1:516486248756:android:61d52187b54dc5ae15cd61",
         "android_client_info": {
-          "package_name": "com.solab"
+          "package_name": "com.company.Solab"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "516486248756-ns232vc4l73ssbtugkck2u380h0oi038.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyBiayGvzgvBiJafeY-vJHS6IFK1y32lFRY"
+          "current_key": "AIzaSyAUUhxCUFU9p9u36L8qRSez9UlmYuqqOI8"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "516486248756-ns232vc4l73ssbtugkck2u380h0oi038.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

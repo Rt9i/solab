@@ -18,25 +18,6 @@ function AppContent() {
   const {saveUser} = useContext(SolabContext);
   const [initialRoute, setInitialRoute] = useState<string | null>(null);
 
-  // const checkAuth = useCallback(async () => {
-  //   try {
-  //     const savedUser = await AsyncStorage.getItem('user');
-  //     if (savedUser) {
-  //       saveUser(JSON.parse(savedUser));
-  //       setInitialRoute('splash');
-  //     } else {
-  //       setInitialRoute('login'); // Redirect to login if not authenticated
-  //     }
-  //   } catch (error) {
-  //     console.log('Failed to load user from storage:', error);
-  //     setInitialRoute('login'); // Fallback to login on error
-  //   }
-  // }, [saveUser]);
-
-  // useEffect(() => {
-  //   checkAuth();
-  // }, [checkAuth]);
-
   return (
     <>
       <Stack initialRouteName={initialRoute || 'index'}>

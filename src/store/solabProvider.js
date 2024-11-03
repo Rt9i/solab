@@ -340,6 +340,7 @@ const SolabProvider = ({children}) => {
       const updatedCart = cart.filter(item => item._id !== itemId);
       setIsItemAdded(false);
       setDelModal(false);
+      setSelectedItems([]);
       setSelectedItemId('');
       setCart(updatedCart);
     },
@@ -463,6 +464,8 @@ const SolabProvider = ({children}) => {
     setDelModal,
     setSelectedItemId,
     selectedItemId,
+    selectedItems,
+    setSelectedItems,
   };
 
   return (

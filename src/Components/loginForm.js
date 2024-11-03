@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {logIn, createUser} from '../res/api';
 
 import SolabContext from '../store/solabContext';
@@ -69,34 +68,57 @@ const LoginForm = () => {
       setLoading(false);
     }
   };
- 
+
   const handleRegister = async () => {
     setErrors({});
     setLoading(true);
 
     try {
-      const response = await createUser(userName, phoneNumber, password);
-      console.log('CreateUser response:', response);
+      const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
+      console.log('OTP sent to phone number:', phoneNumber);
 
-      if (response.user) {
-        Alert.alert(
-          'Success',
-          'User registered successfully. You can now log in.',
-        );
-        setRegisterMode(false);
-        clearTxt();
-      } else if (response.errorMessage) {
-        handleError(response.errorMessage, 'register');
-      }
+      // Store the confirmation result for later use
+      setConfirmationResult(confirmation);
+
+      // Show an input field for OTP verification
+      setOtpVerificationMode(true); // Flag to render OTP input in your UI
     } catch (error) {
-      console.error('Register error:', error);
+      console.error('Error sending OTP:', error);
       setErrors({
-        password: 'An error occurred during registration. Please try again.',
+        phoneNumber: 'Failed to send OTP. Please check the phone number.',
       });
     } finally {
       setLoading(false);
     }
   };
+
+  // const handleRegister = async () => {
+  //   setErrors({});
+  //   setLoading(true);
+
+  //   try {
+  //     const response = await createUser(userName, phoneNumber, password);
+  //     console.log('CreateUser response:', response);
+
+  //     if (response.user) {
+  //       Alert.alert(
+  //         'Success',
+  //         'User registered successfully. You can now log in.',
+  //       );
+  //       setRegisterMode(false);
+  //       clearTxt();
+  //     } else if (response.errorMessage) {
+  //       handleError(response.errorMessage, 'register');
+  //     }
+  //   } catch (error) {
+  //     console.error('Register error:', error);
+  //     setErrors({
+  //       password: 'An error occurred during registration. Please try again.',
+  //     });
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const handleError = (errorMessage, type) => {
     if (errorMessage.includes('duplicate key error')) {
