@@ -13,16 +13,16 @@ react {
 }
 
 def enableProguardInReleaseBuilds = false
-def jscFlavor = 'org.webkit:android-jsc:+'
+def jscFlavor = 'org.webkit:android-jsc:+' // This is the JavaScriptCore library for React Native if Hermes is not enabled.
 
 android {
     ndkVersion rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.solab"
+    namespace "com.solab" // Your app's package name
     defaultConfig {
-        applicationId "com.solab"
+        applicationId "com.solab" // Your app's application ID
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -30,7 +30,7 @@ android {
     }
     signingConfigs {
         debug {
-            storeFile file('debug.keystore')
+            storeFile file('debug.keystore') // Debug keystore configuration
             storePassword 'android'
             keyAlias 'androiddebugkey'
             keyPassword 'android'
@@ -52,22 +52,19 @@ android {
 
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
-    implementation("com.facebook.react:react-android")
-    // implementation("com.facebook.react:flipper-integration")
-
-
+    implementation("com.facebook.react:react-android") // Core React Native library
+    
     if (hermesEnabled.toBoolean()) {
-        implementation("com.facebook.react:hermes-android")
+        implementation("com.facebook.react:hermes-android") // Hermes engine for React Native
     } else {
-        implementation jscFlavor
+        implementation jscFlavor // JavaScriptCore if Hermes is not enabled
     }
 
     // Firebase dependencies
-    implementation "com.google.firebase:firebase-auth:21.0.1"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    implementation 'com.google.android.gms:play-services-auth:20.1.0'
-    
+    implementation "com.google.firebase:firebase-auth:21.0.1" // Firebase Authentication
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion" // Kotlin standard library
+    implementation 'com.google.android.gms:play-services-auth:19.0.0' 
+
 }
 
-
-apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project) // Include native modules for community packages

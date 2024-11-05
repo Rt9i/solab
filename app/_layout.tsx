@@ -15,13 +15,13 @@ import Toast from 'react-native-toast-message';
 SplashScreen.preventAutoHideAsync();
 
 function AppContent() {
-  const {saveUser} = useContext(SolabContext);
+  const colorScheme = useColorScheme();
   const [initialRoute, setInitialRoute] = useState<string | null>(null);
 
   return (
-    <>
+    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack initialRouteName={initialRoute || 'index'}>
-        <Stack.Screen name="Login" options={{headerShown: false}} />
+        {/* <Stack.Screen name="Login" options={{headerShown: false}} /> */}
         <Stack.Screen name="Home" options={{headerShown: false}} />
         <Stack.Screen name="StaffHome" />
         <Stack.Screen name="WorkersHome" />
@@ -44,7 +44,7 @@ function AppContent() {
         <Stack.Screen name="+not-found" />
       </Stack>
       <Toast />
-    </>
+    </ThemeProvider>
   );
 }
 
