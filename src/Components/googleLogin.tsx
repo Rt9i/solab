@@ -5,14 +5,14 @@ import * as Google from 'expo-auth-session/providers/google';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {app} from '../firebase';
 import {getAuth} from 'firebase/auth';
-import {
-  ANDROID_CLIENT_ID,
-  IOS_CLIENT_ID,
-  WEB_CLIENT_ID,
-  EXPO_CLIENT_ID,
-  CLIENT_ID,
-  REDIRECT_URI,
-} from '@env';
+// import {
+//   ANDROID_CLIENT_ID,
+//   IOS_CLIENT_ID,
+//   WEB_CLIENT_ID,
+//   EXPO_CLIENT_ID,
+//   CLIENT_ID,
+//   REDIRECT_URI,
+// } from '@env';
 
 // Ensure WebBrowser handles redirects
 WebBrowser.maybeCompleteAuthSession();
@@ -23,20 +23,15 @@ const auth = getAuth(app);
 const GoogleLogin = () => {
   const [userInfo, setUserInfo] = useState(null);
 
+  const config = {
+    androidClientId: '1:516486248756:android:61d52187b54dc5ae15cd61',
+    iosClientId: '1:516486248756:ios:8933e80fb148bc9a15cd61',
+    webClientId: '1:516486248756:web:abceb6c7188e4d6115cd61',
+    redirectUri: 'https://auth.expo.io/@rt9i/solab',
+    scopes: ['openid', 'profile', 'email'],
+  };
 
-const config = {
-  androidClientId: ANDROID_CLIENT_ID, // Android client ID
-  iosClientId: IOS_CLIENT_ID, // iOS client ID
-  webClientId: WEB_CLIENT_ID, // Web client ID (correct one)
-  expoClientId: EXPO_CLIENT_ID, // Use Web Client ID for Expo
-  clientId:CLIENT_ID,
-  redirectUri: REDIRECT_URI, // Expo-managed redirect URI
-  scopes: ['openid', 'profile', 'email'], 
-};
-
-  
-
-  const [request, response, promptAsync] = Google.useAuthRequest(config)
+  const [request, response, promptAsync] = Google.useAuthRequest(config);
 
   const fetchUserInfo = async token => {
     try {
@@ -68,7 +63,7 @@ const config = {
       <Button
         title="Sign in with Google"
         onPress={() => {
-          console.log('Prompting Google login...'); 
+          console.log('Prompting Google login...');
           promptAsync();
         }}
       />
