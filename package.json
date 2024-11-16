@@ -11,7 +11,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "test": "jest --watchAll",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "deploy": "gh-pages -d web-build"
   },
   "jest": {
     "preset": "jest-expo"
@@ -54,6 +55,7 @@
     "expo-updates": "~0.25.27",
     "expo-web-browser": "^13.0.3",
     "firebase": "^11.0.1",
+    "gh-pages": "^6.2.0",
     "idb": "^8.0.0",
     "jwt-decode": "^4.0.0",
     "nanoid": "^5.0.7",
@@ -100,5 +102,5 @@
   "engines": {
     "node": ">=18"
   },
-   "homepage": "https://rt9i.github.io/solab/"
+  "homepage": "https://rt9i.github.io/solab/"
 }
