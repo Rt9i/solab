@@ -106,9 +106,7 @@ const styles = StyleSheet.create({
     // fontFamily: 'bigFont',
     color: 'white',
     textAlign: 'center',
-    textShadowColor: 'black',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 1,
+   
     backgroundColor: 'grey',
     borderRadius: 10,
     borderWidth: 2,

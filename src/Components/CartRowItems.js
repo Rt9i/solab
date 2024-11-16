@@ -17,8 +17,6 @@ const CartRowItems = props => {
     navigation.navigate('ProductScreen', {data: Item});
   };
 
- 
-
   return (
     <View style={styles.container}>
       <BouncyCheckbox
@@ -60,7 +58,7 @@ const CartRowItems = props => {
             </TouchableOpacity>
             <Text style={styles.quantity}>{props.quantity}</Text>
             <TouchableOpacity
-              onPress={() => removeItemFromCart(Item,Item._id)}
+              onPress={() => removeItemFromCart(Item, Item._id)}
               style={styles.button}>
               <Text style={styles.buttonText}>-</Text>
             </TouchableOpacity>
@@ -80,10 +78,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginVertical: 10,
     padding: 10,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
+
     elevation: 5,
     width: '95%',
     alignSelf: 'center',

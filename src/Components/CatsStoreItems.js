@@ -308,10 +308,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 5,
     backgroundColor: 'rgba(20, 70, 200, 0.1)',
-    shadowColor: 'black',
-    shadowOffset: {width: 0, height: 0.1},
-    shadowOpacity: 0.1,
-    shadowRadius: 1,
+   
     overflow: 'hidden', // Ensure content doesn't overflow
   },
   img: {

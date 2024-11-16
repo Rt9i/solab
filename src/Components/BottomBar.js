@@ -83,7 +83,7 @@ const BottomBar = () => {
                       ? '#9ACD32'
                       : 'rgba(255, 255, 255, 0.3)', // White with transparency
                   transform: [{scale: backgroundSize}],
-                  elevation: selectedIcons === icon.category ? 10 : 2, // Shadow elevation
+                  elevation: selectedIcons === icon.category ? 10 : 2,
                 },
               ]}
             />
@@ -152,10 +152,7 @@ const styles = StyleSheet.create({
     borderRadius: 19, // Ensure it is circular
     backgroundColor: 'rgba(255, 255, 255, 0.3)', // White with transparency
     zIndex: 0, // Ensure it is below the icon
-    shadowColor: '#000', // Shadow color
-    shadowOffset: {width: 0, height: 2}, // Shadow offset
-    shadowOpacity: 0.3, // Shadow opacity
-    shadowRadius: 3, // Shadow radius
+ 
   },
   img: {
     resizeMode: 'contain',

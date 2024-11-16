@@ -781,21 +781,18 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
   },
-  sale: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    borderWidth: 1,
-    borderColor: 'red',
-    borderRadius: 30,
-    backgroundColor: 'white',
+sale: {
+  alignItems: 'center',
+  flexDirection: 'row',
+  justifyContent: 'space-evenly',
+  borderWidth: 1,
+  borderColor: 'red',
+  borderRadius: 30,
+  backgroundColor: 'white',
 
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
+  elevation: 5,                  
+},
+
 
   modalBackground: {
     flex: 1,
@@ -808,14 +805,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 10,
     padding: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5, // Android shadow
+   
+    elevation: 5, 
   },
   modalTitle: {
     color: 'black',
@@ -834,7 +825,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#2196F3',
     borderRadius: 5,
     padding: 10,
-    elevation: 2, // For shadow effect on Android
+    elevation: 2, 
   },
   modalButtonText: {
     color: 'white',
@@ -912,10 +903,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'lightblue',
     padding: 10,
     borderRadius: 30,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84, 
+    
     bottom: 5,
     elevation: 5,
   },

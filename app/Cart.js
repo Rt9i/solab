@@ -341,10 +341,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 0.5,
     borderColor: 'white',
-    textShadowColor: 'grey',
-    textShadowOffset: {width: 1, height: 1},
-    textShadowRadius: 1,
+    elevation: 10,
+
+  
   },
+
   selectedDisplay: {
     marginTop: 10,
     flexDirection: 'row',

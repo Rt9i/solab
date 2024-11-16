@@ -163,11 +163,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 4,
     borderColor: '#1877F2',
-    shadowColor: '#000', // shadow color
-    shadowOffset: {width: 10, height: 20}, // shadow offset
-    shadowOpacity: 0.2, // shadow opacity
-    shadowRadius: 4, // shadow radius for a soft look (iOS only)
-    elevation: 10, // shadow for Android
+ 
+    elevation: 10, 
   },
 
   arrow: {},

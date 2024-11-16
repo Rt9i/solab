@@ -124,8 +124,7 @@
 //     fontFamily: 'bigFont',
 //     height: 20,
 //     marginBottom: 2,
-//     shadowColor: 'black',
-//     textShadowOffset: {width: 1, height: 1},
-//     textShadowRadius: 1,
+//    
+//  
 //   },
 // });

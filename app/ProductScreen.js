@@ -116,10 +116,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     borderColor: '#ddd',
     borderWidth: 1,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
+
   },
   inputContainer: {
     flexDirection: 'row',
@@ -156,10 +153,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 12,
     elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
+   
     borderColor: '#ddd',
     borderWidth: 1,
   },

@@ -1,4 +1,4 @@
-import React, {useContext, useState, useRef, useMemo} from 'react';
+import React, {useContext, useState, useRef, useMemo, useEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -20,6 +20,7 @@ import Swipe from '../src/Components/Swipe';
 import CatsStoreItems from '../src/Components/CatsStoreItems';
 import Sizes from '../src/res/sizes';
 import Images from '@/src/assets/images/images';
+import {useFocusEffect, useNavigation} from 'expo-router';
 
 const CatsStore = props => {
   const [displayMode, setDisplayMode] = useState('row');
@@ -37,7 +38,22 @@ const CatsStore = props => {
   const scrollY = useRef(new Animated.Value(0)).current;
   const [showScrollUp, setShowScrollUp] = useState(false);
   const scrollViewRef = useRef(null);
+  const nav = useNavigation();
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log('go back bozo');
+     
 
+      if (data <= 0) {
+        nav.navigate('index');
+      }
+
+      // Optional: You can return a cleanup function if needed
+      return () => {
+        // Cleanup if necessary
+      };
+    }, [data, nav]), // Dependencies array
+  );
   const renderItem = ({item}) => {
     return (
       <View style={styles.itemContainer}>

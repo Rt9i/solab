@@ -1,10 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, Text, View, Button} from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { app } from '../firebase'; // Ensure this points to your Firebase initialization file
-import { getAuth } from 'firebase/auth';
+import {app} from '../firebase';
+import {getAuth} from 'firebase/auth';
+import {
+  ANDROID_CLIENT_ID,
+  IOS_CLIENT_ID,
+  WEB_CLIENT_ID,
+  EXPO_CLIENT_ID,
+  CLIENT_ID,
+  REDIRECT_URI,
+} from '@env';
 
 // Ensure WebBrowser handles redirects
 WebBrowser.maybeCompleteAuthSession();
@@ -15,28 +23,25 @@ const auth = getAuth(app);
 const GoogleLogin = () => {
   const [userInfo, setUserInfo] = useState(null);
 
-  // Config for Google Auth Request
-  const config = {
-    androidClientId: '1:516486248756:android:61d52187b54dc5ae15cd61',
-    iosClientId: '1:516486248756:ios:8933e80fb148bc9a15cd61',
-    webClientId: '1:516486248756:web:abceb6c7188e4d6115cd61',
-    redirectUri: 'https://auth.expo.io/@rt9i/solab',
-    scopes: ['openid', 'profile', 'email'],
-  };
 
-  const [request, response, promptAsync] = Google.useAuthRequest(config);
+const config = {
+  androidClientId: ANDROID_CLIENT_ID, // Android client ID
+  iosClientId: IOS_CLIENT_ID, // iOS client ID
+  webClientId: WEB_CLIENT_ID, // Web client ID (correct one)
+  expoClientId: EXPO_CLIENT_ID, // Use Web Client ID for Expo
+  clientId:CLIENT_ID,
+  redirectUri: REDIRECT_URI, // Expo-managed redirect URI
+  scopes: ['openid', 'profile', 'email'], 
+};
 
-  useEffect(() => {
-    console.log('Authentication response:', response); // Log the response
-    if (response?.type === 'success' && response.authentication?.accessToken) {
-      fetchUserInfo(response.authentication.accessToken);
-    }
-  }, [response]);
+  
 
-  const fetchUserInfo = async (token) => {
+  const [request, response, promptAsync] = Google.useAuthRequest(config)
+
+  const fetchUserInfo = async token => {
     try {
       const res = await fetch('https://www.googleapis.com/userinfo/v2/me', {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {Authorization: `Bearer ${token}`},
       });
       if (res.ok) {
         const user = await res.json();
@@ -51,16 +56,22 @@ const GoogleLogin = () => {
     }
   };
 
+  useEffect(() => {
+    console.log('Authentication response:', response); // Log the response
+    if (response?.type === 'success' && response.authentication?.accessToken) {
+      fetchUserInfo(response.authentication.accessToken);
+    }
+  }, [response]);
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Google Login Component</Text>
-      <Button 
-        title="Sign in with Google" 
+      <Button
+        title="Sign in with Google"
         onPress={() => {
-          console.log('Prompting Google login...'); // Log statement
-          promptAsync(); 
-        }} 
-      /> 
+          console.log('Prompting Google login...'); 
+          promptAsync();
+        }}
+      />
       {userInfo && (
         <Text style={styles.userInfo}>{JSON.stringify(userInfo, null, 2)}</Text>
       )}
