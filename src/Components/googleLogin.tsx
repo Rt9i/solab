@@ -5,16 +5,8 @@ import * as Google from 'expo-auth-session/providers/google';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {app} from '../firebase';
 import {getAuth} from 'firebase/auth';
-// import {
-//   ANDROID_CLIENT_ID,
-//   IOS_CLIENT_ID,
-//   WEB_CLIENT_ID,
-//   EXPO_CLIENT_ID,
-//   CLIENT_ID,
-//   REDIRECT_URI,
-// } from '@env';
 
-// Ensure WebBrowser handles redirects
+
 WebBrowser.maybeCompleteAuthSession();
 
 // Initialize Firebase Auth

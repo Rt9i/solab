@@ -22,6 +22,7 @@ function AppContent() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack initialRouteName={initialRoute || 'index'}>
         {/* <Stack.Screen name="Login" options={{headerShown: false}} /> */}
+        <Stack.Screen name="index" options={{headerShown: false}} />
         <Stack.Screen name="Home" options={{headerShown: false}} />
         <Stack.Screen name="StaffHome" />
         <Stack.Screen name="WorkersHome" />
@@ -40,7 +41,7 @@ function AppContent() {
           }}
         />
         <Stack.Screen name="SeeAllProducts" />
-        <Stack.Screen name="index" options={{headerShown: false}} />
+     
         <Stack.Screen name="+not-found" />
       </Stack>
       <Toast />
