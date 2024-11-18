@@ -7,6 +7,7 @@
     "platforms": ["ios", "android", "web"],
     "orientation": "portrait",
     "main": "expo-router/entry",
+    "entryPoint": "./app/_layout.tsx",
     "extra": {
       "EXPO_ROUTER_APP_ROOT": "./app/_layout.tsx",
       "GOOGLE_API_KEY": "AIzaSyA6z3FL4IhcCRZNyf7HwaEOvqXe6T9HrUo",
@@ -24,8 +25,10 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.company.solab"
+      "bundleIdentifier": "com.company.solab",
+      "jsEngine": "hermes"
     },
+
     "android": {
       "permissions": [
         "android.permission.READ_EXTERNAL_STORAGE",
