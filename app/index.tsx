@@ -1,4 +1,4 @@
-import {StyleSheet, View, ActivityIndicator, Image, Button} from 'react-native';
+import {StyleSheet, View, ActivityIndicator, Image} from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SolabContext from '../src/store/solabContext';
@@ -108,8 +108,7 @@ const Index = () => {
   return (
     <View style={styles.container}>
       <View style={styles.loadingContainer}>
-        {/* <Image source={Images.whiteLogo()} style={styles.image} /> */}
-        <Button title="go to home bruv" onPress={() => nav.navigate('/Home')} />
+        <Image source={Images.whiteLogo()} style={styles.image} />
         {loading && (
           <ActivityIndicator
             size="large"
