@@ -4,11 +4,7 @@
     "slug": "solab",
     "version": "1.0.0",
     "sdkVersion": "51.0.0",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "platforms": ["ios", "android", "web"],
     "orientation": "portrait",
     "main": "expo-router/entry",
     "extra": {
@@ -45,11 +41,12 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/favicon.png",
+      "router": {
+        "basePath": "solab"
+      }
     },
-    "plugins": [
-      "expo-router"
-    ],
+    "plugins": ["expo-router"],
     "experiments": {
       "typedRoutes": true
     },
