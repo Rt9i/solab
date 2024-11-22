@@ -1,5 +1,5 @@
 const Images = {
-  whiteLogo: () => require('./photos/whiteLogo.png'),
+  whiteLogo: () => require('../../../assets/images/whiteLogo.png'),
   dog: () => require('./photos/dog.png'),
   card: () => require('./photos/card.png'),
   pen: () => require('./photos/pen.png'),
