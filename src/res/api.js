@@ -1,6 +1,8 @@
 import {useEffect} from 'react';
 
+// const mainURL = 'https://solab-server.onrender.com';
 const mainURL = 'https://solab-server.onrender.com';
+
 // fetch('url' , params)
 
 export const getAllUsers = async () => {
