@@ -108,7 +108,7 @@ const Index = () => {
   return (
     <View style={styles.container}>
       <View style={styles.loadingContainer}>
-        <Image source={Images.whiteLogo()} style={styles.image} />
+        {/* <Image source={Images.whiteLogo()} style={styles.image} /> */}
         <Button title="go to home bruv" onPress={() => nav.navigate('/Home')} />
         {loading && (
           <ActivityIndicator
