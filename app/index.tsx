@@ -49,7 +49,7 @@ const Index = () => {
     if (!asyncUser) {
       await fetchData();
       console.log('User is null, navigating to Login');
-      nav.replace('/Home');
+      nav.replace('Home');
       return;
     }
 
@@ -75,15 +75,15 @@ const Index = () => {
         switch (newUser.role) {
           case 'client':
             console.log('Navigating to Home');
-            nav.navigate('/Home');
+            nav.navigate('Home');
             break;
           case 'worker':
             console.log('Navigating to WorkersHome');
-            nav.navigate('/WorkersHome');
+            nav.navigate('WorkersHome');
             break;
           case 'staff':
             console.log('Navigating to StaffHome');
-            nav.navigate('/StaffHome');
+            nav.navigate('StaffHome');
             break;
           default:
             console.error('Invalid user role, no navigation');
