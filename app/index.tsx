@@ -100,7 +100,7 @@ const Index = () => {
 
   useFocusEffect(
     React.useCallback(() => {
-      setLoading(true); 
+      setLoading(true);
       initializeApp();
     }, []),
   );
@@ -108,7 +108,10 @@ const Index = () => {
   return (
     <View style={styles.container}>
       <View style={styles.loadingContainer}>
-        <Image source={Images.whiteLogo()} style={styles.image} />
+        <Image
+          source={require('../src/assets/images/photos/whiteLogo.png')}
+          style={styles.image}
+        />
         {loading && (
           <ActivityIndicator
             size="large"
