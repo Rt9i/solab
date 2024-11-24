@@ -109,13 +109,13 @@ const Index = () => {
     <View style={styles.container}>
       <View style={styles.loadingContainer}>
         <Image source={Images.whiteLogo()} style={styles.image} />
-        {loading && (
+        {/* {loading && (
           <ActivityIndicator
             size="large"
             color="#007bff"
             style={styles.loader}
           />
-        )}
+        )} */}
       </View>
     </View>
   );
