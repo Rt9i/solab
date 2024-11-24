@@ -1,7 +1,6 @@
 import {useEffect} from 'react';
 
-// const mainURL = 'https://solab-server.onrender.com';
-const mainURL = 'https://rt9i.github.io/solab/';
+const mainURL = 'https://solab-server.onrender.com';
 
 // fetch('url' , params)
 
