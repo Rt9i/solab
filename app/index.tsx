@@ -13,7 +13,7 @@ import Images from '@/src/assets/images/images';
 const Index = () => {
   const nav = useRouter();
   const {setUser, saveUserProducts, setData} = useContext(SolabContext);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const checkAsyncStorageForUser = async () => {
     try {
@@ -100,7 +100,7 @@ const Index = () => {
 
   useFocusEffect(
     React.useCallback(() => {
-      setLoading(true); // Start loading when the screen is focused
+      setLoading(true); 
       initializeApp();
     }, []),
   );
@@ -109,13 +109,13 @@ const Index = () => {
     <View style={styles.container}>
       <View style={styles.loadingContainer}>
         <Image source={Images.whiteLogo()} style={styles.image} />
-        {/* {loading && (
+        {loading && (
           <ActivityIndicator
             size="large"
             color="#007bff"
             style={styles.loader}
           />
-        )} */}
+        )}
       </View>
     </View>
   );
