@@ -26,8 +26,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.company.solab",
-      "jsEngine": "hermes"
+      "bundleIdentifier": "com.company.solab"
     },
 
     "android": {
