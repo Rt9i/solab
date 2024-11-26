@@ -4,6 +4,7 @@
     "slug": "solab",
     "version": "1.0.0",
     "homepage": "https://rt9i.github.io/solab",
+    "jsEngine": "hermes",
     "sdkVersion": "51.0.0",
     "platforms": ["ios", "android", "web"],
     "orientation": "portrait",

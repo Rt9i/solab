@@ -1,4 +1,4 @@
-package com.solab
+package com.company.solab
 import android.content.res.Configuration
 import expo.modules.ApplicationLifecycleDispatcher
 import expo.modules.ReactNativeHostWrapper

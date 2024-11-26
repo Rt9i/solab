@@ -1,4 +1,4 @@
-package com.solab
+package com.company.solab
 
 import expo.modules.ReactActivityDelegateWrapper
 import com.facebook.react.ReactActivity
