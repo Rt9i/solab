@@ -1,15 +1,12 @@
-// app/_layout.tsx
-import React, {useEffect, useContext, useState, useCallback} from 'react';
-import {StyleSheet, View, ActivityIndicator, Text} from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {DarkTheme, DefaultTheme, ThemeProvider} from '@react-navigation/native';
-import {Stack} from 'expo-router';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet} from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import {useFonts} from 'expo-font';
-import {useColorScheme} from '@/hooks/useColorScheme';
+import {DarkTheme, DefaultTheme, ThemeProvider} from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native'; // Import NavigationContainer
+import {Stack} from 'expo-router';
 import SolabProvider from '../src/store/solabProvider';
-import SolabContext from '../src/store/solabContext';
-
+import {useColorScheme} from '@/hooks/useColorScheme';
 import Toast from 'react-native-toast-message';
 
 SplashScreen.preventAutoHideAsync();
@@ -21,8 +18,6 @@ function AppContent() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack initialRouteName={initialRoute || 'index'}>
-        {/* <Stack.Screen name="Login" options={{headerShown: false}} /> */}
-        <Stack.Screen name="index" options={{headerShown: false}} />
         <Stack.Screen name="Home" options={{headerShown: false}} />
         <Stack.Screen name="StaffHome" />
         <Stack.Screen name="WorkersHome" />
@@ -41,7 +36,7 @@ function AppContent() {
           }}
         />
         <Stack.Screen name="SeeAllProducts" />
-     
+        <Stack.Screen name="index" options={{headerShown: false}} />
         <Stack.Screen name="+not-found" />
       </Stack>
       <Toast />
@@ -67,9 +62,11 @@ export default function RootLayout() {
 
   return (
     <SolabProvider>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <AppContent />
-      </ThemeProvider>
+      <NavigationContainer>
+        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <AppContent />
+        </ThemeProvider>
+      </NavigationContainer>
     </SolabProvider>
   );
 }
@@ -77,7 +74,6 @@ export default function RootLayout() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
     backgroundColor: '#f8f9fa',
   },
 });
