@@ -1,9 +1,10 @@
 import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
 import React, {useContext} from 'react';
-import {useNavigation} from '@react-navigation/native';
+
 import BouncyCheckbox from 'react-native-bouncy-checkbox'; // Ensure this package is installed
 import ScreenNames from '../../routes/ScreenNames';
 import SolabContext from '../store/solabContext';
+import {useNavigation} from 'expo-router';
 
 const CartRowItems = props => {
   const {strings} = useContext(SolabContext);
@@ -14,7 +15,7 @@ const CartRowItems = props => {
   const navigation = useNavigation();
 
   const onCardPress = () => {
-    navigation.navigate('ProductScreen', {data: Item});
+    navigation.navigate('ProductScreen', Item);
   };
 
   return (

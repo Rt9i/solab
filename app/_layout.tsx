@@ -2,8 +2,12 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import {useFonts} from 'expo-font';
-import {DarkTheme, DefaultTheme, ThemeProvider} from '@react-navigation/native';
-import {NavigationContainer} from '@react-navigation/native'; // Import NavigationContainer
+import {
+  DarkTheme,
+  DefaultTheme,
+  NavigationContainer,
+  ThemeProvider,
+} from '@react-navigation/native';
 import {Stack} from 'expo-router';
 import SolabProvider from '../src/store/solabProvider';
 import {useColorScheme} from '@/hooks/useColorScheme';
@@ -19,13 +23,13 @@ function AppContent() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack initialRouteName={initialRoute || 'index'}>
         <Stack.Screen name="Home" options={{headerShown: false}} />
+        <Stack.Screen name="CatsStore" options={{headerShown: false}} />
         <Stack.Screen name="StaffHome" />
         <Stack.Screen name="WorkersHome" />
         <Stack.Screen name="EditProduct" />
         <Stack.Screen name="SettingsScreen" />
         <Stack.Screen name="Cart" />
         <Stack.Screen name="Profile" />
-        <Stack.Screen name="CatsStore" options={{headerShown: false}} />
         <Stack.Screen
           name="ProductScreen"
           options={{
@@ -63,9 +67,7 @@ export default function RootLayout() {
   return (
     <SolabProvider>
       <NavigationContainer>
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <AppContent />
-        </ThemeProvider>
+        <AppContent />
       </NavigationContainer>
     </SolabProvider>
   );

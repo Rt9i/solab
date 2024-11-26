@@ -8,17 +8,18 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import SolabContext from '../src/store/solabContext';
 import {LinearGradient} from 'expo-linear-gradient';
 import MessageModal from '@/src/Components/messageModal';
-import Images from '@/src/assets/images/images';
 import Toast from 'react-native-toast-message';
+import {useNavigation, useRouter} from 'expo-router';
+import SolabContext from '../src/store/solabContext';
+
 const ProductScreen = () => {
   const navigation = useNavigation();
-  const route = useRoute(); // Get the route params
 
-  const {data: product} = route.params;
+  const product = useRouter();
+  console.log('product: ', product);
+
   const {addItemToCart, strings} = useContext(SolabContext);
   const [quantity, setQuantity] = useState('1');
   const [modalVisible, setModalVisible] = useState(false); // State for modal visibility
@@ -116,7 +117,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     borderColor: '#ddd',
     borderWidth: 1,
-
   },
   inputContainer: {
     flexDirection: 'row',
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     textAlign: 'center',
-    fontWeight: 'bold',
+
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
@@ -146,14 +146,13 @@ const styles = StyleSheet.create({
   addToCartText: {
     fontSize: 16,
     color: '#fff',
-    fontWeight: 'bold',
   },
   descriptionContainer: {
     padding: 16,
     backgroundColor: '#fff',
     borderRadius: 12,
     elevation: 4,
-   
+
     borderColor: '#ddd',
     borderWidth: 1,
   },

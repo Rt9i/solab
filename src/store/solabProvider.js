@@ -201,7 +201,9 @@ const SolabProvider = ({children}) => {
   }, []);
 
   useEffect(() => {
-    setStrings(translations[language]);
+    const currentStrings = translations[language];
+
+    setStrings(currentStrings);
   }, [language]);
 
   useEffect(() => {
