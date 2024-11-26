@@ -678,7 +678,7 @@ const EditProduct = () => {
       <View style={styles.cont}>
         {loading ? (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" />
+            <ActivityIndicator size={50} />
             <Text>{strings.savingChanges}...</Text>
           </View>
         ) : (

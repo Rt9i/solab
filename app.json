@@ -1,12 +1,16 @@
 {
   "expo": {
+    "newArchEnabled": true,
     "name": "Solab",
     "slug": "solab",
     "version": "1.0.0",
     "homepage": "https://rt9i.github.io/solab",
     "jsEngine": "hermes",
-    "sdkVersion": "51.0.0",
-    "platforms": ["ios", "android", "web"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "orientation": "portrait",
     "main": "expo-router/entry",
     "entryPoint": "./app/_layout.tsx",
@@ -26,11 +30,12 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
+      "newArchEnabled": true,
       "supportsTablet": true,
       "bundleIdentifier": "com.company.solab"
     },
-
     "android": {
+      "newArchEnabled": true,
       "permissions": [
         "android.permission.READ_EXTERNAL_STORAGE",
         "android.permission.WRITE_EXTERNAL_STORAGE"
@@ -50,7 +55,10 @@
         "publicPath": "/solab/"
       }
     },
-    "plugins": ["expo-router"],
+    "plugins": [
+      "expo-router",
+      "expo-font"
+    ],
     "experiments": {
       "typedRoutes": true
     },

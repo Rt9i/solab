@@ -202,7 +202,7 @@ const LoginForm = () => {
         </TouchableOpacity>
         {loading && (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#007bff" />
+            <ActivityIndicator size={50} color="#007bff" />
             <Text style={styles.loadingText}>Loading ...</Text>
           </View>
         )}
@@ -230,7 +230,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     borderRadius: 8,
     elevation: 3,
-   
   },
   label: {
     marginBottom: 8,

@@ -108,14 +108,14 @@ const Index = () => {
   return (
     <View style={styles.container}>
       <View style={styles.loadingContainer}>
-        <Button title='go to home man' onPress={()=>nav.navigate("Home")}/>
+        <Button title="go to home man" onPress={() => nav.navigate('Home')} />
         {/* <Image
           source={require('../src/assets/images/photos/whiteLogo.png')}
           style={styles.image}
         /> */}
         {/* {loading && (
           <ActivityIndicator
-            size="large"
+            size={50}
             color="#007bff"
             style={styles.loader}
           />
