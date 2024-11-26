@@ -11,19 +11,23 @@ import {
 import {LinearGradient} from 'expo-linear-gradient';
 import MessageModal from '@/src/Components/messageModal';
 import Toast from 'react-native-toast-message';
-import {useNavigation, useRouter} from 'expo-router';
+import {useLocalSearchParams, useNavigation, useRouter} from 'expo-router';
 import SolabContext from '../src/store/solabContext';
+import Images from '../src/assets/images/images';
 
 const ProductScreen = () => {
   const navigation = useNavigation();
 
-  const product = useRouter();
-  console.log('product: ', product);
+  const product = useLocalSearchParams();
+
+  console.log('Passed Product Data:', product.img);
 
   const {addItemToCart, strings} = useContext(SolabContext);
   const [quantity, setQuantity] = useState('1');
   const [modalVisible, setModalVisible] = useState(false); // State for modal visibility
   const [modalMessage, setModalMessage] = useState(''); // State for modal message
+
+  const imageSource = product?.img?.uri || product?.img;
 
   const handleAddToCart = () => {
     const quantityInt = parseInt(quantity);
@@ -50,9 +54,6 @@ const ProductScreen = () => {
 
     navigation.goBack();
   };
-
-  const isValidUrl = string => /^(https?:\/\/)/.test(string); // Simple regex for URL check
-  const imageSource = product?.img?.uri || product?.img;
 
   return (
     <View style={styles.container}>

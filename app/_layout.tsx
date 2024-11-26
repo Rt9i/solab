@@ -30,15 +30,7 @@ function AppContent() {
         <Stack.Screen name="SettingsScreen" />
         <Stack.Screen name="Cart" />
         <Stack.Screen name="Profile" />
-        <Stack.Screen
-          name="ProductScreen"
-          options={{
-            headerTitle: '',
-            headerStyle: {backgroundColor: 'white'},
-            headerTintColor: '#000000',
-            headerTitleAlign: 'center',
-          }}
-        />
+        <Stack.Screen name="ProductScreen" />
         <Stack.Screen name="SeeAllProducts" />
         <Stack.Screen name="index" options={{headerShown: false}} />
         <Stack.Screen name="+not-found" />

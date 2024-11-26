@@ -15,7 +15,8 @@ const CartRowItems = props => {
   const navigation = useNavigation();
 
   const onCardPress = () => {
-    navigation.navigate('ProductScreen', Item);
+    const {onCheckBoxChange, ...itemWithoutCheckBox} = Item; 
+    navigation.navigate('ProductScreen', itemWithoutCheckBox); 
   };
 
   return (

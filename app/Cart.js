@@ -143,9 +143,9 @@ const Cart = props => {
       isSelected={selectedItems.some(
         selectedItem => selectedItem._id === item._id,
       )}
-      onCheckBoxChange={isChecked => handleCheckBoxChange(isChecked, item)}
       img={item.img}
       key={item.productId}
+      onCheckBoxChange={isChecked => handleCheckBoxChange(isChecked, item)}
     />
   );
 
@@ -342,8 +342,6 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: 'white',
     elevation: 10,
-
-  
   },
 
   selectedDisplay: {
