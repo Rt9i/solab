@@ -22,7 +22,7 @@ function AppContent() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack initialRouteName={initialRoute || 'index'}>
-        <Stack.Screen name="Home" options={{headerShown: false}} />
+        <Stack.Screen name="home" options={{headerShown: false}} />
         <Stack.Screen name="CatsStore" options={{headerShown: false}} />
         <Stack.Screen name="StaffHome" />
         <Stack.Screen name="WorkersHome" />

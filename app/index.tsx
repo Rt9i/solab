@@ -49,7 +49,7 @@ const Index = () => {
     if (!asyncUser) {
       await fetchData();
       console.log('User is null, navigating to Login');
-      nav.replace('/Home');
+      nav.replace('/home');
       return;
     }
 
@@ -75,7 +75,7 @@ const Index = () => {
         switch (newUser.role) {
           case 'client':
             console.log('Navigating to Home');
-            nav.navigate('/Home');
+            nav.navigate('/home');
             break;
           case 'worker':
             console.log('Navigating to WorkersHome');
