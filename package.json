@@ -12,7 +12,7 @@
     "web": "expo start --web",
     "test": "jest --watchAll",
     "lint": "eslint .",
-    "predeploy": "expo export",
+    "predeploy": "expo export --output-dir web-build",
     "deploy": "gh-pages -d web-build",
     "build": "expo export"
   },
