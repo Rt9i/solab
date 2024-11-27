@@ -96,54 +96,57 @@ const CatsStore = props => {
   };
 
   return (
-    // <SafeAreaView style={styles.safeArea}>
-    // <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
-    <LinearGradient
-      colors={['#6CCAFF', '#6CCAFF', '#004C99']}
-      locations={[0, 0.1, 1]}
-      style={styles.container}>
-      <TopBar />
-      <ScrollView
-        style={styles.scroll}
-        contentContainerStyle={{minHeight: Sizes.screenHeight}}
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
-        ref={scrollViewRef}>
-        <View style={styles.sale}>
-          <Swipe />
-        </View>
+    <SafeAreaView style={styles.safeArea}>
+      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
+      <LinearGradient
+        colors={['#6CCAFF', '#6CCAFF', '#004C99']}
+        locations={[0, 0.1, 1]}
+        style={styles.container}>
+        <TopBar />
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={{minHeight: Sizes.screenHeight}}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
+          ref={scrollViewRef}>
+          <View style={styles.sale}>
+            <Swipe />
+          </View>
 
-        <View style={styles.catsBarItemsContainer}>
-          <CatsBarItems
-            style={styles.CatsBarItems}
-            selectedCategory={selectedCategory}
-            setSelectedCategory={onCategoryPress}
-            Array={cat}
-          />
-        </View>
-
-        {rows.map((row, index) => {
-          const filteredItems = getFilteredItemsForRow(row.rows);
-
-          return (
-            <RowContainer
-              index={index + 1}
-              key={row.id} // Make sure row.id is unique for each key
-              row={row.rows}
-              items={filteredItems} // Ensure this is defined and valid
-              renderItem={renderItem} // Make sure renderItem is a valid function
-              selectedCategory={selectedCategory} // Ensure this prop is defined
+          <View style={styles.catsBarItemsContainer}>
+            <CatsBarItems
+              style={styles.CatsBarItems}
+              selectedCategory={selectedCategory}
+              setSelectedCategory={onCategoryPress}
+              Array={cat}
             />
-          );
-        })}
-      </ScrollView>
+          </View>
 
-      <BottomBar />
-      {showScrollUp && (
-        <ScrollUp scrollViewRef={scrollViewRef} onPress={handleScrollUpPress} />
-      )}
-    </LinearGradient>
-    // </SafeAreaView>
+          {rows.map((row, index) => {
+            const filteredItems = getFilteredItemsForRow(row.rows);
+
+            return (
+              <RowContainer
+                index={index + 1}
+                key={row.id} // Make sure row.id is unique for each key
+                row={row.rows}
+                items={filteredItems} // Ensure this is defined and valid
+                renderItem={renderItem} // Make sure renderItem is a valid function
+                selectedCategory={selectedCategory} // Ensure this prop is defined
+              />
+            );
+          })}
+        </ScrollView>
+
+        <BottomBar />
+        {showScrollUp && (
+          <ScrollUp
+            scrollViewRef={scrollViewRef}
+            onPress={handleScrollUpPress}
+          />
+        )}
+      </LinearGradient>
+    </SafeAreaView>
   );
 };
 

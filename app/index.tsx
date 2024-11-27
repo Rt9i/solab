@@ -49,7 +49,7 @@ const Index = () => {
     if (!asyncUser) {
       await fetchData();
       console.log('User is null, navigating to Login');
-      nav.replace('Home');
+      nav.replace('home');
       return;
     }
 
@@ -75,7 +75,7 @@ const Index = () => {
         switch (newUser.role) {
           case 'client':
             console.log('Navigating to Home');
-            nav.navigate('Home');
+            nav.navigate('home');
             break;
           case 'worker':
             console.log('Navigating to WorkersHome');
@@ -108,18 +108,14 @@ const Index = () => {
   return (
     <View style={styles.container}>
       <View style={styles.loadingContainer}>
-        <Button title="go to home man" onPress={() => nav.navigate('Home')} />
-        {/* <Image
+        {/* <Button title="go to home man" onPress={() => nav.navigate('home')} /> */}
+        <Image
           source={require('../src/assets/images/photos/whiteLogo.png')}
           style={styles.image}
-        /> */}
-        {/* {loading && (
-          <ActivityIndicator
-            size={50}
-            color="#007bff"
-            style={styles.loader}
-          />
-        )} */}
+        />
+        {loading && (
+          <ActivityIndicator size={50} color="#007bff" style={styles.loader} />
+        )}
       </View>
     </View>
   );

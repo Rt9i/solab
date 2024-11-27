@@ -17,7 +17,7 @@ function AppContent() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack initialRouteName={'index'}>
-        <Stack.Screen name="Home" options={{headerShown: false}} />
+        <Stack.Screen name="home" options={{headerShown: false}} />
         <Stack.Screen name="StaffHome" />
         <Stack.Screen name="WorkersHome" />
         <Stack.Screen name="EditProduct" />
@@ -62,7 +62,8 @@ export default function RootLayout() {
   return (
     <SolabProvider>
       <NavigationContainer>
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <ThemeProvider
+          value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
           <AppContent />
         </ThemeProvider>
       </NavigationContainer>
