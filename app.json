@@ -6,11 +6,7 @@
     "version": "1.0.0",
     "homepage": "https://rt9i.github.io/solab",
     "jsEngine": "hermes",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "platforms": ["ios", "android", "web"],
     "orientation": "portrait",
     "main": "expo-router/entry",
     "entryPoint": "./app/_layout.tsx",
@@ -32,7 +28,8 @@
     "ios": {
       "newArchEnabled": true,
       "supportsTablet": true,
-      "bundleIdentifier": "com.company.solab"
+      "bundleIdentifier": "com.company.solab",
+      "jsEngine": "hermes"
     },
     "android": {
       "newArchEnabled": true,
@@ -55,10 +52,7 @@
         "publicPath": "/solab/"
       }
     },
-    "plugins": [
-      "expo-router",
-      "expo-font"
-    ],
+    "plugins": ["expo-router", "expo-font"],
     "experiments": {
       "typedRoutes": true
     },
