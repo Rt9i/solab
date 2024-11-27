@@ -9,6 +9,9 @@ import {
 } from '../src/res/api';
 import {useFocusEffect, useRouter} from 'expo-router';
 import Images from '@/src/assets/images/images';
+import { Asset } from 'expo-asset';
+const image = Asset.fromModule(require('../src/assets/images/photos/whiteLogo.png')).uri;
+
 
 const Index = () => {
   const nav = useRouter();
@@ -109,10 +112,7 @@ const Index = () => {
     <View style={styles.container}>
       <View style={styles.loadingContainer}>
         {/* <Button title="go to home man" onPress={() => nav.navigate('home')} /> */}
-        <Image
-          source={require('../src/assets/images/photos/whiteLogo.png')}
-          style={styles.image}
-        />
+        <Image source={{ uri: image }} style={styles.image} />
         {loading && (
           <ActivityIndicator size={50} color="#007bff" style={styles.loader} />
         )}
