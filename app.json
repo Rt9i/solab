@@ -29,7 +29,7 @@
       "newArchEnabled": true,
       "supportsTablet": true,
       "bundleIdentifier": "com.company.solab",
-      "jsEngine": "hermes"
+      "jsEngine": "jsc"
     },
     "android": {
       "newArchEnabled": true,
