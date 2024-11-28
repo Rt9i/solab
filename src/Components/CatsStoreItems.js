@@ -68,104 +68,77 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
   const handleEditProducts = () => {
     navigation.navigate('EditProduct', props);
   };
-  const showRow = () => {
-    {
-      rows.map(item => {
-        return (
-          <View style={{backgroundColor: 'green', width: 50, height: 50}}>
-            <Text>{item.id}</Text>
-          </View>
-        );
-      });
-    }
-  };
-  const toggleShowRows = () => {
-    setShowRows(prev => !prev);
-  };
+
   return (
-    <View>
-      {/* {showRows && (
-        <View style={styles.rowsContainer}>
-          <ScrollView horizontal={true} width={60}>
-            {rows.map(item => (
-              <View key={item.id} style={styles.rowItem}>
-                <Text>{item.id}</Text>
-              </View>
-            ))}
-          </ScrollView>
-        </View>
-      )} */}
-      <View
-        style={
-          user?.role === 'staff' ? styles.itemWidthStaff : styles.itemWidth
-        }>
-        <View style={styles.items}>
-          {user?.role == 'staff' && (
-            <View style={styles.stock}>
-              <Text style={styles.stocktext}>{availableStock}</Text>
-              {/* <TouchableOpacity onPress={toggleShowRows}>
-                <Image source={Images.pen()} style={styles.icon} />
-              </TouchableOpacity> */}
-            </View>
-          )}
-          {(availableStock === 0 || availableStock === null) && (
-            <View style={styles.notavailableStock}>
-              <Text style={styles.stockTxt}>Out of Stock</Text>
-            </View>
-          )}
-
-          <TouchableOpacity onPress={onCardPress} activeOpacity={0.6}>
-            <Image
-              source={img}
-              style={[
-                styles.img,
-                selectedCategory === 'catMeat' ? meatImg : null,
-              ]}
-            />
-          </TouchableOpacity>
-
-          <View style={styles.infoContainer}>
-            <View style={styles.bottomcontainer}>
-              <Text style={styles.bottomtxt1}>{` ${taste}`}</Text>
-            </View>
-
-            <View style={styles.priceContainer}>
-              <Text style={styles.bottomtxt2}>
-                {`${price} ${strings.priceTag}`}
-              </Text>
-              {kg !== 0 && <Text style={styles.bottomtxt4}>{`${kg} kg`}</Text>}
-            </View>
-          </View>
-
-          {user?.role === 'staff' && (
-            <TouchableOpacity
-              onPress={() => handleEditProducts()}
-              style={styles.editButtonContainer}>
-              <View style={{width: 50, height: 50}}>
-                <Image source={Images.edit()} style={styles.edit} />
-              </View>
-            </TouchableOpacity>
-          )}
-          <View style={styles.center}>
-            <TouchableOpacity activeOpacity={0.7} onPress={addToShop}>
-              <View style={styles.cart}>
-                <Image source={Images.addCart()} style={styles.addCart} />
-                <Text style={styles.carttxt}>{strings.addToCart}</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {saleAmount > 0 && (
-          <View style={styles.sale}>
-            <View style={styles.saleLabel}>
-              <Text style={styles.saleText}>
-                {saleAmount} = {salePrice} {strings.priceTag}
-              </Text>
-            </View>
+    <View
+      // style={
+      //   user?.role === 'staff' ? styles.itemWidthStaff : styles.itemWidth
+      // }
+      style={styles.itemWidth}>
+      <View style={styles.items}>
+        {user?.role == 'staff' && (
+          <View style={styles.stock}>
+            <Text style={styles.stocktext}>{availableStock}</Text>
           </View>
         )}
+        {(availableStock === 0 || availableStock === null) && (
+          <View style={styles.notavailableStock}>
+            <Text style={styles.stockTxt}>Out of Stock</Text>
+          </View>
+        )}
+
+        <TouchableOpacity onPress={onCardPress} activeOpacity={0.6}>
+          <Image
+            source={img}
+            style={[
+              styles.img,
+              selectedCategory === 'catMeat' ? meatImg : null,
+            ]}
+          />
+        </TouchableOpacity>
+
+        <View style={styles.infoContainer}>
+          <View style={styles.bottomcontainer}>
+            <Text style={styles.bottomtxt1}>{` ${taste}`}</Text>
+          </View>
+
+          <View style={styles.priceContainer}>
+            <Text style={styles.bottomtxt2}>
+              {`${price} ${strings.priceTag}`}
+            </Text>
+            {kg !== 0 && <Text style={styles.bottomtxt4}>{`${kg} kg`}</Text>}
+          </View>
+        </View>
+
+        {user?.role === 'staff' && (
+          <TouchableOpacity
+            onPress={() => handleEditProducts()}
+            style={styles.editButtonContainer}>
+            <View style={{width: 50, height: 50}}>
+              <Image source={Images.edit()} style={styles.edit} />
+            </View>
+          </TouchableOpacity>
+        )}
+
+        <View style={styles.center}>
+          <TouchableOpacity activeOpacity={0.7} onPress={addToShop}>
+            <View style={styles.cart}>
+              <Image source={Images.addCart()} style={styles.addCart} />
+              <Text style={styles.carttxt}>{strings.addToCart}</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
+
+      {saleAmount > 0 && (
+        <View style={styles.sale}>
+          <View style={styles.saleLabel}>
+            <Text style={styles.saleText}>
+              {saleAmount} = {salePrice} {strings.priceTag}
+            </Text>
+          </View>
+        </View>
+      )}
     </View>
   );
 };
@@ -298,17 +271,17 @@ const styles = StyleSheet.create({
     zIndex: 20,
   },
   itemWidth: {
-    width: 140,
-    height: 250,
+    width: '100%',
+    height: '100%',
+
     marginBottom: 2,
-    borderRadius: 5, // Added border radius to the item frame
-    overflow: 'hidden', // Ensure content doesn't overflow
+    borderRadius: 5,
   },
   items: {
     flex: 1,
     borderRadius: 5,
     backgroundColor: 'rgba(20, 70, 200, 0.1)',
-   
+
     overflow: 'hidden', // Ensure content doesn't overflow
   },
   img: {

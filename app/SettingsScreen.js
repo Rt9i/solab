@@ -17,9 +17,9 @@ import CustomModal from '@/src/Components/customModal';
 import {delUser} from '@/src/res/api';
 import {useNavigation} from 'expo-router';
 
-if (Platform.OS === 'android') {
-  UIManager.setLayoutAnimationEnabledExperimental(true);
-}
+// if (Platform.OS === 'android') {
+//   UIManager.setLayoutAnimationEnabledExperimental(true);
+// }
 
 const SettingsScreen = () => {
   const {user, setUser, changeLanguage, logout, clearAsyncStorage, strings} =

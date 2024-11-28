@@ -9,9 +9,10 @@ import {
 } from '../src/res/api';
 import {useFocusEffect, useRouter} from 'expo-router';
 import Images from '@/src/assets/images/images';
-import { Asset } from 'expo-asset';
-const image = Asset.fromModule(require('../src/assets/images/photos/whiteLogo.png')).uri;
-
+import {Asset} from 'expo-asset';
+const image = Asset.fromModule(
+  require('../src/assets/images/photos/whiteLogo.png'),
+).uri;
 
 const Index = () => {
   const nav = useRouter();
@@ -78,15 +79,15 @@ const Index = () => {
         switch (newUser.role) {
           case 'client':
             console.log('Navigating to Home');
-            nav.navigate('home');
+            nav.navigate('/home');
             break;
           case 'worker':
             console.log('Navigating to WorkersHome');
-            nav.navigate('WorkersHome');
+            nav.navigate('/WorkersHome');
             break;
           case 'staff':
             console.log('Navigating to StaffHome');
-            nav.navigate('StaffHome');
+            nav.navigate('/StaffHome');
             break;
           default:
             console.error('Invalid user role, no navigation');
@@ -112,7 +113,7 @@ const Index = () => {
     <View style={styles.container}>
       <View style={styles.loadingContainer}>
         {/* <Button title="go to home man" onPress={() => nav.navigate('home')} /> */}
-        <Image source={{ uri: image }} style={styles.image} />
+        <Image source={{uri: image}} style={styles.image} />
         {loading && (
           <ActivityIndicator size={50} color="#007bff" style={styles.loader} />
         )}
