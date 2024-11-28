@@ -42,7 +42,6 @@ const CatsStore = props => {
   useFocusEffect(
     React.useCallback(() => {
       console.log('go back bozo');
-     
 
       if (data <= 0) {
         nav.navigate('index');
