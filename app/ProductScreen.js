@@ -21,8 +21,8 @@ const ProductScreen = () => {
   const {data: product} = route.params;
   const {addItemToCart, strings} = useContext(SolabContext);
   const [quantity, setQuantity] = useState('1');
-  const [modalVisible, setModalVisible] = useState(false); // State for modal visibility
-  const [modalMessage, setModalMessage] = useState(''); // State for modal message
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
 
   const handleAddToCart = () => {
     const quantityInt = parseInt(quantity);
@@ -31,8 +31,8 @@ const ProductScreen = () => {
         type: 'error',
         text1: strings.enterNumber,
 
-        position: 'top', // Optionally set this if you want error toast at the top too
-        visibilityTime: 2000, // Show for 3 seconds
+        position: 'top',
+        visibilityTime: 2000,
       });
       return;
     }
@@ -43,14 +43,13 @@ const ProductScreen = () => {
 
       text1: strings.productAdded,
       text2: strings.itemaddsucces + '!🎉',
-      position: 'top', // Show toast from the top
-      visibilityTime: 2000, // Show for 3 seconds
+      position: 'top',
+      visibilityTime: 2000,
     });
 
     navigation.goBack();
   };
 
-  const isValidUrl = string => /^(https?:\/\/)/.test(string); // Simple regex for URL check
   const imageSource = product?.img?.uri || product?.img;
 
   return (

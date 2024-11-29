@@ -27,10 +27,9 @@ const RowContainer = ({
   // When sending an array, ensure that you use `params` properly
   const onSeeAllPress = () => {
     const itemsToSend = JSON.stringify(items); // Serialize the items array
-    navigation.navigate('SeeAllProducts', { items: itemsToSend });
+    navigation.navigate('SeeAllProducts', {items: itemsToSend});
     console.log('Sending items: ', itemsToSend);
   };
-  
 
   useEffect(() => {
     if (flatListRef.current) {
@@ -98,7 +97,8 @@ const RowContainer = ({
 const styles = StyleSheet.create({
   cont: {
     width: '100%',
-    height: '100%',
+    height: 400,
+
     padding: 10,
   },
   img: {

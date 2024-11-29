@@ -24,7 +24,6 @@ const SeeAllProducts = () => {
   const router = useLocalSearchParams();
   const items = router.items ? JSON.parse(router.items) : [];
 
-  console.log('items received: ', items);
 
   const renderItem = ({item}) => {
     return (

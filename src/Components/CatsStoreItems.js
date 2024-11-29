@@ -268,10 +268,11 @@ const styles = StyleSheet.create({
     zIndex: 20,
   },
   itemWidth: {
-    width: '100%',
-    height: '100%',
+    height: 300,
+    width: 140,
     marginBottom: 2,
     borderRadius: 5,
+    overflow:'hidden',
   },
   items: {
     flex: 1,
