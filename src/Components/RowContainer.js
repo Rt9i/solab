@@ -72,7 +72,7 @@ const RowContainer = ({
 
             {text && <Text style={styles.headerText}>{text}</Text>}
           </View>
-          <View style={styles.list}>
+          <View>
             <FlashList
               ref={flatListRef}
               data={items}
@@ -81,7 +81,6 @@ const RowContainer = ({
               )}
               keyExtractor={item => item._id}
               horizontal
-      
               showsHorizontalScrollIndicator={true}
               estimatedItemSize={160}
             />
@@ -93,13 +92,11 @@ const RowContainer = ({
 };
 
 const styles = StyleSheet.create({
-  list: {
-    marginRight: 10,
-  },
   cont: {
     width: '100%',
     height: '100%',
-    marginBottom: 10,
+    padding: 10,
+    
   },
   img: {
     height: 20,
@@ -120,9 +117,10 @@ const styles = StyleSheet.create({
     elevation: 24,
   },
   container: {
-    height: 290,
-    marginBottom: 20,
-    marginLeft: 10,
+    height: 360,
+
+    marginBottom:10,
+   
   },
   header: {
     flexDirection: 'row-reverse',

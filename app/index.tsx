@@ -16,7 +16,7 @@ const image = Asset.fromModule(
 
 const Index = () => {
   const nav = useRouter();
-  const {setUser, saveUserProducts, setData} = useContext(SolabContext);
+  const {setUser, saveUserProducts, setData, logout} = useContext(SolabContext);
   const [loading, setLoading] = useState(false);
 
   const checkAsyncStorageForUser = async () => {
@@ -53,7 +53,7 @@ const Index = () => {
     if (!asyncUser) {
       await fetchData();
       console.log('User is null, navigating to Login');
-      nav.replace('home');
+      nav.replace('/home');
       return;
     }
 
@@ -93,6 +93,7 @@ const Index = () => {
             console.error('Invalid user role, no navigation');
         }
       } catch (error) {
+        logout();
         console.error('Error fetching user or products:', error);
       } finally {
         setLoading(false);

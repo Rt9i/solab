@@ -55,6 +55,8 @@ const enStrings = {
   itemaddsucces: 'Item added to cart successfully',
   selectAProduct: 'Please select a product',
   delUser: 'do you want to dellete your account?',
+  registerMessage: 'registered',
+  nowYouCanLogin: 'now you can login',
 };
 
 const heStrings = {
@@ -115,9 +117,13 @@ const heStrings = {
   selectAProduct: 'אנא בחר מוצר',
   delUser: 'האם אתה רוצה למחוק את החשבון שלך?',
   loginMessage: ' האם אתה רוצה להיכנס?',
+  registerMessage: 'נרשם',
+  nowYouCanLogin: 'الآن يمكنك تسجيل الدخول',
 };
 
 const arStrings = {
+  nowYouCanLogin: 'עכשיו אתה יכול להיכנס',
+  registerMessage: 'تم التسجيل',
   loginMessage: 'هل تريد تسجيل الدخول؟',
   delUser: 'هل تريد حذف حسابك؟',
   selectAProduct: 'الرجاء اختيار منتج',
