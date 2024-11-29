@@ -58,7 +58,7 @@ const SeeAllProducts = () => {
     <View style={styles.container}>
       <FlatList
         contentContainerStyle={styles.flatListContainer}
-        data={items} // Use the items from the query parameters
+        data={items} 
         renderItem={({item, index}) => renderItem({item, index})}
         keyExtractor={(item, index) => index.toString()}
         numColumns={3}
@@ -72,7 +72,7 @@ export default SeeAllProducts;
 const styles = StyleSheet.create({
   itemContainer: {
     height: 300,
-    width:130,
+    width: 130,
   },
   container: {
     backgroundColor: 'white',
