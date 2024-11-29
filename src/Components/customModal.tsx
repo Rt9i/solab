@@ -36,7 +36,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
           <Text style={styles.modalMessage}>{message}</Text>
           {loading ? (
             <View style={styles.loadingContainer}>
-              <ActivityIndicator size="large" color="#0000ff" />
+              <ActivityIndicator size={50} color="#0000ff" />
             </View>
           ) : (
             <View style={styles.row}>

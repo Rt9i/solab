@@ -13,6 +13,7 @@ import {logIn, createUser} from '../res/api';
 
 import SolabContext from '../store/solabContext';
 import {useNavigation} from 'expo-router';
+import Toast from 'react-native-toast-message';
 
 const LoginForm = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -30,7 +31,7 @@ const LoginForm = () => {
   };
 
   const navigation = useNavigation();
-  const {saveUser, clearAsyncStorage} = useContext(SolabContext);
+  const {saveUser, clearAsyncStorage, strings} = useContext(SolabContext);
 
   const handleLogin = async () => {
     if (loading) {
@@ -69,56 +70,61 @@ const LoginForm = () => {
     }
   };
 
-  const handleRegister = async () => {
-    setErrors({});
-    setLoading(true);
-
-    try {
-      const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
-      console.log('OTP sent to phone number:', phoneNumber);
-
-      // Store the confirmation result for later use
-      setConfirmationResult(confirmation);
-
-      // Show an input field for OTP verification
-      setOtpVerificationMode(true); // Flag to render OTP input in your UI
-    } catch (error) {
-      console.error('Error sending OTP:', error);
-      setErrors({
-        phoneNumber: 'Failed to send OTP. Please check the phone number.',
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
   // const handleRegister = async () => {
   //   setErrors({});
   //   setLoading(true);
 
   //   try {
-  //     const response = await createUser(userName, phoneNumber, password);
-  //     console.log('CreateUser response:', response);
+  //     const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
+  //     console.log('OTP sent to phone number:', phoneNumber);
 
-  //     if (response.user) {
-  //       Alert.alert(
-  //         'Success',
-  //         'User registered successfully. You can now log in.',
-  //       );
-  //       setRegisterMode(false);
-  //       clearTxt();
-  //     } else if (response.errorMessage) {
-  //       handleError(response.errorMessage, 'register');
-  //     }
+  //     // Store the confirmation result for later use
+  //     setConfirmationResult(confirmation);
+
+  //     // Show an input field for OTP verification
+  //     setOtpVerificationMode(true); // Flag to render OTP input in your UI
   //   } catch (error) {
-  //     console.error('Register error:', error);
+  //     console.error('Error sending OTP:', error);
   //     setErrors({
-  //       password: 'An error occurred during registration. Please try again.',
+  //       phoneNumber: 'Failed to send OTP. Please check the phone number.',
   //     });
   //   } finally {
   //     setLoading(false);
   //   }
   // };
+
+  const handleRegister = async () => {
+    setErrors({});
+    setLoading(true);
+
+    try {
+      const response = await createUser(userName, phoneNumber, password);
+      console.log('CreateUser response:', response);
+
+      if (response.user) {
+        Toast.show({
+          type: 'success',
+
+          text1: strings.registerMessage,
+          text2: strings.nowYouCanLogin + '!🎉',
+          position: 'top',
+          visibilityTime: 2000,
+        });
+
+        setRegisterMode(false);
+        clearTxt();
+      } else if (response.errorMessage) {
+        handleError(response.errorMessage, 'register');
+      }
+    } catch (error) {
+      error;
+      setErrors({
+        password: 'An error occurred during registration. Please try again.',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleError = (errorMessage, type) => {
     if (errorMessage.includes('duplicate key error')) {
@@ -202,7 +208,7 @@ const LoginForm = () => {
         </TouchableOpacity>
         {loading && (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#007bff" />
+            <ActivityIndicator size={50} color="#007bff" />
             <Text style={styles.loadingText}>Loading ...</Text>
           </View>
         )}
@@ -230,7 +236,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     borderRadius: 8,
     elevation: 3,
-   
   },
   label: {
     marginBottom: 8,

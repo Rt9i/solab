@@ -1,12 +1,13 @@
 import {FlatList, StyleSheet, View} from 'react-native';
 import React, {useContext, useState} from 'react';
-import {useRoute} from '@react-navigation/native';
+
 import CatsStoreItems from '@/src/Components/CatsStoreItems';
 import SolabContext from '@/src/store/solabContext';
+import {useRouter} from 'expo-router';
 
 const SeeAllProducts = () => {
-  const route = useRoute();
-  const {items} = route.params;
+  const items = useRouter();
+  // const {items} = route.params;
   const [displayMode, setDisplayMode] = useState('row');
   const [optionsVisible, setOptionsVisible] = useState(false);
   const {

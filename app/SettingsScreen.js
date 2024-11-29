@@ -17,9 +17,9 @@ import CustomModal from '@/src/Components/customModal';
 import {delUser} from '@/src/res/api';
 import {useNavigation} from 'expo-router';
 
-if (Platform.OS === 'android') {
-  UIManager.setLayoutAnimationEnabledExperimental(true);
-}
+// if (Platform.OS === 'android') {
+//   UIManager.setLayoutAnimationEnabledExperimental(true);
+// }
 
 const SettingsScreen = () => {
   const {user, setUser, changeLanguage, logout, clearAsyncStorage, strings} =
@@ -35,7 +35,7 @@ const SettingsScreen = () => {
   console.log('Current user ID:', currentUserId);
 
   const noUser = () => {
-    setShowModal(false)
+    setShowModal(false);
     navigation.navigate('Login');
   };
 
@@ -43,7 +43,7 @@ const SettingsScreen = () => {
     if (currentUserId) {
       navigation.navigate('Profile', {userId: currentUserId});
     } else {
-      setMessage(strings.loginMessage)
+      setMessage(strings.loginMessage);
       setConfirm(() => noUser);
       setShowModal(true);
       console.log('User ID is not available');
@@ -122,7 +122,7 @@ const SettingsScreen = () => {
 
   const handleDelete = () => {
     setMessage(strings.delUser);
-    setConfirm(onConfirm);
+
     setShowModal(true);
   };
 
@@ -132,9 +132,7 @@ const SettingsScreen = () => {
     try {
       setLoading(true);
       const res = await delUser(user._id);
-      if (res) {
-        logout();
-      }
+      logout();
       console.log('res: ', res);
       setLoading(false);
       setShowModal(false);
@@ -169,7 +167,7 @@ const SettingsScreen = () => {
         message={message}
         visible={showModal}
         onCancel={onCancel}
-        onConfirm={confirm}
+        onConfirm={onConfirm}
         loading={loading}
       />
     </View>

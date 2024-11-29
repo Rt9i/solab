@@ -1,4 +1,4 @@
-import {StyleSheet, View, ActivityIndicator, Image} from 'react-native';
+import {StyleSheet, View, ActivityIndicator, Image, Button} from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SolabContext from '../src/store/solabContext';
@@ -9,11 +9,15 @@ import {
 } from '../src/res/api';
 import {useFocusEffect, useRouter} from 'expo-router';
 import Images from '@/src/assets/images/images';
+import {Asset} from 'expo-asset';
+const image = Asset.fromModule(
+  require('../src/assets/images/photos/whiteLogo.png'),
+).uri;
 
 const Index = () => {
   const nav = useRouter();
-  const {setUser, saveUserProducts, setData} = useContext(SolabContext);
-  const [loading, setLoading] = useState(true);
+  const {setUser, saveUserProducts, setData, logout} = useContext(SolabContext);
+  const [loading, setLoading] = useState(false);
 
   const checkAsyncStorageForUser = async () => {
     try {
@@ -89,6 +93,7 @@ const Index = () => {
             console.error('Invalid user role, no navigation');
         }
       } catch (error) {
+        logout();
         console.error('Error fetching user or products:', error);
       } finally {
         setLoading(false);
@@ -100,7 +105,7 @@ const Index = () => {
 
   useFocusEffect(
     React.useCallback(() => {
-      setLoading(true); // Start loading when the screen is focused
+      setLoading(true);
       initializeApp();
     }, []),
   );
@@ -108,13 +113,10 @@ const Index = () => {
   return (
     <View style={styles.container}>
       <View style={styles.loadingContainer}>
-        <Image source={Images.whiteLogo()} style={styles.image} />
+        {/* <Button title="go to home man" onPress={() => nav.navigate('home')} /> */}
+        <Image source={{uri: image}} style={styles.image} />
         {loading && (
-          <ActivityIndicator
-            size="large"
-            color="#007bff"
-            style={styles.loader}
-          />
+          <ActivityIndicator size={50} color="#007bff" style={styles.loader} />
         )}
       </View>
     </View>

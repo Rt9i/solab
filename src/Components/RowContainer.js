@@ -22,11 +22,10 @@ const RowContainer = ({
   const flatListRef = useRef();
   const {selectedIcons, scrollToTop, user, strings} = useContext(SolabContext);
 
-
   const category = [`${row}`];
 
   const onSeeAllPress = () => {
-    navigation.navigate('SeeAllProducts', {items});
+    navigation.navigate('SeeAllProducts', items);
   };
 
   useEffect(() => {
@@ -44,6 +43,8 @@ const RowContainer = ({
     navigation.navigate('EditProduct', {category});
   };
 
+  if (!items || items.length === 0) return null;
+
   return (
     <View style={styles.container}>
       {user?.role == 'staff' && (
@@ -59,7 +60,7 @@ const RowContainer = ({
       )}
 
       {items.length > 0 ? (
-        <View>
+        <View style={styles.cont}>
           <View style={styles.header}>
             <TouchableOpacity
               onPress={onSeeAllPress}
@@ -71,22 +72,19 @@ const RowContainer = ({
 
             {text && <Text style={styles.headerText}>{text}</Text>}
           </View>
-
-          <FlashList
-            ref={flatListRef}
-            data={items}
-            renderItem={({item}) => (
-              <RenderItem item={item} renderItem={renderItem} />
-            )}
-            keyExtractor={item => item._id}
-            horizontal
-            showsHorizontalScrollIndicator={true}
-            initialNumToRender={10}
-            maxToRenderPerBatch={5}
-            windowSize={10}
-            contentContainerStyle={styles.itemsContainer}
-            estimatedItemSize={140}
-          />
+          <View>
+            <FlashList
+              ref={flatListRef}
+              data={items}
+              renderItem={({item}) => (
+                <RenderItem item={item} renderItem={renderItem} />
+              )}
+              keyExtractor={item => item._id}
+              horizontal
+              showsHorizontalScrollIndicator={true}
+              estimatedItemSize={160}
+            />
+          </View>
         </View>
       ) : null}
     </View>
@@ -94,6 +92,12 @@ const RowContainer = ({
 };
 
 const styles = StyleSheet.create({
+  cont: {
+    width: '100%',
+    height: '100%',
+    padding: 10,
+    
+  },
   img: {
     height: 20,
     width: 20,
@@ -113,8 +117,10 @@ const styles = StyleSheet.create({
     elevation: 24,
   },
   container: {
-    marginBottom: 20,
-    marginLeft: 15,
+    height: 360,
+
+    marginBottom:10,
+   
   },
   header: {
     flexDirection: 'row-reverse',
@@ -140,7 +146,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(176, 196, 222, 0.7)',
     color: 'black',
   },
-  itemsContainer: {},
+  itemsContainer: {
+    height: 200,
+    backgroundColor: 'blue',
+  },
   noItemsText: {
     textAlign: 'center',
     color: 'grey',

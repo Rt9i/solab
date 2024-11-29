@@ -112,7 +112,6 @@ const CatsStore = props => {
           <View style={styles.sale}>
             <Swipe />
           </View>
-
           <View style={styles.catsBarItemsContainer}>
             <CatsBarItems
               style={styles.CatsBarItems}
@@ -153,6 +152,9 @@ const CatsStore = props => {
 export default CatsStore;
 
 const styles = StyleSheet.create({
+  cont: {
+    backgroundColor: 'black',
+  },
   safeArea: {
     flex: 1,
     backgroundColor: '#fff',
@@ -163,16 +165,18 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   container: {
-    flex: 1,
-    backgroundColor: '#6CCAFF',
+    width: '100%',
+    height: '100%',
   },
   scroll: {
-    flex: 1,
+    width: '100%',
+    height: '100%',
   },
   catsBarItemsContainer: {
     justifyContent: 'center',
   },
   itemContainer: {
-    marginLeft: 10,
+    height: '100%',
+    width: '100%',
   },
 });

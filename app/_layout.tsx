@@ -2,13 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import {useFonts} from 'expo-font';
-import {
-  DarkTheme,
-  DefaultTheme,
-  NavigationContainer,
-  ThemeProvider,
-} from '@react-navigation/native';
-import {Stack} from 'expo-router';
+import {useColorScheme} from '@/hooks/useColorScheme';
 import SolabProvider from '../src/store/solabProvider';
 import {useColorScheme} from '@/hooks/useColorScheme';
 import Toast from 'react-native-toast-message';
@@ -17,13 +11,12 @@ SplashScreen.preventAutoHideAsync();
 
 function AppContent() {
   const colorScheme = useColorScheme();
-  const [initialRoute, setInitialRoute] = useState<string | null>(null);
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack initialRouteName={initialRoute || 'index'}>
-        <Stack.Screen name="home" options={{headerShown: false}} />
-        <Stack.Screen name="CatsStore" options={{headerShown: false}} />
+        {/* <Stack.Screen name="Login" options={{headerShown: false}} /> */}
+        <Stack.Screen name="Home" options={{headerShown: false}} />
         <Stack.Screen name="StaffHome" />
         <Stack.Screen name="WorkersHome" />
         <Stack.Screen name="EditProduct" />

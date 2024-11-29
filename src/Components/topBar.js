@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     backgroundColor: 'white',
     height: 60,
-    width: Sizes.screenWidth,
+    width: '100%',
 
   },
   leftContainer: {

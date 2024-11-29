@@ -4,10 +4,12 @@ import React from 'react';
 import GoogleLogin from '@/src/Components/googleLogin';
 
 const Login = () => {
-  return <View style={styles.container}>
-    {/* {loginForm()} */}
-    {GoogleLogin()}
-    </View>;
+  return (
+    <View style={styles.container}>
+      {loginForm()}
+      {/* {GoogleLogin()} */}
+    </View>
+  );
 };
 
 export default Login;
