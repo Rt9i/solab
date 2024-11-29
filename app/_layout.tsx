@@ -58,9 +58,7 @@ export default function RootLayout() {
 
   return (
     <SolabProvider>
-      <NavigationContainer>
-        <AppContent />
-      </NavigationContainer>
+      <AppContent />
     </SolabProvider>
   );
 }
