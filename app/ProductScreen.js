@@ -8,26 +8,21 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import SolabContext from '../src/store/solabContext';
 import {LinearGradient} from 'expo-linear-gradient';
 import MessageModal from '@/src/Components/messageModal';
+import Images from '@/src/assets/images/images';
 import Toast from 'react-native-toast-message';
-import {useLocalSearchParams, useNavigation, useRouter} from 'expo-router';
-import SolabContext from '../src/store/solabContext';
-import Images from '../src/assets/images/images';
-
 const ProductScreen = () => {
   const navigation = useNavigation();
+  const route = useRoute(); // Get the route params
 
-  const product = useLocalSearchParams();
-
-  console.log('Passed Product Data:', product.img);
-
+  const {data: product} = route.params;
   const {addItemToCart, strings} = useContext(SolabContext);
   const [quantity, setQuantity] = useState('1');
   const [modalVisible, setModalVisible] = useState(false); // State for modal visibility
   const [modalMessage, setModalMessage] = useState(''); // State for modal message
-
-  const imageSource = product?.img?.uri || product?.img;
 
   const handleAddToCart = () => {
     const quantityInt = parseInt(quantity);
@@ -54,6 +49,9 @@ const ProductScreen = () => {
 
     navigation.goBack();
   };
+
+  const isValidUrl = string => /^(https?:\/\/)/.test(string); // Simple regex for URL check
+  const imageSource = product?.img?.uri || product?.img;
 
   return (
     <View style={styles.container}>
@@ -118,6 +116,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     borderColor: '#ddd',
     borderWidth: 1,
+
   },
   inputContainer: {
     flexDirection: 'row',
@@ -128,7 +127,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     textAlign: 'center',
-
+    fontWeight: 'bold',
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
@@ -147,13 +146,14 @@ const styles = StyleSheet.create({
   addToCartText: {
     fontSize: 16,
     color: '#fff',
+    fontWeight: 'bold',
   },
   descriptionContainer: {
     padding: 16,
     backgroundColor: '#fff',
     borderRadius: 12,
     elevation: 4,
-
+   
     borderColor: '#ddd',
     borderWidth: 1,
   },
