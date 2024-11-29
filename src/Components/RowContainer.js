@@ -24,9 +24,13 @@ const RowContainer = ({
 
   const category = [`${row}`];
 
+  // When sending an array, ensure that you use `params` properly
   const onSeeAllPress = () => {
-    navigation.navigate('SeeAllProducts', items);
+    const itemsToSend = JSON.stringify(items); // Serialize the items array
+    navigation.navigate('SeeAllProducts', { items: itemsToSend });
+    console.log('Sending items: ', itemsToSend);
   };
+  
 
   useEffect(() => {
     if (flatListRef.current) {
@@ -96,7 +100,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     padding: 10,
-    
   },
   img: {
     height: 20,
@@ -119,8 +122,7 @@ const styles = StyleSheet.create({
   container: {
     height: 360,
 
-    marginBottom:10,
-   
+    marginBottom: 10,
   },
   header: {
     flexDirection: 'row-reverse',

@@ -16,7 +16,7 @@ import Images from '@/src/assets/images/images';
 import Toast from 'react-native-toast-message';
 const ProductScreen = () => {
   const navigation = useNavigation();
-  const route = useRoute(); // Get the route params
+  const route = useRoute();
 
   const {data: product} = route.params;
   const {addItemToCart, strings} = useContext(SolabContext);
@@ -116,7 +116,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     borderColor: '#ddd',
     borderWidth: 1,
-
   },
   inputContainer: {
     flexDirection: 'row',
@@ -153,7 +152,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 12,
     elevation: 4,
-   
+
     borderColor: '#ddd',
     borderWidth: 1,
   },

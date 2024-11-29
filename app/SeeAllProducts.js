@@ -1,15 +1,14 @@
 import {FlatList, StyleSheet, View} from 'react-native';
 import React, {useContext, useState} from 'react';
+import {useLocalSearchParams, useRouter} from 'expo-router'; // Using Expo Router's hook
 
 import CatsStoreItems from '@/src/Components/CatsStoreItems';
 import SolabContext from '@/src/store/solabContext';
-import {useRouter} from 'expo-router';
 
 const SeeAllProducts = () => {
-  const items = useRouter();
-  // const {items} = route.params;
   const [displayMode, setDisplayMode] = useState('row');
   const [optionsVisible, setOptionsVisible] = useState(false);
+
   const {
     selectedIcons,
     search,
@@ -20,6 +19,12 @@ const SeeAllProducts = () => {
     cat,
     rows,
   } = useContext(SolabContext);
+
+  // Using the router to get the parameters
+  const router = useLocalSearchParams();
+  const items = router.items ? JSON.parse(router.items) : [];
+
+  console.log('items received: ', items);
 
   const renderItem = ({item}) => {
     return (
@@ -48,11 +53,12 @@ const SeeAllProducts = () => {
       </View>
     );
   };
+
   return (
     <View style={styles.container}>
       <FlatList
         contentContainerStyle={styles.flatListContainer}
-        data={items}
+        data={items} // Use the items from the query parameters
         renderItem={({item, index}) => renderItem({item, index})}
         keyExtractor={(item, index) => index.toString()}
         numColumns={3}
@@ -64,6 +70,10 @@ const SeeAllProducts = () => {
 export default SeeAllProducts;
 
 const styles = StyleSheet.create({
+  itemContainer: {
+    height: 300,
+    width:130,
+  },
   container: {
     backgroundColor: 'white',
     flex: 1,
