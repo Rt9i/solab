@@ -61,12 +61,9 @@ export default function RootLayout() {
 
   return (
     <SolabProvider>
-      <NavigationContainer>
-        <ThemeProvider
-          value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <AppContent />
-        </ThemeProvider>
-      </NavigationContainer>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <AppContent />
+      </ThemeProvider>
     </SolabProvider>
   );
 }

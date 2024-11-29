@@ -71,10 +71,7 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
 
   return (
     <View
-      // style={
-      //   user?.role === 'staff' ? styles.itemWidthStaff : styles.itemWidth
-      // }
-      style={styles.itemWidth}>
+      style={user?.role === 'staff' ? styles.itemWidthStaff : styles.itemWidth}>
       <View style={styles.items}>
         {user?.role == 'staff' && (
           <View style={styles.stock}>
@@ -273,8 +270,8 @@ const styles = StyleSheet.create({
   itemWidth: {
     width: '100%',
     height: '100%',
-
     marginBottom: 2,
+    
     borderRadius: 5,
   },
   items: {
