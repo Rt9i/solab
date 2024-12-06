@@ -26,7 +26,7 @@ const Home = () => {
     <LinearGradient
       colors={gradientColors}
       locations={[0, 0.7, 1]}
-      style={styles.fullScreenContainer}>
+      style={styles.liner}>
       <TouchableOpacity
         onPress={() => navigateStore(foodType)}
         style={styles.touch}>
@@ -38,20 +38,24 @@ const Home = () => {
 
   return (
     <View style={styles.container}>
-      {renderUi(
-        'dog',
-        Images.dog(),
-        'Dog Food',
-        ['#808080', '#000000', '#000000'],
-        styles.dogButtonText,
-      )}
-      {renderUi(
-        'cat',
-        Images.cat(),
-        'Cat Food',
-        ['#6CCAFF', '#0066FF', '#004C99'],
-        styles.catButtonText,
-      )}
+      <View style={{flex: 1}}>
+        {renderUi(
+          'dog',
+          Images.dog(),
+          'Dog Food',
+          ['#808080', '#000000', '#000000'],
+          styles.dogButtonText,
+        )}
+      </View>
+      <View style={{flex: 1}}>
+        {renderUi(
+          'cat',
+          Images.cat(),
+          'Cat Food',
+          ['#6CCAFF', '#0066FF', '#004C99'],
+          styles.catButtonText,
+        )}
+      </View>
     </View>
   );
 };
@@ -59,19 +63,22 @@ const Home = () => {
 export default Home;
 
 const styles = StyleSheet.create({
+  liner: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   container: {
     flex: 1,
     flexDirection: 'row',
+    backgroundColor: 'white',
   },
-  fullScreenContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+
   touch: {
-    height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+    width: '100%',
+    height: '100%',
   },
   image: {
     height: 250,
