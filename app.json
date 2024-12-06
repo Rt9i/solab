@@ -24,7 +24,8 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.company.solab"
+      "bundleIdentifier": "com.company.solab",
+      "jsEngine": "jsc"
     },
     "android": {
       "permissions": [
