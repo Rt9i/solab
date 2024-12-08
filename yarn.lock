@@ -1449,7 +1449,7 @@
     node-forge "^1.2.1"
     nullthrows "^1.1.1"
 
-"@expo/config-plugins@8.0.11", "@expo/config-plugins@~8.0.8":
+"@expo/config-plugins@8.0.11", "@expo/config-plugins@~8.0.0", "@expo/config-plugins@~8.0.8":
   version "8.0.11"
   resolved "https://registry.yarnpkg.com/@expo/config-plugins/-/config-plugins-8.0.11.tgz#b814395a910f4c8b7cc95d9719dccb6ca53ea4c5"
   integrity sha512-oALE1HwnLFthrobAcC9ocnR9KXLzfWEjgIe4CPe+rDsfC6GDs8dGYCXfRFoCEzoLN4TGYs9RdZ8r0KoCcNrm2A==
@@ -1684,7 +1684,7 @@
     json5 "^2.2.3"
     write-file-atomic "^2.3.0"
 
-"@expo/metro-config@0.18.11":
+"@expo/metro-config@0.18.11", "@expo/metro-config@~0.18.11":
   version "0.18.11"
   resolved "https://registry.yarnpkg.com/@expo/metro-config/-/metro-config-0.18.11.tgz#22e82d92fb9d94ac760cc8b3bff48e6f32b4f032"
   integrity sha512-/uOq55VbSf9yMbUO1BudkUM2SsGW1c5hr9BnhIqYqcsFv0Jp5D3DtJ4rljDKaUeNLbwr6m7pqIrkSMq5NrYf4Q==
@@ -1816,7 +1816,7 @@
     base64-js "^1.2.3"
     xmlbuilder "^14.0.0"
 
-"@expo/prebuild-config@7.0.9":
+"@expo/prebuild-config@7.0.9", "@expo/prebuild-config@~7.0.0":
   version "7.0.9"
   resolved "https://registry.yarnpkg.com/@expo/prebuild-config/-/prebuild-config-7.0.9.tgz#7abd489e18ed6514a0c9cd214eb34c0d5efda799"
   integrity sha512-9i6Cg7jInpnGEHN0jxnW0P+0BexnePiBzmbUvzSbRXpdXihYUX2AKMu73jgzxn5P1hXOSkzNS7umaY+BZ+aBag==
@@ -8832,7 +8832,7 @@ metro-cache@0.81.0:
     flow-enums-runtime "^0.0.6"
     metro-core "0.81.0"
 
-metro-config@0.80.12, metro-config@^0.80.3:
+metro-config@0.80.12, metro-config@^0.80.3, metro-config@~0.80.8:
   version "0.80.12"
   resolved "https://registry.yarnpkg.com/metro-config/-/metro-config-0.80.12.tgz#1543009f37f7ad26352ffc493fc6305d38bdf1c0"
   integrity sha512-4rwOWwrhm62LjB12ytiuR5NgK1ZBNr24/He8mqCsC+HXZ+ATbrewLNztzbAZHtFsrxP4D4GLTGgh96pCpYLSAQ==
@@ -8932,7 +8932,7 @@ metro-minify-terser@0.81.0:
     flow-enums-runtime "^0.0.6"
     terser "^5.15.0"
 
-metro-resolver@0.80.12:
+metro-resolver@0.80.12, metro-resolver@~0.80.8:
   version "0.80.12"
   resolved "https://registry.yarnpkg.com/metro-resolver/-/metro-resolver-0.80.12.tgz#e3815914c21315b04db200032c3243a4cc22dfb6"
   integrity sha512-PR24gYRZnYHM3xT9pg6BdbrGbM/Cu1TcyIFBVlAk7qDAuHkUNQ1nMzWumWs+kwSvtd9eZGzHoucGJpTUEeLZAw==
