@@ -12,7 +12,7 @@
     "web": "expo start --web",
     "test": "jest --watchAll",
     "lint": "eslint .",
-    "predeploy": "expo export --output-dir web-build",
+    "predeploy": "npx expo build:web",
     "deploy": "gh-pages -d web-build",
     "build": "expo export"
   },
@@ -26,6 +26,7 @@
     "@expo/metro-runtime": "~3.2.3",
     "@expo/prebuild-config": "~7.0.0",
     "@expo/vector-icons": "^14.0.3",
+    "@expo/webpack-config": "~19.0.1",
     "@freakycoder/react-native-bounceable": "^1.0.3",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-community/cli-server-api": "^15.1.2",
