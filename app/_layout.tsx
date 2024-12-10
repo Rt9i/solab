@@ -16,31 +16,30 @@ function AppContent() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <NavigationContainer basename="/solab">
-        <Stack initialRouteName={'index'}>
-          <Stack.Screen name="home" options={{headerShown: false}} />
-          <Stack.Screen name="StaffHome" />
-          <Stack.Screen name="WorkersHome" />
-          <Stack.Screen name="EditProduct" />
-          <Stack.Screen name="SettingsScreen" />
-          <Stack.Screen name="Cart" />
-          <Stack.Screen name="Profile" />
-          <Stack.Screen name="CatsStore" options={{headerShown: false}} />
-          <Stack.Screen
-            name="ProductScreen"
-            options={{
-              headerTitle: '',
-              headerStyle: {backgroundColor: 'white'},
-              headerTintColor: '#000000',
-              headerTitleAlign: 'center',
-            }}
-          />
-          <Stack.Screen name="SeeAllProducts" />
-          <Stack.Screen name="index" options={{headerShown: false}} /> 
-          
-          <Stack.Screen name="+not-found" />
-        </Stack>
-      </NavigationContainer>
+      <Stack initialRouteName={'index'}>
+        <Stack.Screen name="home" options={{headerShown: false}} />
+        <Stack.Screen name="StaffHome" />
+        <Stack.Screen name="WorkersHome" />
+        <Stack.Screen name="EditProduct" />
+        <Stack.Screen name="SettingsScreen" />
+        <Stack.Screen name="Cart" />
+        <Stack.Screen name="Profile" />
+        <Stack.Screen name="CatsStore" options={{headerShown: false}} />
+        <Stack.Screen
+          name="ProductScreen"
+          options={{
+            headerTitle: '',
+            headerStyle: {backgroundColor: 'white'},
+            headerTintColor: '#000000',
+            headerTitleAlign: 'center',
+          }}
+        />
+        <Stack.Screen name="SeeAllProducts" />
+        <Stack.Screen name="index" options={{headerShown: false}} />
+
+        <Stack.Screen name="+not-found" />
+      </Stack>
+
       <Toast />
     </ThemeProvider>
   );
