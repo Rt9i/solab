@@ -6,7 +6,7 @@
     "sdkVersion": "51.0.0",
     "platforms": ["ios", "android", "web"],
     "orientation": "portrait",
-
+    "jsEngine": "hermes",
     "extra": {
       "EXPO_ROUTER_APP_ROOT": "./app/_layout.tsx",
       "GOOGLE_API_KEY": "AIzaSyA6z3FL4IhcCRZNyf7HwaEOvqXe6T9HrUo",
@@ -23,6 +23,7 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
+      "jsEngine": "hermes",
       "supportsTablet": true,
       "bundleIdentifier": "com.company.solab"
     },
