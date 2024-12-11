@@ -1,5 +1,5 @@
 import {StyleSheet, View, ActivityIndicator, Image, Button} from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SolabContext from '../src/store/solabContext';
 import {
@@ -9,10 +9,7 @@ import {
 } from '../src/res/api';
 import {useFocusEffect, useRouter} from 'expo-router';
 import Images from '@/src/assets/images/images';
-import {Asset} from 'expo-asset';
-const image = Asset.fromModule(
-  require('../src/assets/images/photos/whiteLogo.png'),
-).uri;
+
 
 const Index = () => {
   const nav = useRouter();
@@ -113,7 +110,10 @@ const Index = () => {
   return (
     <View style={styles.container}>
       <View style={styles.loadingContainer}>
-        <Image source={{uri: image}} style={styles.image} />
+        <Image
+          source={require('../src/assets/images/photos/whiteLogo.png')}
+          style={styles.image}
+        />
         {loading && (
           <ActivityIndicator size={50} color="#007bff" style={styles.loader} />
         )}
