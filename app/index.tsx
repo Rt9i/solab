@@ -106,7 +106,7 @@ const Index = () => {
   useFocusEffect(
     React.useCallback(() => {
       setLoading(true);
-      initializeApp();
+      initializeApp(); 
     }, []),
   );
 
