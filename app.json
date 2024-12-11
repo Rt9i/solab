@@ -6,7 +6,7 @@
     "sdkVersion": "51.0.0",
     "platforms": ["ios", "android", "web"],
     "orientation": "portrait",
-    "jsEngine": "hermes",
+    "main": "expo-router/entry",
     "extra": {
       "EXPO_ROUTER_APP_ROOT": "./app/_layout.tsx",
       "GOOGLE_API_KEY": "AIzaSyA6z3FL4IhcCRZNyf7HwaEOvqXe6T9HrUo",
@@ -23,9 +23,9 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "jsEngine": "hermes",
       "supportsTablet": true,
-      "bundleIdentifier": "com.company.solab"
+      "bundleIdentifier": "com.company.solab",
+      "jsEngine": "jsc"
     },
     "android": {
       "permissions": [
@@ -55,6 +55,8 @@
     "updates": {
       "url": "https://u.expo.dev/858c5b51-e679-45bd-ab3b-02e059a45b7a"
     },
+    "homepage": "https://rt9i.github.io/solab/",
+
     "owner": "rt9i"
   }
 }
