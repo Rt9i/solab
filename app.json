@@ -44,7 +44,7 @@
       "output": "static",
       "favicon": "./assets/images/favicon.png",
       "router": {
-        "basePath": "solab"
+        "publicPath": "/solab/"
       }
     },
     "plugins": ["expo-router"],
