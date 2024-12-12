@@ -1,0 +1,5 @@
+[build]
+  command = "expo export --output out"  # The build command to generate your web app
+  publish = "out"  # Directory where the built files are located
+
+# Optionally, you can add environment variables here or other settings
