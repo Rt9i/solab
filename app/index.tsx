@@ -10,7 +10,6 @@ import {
 import {useFocusEffect, useRouter} from 'expo-router';
 import Images from '@/src/assets/images/images';
 
-
 const Index = () => {
   const nav = useRouter();
   const {setUser, saveUserProducts, setData, logout} = useContext(SolabContext);
@@ -103,17 +102,14 @@ const Index = () => {
   useFocusEffect(
     React.useCallback(() => {
       setLoading(true);
-      initializeApp(); 
+      initializeApp();
     }, []),
   );
 
   return (
     <View style={styles.container}>
       <View style={styles.loadingContainer}>
-        <Image
-          source={require('../src/assets/images/photos/whiteLogo.png')}
-          style={styles.image}
-        />
+        <Image source={Images.whiteLogo()} style={styles.image} />
         {loading && (
           <ActivityIndicator size={50} color="#007bff" style={styles.loader} />
         )}
