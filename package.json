@@ -14,8 +14,7 @@
     "lint": "eslint .",
     "predeploy": "expo export --output-dir web-build",
     "deploy": "gh-pages -d web-build",
-    "build": "react-scripts build"
-    
+    "build": "expo export"
   },
   "jest": {
     "preset": "jest-expo"
