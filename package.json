@@ -14,7 +14,7 @@
     "lint": "eslint .",
     "predeploy": "expo export --output-dir web-build",
     "deploy": "gh-pages -d web-build",
-     "build": "expo export"
+    "build": "expo export"
   },
   "jest": {
     "preset": "jest-expo"
@@ -106,5 +106,4 @@
   "engines": {
     "node": ">=18"
   }
- 
 }
