@@ -114,7 +114,7 @@ const Index = () => {
   return (
     <View style={styles.container}>
       <View style={styles.loadingContainer}>
-        {/* <Button title="go to home man" onPress={() => nav.navigate('home')} /> */}
+
         <Image source={Images.whiteLogo()} style={styles.image} />
         {loading && (
           <ActivityIndicator size={50} color="#007bff" style={styles.loader} />
@@ -126,7 +126,7 @@ const Index = () => {
 
 export default Index;
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create({  
   container: {
     flex: 1,
     justifyContent: 'center',
