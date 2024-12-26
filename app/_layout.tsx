@@ -8,6 +8,7 @@ import {Stack} from 'expo-router';
 import SolabProvider from '../src/store/solabProvider';
 import {useColorScheme} from '@/hooks/useColorScheme';
 import Toast from 'react-native-toast-message';
+import {Platform} from 'react-native';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -36,11 +37,10 @@ function AppContent() {
         />
         <Stack.Screen name="SeeAllProducts" />
         <Stack.Screen name="index" options={{headerShown: false}} />
-
         <Stack.Screen name="+not-found" />
       </Stack>
 
-      <Toast />
+      {Platform.OS !== 'web' && <Toast />}
     </ThemeProvider>
   );
 }
