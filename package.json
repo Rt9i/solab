@@ -4,6 +4,7 @@
   "entryPoint": "src/App.tsx",
   "version": "0.0.1",
   "private": true,
+  "homepage": "https://rt9i.github.io/solab/",
   "scripts": {
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
