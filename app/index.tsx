@@ -1,124 +1,97 @@
-import {StyleSheet, View, ActivityIndicator, Image, Button} from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
+import { StyleSheet, View, ActivityIndicator, Image, Platform } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SolabContext from '../src/store/solabContext';
-import {
-  getUserByID,
-  getUserProducts,
-  getDataFromDataBase,
-} from '../src/res/api';
-import {useFocusEffect, useRouter} from 'expo-router';
+import { getUserByID, getUserProducts, getDataFromDataBase } from '../src/res/api';
+import { useRouter } from 'expo-router';
 import Images from '@/src/assets/images/images';
-import {Asset} from 'expo-asset';
-import { Platform } from 'expo-modules-core';
-
-
-
 
 const Index = () => {
   const nav = useRouter();
-  const {setUser, saveUserProducts, setData, logout} = useContext(SolabContext);
+  const { setUser, saveUserProducts, setData, logout } = useContext(SolabContext);
   const [loading, setLoading] = useState(false);
 
-  const checkAsyncStorageForUser = async () => {
-    try {
-      const storedUser = await AsyncStorage.getItem('user');
-      if (storedUser) {
-        const parsedUser = JSON.parse(storedUser);
-        console.log('User loaded from AsyncStorage:', parsedUser);
-        return parsedUser; // Return user for further use
-      }
-      console.log('No user found in AsyncStorage');
-      return null;
-    } catch (error) {
-      console.error('Failed to load user from AsyncStorage:', error);
-      return null;
-    }
-  };
+  const isWeb = Platform.OS === 'web';
 
+  /**
+   * Fetch data for products and update the store.
+   */
   const fetchData = async () => {
     try {
+      console.log('Fetching data from database...');
       const result = await getDataFromDataBase();
       setData(result);
+      console.log('Data fetched successfully:', result);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
 
+  /**
+   * Initialize the app: handle user session, fetch data, and navigate.
+   */
   const initializeApp = async () => {
     console.log('Initializing app...');
+    setLoading(true);
 
-    const asyncUser = await checkAsyncStorageForUser();
-    console.log('AsyncStorage user data:', asyncUser);
+    try {
+      let asyncUser = null;
 
-    if (!asyncUser) {
-      await fetchData();
-      console.log('User is null, navigating to Login');
-      nav.replace('/home');
-      return;
-    }
-
-    console.log('User found, proceeding to fetch additional data and navigate');
-
-    const updateUserAndFetchProducts = async () => {
-      try {
-        console.log('Fetching user and products...');
-        const newUser = await getUserByID(asyncUser._id);
-        await fetchData();
-        if (!newUser || !newUser.role) {
-          console.error('Invalid user data:', newUser);
-          setLoading(false);
-          return;
-        }
-
-        setUser(newUser);
-        console.log('User role:', newUser.role);
-
-        const response = await getUserProducts(asyncUser._id);
-        saveUserProducts(response);
-
-        switch (newUser.role) {
-          case 'client':
-            console.log('Navigating to Home');
-            nav.navigate('/home');
-            break;
-          case 'worker':
-            console.log('Navigating to WorkersHome');
-            nav.navigate('/WorkersHome');
-            break;
-          case 'staff':
-            console.log('Navigating to StaffHome');
-            nav.navigate('/StaffHome');
-            break;
-          default:
-            console.error('Invalid user role, no navigation');
-        }
-      } catch (error) {
-        logout();
-        console.error('Error fetching user or products:', error);
-      } finally {
-        setLoading(false);
+      // Skip AsyncStorage logic for web
+      if (!isWeb) {
+        asyncUser = await AsyncStorage.getItem('user');
+        asyncUser = asyncUser ? JSON.parse(asyncUser) : null;
       }
-    };
 
-    await updateUserAndFetchProducts();
+      if (!asyncUser) {
+        console.log('No user found in storage. Fetching initial data...');
+        await fetchData(); // Fetch app-wide data
+        nav.replace('/home'); // Redirect to home
+        return;
+      }
+
+      console.log('User found:', asyncUser);
+
+      // Fetch user details and their products
+      const newUser = await getUserByID(asyncUser._id);
+      if (!newUser || !newUser.role) throw new Error('Invalid user data');
+
+      setUser(newUser);
+      const response = await getUserProducts(asyncUser._id);
+      saveUserProducts(response);
+
+      // Navigate based on user role
+      switch (newUser.role) {
+        case 'client':
+          nav.navigate('/home');
+          break;
+        case 'worker':
+          nav.navigate('/WorkersHome');
+          break;
+        case 'staff':
+          nav.navigate('/StaffHome');
+          break;
+        default:
+          console.error('Invalid user role');
+      }
+    } catch (error) {
+      console.error('Initialization error:', error);
+      logout();
+    } finally {
+      setLoading(false);
+    }
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      setLoading(true);
-      initializeApp();
-    }, []),
-  );
-  
+  // Initialize app logic on component mount
+  useEffect(() => {
+    initializeApp();
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.loadingContainer}>
-
         <Image source={Images.whiteLogo()} style={styles.image} />
-        {loading && (
-          <ActivityIndicator size={50} color="#007bff" style={styles.loader} />
-        )}
+        {loading && <ActivityIndicator size="large" color="#007bff" style={styles.loader} />}
       </View>
     </View>
   );
@@ -126,7 +99,7 @@ const Index = () => {
 
 export default Index;
 
-const styles = StyleSheet.create({  
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
