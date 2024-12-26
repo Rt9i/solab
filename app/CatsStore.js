@@ -41,18 +41,15 @@ const CatsStore = props => {
   const nav = useNavigation();
   useFocusEffect(
     React.useCallback(() => {
-      console.log('go back bozo');
-
-      if (data <= 0) {
+      console.log('Current data:', data);
+  
+      if (!data || data.length === 0) {
+        console.warn('No data found, navigating back to index...');
         nav.navigate('index');
       }
-
-      // Optional: You can return a cleanup function if needed
-      return () => {
-        // Cleanup if necessary
-      };
-    }, [data, nav]), // Dependencies array
+    }, [data, nav]),
   );
+  
   const renderItem = ({item}) => {
     return (
       <View style={styles.itemContainer}>

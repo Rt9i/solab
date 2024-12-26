@@ -1,14 +1,24 @@
-import { StyleSheet, View, ActivityIndicator, Image, Platform } from 'react-native';
-import React, { useContext, useEffect, useState } from 'react';
+import {
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  Image,
+  Platform,
+} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SolabContext from '../src/store/solabContext';
-import { getUserByID, getUserProducts, getDataFromDataBase } from '../src/res/api';
-import { useRouter } from 'expo-router';
+import {
+  getUserByID,
+  getUserProducts,
+  getDataFromDataBase,
+} from '../src/res/api';
+import {useRouter} from 'expo-router';
 import Images from '@/src/assets/images/images';
 
 const Index = () => {
   const nav = useRouter();
-  const { setUser, saveUserProducts, setData, logout } = useContext(SolabContext);
+  const {setUser, saveUserProducts, setData, logout} = useContext(SolabContext);
   const [loading, setLoading] = useState(false);
 
   const isWeb = Platform.OS === 'web';
@@ -91,7 +101,13 @@ const Index = () => {
     <View style={styles.container}>
       <View style={styles.loadingContainer}>
         <Image source={Images.whiteLogo()} style={styles.image} />
-        {loading && <ActivityIndicator size="large" color="#007bff" style={styles.loader} />}
+        {loading && (
+          <ActivityIndicator
+            size="large"
+            color="#007bff"
+            style={styles.loader}
+          />
+        )}
       </View>
     </View>
   );
