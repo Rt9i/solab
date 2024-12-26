@@ -31,7 +31,7 @@ const Index = () => {
       console.log('Fetching data from database...');
       const result = await getDataFromDataBase();
       setData(result);
-      console.log('Data fetched successfully:', result);
+      console.log('Data fetched successfully:');
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -100,7 +100,11 @@ const Index = () => {
   return (
     <View style={styles.container}>
       <View style={styles.loadingContainer}>
-        <Image source={Images.whiteLogo()} style={styles.image} />
+        <Image
+          source={Images.whiteLogo()}
+          resizeMode="contain"
+          style={styles.image}
+        />
         {loading && (
           <ActivityIndicator
             size="large"
@@ -129,7 +133,6 @@ const styles = StyleSheet.create({
   image: {
     width: 400,
     height: 400,
-    resizeMode: 'contain',
   },
   loader: {
     marginTop: 20,

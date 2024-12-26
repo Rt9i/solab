@@ -112,7 +112,11 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
             onPress={() => handleEditProducts()}
             style={styles.editButtonContainer}>
             <View style={{width: 50, height: 50}}>
-              <Image source={Images.edit()} style={styles.edit} />
+              <Image
+                source={Images.edit()}
+                resizeMode="contain"
+                style={styles.edit}
+              />
             </View>
           </TouchableOpacity>
         )}
@@ -209,7 +213,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   edit: {
-    resizeMode: 'contain',
     height: 30,
     width: 30,
     zIndex: 1,
@@ -272,7 +275,7 @@ const styles = StyleSheet.create({
     width: 140,
     marginBottom: 2,
     borderRadius: 5,
-    overflow:'hidden',
+    overflow: 'hidden',
   },
   items: {
     flex: 1,

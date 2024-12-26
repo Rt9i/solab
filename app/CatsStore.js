@@ -41,7 +41,7 @@ const CatsStore = props => {
   const nav = useNavigation();
   useFocusEffect(
     React.useCallback(() => {
-      console.log('Current data:', data);
+      // console.log('Current data:', data);
   
       if (!data || data.length === 0) {
         console.warn('No data found, navigating back to index...');
