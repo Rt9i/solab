@@ -1,0 +1,46 @@
+[
+    {
+        "merged": "com.solab.app-debug-43:/mipmap-hdpi_ic_launcher.png.flat",
+        "source": "com.solab.app-main-45:/mipmap-hdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.solab.app-debug-43:/mipmap-mdpi_ic_launcher.png.flat",
+        "source": "com.solab.app-main-45:/mipmap-mdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.solab.app-debug-43:/mipmap-mdpi_ic_launcher_round.png.flat",
+        "source": "com.solab.app-main-45:/mipmap-mdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.solab.app-debug-43:/mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "com.solab.app-main-45:/mipmap-xxxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.solab.app-debug-43:/mipmap-xhdpi_ic_launcher_round.png.flat",
+        "source": "com.solab.app-main-45:/mipmap-xhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.solab.app-debug-43:/mipmap-hdpi_ic_launcher_round.png.flat",
+        "source": "com.solab.app-main-45:/mipmap-hdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.solab.app-debug-43:/mipmap-xxxhdpi_ic_launcher_round.png.flat",
+        "source": "com.solab.app-main-45:/mipmap-xxxhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.solab.app-debug-43:/drawable_rn_edit_text_material.xml.flat",
+        "source": "com.solab.app-main-45:/drawable/rn_edit_text_material.xml"
+    },
+    {
+        "merged": "com.solab.app-debug-43:/mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "com.solab.app-main-45:/mipmap-xhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.solab.app-debug-43:/mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "com.solab.app-main-45:/mipmap-xxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.solab.app-debug-43:/mipmap-xxhdpi_ic_launcher_round.png.flat",
+        "source": "com.solab.app-main-45:/mipmap-xxhdpi/ic_launcher_round.png"
+    }
+]
