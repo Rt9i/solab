@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet} from 'react-native';
+import {Image, StyleSheet} from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import {useFonts} from 'expo-font';
 import {DarkTheme, DefaultTheme, ThemeProvider} from '@react-navigation/native';
@@ -9,6 +9,7 @@ import SolabProvider from '../src/store/solabProvider';
 import {useColorScheme} from '@/hooks/useColorScheme';
 import Toast from 'react-native-toast-message';
 import {Platform} from 'react-native';
+import Images from '@/src/assets/images/images';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -16,9 +17,14 @@ function AppContent() {
   const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack initialRouteName={'index'}>
+    <ThemeProvider value={colorScheme === 'light' ? DarkTheme : DefaultTheme}>
+      <Stack
+        screenOptions={{
+          headerBackTitleVisible: false,
+          headerBackImageSource: Images.arrow(),
+        }}>
         <Stack.Screen name="home" options={{headerShown: false}} />
+        <Stack.Screen name="Policy" />
         <Stack.Screen name="StaffHome" />
         <Stack.Screen name="WorkersHome" />
         <Stack.Screen name="EditProduct" />
@@ -74,5 +80,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f8f9fa',
+  },
+  backImage: {
+    width: 24,
+    height: 24,
+    tintColor: '#000',
+    resizeMode: 'contain',
   },
 });

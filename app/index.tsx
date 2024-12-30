@@ -21,11 +21,6 @@ const Index = () => {
   const {setUser, saveUserProducts, setData, logout} = useContext(SolabContext);
   const [loading, setLoading] = useState(false);
 
-  const isWeb = Platform.OS === 'web';
-
-  /**
-   * Fetch data for products and update the store.
-   */
   const fetchData = async () => {
     try {
       console.log('Fetching data from database...');
@@ -37,9 +32,6 @@ const Index = () => {
     }
   };
 
-  /**
-   * Initialize the app: handle user session, fetch data, and navigate.
-   */
   const initializeApp = async () => {
     console.log('Initializing app...');
     setLoading(true);
@@ -47,22 +39,18 @@ const Index = () => {
     try {
       let asyncUser = null;
 
-      // Skip AsyncStorage logic for web
-      if (!isWeb) {
-        asyncUser = await AsyncStorage.getItem('user');
-        asyncUser = asyncUser ? JSON.parse(asyncUser) : null;
-      }
+      asyncUser = await AsyncStorage.getItem('user');
+      asyncUser = asyncUser ? JSON.parse(asyncUser) : null;
 
       if (!asyncUser) {
         console.log('No user found in storage. Fetching initial data...');
         await fetchData(); // Fetch app-wide data
-        nav.replace('/home'); // Redirect to home
+        nav.replace('/Policy'); // Redirect to home
         return;
       }
 
       console.log('User found:', asyncUser);
 
-      // Fetch user details and their products
       const newUser = await getUserByID(asyncUser._id);
       if (!newUser || !newUser.role) throw new Error('Invalid user data');
 
@@ -72,8 +60,8 @@ const Index = () => {
 
       // Navigate based on user role
       switch (newUser.role) {
-        case 'client':
-          nav.navigate('/home');
+        case 'client': 
+          nav.replace('/Policy');
           break;
         case 'worker':
           nav.navigate('/WorkersHome');

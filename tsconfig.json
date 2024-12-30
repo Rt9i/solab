@@ -1,19 +1,27 @@
 {
   "extends": "@react-native/typescript-config/tsconfig.json",
   "compilerOptions": {
+    // Base config from the React Native TS preset, plus your overrides
     "baseUrl": "./",
     "paths": {
       "@/*": ["*"]
-    }
+    },
+    // If you have any overrides for strict mode or JSX:
+    "strict": true,
+    "jsx": "react-native" 
   },
   "typeRoots": [
-    "./node_modules/@types",
-    "./src/@types" 
+    "./node_modules/@types", 
+    "./src/@types"
   ],
   "include": [
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts"  
-, "app/index.tsx", "app/home.js"  ] 
+    "expo-env.d.ts",
+    "app/index.tsx",
+    "app/home.js",
+    // Here's the critical line
+    "src/@types/**/*.d.ts"
+  ]
 }
