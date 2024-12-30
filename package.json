@@ -14,7 +14,7 @@
     "test": "jest --watchAll",
     "lint": "eslint .",
     "predeploy": "expo export --output-dir web-build",
-    "deploy": "gh-pages -d web-build",
+    "deploy": "netlify deploy --dir=web-build --prod",
     "build": "expo export"
   },
   "jest": {
