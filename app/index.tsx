@@ -32,6 +32,21 @@ const Index = () => {
     }
   };
 
+  const getPolicyAcceptValue = async () => {
+    try {
+      const value = await AsyncStorage.getItem('isAccepted');
+      if (value !== null) {
+        const parsedValue = JSON.parse(value);
+        console.log('Retrieved isAccepted value:', parsedValue);
+        return parsedValue;
+      }
+      return false;
+    } catch (error) {
+      console.error('Error retrieving isAccepted value:', error);
+      return false;
+    }
+  };
+
   const initializeApp = async () => {
     console.log('Initializing app...');
     setLoading(true);
@@ -44,8 +59,16 @@ const Index = () => {
 
       if (!asyncUser) {
         console.log('No user found in storage. Fetching initial data...');
-        await fetchData(); // Fetch app-wide data
-        nav.replace('/Policy'); // Redirect to home
+
+        await fetchData();
+
+        const policyAccept = await getPolicyAcceptValue();
+        console.log('policy result: ', policyAccept);
+
+        if (!policyAccept) {
+          nav.replace('/Policy');
+        }
+        nav.replace('/home');
         return;
       }
 
@@ -58,9 +81,8 @@ const Index = () => {
       const response = await getUserProducts(asyncUser._id);
       saveUserProducts(response);
 
-      // Navigate based on user role
       switch (newUser.role) {
-        case 'client': 
+        case 'client':
           nav.replace('/Policy');
           break;
         case 'worker':

@@ -1,23 +1,29 @@
-import React, {useEffect, useState} from 'react';
-import {Image, StyleSheet} from 'react-native';
+import React, {useEffect} from 'react';
+import {StyleSheet, Platform} from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import {useFonts} from 'expo-font';
 import {DarkTheme, DefaultTheme, ThemeProvider} from '@react-navigation/native';
-import {NavigationContainer} from '@react-navigation/native'; // Import NavigationContainer
 import {Stack} from 'expo-router';
 import SolabProvider from '../src/store/solabProvider';
 import {useColorScheme} from '@/hooks/useColorScheme';
 import Toast from 'react-native-toast-message';
-import {Platform} from 'react-native';
 import Images from '@/src/assets/images/images';
 
 SplashScreen.preventAutoHideAsync();
 
 function AppContent() {
-  const colorScheme = useColorScheme();
+  const scheme = useColorScheme();
+  const finalScheme = scheme || 'light';
+
+  const theme =
+    Platform.OS !== 'web'
+      ? finalScheme === 'light'
+        ? DarkTheme
+        : DefaultTheme
+      : DefaultTheme;
 
   return (
-    <ThemeProvider value={colorScheme === 'light' ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={theme}>
       <Stack
         screenOptions={{
           headerBackTitleVisible: false,
@@ -52,7 +58,6 @@ function AppContent() {
 }
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
@@ -69,9 +74,8 @@ export default function RootLayout() {
 
   return (
     <SolabProvider>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <AppContent />
-      </ThemeProvider>
+      {/* No second ThemeProvider here— just render AppContent */}
+      <AppContent />
     </SolabProvider>
   );
 }
