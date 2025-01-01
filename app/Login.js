@@ -6,8 +6,8 @@ import GoogleLogin from '@/src/Components/googleLogin';
 const Login = () => {
   return (
     <View style={styles.container}>
-      {/* {loginForm()} */}
-      {GoogleLogin()}
+      {loginForm()}
+      {/* {GoogleLogin()} */}
     </View>
   );
 };

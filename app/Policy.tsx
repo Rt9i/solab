@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,32 +8,29 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import {Ionicons} from '@expo/vector-icons';
 import policyText from '@/src/Components/policyText';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useNavigation} from 'expo-router';
 
 export default function Policy() {
   const [isAccepted, setIsAccepted] = useState(false);
-
+  const nav = useNavigation();
   const handleCheckboxToggle = () => {
     setIsAccepted(!isAccepted);
   };
 
   const handleAccept = async () => {
-    if (isAccepted) {
-      console.log('User accepted the policies');
-     await AsyncStorage.setItem('isAccepted', JSON.stringify(isAccepted))
-
-    }
+    console.log('User accepted the policies');
+    await AsyncStorage.setItem('isAccepted', JSON.stringify(isAccepted));
+    nav.navigate('index');
   };
 
   const acceptBox = () => (
     <View style={styles.checkboxContainer}>
       <TouchableOpacity onPress={handleCheckboxToggle} style={styles.row}>
         <View style={[styles.checkbox, isAccepted && styles.checkboxChecked]}>
-          {isAccepted && (
-            <Ionicons name="checkmark" size={16} color="#fff" />
-          )}
+          {isAccepted && <Ionicons name="checkmark" size={16} color="#fff" />}
         </View>
         <Text style={styles.checkboxLabel}>I accept the policy</Text>
       </TouchableOpacity>
@@ -68,7 +65,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   safeArea: {
-    flex:1,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#f8f8f8',
@@ -82,7 +79,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     elevation: 4,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.2,
     shadowRadius: 4,
     padding: 15,

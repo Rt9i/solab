@@ -13,14 +13,20 @@ import {
   getUserProducts,
   getDataFromDataBase,
 } from '../src/res/api';
-import {useRouter} from 'expo-router';
+import {useFocusEffect, useRouter} from 'expo-router';
 import Images from '@/src/assets/images/images';
 
 const Index = () => {
-  const nav = useRouter();
+  const navigation = useRouter();
   const {setUser, saveUserProducts, setData, logout} = useContext(SolabContext);
   const [loading, setLoading] = useState(false);
 
+  const nav = (name: string) => {
+    navigation.navigate(name as any);
+  };
+  const navReplace = (name: string) => {
+    navigation.navigate(name as any);
+  };
   const fetchData = async () => {
     try {
       console.log('Fetching data from database...');
@@ -52,23 +58,22 @@ const Index = () => {
     setLoading(true);
 
     try {
+      const policyAccept = await getPolicyAcceptValue();
       let asyncUser = null;
+
+      await fetchData();
 
       asyncUser = await AsyncStorage.getItem('user');
       asyncUser = asyncUser ? JSON.parse(asyncUser) : null;
+      console.log('policy result: ', policyAccept);
+      if (policyAccept == false) {
+        nav('/Policy');
+        return console.log('policy: ', policyAccept);
+      }
 
       if (!asyncUser) {
         console.log('No user found in storage. Fetching initial data...');
-
-        await fetchData();
-
-        const policyAccept = await getPolicyAcceptValue();
-        console.log('policy result: ', policyAccept);
-
-        if (!policyAccept) {
-          nav.replace('/Policy');
-        }
-        nav.replace('/home');
+        navReplace('/home');
         return;
       }
 
@@ -80,16 +85,16 @@ const Index = () => {
       setUser(newUser);
       const response = await getUserProducts(asyncUser._id);
       saveUserProducts(response);
-
+      if (!policyAccept) return navReplace('/Policy');
       switch (newUser.role) {
         case 'client':
-          nav.replace('/Policy');
+          nav('/home');
           break;
         case 'worker':
-          nav.navigate('/WorkersHome');
+          nav('/WorkersHome');
           break;
         case 'staff':
-          nav.navigate('/StaffHome');
+          nav('/StaffHome');
           break;
         default:
           console.error('Invalid user role');
@@ -102,11 +107,11 @@ const Index = () => {
     }
   };
 
-  // Initialize app logic on component mount
-  useEffect(() => {
-    initializeApp();
-  }, []);
-
+  useFocusEffect(
+    React.useCallback(() => {
+      initializeApp(); // Run when screen comes into focus
+    }, []),
+  );
   return (
     <View style={styles.container}>
       <View style={styles.loadingContainer}>

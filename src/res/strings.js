@@ -21,7 +21,7 @@ const enStrings = {
   category: 'Category',
   fillthefield: 'Please fill out the following fields',
   Brand: 'Brand',
-  amountError: ' sale amount is higher than  sale price',
+  amountError: 'sale amount is higher than sale price',
   name: 'name',
   brand: 'brand',
   delMessage: 'do you want to dellete the item?',
@@ -57,6 +57,7 @@ const enStrings = {
   delUser: 'do you want to dellete your account?',
   registerMessage: 'registered',
   nowYouCanLogin: 'now you can login',
+  logout: 'are you sure you want to logout?',
 };
 
 const heStrings = {
@@ -118,7 +119,8 @@ const heStrings = {
   delUser: 'האם אתה רוצה למחוק את החשבון שלך?',
   loginMessage: ' האם אתה רוצה להיכנס?',
   registerMessage: 'נרשם',
-  nowYouCanLogin: 'الآن يمكنك تسجيل الدخول',
+  nowYouCanLogin: 'עכשיו אתה יכול להיכנס',
+  logout: 'האם אתה בטוח שברצונך להתנתק?',
 };
 
 const arStrings = {
@@ -159,12 +161,10 @@ const arStrings = {
   clearCart: 'مسح العربة',
   name: 'اسم',
   price: 'سعر',
-
   selectedpets: 'الحيوانات الأليفة المختارة',
   row: 'صف',
   selectedRow: ' الريف',
   taste: 'الطعم',
-  price: 'السعر',
   weight: 'الوزن',
   saleAmount: 'كمية التخفيض',
   salePrice: 'سعر التخفيض',
@@ -182,6 +182,7 @@ const arStrings = {
   selectAll: 'اختر الكل',
   searchKeys: 'مفاتيح البحث',
   seeAllButton: 'كل المنتجات',
+  logout: 'هل أنت متأكد أنك تريد تسجيل الخروج؟',
 };
 
-export {enStrings, heStrings, arStrings};
+export { enStrings, heStrings, arStrings };

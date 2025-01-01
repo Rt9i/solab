@@ -1,7 +1,12 @@
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Linking, ScrollView, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 
 const policyText = () => {
+  const handleLinkPress = url => {
+    Linking.openURL(url).catch(err =>
+      console.error('Error opening link:', err),
+    );
+  };
   return (
     <View style={styles.policyBox}>
       <ScrollView
@@ -16,9 +21,11 @@ const policyText = () => {
           protecting the personal information you share with us. This policy
           describes how we collect, use, and share your personal information.
           For more information, please visit our full privacy policy at{' '}
-          <Text style={styles.link}>
-            https://www.termsfeed.com/live/0d17353b-348e-4ced-85ea-ef8c630a3f21
-          </Text>.
+          <Text
+            style={styles.link}
+            onPress={() => handleLinkPress('https://www.termsfeed.com/live/0d17353b-348e-4ced-85ea-ef8c630a3f21')}
+          >solab's policy </Text>
+          .
         </Text>
 
         <Text style={styles.divider} />
@@ -29,8 +36,8 @@ const policyText = () => {
         </Text>
         <Text style={styles.paragraph}>
           By accessing or using Solab's services, you agree to comply with and
-          be bound by these Terms of
-          Service. If you do not agree to these terms, please refrain from using our services.
+          be bound by these Terms of Service. If you do not agree to these
+          terms, please refrain from using our services.
         </Text>
 
         <Text style={styles.sectionNumber}>
@@ -40,8 +47,8 @@ const policyText = () => {
           You agree to use our services only for lawful purposes and in
           compliance with these terms. Misuse of the services, such as engaging
           in fraudulent activities, providing false information, or violating
-          local laws, is strictly prohibited. We reserve the right to suspend
-          or terminate accounts that violate these terms.
+          local laws, is strictly prohibited. We reserve the right to suspend or
+          terminate accounts that violate these terms.
         </Text>
 
         <Text style={styles.sectionNumber}>
@@ -50,12 +57,11 @@ const policyText = () => {
         <Text style={styles.paragraph}>
           - Orders: By placing an order, you confirm the information provided is
           accurate. Orders are subject to availability and payment confirmation.
-          {'\n'}
-          - Booking: Appointments must be made via our platform. Cancellations
-          should be done 24 hours in advance for a full refund. {'\n'}
-          - Payments: All payments are processed securely using third-party
-          payment gateways. We are not responsible for errors caused by these
-          services.
+          {'\n'}- Booking: Appointments must be made via our platform.
+          Cancellations should be done 24 hours in advance for a full refund.{' '}
+          {'\n'}- Payments: All payments are processed securely using
+          third-party payment gateways. We are not responsible for errors caused
+          by these services.
         </Text>
 
         <Text style={styles.sectionNumber}>
@@ -72,11 +78,11 @@ const policyText = () => {
         </Text>
         <Text style={styles.paragraph}>
           - Shipping: Orders are processed within 1-2 business days. Delivery
-          times may vary by location. {'\n'}
-          - Returns: Unopened products can be returned within 30 days for a full
-          refund. Return shipping costs are the responsibility of the customer
-          unless the product is defective. {'\n'}
-          - Refunds: Refunds will be issued to the original payment method.
+          times may vary by location. {'\n'}- Returns: Unopened products can be
+          returned within 30 days for a full refund. Return shipping costs are
+          the responsibility of the customer unless the product is defective.{' '}
+          {'\n'}- Refunds: Refunds will be issued to the original payment
+          method.
         </Text>
 
         <Text style={styles.sectionNumber}>
@@ -120,7 +126,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     elevation: 1,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.2,
     shadowRadius: 4,
   },
@@ -150,7 +156,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginBottom: 8,
     lineHeight: 20,
-  
   },
   divider: {
     marginVertical: 20,

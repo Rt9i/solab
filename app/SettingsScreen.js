@@ -34,21 +34,43 @@ const SettingsScreen = () => {
 
   console.log('Current user ID:', currentUserId);
 
-  const noUser = () => {
-    setShowModal(false);
-    navigation.navigate('Login');
-  };
-
   const handleProfilePress = () => {
     if (currentUserId) {
       navigation.navigate('Profile', {userId: currentUserId});
     } else {
       setMessage(strings.loginMessage);
-      setConfirm(() => noUser);
+      setConfirm(() => login);
       setShowModal(true);
-      console.log('User ID is not available');
     }
   };
+
+  const handleLogOut = async () => {
+    setMessage(strings.logout);
+    setConfirm(() => logout);
+    setShowModal(true);
+  };
+  const handleDelete = () => {
+    setMessage(strings.delUser);
+    setConfirm(() => delleteuser);
+    setShowModal(true);
+  };
+  const delleteuser = async () => {
+    try {
+      setLoading(true);
+      const res = await delUser(user._id);
+      logout();
+      console.log('res: ', res);
+      setLoading(false);
+      setShowModal(false);
+    } catch (e) {
+      e;
+    }
+  };
+  const login = () => {
+    setShowModal(false);
+    navigation.navigate('Login');
+  };
+
   const settings = [
     {
       name: 'Profile',
@@ -93,10 +115,6 @@ const SettingsScreen = () => {
     },
   ];
 
-  const handleLogOut = async () => {
-    logout();
-  };
-
   const renderSettings = () => {
     return settings.map((setting, index) => (
       <TouchableOpacity key={index} onPress={setting.onPress}>
@@ -120,26 +138,7 @@ const SettingsScreen = () => {
     ));
   };
 
-  const handleDelete = () => {
-    setMessage(strings.delUser);
-
-    setShowModal(true);
-  };
-
   const onCancel = () => setShowModal(false);
-
-  const onConfirm = async () => {
-    try {
-      setLoading(true);
-      const res = await delUser(user._id);
-      logout();
-      console.log('res: ', res);
-      setLoading(false);
-      setShowModal(false);
-    } catch (e) {
-      e;
-    }
-  };
 
   return (
     <View style={styles.container}>
@@ -167,7 +166,7 @@ const SettingsScreen = () => {
         message={message}
         visible={showModal}
         onCancel={onCancel}
-        onConfirm={onConfirm}
+        onConfirm={confirm}
         loading={loading}
       />
     </View>
