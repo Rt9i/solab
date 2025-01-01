@@ -13,7 +13,7 @@
     "web": "expo start --web",
     "test": "jest --watchAll",
     "lint": "eslint .",
-    "predeploy": "expo export --output-dir web-build",
+    "predeploy": "expo export --output-dir web-build && copy google33e5f051725da8a3.html web-build\\",
     "deploy": "netlify deploy --dir=web-build --prod",
     "build": "expo export",
     "preview": "serve web-build"
