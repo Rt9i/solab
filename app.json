@@ -32,16 +32,12 @@
       "jsEngine": "jsc"
     },
     "android": {
-      "permissions": [
-        "android.permission.READ_EXTERNAL_STORAGE",
-        "android.permission.WRITE_EXTERNAL_STORAGE"
-      ],
+      "package": "com.company.solab",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "icon": "./assets/images/icon.png",
-      "package": "com.company.solab"
+      "icon": "./assets/images/icon.png"
     },
     "web": {
       "bundler": "metro",

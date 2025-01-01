@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View, Button, Alert} from 'react-native';
+import {StyleSheet, Text, View, Button, Alert, Image} from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
 import {makeRedirectUri} from 'expo-auth-session';
@@ -73,16 +73,15 @@ const GoogleLogin: React.FC = () => {
     const {authentication} = response;
 
     if (authentication?.idToken) {
-      // Use idToken for Firebase login
       handleFirebaseLogin(authentication.idToken);
     } else if (authentication?.accessToken) {
       // Fallback: Fetch user info using accessToken
       const userInfo = await fetchGoogleUserInfo(authentication.accessToken);
       setUserInfo(userInfo);
-      Alert.alert('Login Successful', `Welcome ${userInfo.name}`);
+      console.log('Login Successful', `Welcome ${userInfo.name}`);
     } else {
       console.warn('No tokens received.');
-      Alert.alert('Login Failed', 'No ID or access token was provided.');
+      console.log('Login Failed', 'No ID or access token was provided.');
     }
   };
 
@@ -98,10 +97,10 @@ const GoogleLogin: React.FC = () => {
         picture: user.photoURL,
       } as any);
       await AsyncStorage.setItem('user', JSON.stringify(user));
-      Alert.alert('Login Successful', `Welcome ${user.displayName}`);
+      console.log('Login Successful', `Welcome ${user.displayName}`);
     } catch (error) {
       console.error('Firebase authentication error:', error);
-      Alert.alert('Login Failed', 'Could not authenticate with Firebase.');
+      console.log('Login Failed', 'Could not authenticate with Firebase.');
     }
   };
 
@@ -131,12 +130,13 @@ const GoogleLogin: React.FC = () => {
         onPress={() => {
           promptAsync();
         }}
-        disabled={!request}
+        disabled={!request || userInfo != null}
       />
       {userInfo && (
         <View style={styles.userInfoContainer}>
           <Text style={styles.userInfo}>Welcome, {userInfo.name}</Text>
           <Text style={styles.userInfo}>Email: {userInfo.email}</Text>
+          <Image source={{uri: userInfo.picture}} style={styles.profileImage} />
         </View>
       )}
     </View>
@@ -146,6 +146,12 @@ const GoogleLogin: React.FC = () => {
 export default GoogleLogin;
 
 const styles = StyleSheet.create({
+  profileImage: {
+    width: 100, // Set the width of the image
+    height: 100, // Set the height of the image
+    borderRadius: 50, // Make it circular
+    marginVertical: 10,
+  },
   container: {
     flex: 1,
     justifyContent: 'center',

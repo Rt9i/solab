@@ -86,7 +86,8 @@ const RowContainer = ({
           <FlashList
             ref={flatListRef}
             data={items}
-            horizontal
+            horizontal={true}
+            showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator
             estimatedItemSize={160}
             renderItem={({item}) => (
@@ -158,6 +159,7 @@ const styles = StyleSheet.create({
 
   flashListContainer: {
     height: 320,
+    maxHeight: 320,
     width: '100%',
     maxWidth: 800,
     alignSelf: 'center',
