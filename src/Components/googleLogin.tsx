@@ -33,7 +33,7 @@ const GoogleLogin: React.FC = () => {
   // Dynamically configure the redirect URI
   const redirectUri = makeRedirectUri({
     useProxy: process.env.NODE_ENV === 'development', // Use proxy in development for simplicity
-    scheme: 'solab', // Replace with your app's scheme for standalone builds
+    scheme: 'solab', // Replace with your app's scheme if needed
   } as any);
 
   // Debug the redirect URI
@@ -45,8 +45,8 @@ const GoogleLogin: React.FC = () => {
     iosClientId: IOS_CLIENT_ID,
     webClientId: WEB_CLIENT_ID,
     redirectUri, // Use the dynamically created redirect URI
-    scopes: ['openid', 'profile', 'email'],
-    usePopup: true, // Ensure popup-based flow for web
+    scopes: ['openid', 'profile', 'email'], // Ensure 'openid' is included
+    usePopup: true, // Use popup flow for web
   } as any);
 
   useEffect(() => {
@@ -55,13 +55,7 @@ const GoogleLogin: React.FC = () => {
       console.log('Google Auth Response:', response);
 
       if (response.type === 'success') {
-        const {authentication} = response;
-        if (authentication?.idToken) {
-          handleFirebaseLogin(authentication.idToken);
-        } else {
-          console.warn('No ID token received.');
-          Alert.alert('Login Failed', 'No ID token was provided.');
-        }
+        handleGoogleResponse(response);
       } else if (response.type === 'error') {
         console.error('OAuth Error:', response.error);
         Alert.alert('Login Failed', 'There was an issue completing the login.');
@@ -74,6 +68,23 @@ const GoogleLogin: React.FC = () => {
       }
     }
   }, [response]);
+
+  const handleGoogleResponse = async (response: any) => {
+    const {authentication} = response;
+
+    if (authentication?.idToken) {
+      // Use idToken for Firebase login
+      handleFirebaseLogin(authentication.idToken);
+    } else if (authentication?.accessToken) {
+      // Fallback: Fetch user info using accessToken
+      const userInfo = await fetchGoogleUserInfo(authentication.accessToken);
+      setUserInfo(userInfo);
+      Alert.alert('Login Successful', `Welcome ${userInfo.name}`);
+    } else {
+      console.warn('No tokens received.');
+      Alert.alert('Login Failed', 'No ID or access token was provided.');
+    }
+  };
 
   const handleFirebaseLogin = async (idToken: string) => {
     const credential = GoogleAuthProvider.credential(idToken);
@@ -91,6 +102,24 @@ const GoogleLogin: React.FC = () => {
     } catch (error) {
       console.error('Firebase authentication error:', error);
       Alert.alert('Login Failed', 'Could not authenticate with Firebase.');
+    }
+  };
+
+  const fetchGoogleUserInfo = async (accessToken: string) => {
+    try {
+      const response = await fetch(
+        'https://www.googleapis.com/oauth2/v3/userinfo',
+        {
+          headers: {Authorization: `Bearer ${accessToken}`},
+        },
+      );
+      const userInfo = await response.json();
+      console.log('Google User Info:', userInfo);
+      return userInfo;
+    } catch (error) {
+      console.error('Failed to fetch user info:', error);
+      Alert.alert('Login Failed', 'Could not fetch user info.');
+      return null;
     }
   };
 
