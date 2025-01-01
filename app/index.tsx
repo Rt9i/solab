@@ -4,6 +4,8 @@ import {
   ActivityIndicator,
   Image,
   Platform,
+  Text,
+  Linking,
 } from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -127,6 +129,17 @@ const Index = () => {
             style={styles.loader}
           />
         )}
+        <View>
+          <Text
+            style={styles.link}
+            onPress={() =>
+              Linking.openURL(
+                'https://www.termsfeed.com/live/0d17353b-348e-4ced-85ea-ef8c630a3f21',
+              ).catch(err => console.error('Failed to open URL:', err))
+            }>
+            Privacy Policy
+          </Text>
+        </View>
       </View>
     </View>
   );
@@ -135,6 +148,11 @@ const Index = () => {
 export default Index;
 
 const styles = StyleSheet.create({
+  link: {
+    fontSize: 24,
+    color: '#007bff',
+    textDecorationLine: 'underline',
+  },
   container: {
     flex: 1,
     justifyContent: 'center',

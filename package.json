@@ -15,7 +15,8 @@
     "lint": "eslint .",
     "predeploy": "expo export --output-dir web-build",
     "deploy": "netlify deploy --dir=web-build --prod",
-    "build": "expo export"
+    "build": "expo export",
+    "preview": "serve web-build"
   },
   "jest": {
     "preset": "jest-expo"
