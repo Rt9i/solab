@@ -32,7 +32,7 @@ const GoogleLogin: React.FC = () => {
 
   // Dynamically configure the redirect URI
   const redirectUri = makeRedirectUri({
-    useProxy: process.env.NODE_ENV === 'development', // Use proxy in development for simplicity
+    useProxy: true, // Use proxy in development for simplicity
     scheme: 'solab', // Replace with your app's scheme if needed
   } as any);
 
@@ -46,7 +46,7 @@ const GoogleLogin: React.FC = () => {
     webClientId: WEB_CLIENT_ID,
     redirectUri, // Use the dynamically created redirect URI
     scopes: ['openid', 'profile', 'email'], // Ensure 'openid' is included
-    usePopup: true, // Use popup flow for web
+    usePopup: false, // Use popup flow for web
   } as any);
 
   useEffect(() => {
