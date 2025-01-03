@@ -37,5 +37,6 @@ const Images = {
   twoArrows: () => require('./photos/twoArrows.png'),
   edit: () => require('./photos/edit.png'),
   roundCheckMark: () => require('./photos/roundCheckMark.png'),
+  Gicon: () => require('./photos/Gicon.png'),
 };
 export default Images;
