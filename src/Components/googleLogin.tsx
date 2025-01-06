@@ -26,13 +26,14 @@ const GoogleLogin: React.FC = () => {
   const ANDROID_CLIENT_ID = Constants.expoConfig?.extra?.ANDROID_CLIENT_ID;
   const IOS_CLIENT_ID = Constants.expoConfig?.extra?.IOS_CLIENT_ID;
   const WEB_CLIENT_ID = Constants.expoConfig?.extra?.WEB_CLIENT_ID;
+
   const redirectUri = makeRedirectUri({
     useProxy: process.env.NODE_ENV === 'development',
     scheme: 'solab',
   } as any);
 
   const [request, response, promptAsync] = Google.useAuthRequest({
-    androidClientId: ANDROID_CLIENT_ID,
+    androidClientId: WEB_CLIENT_ID,
     iosClientId: IOS_CLIENT_ID,
     webClientId: WEB_CLIENT_ID,
     redirectUri,
@@ -91,19 +92,22 @@ const GoogleLogin: React.FC = () => {
     }
   }, [response]);
 
-  console.log('gogole login response: ', response);
-
   const GoogleSignInButton: React.FC<{onPress: () => void}> = ({onPress}) => (
     <TouchableOpacity style={styles.googleButton} onPress={onPress}>
       <Image source={Images.Gicon()} style={styles.googleIcon} />
       <Text style={styles.googleButtonText}>Sign in with Google</Text>
     </TouchableOpacity>
   );
+  const handleGoogleSignIn = async () => {
+    console.log('Attempting Google sign-in...');
+    const result = await promptAsync();
+    console.log('Result after promptAsync:', result);
+  };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Google Login</Text>
-      <GoogleSignInButton onPress={() => promptAsync()} />
+      <GoogleSignInButton onPress={() => handleGoogleSignIn()} />
     </View>
   );
 };
