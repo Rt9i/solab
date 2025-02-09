@@ -16,7 +16,7 @@ import {useNavigation} from 'expo-router';
 import Sizes from '../res/sizes';
 
 const TopBar = () => {
-  const {triggerScrollToTop, user} = useContext(SolabContext);
+  const {triggerScrollToTop, user, currentUser} = useContext(SolabContext);
   const navigation = useNavigation();
   const {
     cart,
@@ -61,6 +61,20 @@ const TopBar = () => {
       activeOpacity={0.8}>
       <View style={styles.loginContainer}>
         <Text style={styles.login}>Login</Text>
+      </View>
+    </TouchableOpacity>
+  );
+  const profilePic = () => (
+    <TouchableOpacity
+      onPress={navLogin}
+      style={styles.touch}
+      activeOpacity={0.8}>
+      <View style={styles.profileCont}>
+        <Image
+          source={{uri: currentUser?.picture ?? Images.profileIcon()}}
+          style={styles.profileImage}
+          resizeMode="contain"
+        />
       </View>
     </TouchableOpacity>
   );
@@ -116,6 +130,7 @@ const TopBar = () => {
       searchInputRef.current.focus();
     }
   };
+  console.log('picture: ', currentUser?.picture);
 
   return (
     <View style={styles.container}>
@@ -147,7 +162,7 @@ const TopBar = () => {
           </TouchableOpacity>
         )}
       </View>
-      {!user && LoginBox()}
+      {!currentUser ? LoginBox() : profilePic()}
 
       {cartBox()}
     </View>
@@ -155,6 +170,17 @@ const TopBar = () => {
 };
 
 const styles = StyleSheet.create({
+  profileCont: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  profileImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 50,
+    backgroundColor: 'green',
+  },
   login: {
     borderWidth: 1,
     padding: 4,
@@ -163,8 +189,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 4,
     borderColor: '#1877F2',
- 
-    elevation: 10, 
+
+    elevation: 10,
   },
 
   arrow: {},
@@ -180,7 +206,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     height: 60,
     width: '100%',
-
   },
   leftContainer: {
     flexDirection: 'row',
@@ -188,7 +213,7 @@ const styles = StyleSheet.create({
     margin: 4,
   },
   touch: {
-    flex:1,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     width: 40,

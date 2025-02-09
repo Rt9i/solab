@@ -23,5 +23,5 @@
     "app/home.js",
     // Here's the critical line
     "src/@types/**/*.d.ts"
-  ]
+, "src/store/solabProvider.tsxxx"  ]
 }

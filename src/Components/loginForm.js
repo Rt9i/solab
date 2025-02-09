@@ -70,29 +70,6 @@ const LoginForm = () => {
     }
   };
 
-  // const handleRegister = async () => {
-  //   setErrors({});
-  //   setLoading(true);
-
-  //   try {
-  //     const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
-  //     console.log('OTP sent to phone number:', phoneNumber);
-
-  //     // Store the confirmation result for later use
-  //     setConfirmationResult(confirmation);
-
-  //     // Show an input field for OTP verification
-  //     setOtpVerificationMode(true); // Flag to render OTP input in your UI
-  //   } catch (error) {
-  //     console.error('Error sending OTP:', error);
-  //     setErrors({
-  //       phoneNumber: 'Failed to send OTP. Please check the phone number.',
-  //     });
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const handleRegister = async () => {
     setErrors({});
     setLoading(true);
@@ -137,82 +114,76 @@ const LoginForm = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.formContainer}>
-        <Text style={styles.label}>{registerMode ? 'Register' : 'Log In'}</Text>
-        {registerMode && (
-          <TextInput
-            style={styles.input}
-            value={userName}
-            onChangeText={setUserName}
-            placeholder="Name"
-            placeholderTextColor="rgba(0, 0, 0, 0.3)"
-            accessibilityLabel="Name input"
-            testID="userNameInput" // For testing
-          />
-        )}
-        <Text style={styles.errorText}>{errors.phoneNumber}</Text>
+    <View style={styles.formContainer}>
+      <Text style={styles.label}>{registerMode ? 'Register' : 'Log In'}</Text>
+      {registerMode && (
         <TextInput
-          style={[styles.input, errors.phoneNumber && styles.inputError]}
-          value={phoneNumber}
-          onChangeText={setPhoneNumber}
-          keyboardType="phone-pad"
-          placeholder="Phone Number"
+          style={styles.input}
+          value={userName}
+          onChangeText={setUserName}
+          placeholder="Name"
           placeholderTextColor="rgba(0, 0, 0, 0.3)"
-          accessibilityLabel="Phone number input"
-          testID="phoneNumberInput" // For testing
+          accessibilityLabel="Name input"
+          testID="userNameInput" // For testing
         />
-        <View style={styles.passwordContainer}>
-          <TextInput
-            style={[
-              styles.input,
-              styles.passwordInput,
-              errors.password && styles.inputError,
-            ]}
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry={!showPassword}
-            placeholder="Password"
-            placeholderTextColor="rgba(0, 0, 0, 0.3)"
-            accessibilityLabel="Password input"
-            testID="passwordInput" // For testing
-          />
-          <TouchableOpacity
-            onPress={() => setShowPassword(!showPassword)}
-            style={styles.eyeIcon}
-            accessibilityLabel={
-              showPassword ? 'Hide password' : 'Show password'
-            }>
-            <Text style={styles.show}>{showPassword ? 'Hide' : 'Show'}</Text>
-          </TouchableOpacity>
-        </View>
+      )}
+      <Text style={styles.errorText}>{errors.phoneNumber}</Text>
+      <TextInput
+        style={[styles.input, errors.phoneNumber && styles.inputError]}
+        value={phoneNumber}
+        onChangeText={setPhoneNumber}
+        keyboardType="phone-pad"
+        placeholder="Phone Number"
+        placeholderTextColor="rgba(0, 0, 0, 0.3)"
+        accessibilityLabel="Phone number input"
+        testID="phoneNumberInput" // For testing
+      />
+      <View style={styles.passwordContainer}>
+        <TextInput
+          style={[
+            styles.input,
+            styles.passwordInput,
+            errors.password && styles.inputError,
+          ]}
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry={!showPassword}
+          placeholder="Password"
+          placeholderTextColor="rgba(0, 0, 0, 0.3)"
+          accessibilityLabel="Password input"
+          testID="passwordInput" // For testing
+        />
         <TouchableOpacity
-          style={styles.button}
-          onPress={registerMode ? handleRegister : handleLogin}
-          disabled={loading}
-          accessibilityLabel={
-            registerMode ? 'Register button' : 'Log In button'
-          }>
-          <Text style={styles.buttonText}>
-            {registerMode ? 'Register' : 'Log In'}
-          </Text>
+          onPress={() => setShowPassword(!showPassword)}
+          style={styles.eyeIcon}
+          accessibilityLabel={showPassword ? 'Hide password' : 'Show password'}>
+          <Text style={styles.show}>{showPassword ? 'Hide' : 'Show'}</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, styles.switchButton]}
-          onPress={() => setRegisterMode(!registerMode)}
-          disabled={loading}
-          accessibilityLabel={registerMode ? 'Log In' : 'Register'}>
-          <Text style={styles.buttonText}>
-            {registerMode ? 'Switch to Log In' : 'Switch to Register'}
-          </Text>
-        </TouchableOpacity>
-        {loading && (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size={50} color="#007bff" />
-            <Text style={styles.loadingText}>Loading ...</Text>
-          </View>
-        )}
       </View>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={registerMode ? handleRegister : handleLogin}
+        disabled={loading}
+        accessibilityLabel={registerMode ? 'Register button' : 'Log In button'}>
+        <Text style={styles.buttonText}>
+          {registerMode ? 'Register' : 'Log In'}
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.button, styles.switchButton]}
+        onPress={() => setRegisterMode(!registerMode)}
+        disabled={loading}
+        accessibilityLabel={registerMode ? 'Log In' : 'Register'}>
+        <Text style={styles.buttonText}>
+          {registerMode ? 'Switch to Log In' : 'Switch to Register'}
+        </Text>
+      </TouchableOpacity>
+      {loading && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size={50} color="#007bff" />
+          <Text style={styles.loadingText}>Loading ...</Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -224,7 +195,10 @@ const styles = StyleSheet.create({
     width: 50,
   },
   container: {
-    flex: 1,
+    height: '100%',
+    width: '100%',
+    maxWidth: 500,
+    maxHeight: 650,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#f8f9fa',

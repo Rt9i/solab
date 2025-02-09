@@ -1,4 +1,9 @@
-const enStrings = {
+type Language = 'en' | 'he' | 'ar';
+
+type Translations = {
+  [key: string]: string; 
+};
+const enStrings : Translations = {
   loginMessage: 'do you want to sign in?',
   productAdded: 'Product added',
   searchKeys: 'search keys',
@@ -60,14 +65,13 @@ const enStrings = {
   logout: 'are you sure you want to logout?',
 };
 
-const heStrings = {
+const heStrings : Translations = {
   addToCart: 'הוסף לעגלה',
   enterNumber: 'הכנס מספר',
   catsStore: 'חתול',
   dogsStore: 'כלב',
   cart: 'עגלה',
   priceTag: '₪',
-  price: 'מחיר',
   empty: 'ריק',
   DryFood: 'אוכל יבש',
   meat: 'בשר',
@@ -104,7 +108,6 @@ const heStrings = {
   brand: 'מותג ',
   category: 'קטגוריה',
   name: 'שם',
-  price: 'מחיר',
   amount: 'כמות',
   amountError: 'כמות המכירה גבוהה יותר ממחיר המכירה',
   image: 'תמונה',
@@ -123,7 +126,7 @@ const heStrings = {
   logout: 'האם אתה בטוח שברצונך להתנתק?',
 };
 
-const arStrings = {
+const arStrings : Translations = {
   nowYouCanLogin: 'עכשיו אתה יכול להיכנס',
   registerMessage: 'تم التسجيل',
   loginMessage: 'هل تريد تسجيل الدخول؟',
@@ -160,7 +163,6 @@ const arStrings = {
   bowl: 'وعاء',
   clearCart: 'مسح العربة',
   name: 'اسم',
-  price: 'سعر',
   selectedpets: 'الحيوانات الأليفة المختارة',
   row: 'صف',
   selectedRow: ' الريف',
@@ -185,4 +187,4 @@ const arStrings = {
   logout: 'هل أنت متأكد أنك تريد تسجيل الخروج؟',
 };
 
-export { enStrings, heStrings, arStrings };
+export {enStrings, heStrings, arStrings};

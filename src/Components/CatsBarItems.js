@@ -111,25 +111,34 @@ const CatsBarItems = ({selectedCategory, setSelectedCategory, Array}) => {
   };
 
   const renderBar = () => (
-    <FlatList
-      ref={flatListRef}
-      data={categories}
-      renderItem={({item, index}) => renderBarItems(item, index)}
-      keyExtractor={item => item.id}
-      showsHorizontalScrollIndicator={false}
-      style={styles.FlatList}
-      horizontal={true}
-    />
+    <View
+      style={{
+        flex: 1,
+        maxWidth: 600,
+        overflow: 'hidden',
+      }}>
+      <FlatList
+        ref={flatListRef}
+        data={categories}
+        renderItem={({item, index}) => renderBarItems(item, index)}
+        keyExtractor={item => item.id}
+        style={styles.FlatList}
+        showsHorizontalScrollIndicator={false}
+        horizontal={true}
+      />
+    </View>
   );
 
   const scrollToCategory = index => {
-   
-    const itemWidth = 79; 
-    const screenWidth = Sizes.screenWidth;
-    const scrollToX = index * itemWidth - (screenWidth / 2 - itemWidth / 2); 
-
-    flatListRef.current.scrollToOffset({animated: true, offset: scrollToX});
+    if (flatListRef.current && flatListRef.current.scrollToIndex) {
+      flatListRef.current.scrollToIndex({
+        index,
+        animated: true,
+        viewPosition: 0.5, 
+      });
+    }
   };
+  
 
   return renderBar();
 };
@@ -175,8 +184,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   FlatList: {
-    width: '100%',
-    height: 100,
+    flex: 1,
     paddingHorizontal: 10,
   },
 });

@@ -42,14 +42,14 @@ const CatsStore = props => {
   useFocusEffect(
     React.useCallback(() => {
       // console.log('Current data:', data);
-  
+
       if (!data || data.length === 0) {
         console.warn('No data found, navigating back to index...');
         nav.navigate('index');
       }
     }, [data, nav]),
   );
-  
+
   const renderItem = ({item}) => {
     return (
       <View style={styles.itemContainer}>
@@ -106,6 +106,7 @@ const CatsStore = props => {
           onScroll={handleScroll}
           scrollEventThrottle={16}
           ref={scrollViewRef}>
+            
           <View style={styles.sale}>
             <Swipe />
           </View>
@@ -149,6 +150,12 @@ const CatsStore = props => {
 export default CatsStore;
 
 const styles = StyleSheet.create({
+  sale: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignContent: 'center',
+  },
   cont: {
     backgroundColor: 'black',
   },
@@ -170,7 +177,9 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   catsBarItemsContainer: {
+    height: 100,
     justifyContent: 'center',
+    alignItems: 'center',
   },
   itemContainer: {
     height: '100%',

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -15,13 +15,23 @@ import Constants from 'expo-constants';
 import {getAuth, GoogleAuthProvider, signInWithCredential} from 'firebase/auth';
 import {app} from '../firebase'; // Ensure Firebase is initialized
 import Images from '../assets/images/images';
+import SolabContext from '../store/solabContext';
+import {useNavigation} from 'expo-router';
 // Let Expo handle the OAuth session in-app browser
 WebBrowser.maybeCompleteAuthSession();
 
 const auth = getAuth(app);
+type User = {
+  picture: string;
+  name: string;
+  email: string;
+};
 
 const GoogleLogin: React.FC = () => {
-  const [currentUser, setCurrentUser] = useState();
+  const {currentUser, setCurrentUser} = React.useContext(SolabContext);
+
+  const nav = useNavigation();
+  console.log('user picture: ', currentUser?.picture);
 
   const ANDROID_CLIENT_ID = Constants.expoConfig?.extra?.ANDROID_CLIENT_ID;
   const IOS_CLIENT_ID = Constants.expoConfig?.extra?.IOS_CLIENT_ID;
@@ -37,23 +47,34 @@ const GoogleLogin: React.FC = () => {
     iosClientId: IOS_CLIENT_ID,
     webClientId: WEB_CLIENT_ID,
     redirectUri,
-    scopes: ['openid', 'profile', 'email'],
+    scopes: [
+      'openid',
+      'profile',
+      'email',
+      // 'https://www.googleapis.com/auth/user.phonenumbers.read',
+    ],
   });
   const handleFirebaseLogin = async (idToken: string) => {
     const credential = GoogleAuthProvider.credential(idToken);
     try {
       const result = await signInWithCredential(auth, credential);
       const user = result.user;
+      const userData = {
+        id: user.uid,
+        email: user.email,
+        name: user.displayName,
+        picture: user.photoURL,
+      };
+      setCurrentUser(userData);
       console.log('Firebase Login Successful:', {
         id: user.uid,
         email: user.email,
         name: user.displayName,
         picture: user.photoURL,
       });
-      Alert.alert('Login Successful', `Welcome, ${user.displayName}`);
     } catch (error) {
       console.error('Firebase Login Failed:', error);
-      Alert.alert('Login Failed', 'Could not log in with Firebase.');
+      window.alert('Login Failed', 'Could not log in with Firebase.');
     }
   };
 
@@ -66,29 +87,41 @@ const GoogleLogin: React.FC = () => {
         },
       );
       const userInfo = await response.json();
+      setCurrentUser(userInfo);
       console.log('User Info:', userInfo);
-      Alert.alert('Login Successful', `Welcome, ${userInfo.name}`);
     } catch (error) {
       console.error('Error Fetching User Info:', error);
-      Alert.alert(
+      window.alert(
         'Failed to Fetch User Info',
         'Could not fetch user information.',
       );
     }
   };
+
   useEffect(() => {
     if (response?.type === 'success') {
       const {authentication} = response;
 
       if (authentication?.idToken) {
-        handleFirebaseLogin(authentication.idToken); // Log in to Firebase
+        handleFirebaseLogin(authentication.idToken);
+        nav.navigate('index');
       } else if (authentication?.accessToken) {
-        fetchGoogleUserInfo(authentication.accessToken); // Fetch user profile
+        fetchGoogleUserInfo(authentication.accessToken).then(userInfo => {
+          // Assuming `userInfo` contains the user's Gmail data
+          saveUserInfoToDatabase(userInfo);
+          nav.navigate('index');
+        });
       } else {
-        Alert.alert('Login Failed', 'No valid authentication tokens received.');
+        window.alert(
+          'Login Failed',
+          'No valid authentication tokens received.',
+        );
       }
     } else if (response?.type === 'error') {
-      Alert.alert('Login Error', 'An error occurred during the login process.');
+      window.alert(
+        'Login Error',
+        'An error occurred during the login process.',
+      );
     }
   }, [response]);
 
@@ -106,8 +139,18 @@ const GoogleLogin: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Google Login</Text>
-      <GoogleSignInButton onPress={() => handleGoogleSignIn()} />
+      {!currentUser || Object.keys(currentUser).length === 0 ? (
+        <GoogleSignInButton onPress={() => handleGoogleSignIn()} />
+      ) : (
+        <View>
+          <Image
+            source={{uri: currentUser?.picture ?? Images.profileIcon()}}
+            style={styles.profileImage}
+            resizeMode="contain"
+          />
+          <Text> loged in</Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -139,14 +182,11 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    marginVertical: 10,
   },
   container: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 16,
-    backgroundColor: 'lightgrey',
+    alignContent: 'center',
   },
   title: {
     fontSize: 24,

@@ -8,11 +8,13 @@ const Swipe = ({onScroll}) => {
     <View style={styles.container}>
       <Swiper
         style={styles.wrapper}
-        showsButtons={false}
+        showsButtons={true}
         autoplay
-        autoplayTimeout={5}
+        autoplayTimeout={6}
         loop
-        onScroll={onScroll}>
+        onScroll={onScroll}
+        nextButton={<Text style={styles.arrow}>›</Text>}
+        prevButton={<Text style={styles.arrow}>‹</Text>}>
         <View style={styles.slide1}>
           <Image source={Images.saleTest()} style={styles.img} />
         </View>
@@ -26,14 +28,23 @@ const Swipe = ({onScroll}) => {
 };
 export default Swipe;
 const styles = StyleSheet.create({
+  arrow: {
+    color: 'white', // Change arrow color
+    fontSize: 50,   // Adjust size if needed
+    fontWeight: 'bold',
+    paddingHorizontal: 15,
+  },
+  
   img: {
     resizeMode: 'contain',
     width: '100%',
   },
   container: {
-    height: 200, // Adjust height as needed
-    width: '100%',
+    height: 230,
+    maxHeight: 400,
+    maxWidth: 780,
     overflow: 'hidden',
+
     zIndex: 1, // Ensure it's above other components
   },
   wrapper: {
@@ -44,18 +55,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#9DD6EB',
-  },
-  slide2: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#97CAE5',
-  },
-  slide3: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#92BBD9',
   },
   text: {
     color: '#fff',

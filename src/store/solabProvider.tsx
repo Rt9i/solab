@@ -1,45 +1,61 @@
-import React, {useEffect, useState, useCallback, useRef, useMemo} from 'react';
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+  useMemo,
+  ReactNode,
+} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SolabContext from './solabContext';
 import {enStrings, heStrings, arStrings} from '../res/strings';
 import {Alert} from 'react-native';
-import ScreenNames from '../../routes/ScreenNames';
-
 import {updateUserProducts, saveProductsToDatabase} from '../res/api';
-import getCategoryItemsData from '../res/Data';
-import Images from '../assets/images/images';
-import data from '../res/Data';
-import axios from 'axios';
-import CustomModal from '../Components/customModal';
 import {useNavigation} from 'expo-router';
-const SolabProvider = ({children}) => {
-  const [cart, setCart] = useState([]);
-  const [isItemAdded, setIsItemAdded] = useState(false);
-  const [brands, setBrands] = useState([]);
-  const [dogBrands, setDogBrands] = useState([]);
-  const [language, setLanguage] = useState('he');
-  const [strings, setStrings] = useState(heStrings);
-  const [selectedIcons, setSelectedIcons] = useState([]);
-  const [search, setSearch] = useState('');
-  const [filteredItemsState, setFilteredItemsState] = useState([]);
-  const [keywords, setKeywords] = useState([]);
-  const [user, setUser] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState('food');
-  const debounceTimeout = useRef(null);
-  const [scrollToTop, setScrollToTop] = useState(false);
-  const [updatedData, setUpdatedData] = useState([]);
-  const [data, setData] = useState([]);
-  const [totalPrice, setTotalPrice] = useState(0);
-  const [selectedItems, setSelectedItems] = useState([]);
-  const [selectedItemId, setSelectedItemId] = useState('');
-  const [delModal, setDelModal] = useState(false);
+
+interface SolabProviderProps {
+  children: ReactNode;
+}
+type Language = 'en' | 'he' | 'ar';
+
+type UserData = {
+  id: string;
+  email: string | null;
+  name: string | null;
+  picture: string | null;
+};
+const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
+  const [cart, setCart] = useState<any[]>([]);
+  const [isItemAdded, setIsItemAdded] = useState<boolean>(false);
+  const [brands, setBrands] = useState<string[]>([]);
+  const [dogBrands, setDogBrands] = useState<string[]>([]);
+  const [language, setLanguage] = useState<string>('he');
+  const [strings, setStrings] = useState<typeof heStrings>(heStrings);
+  const [selectedIcons, setSelectedIcons] = useState<string[]>([]);
+  const [search, setSearch] = useState<string[]>([]);
+  const [filteredItemsState, setFilteredItemsState] = useState<any[]>([]);
+  const [keywords, setKeywords] = useState<string[]>([]);
+  const [user, setUser] = useState<any | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>('food');
+  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
+  const [scrollToTop, setScrollToTop] = useState<boolean>(false);
+  const [updatedData, setUpdatedData] = useState<any[]>([]);
+  const [data, setData] = useState<any[]>([]);
+  const [selectedItems, setSelectedItems] = useState<any[]>([]);
+  const [selectedItemId, setSelectedItemId] = useState<string>('');
+  const [delModal, setDelModal] = useState<boolean>(false);
   const nav = useNavigation();
+  const [currentUser, setCurrentUser] = useState<UserData | null>(null);
+
   useEffect(() => {
     console.log('User:', user);
   }, [user]);
+  useEffect(() => {
+    // console.log('current user :', currentUser?.name);
+  }, [currentUser]);
 
-  const translations = {
+  const translations: Record<Language, typeof enStrings> = {
     en: enStrings,
     he: heStrings,
     ar: arStrings,
@@ -78,39 +94,51 @@ const SolabProvider = ({children}) => {
   const triggerScrollToTop = () => {
     setScrollToTop(prev => !prev);
   };
+
+  interface Item {
+    _id: string;
+    category: string[];
+    petType: string[];
+    searchKeys?: string[];
+  }
+
   const getFilteredItemsForRow = useMemo(
-    () => rowValue => {
-      const isSearchActive = search.length > 0;
+    () =>
+      (rowValue: string): Item[] => {
+        const isSearchActive = search.length > 0;
 
-      const filteredItems = data.filter(item => {
-        const matchesSearch = isSearchActive
-          ? search.some(keyword =>
-              item.searchKeys?.some(key =>
-                key.toLowerCase().includes(keyword.toLowerCase()),
-              ),
-            )
-          : true;
-
-        const matchesCategory =
-          !isSearchActive && selectedCategory
-            ? item.category?.includes(selectedCategory)
+        const filteredItems = data.filter((item: Item) => {
+          const matchesSearch = isSearchActive
+            ? search.some((keyword: string) =>
+                item.searchKeys?.some(key =>
+                  key.toLowerCase().includes(keyword.toLowerCase()),
+                ),
+              )
             : true;
 
-        const matchesRowValue = rowValue
-          ? item.category.includes(rowValue)
-          : true;
+          const matchesCategory =
+            !isSearchActive && selectedCategory
+              ? item.category?.includes(selectedCategory)
+              : true;
 
-        const matchesPetType = selectedIcons.length
-          ? item.petType?.some(pet => selectedIcons.includes(pet))
-          : true;
+          const matchesRowValue = rowValue
+            ? item.category.includes(rowValue)
+            : true;
 
-        return (
-          matchesSearch && matchesCategory && matchesRowValue && matchesPetType
-        );
-      });
+          const matchesPetType = selectedIcons.length
+            ? item.petType?.some(pet => selectedIcons.includes(pet))
+            : true;
 
-      return filteredItems;
-    },
+          return (
+            matchesSearch &&
+            matchesCategory &&
+            matchesRowValue &&
+            matchesPetType
+          );
+        });
+
+        return filteredItems;
+      },
     [search, selectedCategory, selectedIcons, data],
   );
 
@@ -149,23 +177,6 @@ const SolabProvider = ({children}) => {
     };
   }, [cart]);
 
-  const saveCartToAsyncStorage = async cart => {
-    if (user == null) {
-      if (!cart) {
-        console.log('No cart data to save');
-        return;
-      }
-
-      try {
-        const cartString = JSON.stringify(cart);
-        await AsyncStorage.setItem('cart', cartString);
-        console.log('Cart saved to AsyncStorage:', cartString);
-      } catch (error) {
-        console.error('Error saving cart to AsyncStorage:', error);
-      }
-    }
-  };
-
   const loadCartFromAsyncStorage = useCallback(async () => {
     try {
       const cartData = await AsyncStorage.getItem('cart');
@@ -191,7 +202,7 @@ const SolabProvider = ({children}) => {
     }
   }, []);
 
-  const changeLanguage = useCallback(async lang => {
+  const changeLanguage = useCallback(async (lang: Language) => {
     try {
       await AsyncStorage.setItem('language', lang);
       setLanguage(lang);
@@ -202,10 +213,8 @@ const SolabProvider = ({children}) => {
 
   useEffect(() => {
     const currentStrings = translations[language];
-
     setStrings(currentStrings);
   }, [language]);
-
   useEffect(() => {
     const loadLanguage = async () => {
       try {
@@ -349,24 +358,6 @@ const SolabProvider = ({children}) => {
     [cart],
   );
 
-  const confirmDelete = async () => {
-    try {
-      setDelLoading(true);
-      const deleting = await removeItemFromDatabase(_id);
-      console.log('Product deleted');
-      const result = await getDataFromDataBase();
-      setData(result);
-      setDelLoading(false);
-      goback();
-    } catch (e) {}
-
-    setModalVisible(false); // Close the modal
-  };
-
-  const cancelDelete = () => {
-    setModalVisible(false); // Close the modal without deleting
-  };
-
   const removeItemFromCart = useCallback(
     (item, itemId) => {
       const existingItemIndex = cart.findIndex(
@@ -468,6 +459,8 @@ const SolabProvider = ({children}) => {
     selectedItemId,
     selectedItems,
     setSelectedItems,
+    currentUser,
+    setCurrentUser,
   };
 
   return (

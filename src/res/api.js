@@ -270,6 +270,10 @@ export const delUser = async _id => {
   }
 };
 
+export const saveUserInfoToDatabase = async => {
+  try {
+  } catch {}
+};
 const appFetch = async (route, method = 'GET', body = null) => {
   const url = `${mainURL}${route}`;
 

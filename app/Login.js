@@ -1,21 +1,36 @@
-import {StyleSheet, Text, View} from 'react-native';
-import loginForm from '../src/Components/loginForm';
-import React from 'react';
+import {StyleSheet, Text, View, Image} from 'react-native';
+import React, {useContext} from 'react';
 import GoogleLogin from '@/src/Components/googleLogin';
+import SolabContext from '../src/store/solabContext';
+import Images from '../src/assets/images/images';
+import LoginForm from '../src/Components/loginForm';
 
 const Login = () => {
+  const {currentUser} = useContext(SolabContext);
+  console.log('user is: ', currentUser);
+  console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^');
   return (
-    <View style={styles.container}>
-      {/* {loginForm()} */}
-      {GoogleLogin()}
-    </View>
-  );
+  <View style={styles.container}>
+    {currentUser == null && <LoginForm />}
+    <GoogleLogin />
+  </View>
+);
+
 };
 
 export default Login;
 
 const styles = StyleSheet.create({
+  profileImage: {
+    width: 30,
+    height: 30,
+    borderRadius: 50,
+  },
   container: {
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    alignItems: 'center',
   },
 });
