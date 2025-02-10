@@ -6,14 +6,10 @@ import {
   Image,
   Text,
   TextInput,
-  Button,
 } from 'react-native';
-
-import ScreenNames from '../../routes/ScreenNames';
 import Images from '../assets/images/images';
 import SolabContext from '../store/solabContext';
 import {useNavigation} from 'expo-router';
-import Sizes from '../res/sizes';
 
 const TopBar = () => {
   const {triggerScrollToTop, user, currentUser} = useContext(SolabContext);
@@ -64,6 +60,8 @@ const TopBar = () => {
       </View>
     </TouchableOpacity>
   );
+  console.log('the user image: ', currentUser?.picture);
+
   const profilePic = () => (
     <TouchableOpacity
       onPress={navLogin}
@@ -179,7 +177,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 50,
-    backgroundColor: 'green',
   },
   login: {
     borderWidth: 1,

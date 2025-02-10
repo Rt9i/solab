@@ -13,7 +13,7 @@ interface CustomModalProps {
   onConfirm?: () => void;
   onCancel: () => void;
   loading?: boolean;
-  itemId:String
+  itemId: String;
 }
 
 const CustomModal: React.FC<CustomModalProps> = ({
@@ -22,7 +22,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
   onConfirm,
   onCancel,
   loading = false,
-  itemId=null,
+  itemId = null,
 }) => {
   return (
     <Modal
@@ -64,11 +64,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContainer: {
+    maxWidth: 500,
     width: '80%',
     backgroundColor: 'white',
     borderRadius: 10,
     padding: 20,
-  
+
     elevation: 5,
   },
   modalMessage: {

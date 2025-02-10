@@ -108,7 +108,7 @@ const GoogleLogin: React.FC = () => {
       } else if (authentication?.accessToken) {
         fetchGoogleUserInfo(authentication.accessToken).then(userInfo => {
           // Assuming `userInfo` contains the user's Gmail data
-          saveUserInfoToDatabase(userInfo);
+          // saveUserInfoToDatabase(userInfo);
           nav.navigate('index');
         });
       } else {
