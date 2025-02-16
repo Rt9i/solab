@@ -248,9 +248,9 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
     loadUserData();
   }, []);
 
-  const saveUser = useCallback(async userData => {
+  const saveUser = useCallback(async (userData: UserData) => {
     console.log('user data:', userData);
-
+  
     try {
       setUser(userData);
       await AsyncStorage.setItem('user', JSON.stringify(userData));

@@ -10,13 +10,15 @@ import {
 } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
-import {makeRedirectUri} from 'expo-auth-session';
+import {makeRedirectUri, Prompt} from 'expo-auth-session';
 import Constants from 'expo-constants';
 import {getAuth, GoogleAuthProvider, signInWithCredential} from 'firebase/auth';
 import {app} from '../firebase'; // Ensure Firebase is initialized
 import Images from '../assets/images/images';
 import SolabContext from '../store/solabContext';
 import {useNavigation} from 'expo-router';
+import {GoogleLoginAndRegister} from '../res/api';
+import PhoneModal from './getNumber';
 // Let Expo handle the OAuth session in-app browser
 WebBrowser.maybeCompleteAuthSession();
 
@@ -29,6 +31,10 @@ type User = {
 
 const GoogleLogin: React.FC = () => {
   const {currentUser, setCurrentUser} = React.useContext(SolabContext);
+
+  const [phoneNumber, setPhoneNumber] = useState<string | null>(null);
+  const [isPhoneVerified, setIsPhoneVerified] = useState<boolean>(false);
+  const [isModalVisible, setModalVisible] = useState(false);
 
   const nav = useNavigation();
   console.log('user picture: ', currentUser?.picture);
@@ -47,12 +53,7 @@ const GoogleLogin: React.FC = () => {
     iosClientId: IOS_CLIENT_ID,
     webClientId: WEB_CLIENT_ID,
     redirectUri,
-    scopes: [
-      'openid',
-      'profile',
-      'email',
-      // 'https://www.googleapis.com/auth/user.phonenumbers.read',
-    ],
+    scopes: ['openid', 'profile', 'email'],
   });
   const handleFirebaseLogin = async (idToken: string) => {
     const credential = GoogleAuthProvider.credential(idToken);
@@ -98,6 +99,25 @@ const GoogleLogin: React.FC = () => {
     }
   };
 
+  const saveUserInfoToDatabase = async () => {
+    if (isPhoneVerified && currentUser && phoneNumber) {
+      const userData = {
+        name: currentUser.name,
+        email: currentUser.email,
+        phoneNumber: phoneNumber,
+        picture: currentUser.picture,
+      };
+      try {
+        await GoogleLoginAndRegister(userData); // Your existing API call
+        nav.navigate('index'); // Navigate to the next screen
+      } catch (error) {
+        window.alert('Error saving user data:', error);
+      }
+    } else {
+      window.alert('Phone number verification failed.');
+    }
+  };
+
   useEffect(() => {
     if (response?.type === 'success') {
       const {authentication} = response;
@@ -107,9 +127,10 @@ const GoogleLogin: React.FC = () => {
         nav.navigate('index');
       } else if (authentication?.accessToken) {
         fetchGoogleUserInfo(authentication.accessToken).then(userInfo => {
-          // Assuming `userInfo` contains the user's Gmail data
-          // saveUserInfoToDatabase(userInfo);
-          nav.navigate('index');
+          // Step 3: Once user info is fetched, prompt for phone number
+          setCurrentUser(userInfo);
+
+          setModalVisible(true);
         });
       } else {
         window.alert(
@@ -131,6 +152,7 @@ const GoogleLogin: React.FC = () => {
       <Text style={styles.googleButtonText}>Sign in with Google</Text>
     </TouchableOpacity>
   );
+
   const handleGoogleSignIn = async () => {
     console.log('Attempting Google sign-in...');
     const result = await promptAsync();
@@ -139,6 +161,15 @@ const GoogleLogin: React.FC = () => {
 
   return (
     <View style={styles.container}>
+      <PhoneModal
+        phoneNumber={phoneNumber}
+        setPhoneNumber={setPhoneNumber}
+        isModalVisible={isModalVisible}
+        setModalVisible={setModalVisible}
+        saveUserInfoToDatabase={saveUserInfoToDatabase}
+        setIsPhoneVerified={setIsPhoneVerified}
+      />
+
       {!currentUser || Object.keys(currentUser).length === 0 ? (
         <GoogleSignInButton onPress={() => handleGoogleSignIn()} />
       ) : (
