@@ -80,7 +80,8 @@
     "react-native-swiper": "^1.6.0",
     "react-native-toast-message": "^2.2.1",
     "react-native-web": "~0.19.10",
-    "send": "^1.1.0"
+    "send": "^1.1.0",
+    "textflow.js": "^0.1.4"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

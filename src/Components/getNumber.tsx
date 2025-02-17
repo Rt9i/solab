@@ -1,7 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { Modal, TextInput, Button, View, StyleSheet, Text } from 'react-native';
-import { firebase } from '../firebase'; // Ensure you import firebase
-import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
+import React, {useState, useEffect, useContext, createContext} from 'react';
+import Constants from 'expo-constants';
+import {
+  Alert,
+  Modal,
+  TextInput,
+  Button,
+  View,
+  StyleSheet,
+  Text,
+} from 'react-native';
+import SolabContext from '../store/solabContext';
+import {sendOTP} from '../res/api';
 
 type PhoneModalProps = {
   phoneNumber: string | null;
@@ -20,80 +29,29 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
   saveUserInfoToDatabase,
   setIsPhoneVerified,
 }) => {
+  const solabContext = useContext(SolabContext);
   const [verificationCode, setVerificationCode] = useState<string>('');
   const [verificationId, setVerificationId] = useState<string | null>(null);
-  const auth = getAuth();
-  let recaptchaVerifier: RecaptchaVerifier | null = null;
 
-  useEffect(() => {
-    // Initialize reCAPTCHA only when the modal is shown
-    if (isModalVisible && recaptchaVerifier === null) {
-      recaptchaVerifier = new RecaptchaVerifier(
-        'recaptcha-container', // ID of the div element for reCAPTCHA container (on the web) or use it invisibly on mobile
-        {
-          size: 'invisible',
-          callback: (response) => {
-            console.log('reCAPTCHA verified');
-          },
-        },
-        auth
-      );
-    }
-
-    return () => {
-      // Cleanup reCAPTCHA when the modal is closed
-      if (recaptchaVerifier) {
-        recaptchaVerifier.clear();
-      }
-    };
-  }, [isModalVisible]);
-
-  const sendVerificationCode = async (phone: string) => {
-    if (!phone) {
-      alert('Please enter a valid phone number.');
-      return;
-    }
-    try {
-      // Ensure recaptchaVerifier is properly initialized
-      if (!recaptchaVerifier) {
-        console.error('reCAPTCHA verifier is not initialized');
-        return;
-      }
-
-      const confirmationResult = await signInWithPhoneNumber(auth, phone, recaptchaVerifier);
-      setVerificationId(confirmationResult.verificationId); // Store verificationId for later
-      alert('Code sent! Check your phone for the verification code.');
-    } catch (error) {
-      console.error('Error sending verification code:', error);
-      alert('Error sending code: ' + error.message);
-    }
-  };
+  
 
   const confirmVerificationCode = async () => {
-    if (!verificationId || !verificationCode) {
-      alert('Please enter the verification code.');
-      return;
-    }
     try {
-      const credential = firebase.auth.PhoneAuthProvider.credential(verificationId, verificationCode);
-      await firebase.auth().signInWithCredential(credential);
-      setIsPhoneVerified(true);
-      saveUserInfoToDatabase(); // After verification, save the user's info to the database
-      setModalVisible(false); // Close the modal
-      alert('Phone number verified successfully!');
-    } catch (error) {
-      console.error('Error confirming verification code:', error);
-      alert('Invalid verification code.');
+      console.log('sending requeest');
+
+      const response = await sendOTP('+972' + phoneNumber);
+
+      console.log('otp rsponse: ', response);
+    } catch (e) {
+      console.log(e);
     }
   };
-
   return (
     <Modal
       visible={isModalVisible}
       transparent
       animationType="fade"
-      onRequestClose={() => setModalVisible(false)}
-    >
+      onRequestClose={() => setModalVisible(false)}>
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
           <Text style={styles.title}>Please enter your phone number:</Text>
@@ -107,7 +65,7 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
           <View style={styles.buttonContainer}>
             <Button
               title="Verify Phone"
-              onPress={() => sendVerificationCode(phoneNumber || '')}
+              onPress={() => confirmVerificationCode()}
             />
             <Button
               title="Close"
@@ -145,18 +103,20 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
+    width: '100%',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
   },
   modalContainer: {
-    width: 600,
+    width: '100%',
+    maxWidth: 600,
     backgroundColor: 'white',
     padding: 20,
     borderRadius: 10,
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 5,

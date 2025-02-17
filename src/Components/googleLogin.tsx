@@ -37,7 +37,7 @@ const GoogleLogin: React.FC = () => {
   const [isModalVisible, setModalVisible] = useState(false);
 
   const nav = useNavigation();
-  console.log('user picture: ', currentUser?.picture);
+
 
   const ANDROID_CLIENT_ID = Constants.expoConfig?.extra?.ANDROID_CLIENT_ID;
   const IOS_CLIENT_ID = Constants.expoConfig?.extra?.IOS_CLIENT_ID;
@@ -100,49 +100,46 @@ const GoogleLogin: React.FC = () => {
   };
 
   const saveUserInfoToDatabase = async () => {
-    if (isPhoneVerified && currentUser && phoneNumber) {
-      const userData = {
-        name: currentUser.name,
-        email: currentUser.email,
-        phoneNumber: phoneNumber,
-        picture: currentUser.picture,
-      };
-      try {
-        await GoogleLoginAndRegister(userData); // Your existing API call
-        nav.navigate('index'); // Navigate to the next screen
-      } catch (error) {
-        window.alert('Error saving user data:', error);
-      }
-    } else {
-      window.alert('Phone number verification failed.');
+    if (!isPhoneVerified && !currentUser && !phoneNumber) {
+      return window.alert('Phone number verification failed.');
+    }
+    const userData = {
+      name: currentUser.name,
+      email: currentUser.email,
+      phoneNumber: phoneNumber,
+      picture: currentUser.picture,
+    };
+    try {
+      await GoogleLoginAndRegister(userData); // Your existing API call
+      nav.navigate('index'); // Navigate to the next screen
+    } catch (error) {
+      window.alert('Error saving user data:', error);
     }
   };
 
   useEffect(() => {
-    if (response?.type === 'success') {
-      const {authentication} = response;
+    if (!response) return; // Exit early if response is null
 
-      if (authentication?.idToken) {
-        handleFirebaseLogin(authentication.idToken);
-        nav.navigate('index');
-      } else if (authentication?.accessToken) {
-        fetchGoogleUserInfo(authentication.accessToken).then(userInfo => {
-          // Step 3: Once user info is fetched, prompt for phone number
-          setCurrentUser(userInfo);
-
-          setModalVisible(true);
-        });
-      } else {
-        window.alert(
-          'Login Failed',
-          'No valid authentication tokens received.',
-        );
-      }
-    } else if (response?.type === 'error') {
+    if (response.type === 'error') {
       window.alert(
         'Login Error',
         'An error occurred during the login process.',
       );
+      return;
+    }
+
+    const authentication = response?.authentication;
+
+    if (authentication?.idToken) {
+      handleFirebaseLogin(authentication.idToken);
+      nav.navigate('index');
+    } else if (authentication?.accessToken) {
+      fetchGoogleUserInfo(authentication.accessToken).then(userInfo => {
+        setCurrentUser(userInfo);
+        setModalVisible(true);
+      });
+    } else {
+      window.alert('Login Failed', 'No valid authentication tokens received.');
     }
   }, [response]);
 
@@ -155,8 +152,14 @@ const GoogleLogin: React.FC = () => {
 
   const handleGoogleSignIn = async () => {
     console.log('Attempting Google sign-in...');
-    const result = await promptAsync();
-    console.log('Result after promptAsync:', result);
+
+    setModalVisible(true);
+    // const result = await promptAsync();
+
+    // console.log('Result after promptAsync:', result);
+    // if (result?.type === 'success') {
+    //   window.location.href = '/';
+    // }
   };
 
   return (
@@ -215,6 +218,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   container: {
+    width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
     alignContent: 'center',

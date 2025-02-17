@@ -4,6 +4,24 @@ const mainURL = 'https://solab-server.onrender.com';
 
 // fetch('url' , params)
 
+export const sendOTP = async phoneNumber => {
+  try {
+    const response = await fetch(`${mainURL}/sendOTP`, {
+      // Use fetch directly
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({phoneNumber}),
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (e) {
+    console.error('Sending OTP failed:', e);
+  }
+};
+
 export const getAllUsers = async () => {
   try {
     return await appFetch('/getAllUsers');

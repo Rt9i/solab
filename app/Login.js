@@ -7,15 +7,13 @@ import LoginForm from '../src/Components/loginForm';
 
 const Login = () => {
   const {currentUser} = useContext(SolabContext);
-  console.log('user is: ', currentUser);
-  console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^');
-  return (
-  <View style={styles.container}>
-    {currentUser == null && <LoginForm />}
-    <GoogleLogin />
-  </View>
-);
 
+  return (
+    <View style={styles.container}>
+      {currentUser == null && <LoginForm />}
+      <GoogleLogin />
+    </View>
+  );
 };
 
 export default Login;
