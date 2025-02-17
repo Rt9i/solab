@@ -29,7 +29,6 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
   saveUserInfoToDatabase,
   setIsPhoneVerified,
 }) => {
-  const solabContext = useContext(SolabContext);
   const [verificationCode, setVerificationCode] = useState<string>('');
   const [verificationId, setVerificationId] = useState<string | null>(null);
 
