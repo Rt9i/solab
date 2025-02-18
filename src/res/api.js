@@ -21,6 +21,25 @@ export const sendOTP = async phoneNumber => {
     console.error('Sending OTP failed:', e);
   }
 };
+export const verifyOTP = async (phoneNumber, code) => {
+  try {
+    console.log('number: ' + phoneNumber, 'code:' + code);
+
+    const response = await fetch(`${mainURL}/verifyOTP`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({phoneNumber, code}),
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (e) {
+    console.error('OTP verification failed:', e);
+    return {success: false, message: 'Network error'};
+  }
+};
 
 export const getAllUsers = async () => {
   try {

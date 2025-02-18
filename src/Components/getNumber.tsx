@@ -10,7 +10,7 @@ import {
   Text,
 } from 'react-native';
 import SolabContext from '../store/solabContext';
-import {sendOTP} from '../res/api';
+import {sendOTP, verifyOTP} from '../res/api';
 
 type PhoneModalProps = {
   phoneNumber: string | null;
@@ -30,21 +30,24 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
   setIsPhoneVerified,
 }) => {
   const [verificationCode, setVerificationCode] = useState<string>('');
-  const [verificationId, setVerificationId] = useState<string | null>(null);
+  const [verificationCodeSent, setverificationCodeSent] = useState<
+    boolean | null
+  >(false);
 
-  
-
-  const confirmVerificationCode = async () => {
+  const sendOtpCode = async () => {
     try {
       console.log('sending requeest');
 
       const response = await sendOTP('+972' + phoneNumber);
-
+      setverificationCodeSent(true);
       console.log('otp rsponse: ', response);
     } catch (e) {
       console.log(e);
     }
   };
+
+  console.log('number:', phoneNumber);
+
   return (
     <Modal
       visible={isModalVisible}
@@ -53,28 +56,30 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
       onRequestClose={() => setModalVisible(false)}>
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
-          <Text style={styles.title}>Please enter your phone number:</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Phone Number"
-            keyboardType="phone-pad"
-            value={phoneNumber || ''}
-            onChangeText={setPhoneNumber}
-          />
-          <View style={styles.buttonContainer}>
-            <Button
-              title="Verify Phone"
-              onPress={() => confirmVerificationCode()}
-            />
-            <Button
-              title="Close"
-              onPress={() => setModalVisible(false)}
-              color="red"
-            />
-          </View>
+          {!verificationCodeSent && (
+            <View>
+              <Text style={styles.title}>Please enter your phone number:</Text>
 
-          {verificationId && (
+              <TextInput
+                style={styles.input}
+                placeholder="Phone Number"
+                keyboardType="phone-pad"
+                value={phoneNumber || ''}
+                onChangeText={setPhoneNumber}
+              />
+              <View style={styles.buttonContainer}>
+                <Button title="Verify Phone" onPress={() => sendOtpCode()} />
+                <Button
+                  title="Close"
+                  onPress={() => setModalVisible(false)}
+                  color="red"
+                />
+              </View>
+            </View>
+          )}
+          {verificationCodeSent && (
             <View style={styles.verificationContainer}>
+              <Text>please enter the code</Text>
               <TextInput
                 style={styles.input}
                 placeholder="Verification Code"
@@ -82,7 +87,12 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
                 value={verificationCode}
                 onChangeText={setVerificationCode}
               />
-              <Button title="Confirm Code" onPress={confirmVerificationCode} />
+              <Button
+                title="Confirm Code"
+                onPress={() =>
+                  verifyOTP('+972'+ phoneNumber, verificationCode)
+                }
+              />
             </View>
           )}
         </View>
