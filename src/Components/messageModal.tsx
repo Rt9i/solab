@@ -1,16 +1,10 @@
 import React from 'react';
-import {
-  Modal,
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
+import {Modal, View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 
 interface MessageModalProps {
-  message?: string; 
-  visible: boolean; 
-  onClose: () => void; 
+  message?: string;
+  visible: boolean;
+  onClose: () => void;
 }
 
 const MessageModal: React.FC<MessageModalProps> = ({
@@ -51,7 +45,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 10,
     padding: 20,
-   
+
     elevation: 5,
   },
   modalMessage: {

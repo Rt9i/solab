@@ -6,19 +6,14 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
-  Alert,
   ActivityIndicator,
   FlatList,
   Modal,
   Linking,
-  PermissionsAndroid,
-  Platform,
-  Button,
 } from 'react-native';
 import React, {
   useContext,
   useEffect,
-  useMemo,
   useState,
   useCallback,
 } from 'react';
@@ -35,7 +30,6 @@ import {
   setItemInDataBase,
 } from '../src/res/api';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {launchImageLibrary} from 'react-native-image-picker';
 import * as MediaLibrary from 'expo-media-library';
 import * as ImagePicker from 'expo-image-picker';
 import CustomModal from '@/src/Components/customModal';

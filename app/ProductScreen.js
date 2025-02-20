@@ -4,7 +4,6 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -12,8 +11,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import SolabContext from '../src/store/solabContext';
 import {LinearGradient} from 'expo-linear-gradient';
 import MessageModal from '@/src/Components/messageModal';
-import Images from '@/src/assets/images/images';
-import Toast from 'react-native-toast-message';
+
 const ProductScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
@@ -27,7 +25,7 @@ const ProductScreen = () => {
   const handleAddToCart = () => {
     const quantityInt = parseInt(quantity);
     if (isNaN(quantityInt) || quantityInt <= 0) {
-      Toast.show({
+      toast.show({
         type: 'error',
         text1: strings.enterNumber,
 
@@ -38,7 +36,7 @@ const ProductScreen = () => {
     }
 
     addItemToCart({...product, quantity: quantityInt});
-    Toast.show({
+    toast.show({
       type: 'success',
 
       text1: strings.productAdded,

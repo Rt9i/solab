@@ -30,7 +30,7 @@ function AppContent() {
           headerBackTitleVisible: false,
           headerBackImageSource: Images.arrow(),
         }}>
-        <Stack.Screen name="home" options={{headerShown: false}} />
+        <Stack.Screen name="Home" options={{headerShown: false}} />
         <Stack.Screen name="Policy" />
         <Stack.Screen name="StaffHome" />
         <Stack.Screen name="WorkersHome" />
