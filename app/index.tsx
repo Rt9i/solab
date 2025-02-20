@@ -75,7 +75,7 @@ const Index = () => {
 
       if (!asyncUser) {
         console.log('No user found in storage. Fetching initial data...');
-        navReplace('/home');
+        navReplace('/Home');
         return;
       }
 
@@ -90,7 +90,7 @@ const Index = () => {
       if (!policyAccept) return navReplace('/Policy');
       switch (newUser.role) {
         case 'client':
-          nav('/home');
+          nav('/Home');
           break;
         case 'worker':
           nav('/WorkersHome');
