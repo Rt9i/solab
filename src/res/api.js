@@ -1,4 +1,3 @@
-
 const mainURL = 'https://solab-server.onrender.com';
 
 // fetch('url' , params)
@@ -303,6 +302,31 @@ export const delUser = async _id => {
   } catch (e) {
     console.error('Error deleting item:', e);
     throw e;
+  }
+};
+export const getUserByGmail = async email => {
+  try {
+    const response = await fetch(
+      `${mainURL}/getUserByGmail?email=${encodeURIComponent(email)}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+
+    if (!response.ok) {
+      console.log("Didn't work", response.status);
+      return null;
+    }
+
+    const data = await response.json();
+    console.log('Response Data:', data);
+    return data;
+  } catch (e) {
+    console.error('Error fetching user by Gmail:', e);
+    return null;
   }
 };
 

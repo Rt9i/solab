@@ -9,7 +9,12 @@ import {
   Text,
   Image,
 } from 'react-native';
-import {GoogleLoginAndRegister, sendOTP, verifyOTP} from '../res/api';
+import {
+  getUserByGmail,
+  GoogleLoginAndRegister,
+  sendOTP,
+  verifyOTP,
+} from '../res/api';
 import Images from '../assets/images/images';
 import {Platform} from 'react-native';
 import Toast from 'react-native-toast-message';
@@ -38,7 +43,7 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
     boolean | null
   >(false);
   const {currentUser, setCurrentUser} = React.useContext(SolabContext);
-  
+
   const showToast = (wemMessage, appText1, appText2) => {
     if (Platform.OS === 'web') {
       toast.success(wemMessage);
@@ -68,20 +73,23 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
 
   const signToDataBase = async () => {
     try {
-      console.log('user data: ', currentUser);
-      const userData = {
-        name: currentUser.name,
-        email: currentUser.email,
-        picture: currentUser.photoURL,
-        phoneNumber: phoneNumber,
-      };
+      const res = await getUserByGmail(currentUser.email);
+      console.log('current user mail: ', currentUser.email);
+      console.log('user: ', res);
+      // console.log('user data: ', currentUser);
+      // const userData = {
+      //   name: currentUser.name,
+      //   email: currentUser.email,
+      //   picture: currentUser.photoURL,
+      //   phoneNumber: phoneNumber,
+      // };
 
-      await GoogleLoginAndRegister(
-        userData.name,
-        userData.email,
-        userData.picture,
-        userData.phoneNumber,
-      );
+      // await GoogleLoginAndRegister(
+      //   userData.name,
+      //   userData.email,
+      //   userData.picture,
+      //   userData.phoneNumber,
+      // );
     } catch (e) {
       console.log(e);
     }
