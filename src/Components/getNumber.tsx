@@ -1,5 +1,4 @@
 import React, {useState, useEffect, useContext, createContext} from 'react';
-import Constants from 'expo-constants';
 import {
   Alert,
   Modal,
@@ -8,17 +7,22 @@ import {
   View,
   StyleSheet,
   Text,
+  Image,
 } from 'react-native';
+import {GoogleLoginAndRegister, sendOTP, verifyOTP} from '../res/api';
+import Images from '../assets/images/images';
+import {Platform} from 'react-native';
+import Toast from 'react-native-toast-message';
+import {toast} from 'react-hot-toast';
 import SolabContext from '../store/solabContext';
-import {sendOTP, verifyOTP} from '../res/api';
 
 type PhoneModalProps = {
   phoneNumber: string | null;
   setPhoneNumber: (phone: string) => void;
   isModalVisible: boolean;
   setModalVisible: (visible: boolean) => void;
-  saveUserInfoToDatabase: () => void;
   setIsPhoneVerified: (verified: boolean) => void;
+  isPhoneVerified: boolean;
 };
 
 const PhoneModal: React.FC<PhoneModalProps> = ({
@@ -26,13 +30,29 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
   setPhoneNumber,
   isModalVisible,
   setModalVisible,
-  saveUserInfoToDatabase,
   setIsPhoneVerified,
+  isPhoneVerified,
 }) => {
   const [verificationCode, setVerificationCode] = useState<string>('');
   const [verificationCodeSent, setverificationCodeSent] = useState<
     boolean | null
   >(false);
+  const {currentUser, setCurrentUser} = React.useContext(SolabContext);
+  
+  const showToast = (wemMessage, appText1, appText2) => {
+    if (Platform.OS === 'web') {
+      toast.success(wemMessage);
+    } else {
+      Toast.show({
+        type: 'success',
+        text1: appText1,
+        text2: appText2,
+        position: 'top',
+        visibilityTime: 4000,
+        autoHide: true,
+      } as any);
+    }
+  };
 
   const sendOtpCode = async () => {
     try {
@@ -46,7 +66,49 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
     }
   };
 
-  console.log('number:', phoneNumber);
+  const signToDataBase = async () => {
+    try {
+      console.log('user data: ', currentUser);
+      const userData = {
+        name: currentUser.name,
+        email: currentUser.email,
+        picture: currentUser.photoURL,
+        phoneNumber: phoneNumber,
+      };
+
+      await GoogleLoginAndRegister(
+        userData.name,
+        userData.email,
+        userData.picture,
+        userData.phoneNumber,
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const verifyOTPCode = async () => {
+    try {
+      console.log('sending requeest');
+
+      const response = await verifyOTP('+972' + phoneNumber, verificationCode);
+
+      if (response.ok == true || response.success == true) {
+        setIsPhoneVerified(true);
+        showToast(
+          'Phone Verified!',
+          'Phone Verified!',
+          'Your phone number has been successfully verified.',
+        );
+        signToDataBase();
+        console.log('verifcation rsponse: ', response);
+        // window.location.href = '/';
+        return;
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <Modal
@@ -56,7 +118,8 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
       onRequestClose={() => setModalVisible(false)}>
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
-          {!verificationCodeSent && (
+          <Button title="sign to dadabase" onPress={() => signToDataBase()} />
+          {!verificationCodeSent && !isPhoneVerified && (
             <View>
               <Text style={styles.title}>Please enter your phone number:</Text>
 
@@ -77,7 +140,7 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
               </View>
             </View>
           )}
-          {verificationCodeSent && (
+          {verificationCodeSent && !isPhoneVerified && (
             <View style={styles.verificationContainer}>
               <Text>please enter the code</Text>
               <TextInput
@@ -87,12 +150,19 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
                 value={verificationCode}
                 onChangeText={setVerificationCode}
               />
-              <Button
-                title="Confirm Code"
-                onPress={() =>
-                  verifyOTP('+972'+ phoneNumber, verificationCode)
-                }
-              />
+              <Button title="Confirm Code" onPress={() => verifyOTPCode()} />
+            </View>
+          )}
+          {isPhoneVerified && (
+            <View>
+              <View>
+                <Text>its veryfied</Text>
+                <Image
+                  source={Images.roundCheckMark()}
+                  style={[styles.img, {resizeMode: 'contain'}]}
+                />
+              </View>
+              <Button title="close" onPress={() => setModalVisible(false)} />
             </View>
           )}
         </View>
@@ -104,6 +174,7 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
 export default PhoneModal;
 
 const styles = StyleSheet.create({
+  img: {},
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',

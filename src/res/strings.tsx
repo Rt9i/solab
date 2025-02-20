@@ -1,9 +1,7 @@
-type Language = 'en' | 'he' | 'ar';
-
 type Translations = {
-  [key: string]: string; 
+  [key: string]: string;
 };
-const enStrings : Translations = {
+const enStrings: Translations = {
   loginMessage: 'do you want to sign in?',
   productAdded: 'Product added',
   searchKeys: 'search keys',
@@ -65,7 +63,7 @@ const enStrings : Translations = {
   logout: 'are you sure you want to logout?',
 };
 
-const heStrings : Translations = {
+const heStrings: Translations = {
   addToCart: 'הוסף לעגלה',
   enterNumber: 'הכנס מספר',
   catsStore: 'חתול',
@@ -126,7 +124,7 @@ const heStrings : Translations = {
   logout: 'האם אתה בטוח שברצונך להתנתק?',
 };
 
-const arStrings : Translations = {
+const arStrings: Translations = {
   nowYouCanLogin: 'עכשיו אתה יכול להיכנס',
   registerMessage: 'تم التسجيل',
   loginMessage: 'هل تريد تسجيل الدخول؟',

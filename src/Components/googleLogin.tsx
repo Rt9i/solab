@@ -13,31 +13,30 @@ import * as Google from 'expo-auth-session/providers/google';
 import {makeRedirectUri, Prompt} from 'expo-auth-session';
 import Constants from 'expo-constants';
 import {getAuth, GoogleAuthProvider, signInWithCredential} from 'firebase/auth';
-import {app} from '../firebase'; // Ensure Firebase is initialized
+import {app} from '../firebase';
 import Images from '../assets/images/images';
 import SolabContext from '../store/solabContext';
 import {useNavigation} from 'expo-router';
 import {GoogleLoginAndRegister} from '../res/api';
 import PhoneModal from './getNumber';
-// Let Expo handle the OAuth session in-app browser
+
 WebBrowser.maybeCompleteAuthSession();
 
 const auth = getAuth(app);
-type User = {
-  picture: string;
-  name: string;
-  email: string;
-};
 
+type UserData = {
+  email: string | null;
+  name: string | null;
+  picture: string | null;
+};
 const GoogleLogin: React.FC = () => {
-  const {currentUser, setCurrentUser} = React.useContext(SolabContext);
+  const {currentUser, setCurrentUser} = useContext(SolabContext);
 
   const [phoneNumber, setPhoneNumber] = useState<string | null>(null);
   const [isPhoneVerified, setIsPhoneVerified] = useState<boolean>(false);
   const [isModalVisible, setModalVisible] = useState(false);
 
   const nav = useNavigation();
-
 
   const ANDROID_CLIENT_ID = Constants.expoConfig?.extra?.ANDROID_CLIENT_ID;
   const IOS_CLIENT_ID = Constants.expoConfig?.extra?.IOS_CLIENT_ID;
@@ -55,22 +54,23 @@ const GoogleLogin: React.FC = () => {
     redirectUri,
     scopes: ['openid', 'profile', 'email'],
   });
+
   const handleFirebaseLogin = async (idToken: string) => {
     const credential = GoogleAuthProvider.credential(idToken);
     try {
       const result = await signInWithCredential(auth, credential);
       const user = result.user;
-      const userData = {
-        id: user.uid,
-        email: user.email,
-        name: user.displayName,
-        picture: user.photoURL,
-      };
-      setCurrentUser(userData);
+
       console.log('Firebase Login Successful:', {
         id: user.uid,
         email: user.email,
         name: user.displayName,
+        picture: user.photoURL,
+      });
+
+      setCurrentUser({
+        name: user.displayName,
+        email: user.email,
         picture: user.photoURL,
       });
     } catch (error) {
@@ -88,8 +88,12 @@ const GoogleLogin: React.FC = () => {
         },
       );
       const userInfo = await response.json();
-      setCurrentUser(userInfo);
-      console.log('User Info:', userInfo);
+
+      setCurrentUser({
+        name: userInfo.name,
+        email: userInfo.email,
+        picture: userInfo.picture,
+      });
     } catch (error) {
       console.error('Error Fetching User Info:', error);
       window.alert(
@@ -99,26 +103,8 @@ const GoogleLogin: React.FC = () => {
     }
   };
 
-  const saveUserInfoToDatabase = async () => {
-    if (!isPhoneVerified && !currentUser && !phoneNumber) {
-      return window.alert('Phone number verification failed.');
-    }
-    const userData = {
-      name: currentUser.name,
-      email: currentUser.email,
-      phoneNumber: phoneNumber,
-      picture: currentUser.picture,
-    };
-    try {
-      await GoogleLoginAndRegister(userData); // Your existing API call
-      nav.navigate('index'); // Navigate to the next screen
-    } catch (error) {
-      window.alert('Error saving user data:', error);
-    }
-  };
-
   useEffect(() => {
-    if (!response) return; // Exit early if response is null
+    if (!response) return;
 
     if (response.type === 'error') {
       window.alert(
@@ -132,10 +118,8 @@ const GoogleLogin: React.FC = () => {
 
     if (authentication?.idToken) {
       handleFirebaseLogin(authentication.idToken);
-      nav.navigate('index');
     } else if (authentication?.accessToken) {
       fetchGoogleUserInfo(authentication.accessToken).then(userInfo => {
-        setCurrentUser(userInfo);
         setModalVisible(true);
       });
     } else {
@@ -150,18 +134,60 @@ const GoogleLogin: React.FC = () => {
     </TouchableOpacity>
   );
 
+  const handlePrompt = async () => {
+    try {
+      const result = await promptAsync();
+      console.log('Result after promptAsync:', result);
+
+      // window.location.href = '/';
+    } catch (error) {
+      console.error('Error in promptAsync:', error);
+    }
+  };
+
   const handleGoogleSignIn = async () => {
     console.log('Attempting Google sign-in...');
 
-    setModalVisible(true);
-    // const result = await promptAsync();
+    try {
+      const result = await promptAsync();
+      if (!result || result.type === 'error') {
+        throw new Error('Google login failed');
+      }
 
-    // console.log('Result after promptAsync:', result);
-    // if (result?.type === 'success') {
-    //   window.location.href = '/';
-    // }
+      const authentication = result.authentication
+      if (authentication?.idToken) {
+        // Google login successful, fetch user info
+        const userInfo = await fetchGoogleUserInfo(authentication.accessToken);
+
+        if (userInfo) {
+          const response = await GoogleLoginAndRegister(
+            userInfo.name,
+            userInfo.email,
+            userInfo.picture,
+            phoneNumber,
+          );
+
+          if (response.success) {
+            // If the user exists or is registered, log them in
+            setCurrentUser({
+              name: userInfo.name,
+              email: userInfo.email,
+              picture: userInfo.picture,
+            });
+
+            // Optionally navigate to another screen
+            // nav.navigate('Home');
+          } else {
+            // User doesn't exist, proceed to phone verification
+            setModalVisible(true);
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Google Sign-In Error:', error);
+      window.alert('Login Failed', 'Could not complete the sign-in process.');
+    }
   };
-
   return (
     <View style={styles.container}>
       <PhoneModal
@@ -169,22 +195,11 @@ const GoogleLogin: React.FC = () => {
         setPhoneNumber={setPhoneNumber}
         isModalVisible={isModalVisible}
         setModalVisible={setModalVisible}
-        saveUserInfoToDatabase={saveUserInfoToDatabase}
         setIsPhoneVerified={setIsPhoneVerified}
+        isPhoneVerified={isPhoneVerified}
       />
 
-      {!currentUser || Object.keys(currentUser).length === 0 ? (
-        <GoogleSignInButton onPress={() => handleGoogleSignIn()} />
-      ) : (
-        <View>
-          <Image
-            source={{uri: currentUser?.picture ?? Images.profileIcon()}}
-            style={styles.profileImage}
-            resizeMode="contain"
-          />
-          <Text> loged in</Text>
-        </View>
-      )}
+      <GoogleSignInButton onPress={() => handleGoogleSignIn()} />
     </View>
   );
 };

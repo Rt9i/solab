@@ -2,7 +2,6 @@ import {StyleSheet, Text, View, Image} from 'react-native';
 import React, {useContext} from 'react';
 import GoogleLogin from '@/src/Components/googleLogin';
 import SolabContext from '../src/store/solabContext';
-import Images from '../src/assets/images/images';
 import LoginForm from '../src/Components/loginForm';
 
 const Login = () => {

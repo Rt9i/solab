@@ -6,9 +6,10 @@ import {DarkTheme, DefaultTheme, ThemeProvider} from '@react-navigation/native';
 import {Stack} from 'expo-router';
 import SolabProvider from '../src/store/solabProvider';
 import {useColorScheme} from '@/hooks/useColorScheme';
-import Toast from 'react-native-toast-message';
 import Images from '@/src/assets/images/images';
 
+import Toast from 'react-native-toast-message';
+import {Toaster} from 'react-hot-toast';
 SplashScreen.preventAutoHideAsync();
 
 function AppContent() {
@@ -53,6 +54,7 @@ function AppContent() {
       </Stack>
 
       {Platform.OS !== 'web' && <Toast />}
+      {Platform.OS === 'web' && <Toaster position="top-center" />}
     </ThemeProvider>
   );
 }

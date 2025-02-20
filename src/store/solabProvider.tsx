@@ -18,12 +18,7 @@ interface SolabProviderProps {
 }
 type Language = 'en' | 'he' | 'ar';
 
-type UserData = {
-  id: string;
-  email: string | null;
-  name: string | null;
-  picture: string | null;
-};
+
 const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
   const [cart, setCart] = useState<any[]>([]);
   const [isItemAdded, setIsItemAdded] = useState<boolean>(false);
@@ -46,14 +41,17 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
   const [selectedItemId, setSelectedItemId] = useState<string>('');
   const [delModal, setDelModal] = useState<boolean>(false);
   const nav = useNavigation();
-  const [currentUser, setCurrentUser] = useState<UserData | null>(null);
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     console.log('User:', user);
   }, [user]);
+
+  
   useEffect(() => {
-    // console.log('current user :', currentUser?.name);
-  }, [currentUser]);
+    console.log('Updated current user:', currentUser);
+  }, [currentUser]); 
+  
 
   const translations: Record<Language, typeof enStrings> = {
     en: enStrings,

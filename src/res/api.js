@@ -307,14 +307,19 @@ export const delUser = async _id => {
   }
 };
 
-export const GoogleLoginAndRegister = async (name, email, phoneNumber) => {
+export const GoogleLoginAndRegister = async (
+  name,
+  email,
+  picture,
+  phoneNumber,
+) => {
   try {
     const response = await fetch(`${mainURL}/GoogleLoginAndRegister`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({name, email, phoneNumber}),
+      body: JSON.stringify({name, email, picture, phoneNumber}),
     });
 
     if (!response.ok) {
