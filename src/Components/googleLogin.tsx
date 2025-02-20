@@ -154,33 +154,30 @@ const GoogleLogin: React.FC = () => {
         throw new Error('Google login failed');
       }
 
-      const authentication = result.authentication
+      const authentication = result.authentication;
       if (authentication?.idToken) {
         // Google login successful, fetch user info
         const userInfo = await fetchGoogleUserInfo(authentication.accessToken);
 
-        if (userInfo) {
-          const response = await GoogleLoginAndRegister(
-            userInfo.name,
-            userInfo.email,
-            userInfo.picture,
-            phoneNumber,
-          );
+        const response = await GoogleLoginAndRegister(
+          userInfo.name,
+          userInfo.email,
+          userInfo.picture,
+          phoneNumber,
+        );
 
-          if (response.success) {
-            // If the user exists or is registered, log them in
-            setCurrentUser({
-              name: userInfo.name,
-              email: userInfo.email,
-              picture: userInfo.picture,
-            });
+        if (response.success) {
+          setCurrentUser({
+            name: userInfo.name,
+            email: userInfo.email,
+            picture: userInfo.picture,
+          });
 
-            // Optionally navigate to another screen
-            // nav.navigate('Home');
-          } else {
-            // User doesn't exist, proceed to phone verification
-            setModalVisible(true);
-          }
+          // Optionally navigate to another screen
+          // nav.navigate('Home');
+        } else {
+          // User doesn't exist, proceed to phone verification
+          setModalVisible(true);
         }
       }
     } catch (error) {
