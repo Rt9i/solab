@@ -17,9 +17,10 @@ import {app} from '../firebase';
 import Images from '../assets/images/images';
 import SolabContext from '../store/solabContext';
 import {useNavigation} from 'expo-router';
-import {GoogleLoginAndRegister} from '../res/api';
+import {getUserByGmail, GoogleLoginAndRegister} from '../res/api';
 import PhoneModal from './getNumber';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import CryptoJS from 'crypto-js';
 WebBrowser.maybeCompleteAuthSession();
 
 const auth = getAuth(app);
@@ -30,9 +31,10 @@ type UserData = {
   picture: string | null;
 };
 const GoogleLogin: React.FC = () => {
-  const {currentUser, setCurrentUser} = useContext(SolabContext);
+  const {currentUser, setCurrentUser, setUser, user}: any =
+    useContext(SolabContext);
 
-  const [phoneNumber, setPhoneNumber] = useState<string | null>(null);
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [isPhoneVerified, setIsPhoneVerified] = useState<boolean>(false);
   const [isModalVisible, setModalVisible] = useState(false);
 
@@ -41,6 +43,7 @@ const GoogleLogin: React.FC = () => {
   const ANDROID_CLIENT_ID = Constants.expoConfig?.extra?.ANDROID_CLIENT_ID;
   const IOS_CLIENT_ID = Constants.expoConfig?.extra?.IOS_CLIENT_ID;
   const WEB_CLIENT_ID = Constants.expoConfig?.extra?.WEB_CLIENT_ID;
+  const ENCRYPTION_KEY = Constants.expoConfig?.extra?.ENCRYPTION_KEY;
 
   const redirectUri = makeRedirectUri({
     useProxy: process.env.NODE_ENV === 'development',
@@ -54,6 +57,30 @@ const GoogleLogin: React.FC = () => {
     redirectUri,
     scopes: ['openid', 'profile', 'email'],
   });
+
+  const encryptData = (data: any) => {
+    try {
+      const encryptedData = CryptoJS.AES.encrypt(
+        data,
+        ENCRYPTION_KEY,
+      ).toString();
+      return encryptedData;
+    } catch (error) {
+      console.error('Error encrypting data:', error);
+      return null;
+    }
+  };
+
+  const decryptData = (encryptedData: any) => {
+    try {
+      const bytes = CryptoJS.AES.decrypt(encryptedData, ENCRYPTION_KEY);
+      const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
+      return decryptedData;
+    } catch (error) {
+      console.error('Error decrypting data:', error);
+      return null;
+    }
+  };
 
   const handleFirebaseLogin = async (idToken: string) => {
     const credential = GoogleAuthProvider.credential(idToken);
@@ -88,12 +115,14 @@ const GoogleLogin: React.FC = () => {
         },
       );
       const userInfo = await response.json();
+      console.log('fetched user from function: ', userInfo);
 
-      setCurrentUser({
-        name: userInfo.name,
-        email: userInfo.email,
-        picture: userInfo.picture,
-      });
+      // setCurrentUser({
+      //   name: userInfo.name,
+      //   email: userInfo.email,
+      //   picture: userInfo.picture,
+      // });
+      return userInfo;
     } catch (error) {
       console.error('Error Fetching User Info:', error);
       window.alert(
@@ -103,29 +132,20 @@ const GoogleLogin: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    if (!response) return;
+  // useEffect(() => {
+  //   if (currentUser) {
 
-    if (response.type === 'error') {
-      window.alert(
-        'Login Error',
-        'An error occurred during the login process.',
-      );
-      return;
-    }
+  //     getUserByGmail(currentUser.email).then(user => {
+  //       console.log('got user email by: ', currentUser.email);
 
-    const authentication = response?.authentication;
+  //       if (!user) {
+  //         console.log(currentUser.email, 'was not found in data base ');
 
-    if (authentication?.idToken) {
-      handleFirebaseLogin(authentication.idToken);
-    } else if (authentication?.accessToken) {
-      fetchGoogleUserInfo(authentication.accessToken).then(userInfo => {
-        setModalVisible(true);
-      });
-    } else {
-      window.alert('Login Failed', 'No valid authentication tokens received.');
-    }
-  }, [response]);
+  //         setModalVisible(true);
+  //       }
+  //     });
+  //   }
+  // }, [currentUser]);
 
   const GoogleSignInButton: React.FC<{onPress: () => void}> = ({onPress}) => (
     <TouchableOpacity style={styles.googleButton} onPress={onPress}>
@@ -134,57 +154,52 @@ const GoogleLogin: React.FC = () => {
     </TouchableOpacity>
   );
 
-  const handlePrompt = async () => {
-    try {
-      const result = await promptAsync();
-      console.log('Result after promptAsync:', result);
-
-      // window.location.href = '/';
-    } catch (error) {
-      console.error('Error in promptAsync:', error);
-    }
-  };
-
   const handleGoogleSignIn = async () => {
     console.log('Attempting Google sign-in...');
 
     try {
-      const result = await promptAsync();
+      const result = await promptAsync({
+        useProxy: false,
+        redirectUri: 'https://abgrooming.netlify.app',
+      } as any);
+
       if (!result || result.type === 'error') {
         throw new Error('Google login failed');
       }
 
       const authentication = result.authentication;
-      if (authentication?.idToken) {
-        // Google login successful, fetch user info
+      console.log('Authentication:', authentication);
+
+      if (authentication?.accessToken) {
+        console.log('Access token found');
+
         const userInfo = await fetchGoogleUserInfo(authentication.accessToken);
+        const existingUser = await getUserByGmail(userInfo.email);
 
-        const response = await GoogleLoginAndRegister(
-          userInfo.name,
-          userInfo.email,
-          userInfo.picture,
-          phoneNumber,
-        );
+        if (existingUser) {
+          console.log(
+            'User found in database, saving and redirecting...',
+            existingUser,
+          );
 
-        if (response.success) {
-          setCurrentUser({
-            name: userInfo.name,
-            email: userInfo.email,
-            picture: userInfo.picture,
-          });
+          const encryptedEmail = encryptData(userInfo.email);
+          console.log('Email before encryption:', userInfo.email);
+          console.log('Encrypted email:', encryptedEmail);
 
-          // Optionally navigate to another screen
-          // nav.navigate('Home');
+          await AsyncStorage.setItem('userEmail', encryptedEmail);
+          console.log('Encrypted email saved to AsyncStorage');
+
+          window.location.href = '/';
         } else {
-          // User doesn't exist, proceed to phone verification
+          console.log('User was not found in database');
           setModalVisible(true);
         }
       }
     } catch (error) {
       console.error('Google Sign-In Error:', error);
-      window.alert('Login Failed', 'Could not complete the sign-in process.');
     }
   };
+
   return (
     <View style={styles.container}>
       <PhoneModal

@@ -5,4 +5,5 @@ declare module '@env' {
   export const EXPO_CLIENT_ID: string;
   export const CLIENT_ID: string;
   export const REDIRECT_URI: string;
+  export const ENCRYPTION_KEY: string;
 }

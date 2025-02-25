@@ -18,7 +18,6 @@ interface SolabProviderProps {
 }
 type Language = 'en' | 'he' | 'ar';
 
-
 const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
   const [cart, setCart] = useState<any[]>([]);
   const [isItemAdded, setIsItemAdded] = useState<boolean>(false);
@@ -46,12 +45,6 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
   useEffect(() => {
     console.log('User:', user);
   }, [user]);
-
-  
-  useEffect(() => {
-    console.log('Updated current user:', currentUser);
-  }, [currentUser]); 
-  
 
   const translations: Record<Language, typeof enStrings> = {
     en: enStrings,
@@ -248,7 +241,7 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
 
   const saveUser = useCallback(async (userData: UserData) => {
     console.log('user data:', userData);
-  
+
     try {
       setUser(userData);
       await AsyncStorage.setItem('user', JSON.stringify(userData));
@@ -263,15 +256,34 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
     try {
       const userBefore = await AsyncStorage.getItem('user');
       const cartBefore = await AsyncStorage.getItem('cart');
-      console.log('Before clearing:', {userBefore, cartBefore});
+      const userPhoneNumberbefore =
+        await AsyncStorage.getItem('userPhoneNumber');
+      const emailBefore = await AsyncStorage.getItem('userEmail');
+
+      console.log('Before clearing:', {
+        userBefore,
+        cartBefore,
+        userPhoneNumberbefore,
+        emailBefore,
+      });
 
       await AsyncStorage.removeItem('user');
       await AsyncStorage.removeItem('cart');
-
+      await AsyncStorage.removeItem('userPhoneNumber');
+      await AsyncStorage.removeItem('userEmail');
       // Log after clearing
+      const userPhoneNumberAfter =
+        await AsyncStorage.getItem('userPhoneNumber');
+      const emailAfter = await AsyncStorage.getItem('userEmail');
       const userAfter = await AsyncStorage.getItem('user');
       const cartAfter = await AsyncStorage.getItem('cart');
-      console.log('After clearing:', {userAfter, cartAfter});
+
+      console.log('After clearing:', {
+        userAfter,
+        cartAfter,
+        userPhoneNumberAfter,
+        emailAfter,
+      });
     } catch (error) {
       console.log('Failed to clear AsyncStorage:', error);
     }
@@ -284,7 +296,8 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
       setCart([]);
       setIsAuthenticated(false);
       await clearAsyncStorage();
-      nav.navigate('index');
+
+      window.location.href = '/';
       console.log('Logged out successfully');
     } catch (error) {
       console.log('Failed to log out:', error);

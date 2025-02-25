@@ -6131,6 +6131,11 @@ crypt@0.0.2, crypt@~0.0.1:
   resolved "https://registry.npmjs.org/crypt/-/crypt-0.0.2.tgz"
   integrity sha512-mCxBlsHFYh9C+HVpiEacem8FEBnMXgU9gy4zmNC+SXAZNB/1idgp/aulFJ4FgCi7GPEVbfyng092GqL2k2rmow==
 
+crypto-js@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-4.2.0.tgz#4d931639ecdfd12ff80e8186dba6af2c2e856631"
+  integrity sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==
+
 crypto-random-string@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/crypto-random-string/-/crypto-random-string-1.0.0.tgz#a230f64f568310e1498009940790ec99545bca7e"
@@ -7156,6 +7161,11 @@ expo-auth-session@~5.5.2:
     expo-linking "~6.3.0"
     expo-web-browser "~13.0.0"
     invariant "^2.2.4"
+
+expo-av@~14.0.7:
+  version "14.0.7"
+  resolved "https://registry.yarnpkg.com/expo-av/-/expo-av-14.0.7.tgz#deb967325e58b2c4d408f5d76a7ccb269442cba1"
+  integrity sha512-FvKZxyy+2/qcCmp+e1GTK3s4zH8ZO1RfjpqNxh7ARlS1oH8HPtk1AyZAMo52tHz3yQ3UIqxQ2YbI9CFb4065lA==
 
 expo-constants@~16.0.0, expo-constants@~16.0.2:
   version "16.0.2"
@@ -11782,6 +11792,11 @@ react-native-image-picker@^7.1.2:
   version "7.2.2"
   resolved "https://registry.npmjs.org/react-native-image-picker/-/react-native-image-picker-7.2.2.tgz"
   integrity sha512-hcSaD/ohDac1ooDbZyKltfmOEAWrQOrPbusKEfbJQ7EfGveBEIF5wfmZsCjXRc0HNpGdQ71P1x2JZckkqu7IRw==
+
+react-native-keychain@^9.2.3:
+  version "9.2.3"
+  resolved "https://registry.yarnpkg.com/react-native-keychain/-/react-native-keychain-9.2.3.tgz#d21d88a39847c8910fe1e18f8280a4a32a24a6bc"
+  integrity sha512-dbn50fk4HLr4JQ71X3j6ZSTbKv+G9s85Zv9cE2na7k7KGn1j+wxjqGTE3wG+WKB3nNEylgu/KXR99mtsC/hpRQ==
 
 react-native-linear-gradient@^2.8.3:
   version "2.8.3"

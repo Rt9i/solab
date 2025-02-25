@@ -20,6 +20,9 @@ import {Platform} from 'react-native';
 import Toast from 'react-native-toast-message';
 import {toast} from 'react-hot-toast';
 import SolabContext from '../store/solabContext';
+import CryptoJS from 'crypto-js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from 'expo-constants';
 
 type PhoneModalProps = {
   phoneNumber: string | null;
@@ -71,27 +74,73 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
     }
   };
 
+  const ENCRYPTION_KEY = Constants.expoConfig?.extra?.ENCRYPTION_KEY;
+
+  const encryptPhonenumber = async () => {
+    try {
+      console.log('phone number before encryption: ', phoneNumber);
+
+      const encryptedNumber = CryptoJS.AES.encrypt(
+        phoneNumber,
+        ENCRYPTION_KEY,
+      ).toString();
+      console.log('phone number after encryption: ', encryptedNumber);
+      await AsyncStorage.setItem('userPhoneNumber', encryptedNumber);
+    } catch (e) {
+      e;
+    }
+  };
+
+  const getphoneNumber = async () => {
+    try {
+      const encryptedNumber = await AsyncStorage.getItem('userPhoneNumber');
+
+      if (!encryptedNumber) {
+        console.log('No phone number found in storage.');
+        return null;
+      }
+
+      const bytes = CryptoJS.AES.decrypt(encryptedNumber, ENCRYPTION_KEY);
+
+      const decryptedNumber = bytes.toString(CryptoJS.enc.Utf8);
+
+      console.log('Decrypted phone number:', decryptedNumber);
+      return decryptedNumber;
+    } catch (e) {
+      console.error('Decryption error:', e);
+      return null;
+    }
+  };
+
   const signToDataBase = async () => {
     try {
-      const res = await getUserByGmail(currentUser.email);
-      console.log('current user mail: ', currentUser.email);
-      console.log('user: ', res);
-      // console.log('user data: ', currentUser);
-      // const userData = {
-      //   name: currentUser.name,
-      //   email: currentUser.email,
-      //   picture: currentUser.photoURL,
-      //   phoneNumber: phoneNumber,
-      // };
+      console.log('user name: ', currentUser.name);
+      console.log('user email: ', currentUser.email);
+      console.log('user picture: ', currentUser.picture);
+      console.log('number type: ', typeof phoneNumber);
+      console.log('phoneNumber : ', phoneNumber);
 
-      // await GoogleLoginAndRegister(
-      //   userData.name,
-      //   userData.email,
-      //   userData.picture,
-      //   userData.phoneNumber,
-      // );
+      const response = await GoogleLoginAndRegister(
+        currentUser.name,
+        currentUser.email,
+        currentUser.picture,
+        phoneNumber,
+      );
+
+      console.log('Server Response:', response);
+
+      const encryptedNumber = CryptoJS.AES.encrypt(
+        phoneNumber,
+        ENCRYPTION_KEY,
+      ).toString();
+
+      await AsyncStorage.setItem('userPhoneNumber', encryptedNumber);
+
+      console.log('Encrypted phone number saved:', encryptedNumber);
+
+      window.location.href = '/';
     } catch (e) {
-      console.log(e);
+      console.error('Error signing in user:', e);
     }
   };
 
@@ -118,6 +167,11 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
     }
   };
 
+  const handlePhoneNumberChange = (newPhoneNumber: string) => {
+    setPhoneNumber(newPhoneNumber);
+    console.log('Updated phone number:', newPhoneNumber);
+  };
+
   return (
     <Modal
       visible={isModalVisible}
@@ -126,7 +180,9 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
       onRequestClose={() => setModalVisible(false)}>
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
-          <Button title="sign to dadabase" onPress={() => signToDataBase()} />
+          {/* <Button title="save number " onPress={() => encryptPhonenumber()} />
+          <Button title="get number" onPress={() => getphoneNumber()} />
+          <Button title="save user " onPress={() => signToDataBase()} /> */}
           {!verificationCodeSent && !isPhoneVerified && (
             <View>
               <Text style={styles.title}>Please enter your phone number:</Text>
@@ -136,15 +192,16 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
                 placeholder="Phone Number"
                 keyboardType="phone-pad"
                 value={phoneNumber || ''}
-                onChangeText={setPhoneNumber}
+                onChangeText={handlePhoneNumberChange} // Use onChangeText instead of onChange
               />
+
               <View style={styles.buttonContainer}>
                 <Button title="Verify Phone" onPress={() => sendOtpCode()} />
-                <Button
+                {/* <Button
                   title="Close"
                   onPress={() => setModalVisible(false)}
                   color="red"
-                />
+                /> */}
               </View>
             </View>
           )}

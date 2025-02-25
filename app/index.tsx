@@ -14,21 +14,38 @@ import {
   getUserByID,
   getUserProducts,
   getDataFromDataBase,
+  getUserByPhoneNumber,
+  getUserByGmail,
 } from '../src/res/api';
 import {useFocusEffect, useRouter} from 'expo-router';
 import Images from '@/src/assets/images/images';
+import Constants from 'expo-constants';
+import CryptoJS from 'crypto-js';
 
 const Index = () => {
   const navigation = useRouter();
   const {setUser, saveUserProducts, setData, logout} = useContext(SolabContext);
   const [loading, setLoading] = useState(false);
+  const ENCRYPTION_KEY = Constants.expoConfig?.extra?.ENCRYPTION_KEY;
 
   const nav = (name: string) => {
     navigation.navigate(name as any);
   };
+
   const navReplace = (name: string) => {
     navigation.navigate(name as any);
   };
+  const decryptData = (encryptedData: any) => {
+    try {
+      const bytes = CryptoJS.AES.decrypt(encryptedData, ENCRYPTION_KEY);
+      const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
+      return decryptedData;
+    } catch (error) {
+      console.error('Error decrypting data:', error);
+      return null;
+    }
+  };
+
   const fetchData = async () => {
     try {
       console.log('Fetching data from database...');
@@ -39,7 +56,26 @@ const Index = () => {
       console.error('Error fetching data:', error);
     }
   };
+  const getphoneNumber = async () => {
+    try {
+      const encryptedNumber = await AsyncStorage.getItem('userPhoneNumber');
 
+      if (!encryptedNumber) {
+        console.log('No phone number found in storage.');
+        return null;
+      }
+
+      const bytes = CryptoJS.AES.decrypt(encryptedNumber, ENCRYPTION_KEY);
+
+      const decryptedNumber = bytes.toString(CryptoJS.enc.Utf8);
+
+      console.log('Decrypted phone number:', decryptedNumber);
+      return decryptedNumber;
+    } catch (e) {
+      console.error('Decryption error:', e);
+      return null;
+    }
+  };
   const getPolicyAcceptValue = async () => {
     try {
       const value = await AsyncStorage.getItem('isAccepted');
@@ -54,6 +90,39 @@ const Index = () => {
       return false;
     }
   };
+  const getUser = async () => {
+    try {
+      // Try getting the phone number first
+      let asyncUserPhoneNumber = await getphoneNumber();
+      if (asyncUserPhoneNumber) {
+        console.log('Phone number found:', asyncUserPhoneNumber);
+        const userInfo = await getUserByPhoneNumber(asyncUserPhoneNumber);
+        console.log('User fetched by phone number:', userInfo);
+        return userInfo;
+      }
+
+      // If phone number doesn't exist, try getting email
+      const encryptedEmail = await AsyncStorage.getItem('userEmail');
+      if (!encryptedEmail) {
+        console.log('No email found in AsyncStorage.');
+        return null;
+      }
+
+      const email = decryptData(encryptedEmail);
+      if (!email) {
+        console.log('Failed to decrypt email.');
+        return null;
+      }
+
+      console.log('Decrypted email:', email);
+      const userInfo = await getUserByGmail(email);
+      console.log('User fetched by email:', userInfo);
+      return userInfo;
+    } catch (error) {
+      console.error('Error getting user:', error);
+      return null;
+    }
+  };
 
   const initializeApp = async () => {
     console.log('Initializing app...');
@@ -61,34 +130,41 @@ const Index = () => {
 
     try {
       const policyAccept = await getPolicyAcceptValue();
-      let asyncUser = null;
+      let userData = await getUser();
 
       await fetchData();
 
-      asyncUser = await AsyncStorage.getItem('user');
-      asyncUser = asyncUser ? JSON.parse(asyncUser) : null;
-      console.log('policy result: ', policyAccept);
+      console.log('Policy accept result: ', policyAccept);
       if (policyAccept == false) {
         nav('/Policy');
-        return console.log('policy: ', policyAccept);
+        return console.log('Policy not accepted:', policyAccept);
       }
 
-      if (!asyncUser) {
-        console.log('No user found in storage. Fetching initial data...');
-        navReplace('/Home');
+      if (!userData || userData.error === true) {
+        console.log('No user found. Redirecting to Home...');
+        nav('Home');
         return;
       }
 
-      console.log('User found:', asyncUser);
+      console.log('User found:', userData);
 
-      const newUser = await getUserByID(asyncUser._id);
-      if (!newUser || !newUser.role) throw new Error('Invalid user data');
+      // Extract the actual user object if it's nested
+      const user = userData.user ? userData.user : userData;
 
-      setUser(newUser);
-      const response = await getUserProducts(asyncUser._id);
+      console.log('Extracted user:', user);
+      console.log('user _id: ', user._id);
+
+      if (!user._id) {
+        console.error('Error: user._id is still undefined');
+        return;
+      }
+
+      setUser(user); // Set user context or state
+
+      const response = await getUserProducts(user._id);
       saveUserProducts(response);
-      if (!policyAccept) return navReplace('/Policy');
-      switch (newUser.role) {
+
+      switch (user.role) {
         case 'client':
           nav('/Home');
           break;
@@ -103,7 +179,6 @@ const Index = () => {
       }
     } catch (error) {
       console.error('Initialization error:', error);
-      logout();
     } finally {
       setLoading(false);
     }
@@ -122,6 +197,7 @@ const Index = () => {
           resizeMode="contain"
           style={styles.image}
         />
+
         {loading && (
           <ActivityIndicator
             size="large"

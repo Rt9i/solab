@@ -39,6 +39,26 @@ export const verifyOTP = async (phoneNumber, code) => {
   }
 };
 
+export const getUserByPhoneNumber = async phoneNumber => {
+  console.log('Phone Number from api:', phoneNumber); // Log the phone number
+
+  try {
+    const response = await fetch(
+      `${mainURL}/getUserByPhoneNumber?phoneNumber=${encodeURIComponent(phoneNumber)}`,
+      {
+        method: 'GET',
+        headers: {'Content-Type': 'application/json'},
+      },
+    );
+
+    const data = await response.json();
+    console.log('get phone number response:', data);
+    return data;
+  } catch (e) {
+    console.error('Error fetching user:', e);
+  }
+};
+
 export const getAllUsers = async () => {
   try {
     return await appFetch('/getAllUsers');
@@ -103,17 +123,10 @@ export const getUserProducts = async userId => {
     if (!/^[0-9a-fA-F]{24}$/.test(userId)) {
       throw new Error('Invalid ObjectId format');
     }
-
     const response = await appFetch(`/getUserProducts/${userId}`, 'GET');
-
-    // Check if the response has the `products` field
     if (!response.products) {
       throw new Error('Products not found in response');
     }
-
-    // Log the products that we received
-    // console.log('Fetched user products:', response.products);
-
     return response.products; // Return the products array
   } catch (error) {
     console.error('Failed to fetch user products:', error);
@@ -306,6 +319,7 @@ export const delUser = async _id => {
 };
 export const getUserByGmail = async email => {
   try {
+    console.log('Sending this email: ', email);
     const response = await fetch(
       `${mainURL}/getUserByGmail?email=${encodeURIComponent(email)}`,
       {
@@ -315,17 +329,16 @@ export const getUserByGmail = async email => {
         },
       },
     );
+    console.log('user response: ', response);
 
     if (!response.ok) {
-      console.log("Didn't work", response.status);
+      console.log('Request failed:', response.status);
       return null;
     }
-
     const data = await response.json();
-    console.log('Response Data:', data);
     return data;
   } catch (e) {
-    console.error('Error fetching user by Gmail:', e);
+    console.error('Error during fetch:', e);
     return null;
   }
 };

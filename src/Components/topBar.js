@@ -32,6 +32,9 @@ const TopBar = () => {
   const navigateToCart = () => {
     navigation.navigate('Cart');
   };
+  const navProfile = () =>{
+    navigation.navigate("Profile")
+  }
   const navLogin = () => {
     navigation.navigate('Login');
   };
@@ -60,16 +63,16 @@ const TopBar = () => {
       </View>
     </TouchableOpacity>
   );
-  console.log('the user image: ', currentUser?.picture);
+
 
   const profilePic = () => (
     <TouchableOpacity
-      onPress={navLogin}
+      onPress={navProfile}
       style={styles.touch}
       activeOpacity={0.8}>
       <View style={styles.profileCont}>
         <Image
-          source={{uri: currentUser?.picture ?? Images.profileIcon()}}
+          source={{uri: user?.picture ?? Images.profileIcon()}}
           style={styles.profileImage}
           resizeMode="contain"
         />
@@ -128,7 +131,7 @@ const TopBar = () => {
       searchInputRef.current.focus();
     }
   };
-  console.log('picture: ', currentUser?.picture);
+
 
   return (
     <View style={styles.container}>
@@ -160,7 +163,7 @@ const TopBar = () => {
           </TouchableOpacity>
         )}
       </View>
-      {!currentUser ? LoginBox() : profilePic()}
+      {!user ? LoginBox() : profilePic()}
 
       {cartBox()}
     </View>

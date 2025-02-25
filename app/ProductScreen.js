@@ -11,6 +11,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import SolabContext from '../src/store/solabContext';
 import {LinearGradient} from 'expo-linear-gradient';
 import MessageModal from '@/src/Components/messageModal';
+import toast from 'react-hot-toast';
 
 const ProductScreen = () => {
   const navigation = useNavigation();
@@ -25,28 +26,22 @@ const ProductScreen = () => {
   const handleAddToCart = () => {
     const quantityInt = parseInt(quantity);
     if (isNaN(quantityInt) || quantityInt <= 0) {
-      toast.show({
-        type: 'error',
-        text1: strings.enterNumber,
-
-        position: 'top',
-        visibilityTime: 2000,
+      toast.error(strings.enterNumber, {
+        position: 'top-center',
+        duration: 2000,
       });
       return;
     }
-
+  
     addItemToCart({...product, quantity: quantityInt});
-    toast.show({
-      type: 'success',
-
-      text1: strings.productAdded,
-      text2: strings.itemaddsucces + '!🎉',
-      position: 'top',
-      visibilityTime: 2000,
+    toast.success(`${strings.productAdded} ! 🎉`, {
+      position: 'top-center',
+      duration: 2000,
     });
-
+  
     navigation.goBack();
   };
+  
 
   const imageSource = product?.img?.uri || product?.img;
 

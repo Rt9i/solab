@@ -32,7 +32,6 @@ const SettingsScreen = () => {
   const [message, setMessage] = useState(null);
   const currentUserId = user ? user._id : null;
 
-  console.log('Current user ID:', currentUserId);
 
   const handleProfilePress = () => {
     if (currentUserId) {
@@ -74,7 +73,7 @@ const SettingsScreen = () => {
   const settings = [
     {
       name: 'Profile',
-      image: Images.profileIcon(),
+      image: user? user.picture : Images.profileIcon(),
       onPress: () => handleProfilePress(),
     },
     {
@@ -203,6 +202,7 @@ const styles = StyleSheet.create({
   image: {
     width: 30,
     height: 30,
+    borderRadius:20,
   },
   arrow: {
     fontSize: 20,

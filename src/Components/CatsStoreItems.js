@@ -9,11 +9,9 @@ import {
 } from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import ScreenNames from '../../routes/ScreenNames';
 import SolabContext from '../store/solabContext';
 import Images from '../assets/images/images';
-import AddOrLess from './AddOrLess';
-import Toast from 'react-native-toast-message';
+import toast from 'react-hot-toast';
 
 const CatsStoreItems = ({selectedCategory, ...props}) => {
   const {strings, changeLanguage, user, row} = useContext(SolabContext);
@@ -56,15 +54,13 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
   const addToShop = () => {
     const Item = {...props};
     addItemToCart(Item, Item.productId);
-    Toast.show({
-      type: 'success',
 
-      text1: strings.productAdded,
-      text2: strings.itemaddsucces + '!🎉',
-      position: 'top', // Show toast from the top
-      visibilityTime: 1000,
+    toast.success(`${strings.productAdded}! 🎉`, {
+      position: 'top-center', // Show toast from the top
+      duration: 1000, // Duration for 1 second
     });
   };
+
   const handleEditProducts = () => {
     navigation.navigate('EditProduct', props);
   };
@@ -91,6 +87,7 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
               styles.img,
               selectedCategory === 'catMeat' ? meatImg : null,
             ]}
+            crossorigin="anonymous"
           />
         </TouchableOpacity>
 

@@ -39,6 +39,10 @@ const CatsStore = props => {
   const [showScrollUp, setShowScrollUp] = useState(false);
   const scrollViewRef = useRef(null);
   const nav = useNavigation();
+
+  const video = useRef(null);
+  const [status, setStatus] = useState({});
+
   useFocusEffect(
     React.useCallback(() => {
       // console.log('Current data:', data);
@@ -106,7 +110,6 @@ const CatsStore = props => {
           onScroll={handleScroll}
           scrollEventThrottle={16}
           ref={scrollViewRef}>
-            
           <View style={styles.sale}>
             <Swipe />
           </View>

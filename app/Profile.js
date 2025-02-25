@@ -1,12 +1,12 @@
-import React, { useContext } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import React, {useContext} from 'react';
+import {View, Text, StyleSheet, Image} from 'react-native';
 import SolabContext from '../src/store/solabContext';
 import Images from '../src/assets/images/images';
-import { FlashList } from '@shopify/flash-list';
+import {FlashList} from '@shopify/flash-list';
 import Sizes from '@/src/res/sizes';
 
 const ProfileScreen = () => {
-  const { user } = useContext(SolabContext);
+  const {user} = useContext(SolabContext);
 
   if (!user) {
     return (
@@ -16,23 +16,27 @@ const ProfileScreen = () => {
     );
   }
 
-  const products = user.products || []; 
+  const products = user.products || [];
   return (
     <View style={styles.container}>
-      <Image source={Images.profileIcon()} style={styles.profileImage} />
+      <Image source={{uri: user.picture}} style={styles.profileImage} />
       <Text style={styles.userName}>{user.userName || 'User Name'}</Text>
       <Text style={styles.userPhone}>{user.phoneNumber || 'Phone Number'}</Text>
 
-      <View style={{ flex: 1, width: Sizes.screenWidth }}>
+      <View style={{flex: 1, width: Sizes.screenWidth}}>
         <FlashList
           // Removed style={{ flex: 1 }} from FlashList
           data={products}
           estimatedItemSize={85} // Set estimated item size
-          contentContainerStyle={{ paddingBottom: 2 }}
+          contentContainerStyle={{paddingBottom: 2}}
           keyExtractor={item => item._id} // Ensure items have a unique _id
-          renderItem={({ item }) => (
+          renderItem={({item}) => (
             <View style={styles.productContainer}>
-              <Image source={{ uri: item.img }} style={styles.productImage} />
+              <Image
+                source={{uri: item.img}}
+                style={styles.productImage}
+                crossorigin="anonymous"
+              />
               <View style={styles.productDetails}>
                 <Text style={styles.productName}>
                   {item.brand || 'Product Name'}
@@ -79,7 +83,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: '#fff',
     borderRadius: 8,
- 
+
     elevation: 2,
   },
   productImage: {

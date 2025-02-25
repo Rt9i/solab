@@ -33,7 +33,9 @@ const CartRowItems = props => {
           <Image
             source={typeof img === 'string' ? {uri: img} : img}
             style={styles.img}
+            crossorigin="anonymous"
           />
+
           <Text>
             {Item.saleAmount && (
               <View style={styles.sale}>
