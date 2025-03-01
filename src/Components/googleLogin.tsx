@@ -7,6 +7,7 @@ import {
   Alert,
   Image,
   TouchableOpacity,
+  Linking,
 } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
@@ -45,18 +46,17 @@ const GoogleLogin: React.FC = () => {
   const WEB_CLIENT_ID = Constants.expoConfig?.extra?.WEB_CLIENT_ID;
   const ENCRYPTION_KEY = Constants.expoConfig?.extra?.ENCRYPTION_KEY;
 
-  const redirectUri = makeRedirectUri({
-    useProxy: process.env.NODE_ENV === 'development',
-    scheme: 'solab',
-  } as any);
+  const redirectUri = 'https://solabgrooming.netlify.app';
 
   const [request, response, promptAsync] = Google.useAuthRequest({
     androidClientId: WEB_CLIENT_ID,
     iosClientId: IOS_CLIENT_ID,
     webClientId: WEB_CLIENT_ID,
-    redirectUri,
+    redirectUri, // Set redirect URI here
     scopes: ['openid', 'profile', 'email'],
-  });
+    useProxy: false, // Must be false to prevent popup
+    prompt: Prompt.SelectAccount, // Forces account selection
+  } as any);
 
   const encryptData = (data: any) => {
     try {
@@ -67,17 +67,6 @@ const GoogleLogin: React.FC = () => {
       return encryptedData;
     } catch (error) {
       console.error('Error encrypting data:', error);
-      return null;
-    }
-  };
-
-  const decryptData = (encryptedData: any) => {
-    try {
-      const bytes = CryptoJS.AES.decrypt(encryptedData, ENCRYPTION_KEY);
-      const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
-      return decryptedData;
-    } catch (error) {
-      console.error('Error decrypting data:', error);
       return null;
     }
   };
@@ -117,11 +106,6 @@ const GoogleLogin: React.FC = () => {
       const userInfo = await response.json();
       console.log('fetched user from function: ', userInfo);
 
-      // setCurrentUser({
-      //   name: userInfo.name,
-      //   email: userInfo.email,
-      //   picture: userInfo.picture,
-      // });
       return userInfo;
     } catch (error) {
       console.error('Error Fetching User Info:', error);
@@ -132,21 +116,6 @@ const GoogleLogin: React.FC = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (currentUser) {
-
-  //     getUserByGmail(currentUser.email).then(user => {
-  //       console.log('got user email by: ', currentUser.email);
-
-  //       if (!user) {
-  //         console.log(currentUser.email, 'was not found in data base ');
-
-  //         setModalVisible(true);
-  //       }
-  //     });
-  //   }
-  // }, [currentUser]);
-
   const GoogleSignInButton: React.FC<{onPress: () => void}> = ({onPress}) => (
     <TouchableOpacity style={styles.googleButton} onPress={onPress}>
       <Image source={Images.Gicon()} style={styles.googleIcon} />
@@ -155,12 +124,11 @@ const GoogleLogin: React.FC = () => {
   );
 
   const handleGoogleSignIn = async () => {
-    console.log('Attempting Google sign-in...');
-
     try {
       const result = await promptAsync({
         useProxy: false,
-        redirectUri: 'https://abgrooming.netlify.app',
+        redirectUri,
+        prompt: Prompt.SelectAccount,
       } as any);
 
       if (!result || result.type === 'error') {
@@ -168,30 +136,16 @@ const GoogleLogin: React.FC = () => {
       }
 
       const authentication = result.authentication;
-      console.log('Authentication:', authentication);
 
       if (authentication?.accessToken) {
-        console.log('Access token found');
-
         const userInfo = await fetchGoogleUserInfo(authentication.accessToken);
         const existingUser = await getUserByGmail(userInfo.email);
 
         if (existingUser) {
-          console.log(
-            'User found in database, saving and redirecting...',
-            existingUser,
-          );
-
           const encryptedEmail = encryptData(userInfo.email);
-          console.log('Email before encryption:', userInfo.email);
-          console.log('Encrypted email:', encryptedEmail);
-
           await AsyncStorage.setItem('userEmail', encryptedEmail);
-          console.log('Encrypted email saved to AsyncStorage');
-
           window.location.href = '/';
         } else {
-          console.log('User was not found in database');
           setModalVisible(true);
         }
       }
@@ -223,7 +177,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#4285F4',
+    // backgroundColor: '#4285F4',
+    backgroundColor: 'green',
     padding: 5,
     borderRadius: 5,
   },

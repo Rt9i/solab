@@ -84,10 +84,10 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
           <Image
             source={img}
             style={[
-              styles.img,
+              {resizeMode: 'contain'}, 
+              styles.img, 
               selectedCategory === 'catMeat' ? meatImg : null,
             ]}
-            crossorigin="anonymous"
           />
         </TouchableOpacity>
 
@@ -121,7 +121,10 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
         <View style={styles.center}>
           <TouchableOpacity activeOpacity={0.7} onPress={addToShop}>
             <View style={styles.cart}>
-              <Image source={Images.addCart()} style={styles.addCart} />
+              <Image
+                source={Images.addCart()}
+                style={({resizeMode: 'contain'}, styles.addCart)}
+              />
               <Text style={styles.carttxt}>{strings.addToCart}</Text>
             </View>
           </TouchableOpacity>
@@ -253,18 +256,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  checkMark: {
-    backgroundColor: 'grey',
-    width: 40,
-    height: 39,
-    resizeMode: 'contain',
-    borderWidth: 1,
-    borderColor: 'black',
-  },
+
   addCart: {
     width: 20,
     height: 20,
-    resizeMode: 'contain',
+
     zIndex: 20,
   },
   itemWidth: {
@@ -283,7 +279,7 @@ const styles = StyleSheet.create({
   },
   img: {
     marginTop: 15,
-    resizeMode: 'contain',
+   
     width: '100%',
     height: 120,
     borderTopLeftRadius: 5,

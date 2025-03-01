@@ -17,6 +17,16 @@ const ProfileScreen = () => {
   }
 
   const products = user.products || [];
+  const renderedItem = item => (
+    <View style={styles.productContainer}>
+      <Image source={{uri: item.img}} style={styles.productImage} />
+      <View style={styles.productDetails}>
+        <Text style={styles.productName}>{item.brand || 'Product Name'}</Text>
+        <Text style={styles.productPrice}>${item.price || 'Price'}</Text>
+      </View>
+    </View>
+  );
+
   return (
     <View style={styles.container}>
       <Image source={{uri: user.picture}} style={styles.profileImage} />
@@ -30,23 +40,7 @@ const ProfileScreen = () => {
           estimatedItemSize={85} // Set estimated item size
           contentContainerStyle={{paddingBottom: 2}}
           keyExtractor={item => item._id} // Ensure items have a unique _id
-          renderItem={({item}) => (
-            <View style={styles.productContainer}>
-              <Image
-                source={{uri: item.img}}
-                style={styles.productImage}
-                crossorigin="anonymous"
-              />
-              <View style={styles.productDetails}>
-                <Text style={styles.productName}>
-                  {item.brand || 'Product Name'}
-                </Text>
-                <Text style={styles.productPrice}>
-                  ${item.price || 'Price'}
-                </Text>
-              </View>
-            </View>
-          )}
+          renderItem={({item}) => renderedItem(item)}
         />
       </View>
     </View>

@@ -31,6 +31,7 @@
     "@react-native-community/cli-server-api": "^15.1.2",
     "@react-native-firebase/app": "^21.0.0",
     "@react-native-firebase/auth": "^21.0.0",
+    "@react-native-google-signin/google-signin": "^13.2.0",
     "@react-native-picker/picker": "2.7.5",
     "@react-navigation/bottom-tabs": "^6.5.20",
     "@react-navigation/native": "^6.1.17",
@@ -84,6 +85,7 @@
     "react-native-swiper": "^1.6.0",
     "react-native-toast-message": "^2.2.1",
     "react-native-web": "~0.19.10",
+    "react-native-webview": "13.8.6",
     "send": "^1.1.0",
     "textflow.js": "^0.1.4"
   },
