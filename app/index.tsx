@@ -22,15 +22,30 @@ import {
 import {useFocusEffect, useRouter} from 'expo-router';
 import Images from '@/src/assets/images/images';
 import Constants from 'expo-constants';
+import PhoneModal from '@/src/Components/getNumber';
 
 const Index = () => {
   const navigation = useRouter();
-  const {setUser, saveUserProducts, setData, logout, fetchGoogleUserInfo}: any =
-    useContext(SolabContext);
+  const {
+    user,
+    setUser,
+    saveUserProducts,
+    setData,
+    logout,
+    fetchGoogleUserInfo,
+    setModalVisible,
+    isModalVisible,
+    setCurrentUser,
+    currentUser,
+  }: any = useContext(SolabContext);
   const [loading, setLoading] = useState(false);
-  const ENCRYPTION_KEY = Constants.expoConfig?.extra?.ENCRYPTION_KEY;
-  const ANDROID_CLIENT_ID = Constants.expoConfig?.extra?.ANDROID_CLIENT_ID;
-  const IOS_CLIENT_ID = Constants.expoConfig?.extra?.IOS_CLIENT_ID;
+  const [rememberMe, setRememberMe] = useState(false);
+  const [modalCallback, setModalCallback] = useState<
+    ((phone: string) => void) | null
+  >(null);
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const [isPhoneVerified, setIsPhoneVerified] = useState<boolean>(false);
+
   const WEB_CLIENT_ID = Constants.expoConfig?.extra?.WEB_CLIENT_ID;
 
   const REDIRECT_URI = Constants.releaseChannel
@@ -38,26 +53,15 @@ const Index = () => {
     : 'http://localhost:8081'; // Local development URL
   console.log('redirect url: ', REDIRECT_URI);
 
-  const handelingtoken = async (code: string) => {
+  const handelGoogleLogin = async (code: string) => {
     try {
       const result = await fetchAccessToken(code, WEB_CLIENT_ID, REDIRECT_URI);
-      console.log('---------------------------');
-      console.log('token stuffff:', result);
-      console.log('---------------------------');
-      fetchGoogleUserInfo(result.access_token);
+
+      return result;
     } catch (error) {
       console.error('Error fetching access token:', error);
     }
   };
-
-  useEffect(() => {
-    const queryParams = new URLSearchParams(window.location.search);
-    const code = queryParams.get('code'); // Google sends back the auth code in the URL
-
-    if (code) {
-      handelingtoken(code);
-    }
-  }, []);
 
   const nav = (name: string) => {
     navigation.navigate(name as any);
@@ -71,21 +75,32 @@ const Index = () => {
       console.error('Error fetching data:', error);
     }
   };
-  const getphoneNumber = async () => {
-    try {
-      const encryptedNumber = await AsyncStorage.getItem('userPhoneNumber');
 
-      if (!encryptedNumber) {
-        console.log('No phone number found in storage.');
+  const getUser = async () => {
+    try {
+      // Try getting the phone number first
+      let number = await AsyncStorage.getItem('userPhoneNumber');
+      if (number) {
+        console.log('Phone number found:', number);
+        const userInfo = await getUserByPhoneNumber(number);
+
+        console.log('User fetched by phone number:', userInfo);
+        return userInfo;
+      }
+
+      // If phone number doesn't exist, try getting email
+      const email = await AsyncStorage.getItem('userEmail');
+      if (!email) {
+        console.log('No email found in AsyncStorage.');
         return null;
       }
 
-      const decryptedNumber = await decryptData(encryptedNumber);
-
-      console.log('Decrypted phone number:', decryptedNumber);
-      return decryptedNumber;
-    } catch (e) {
-      console.error('Decryption error:', e);
+      console.log('Decrypted email:', email);
+      const userInfo = await getUserByGmail(email);
+      console.log('User fetched by email:', userInfo);
+      return userInfo;
+    } catch (error) {
+      console.error('Error getting user:', error);
       return null;
     }
   };
@@ -104,99 +119,112 @@ const Index = () => {
       return false;
     }
   };
-
-  const getUser = async () => {
-    try {
-      // Try getting the phone number first
-      let asyncUserPhoneNumber = await getphoneNumber();
-      if (asyncUserPhoneNumber) {
-        console.log('Phone number found:', asyncUserPhoneNumber);
-        const userInfo = await getUserByPhoneNumber(asyncUserPhoneNumber);
-        console.log('User fetched by phone number:', userInfo);
-        return userInfo;
-      }
-
-      // If phone number doesn't exist, try getting email
-      const encryptedEmail = await AsyncStorage.getItem('userEmail');
-      if (!encryptedEmail) {
-        console.log('No email found in AsyncStorage.');
-        return null;
-      }
-
-      const email = decryptData(encryptedEmail);
-      if (!email) {
-        console.log('Failed to decrypt email.');
-        return null;
-      }
-
-      console.log('Decrypted email:', email);
-      const userInfo = await getUserByGmail(email);
-      console.log('User fetched by email:', userInfo);
-      return userInfo;
-    } catch (error) {
-      console.error('Error getting user:', error);
-      return null;
-    }
+  const waitForPhoneInput = () => {
+    return new Promise<string>(resolve => {
+      setModalCallback(() => resolve); // Save the callback to resolve later
+      setModalVisible(true); // Show the modal
+    });
   };
 
   const initializeApp = async () => {
     console.log('Initializing app...');
     setLoading(true);
 
+    let userByEmail = null; // Store user outside try-catch
+
     try {
-      const policyAccept = await getPolicyAcceptValue();
-      let userData = await getUser();
+      const queryParams = new URLSearchParams(window.location.search);
+      const code = queryParams.get('code');
 
-      await fetchData();
+      if (code) {
+        console.log('Google Auth Code detected:', code);
 
-      console.log('Policy accept result: ', policyAccept);
-      if (policyAccept == false) {
-        nav('/Policy');
-        return console.log('Policy not accepted:', policyAccept);
-      }
+        try {
+          const fetchResult = await handelGoogleLogin(code);
+          console.log('fetched result: ', fetchResult);
 
-      if (!userData || userData.error === true) {
-        console.log('No user found. Redirecting to Home...');
-        nav('Home');
-        return;
-      }
+          if (!fetchResult || fetchResult == undefined) {
+            console.warn('Google login failed or expired code. Continuing...');
+            return (window.location.href = '/');
+          }
 
-      console.log('User found:', userData);
+          const user = await fetchGoogleUserInfo(fetchResult.access_token);
+          setCurrentUser(user);
+          console.log('user: ', user);
 
-      // Extract the actual user object if it's nested
-      const user = userData.user ? userData.user : userData;
+          userByEmail = await getUserByGmail(user.email); // Assign user to outer variable
 
-      console.log('Extracted user:', user);
-      console.log('user _id: ', user._id);
-
-      if (!user._id) {
-        console.error('Error: user._id is still undefined');
-        return;
-      }
-
-      setUser(user); // Set user context or state
-
-      const response = await getUserProducts(user._id);
-      saveUserProducts(response);
-
-      switch (user.role) {
-        case 'client':
-          nav('/Home');
-          break;
-        case 'worker':
-          nav('/WorkersHome');
-          break;
-        case 'staff':
-          nav('/StaffHome');
-          break;
-        default:
-          console.error('Invalid user role');
+          if (userByEmail) {
+            if (rememberMe) {
+              await AsyncStorage.setItem('user', JSON.stringify(userByEmail));
+              console.log('Stored user in AsyncStorage:', userByEmail);
+            }
+            setUser(userByEmail);
+          } else {
+            const phoneRes = await waitForPhoneInput();
+            console.log('phone modal response: ', phoneRes);
+          }
+        } catch (error) {
+          console.warn(
+            'Google login failed (possibly expired code). Skipping authentication:',
+            error,
+          );
+        }
       }
     } catch (error) {
       console.error('Initialization error:', error);
-    } finally {
-      setLoading(false);
     }
+
+    // ✅ Now this part executes whether we get the user or not
+    console.log('Continuing app initialization...');
+
+    const number = await AsyncStorage.getItem('userPhoneNumber');
+    console.log('phone number from async: ', number);
+
+    const usebyNumber = await getUserByPhoneNumber(number);
+    setUser(usebyNumber);
+
+    console.log('User entered phone number:', number);
+    // Step 2: Continue initialization
+    const policyAccept = await getPolicyAcceptValue();
+
+    await fetchData();
+
+    console.log('Policy accept result: ', policyAccept);
+    if (policyAccept == false) {
+      nav('/Policy');
+      return console.log('Policy not accepted:', policyAccept);
+    }
+
+    if (!user || user?.error === true) {
+      console.log('No user found. Redirecting to Home...');
+      nav('Home');
+      return;
+    }
+
+    if (!user._id) {
+      console.error('Error: user._id is still undefined');
+      return;
+    }
+
+    const response = await getUserProducts(user._id);
+    saveUserProducts(response);
+
+    switch (user.role) {
+      case 'client':
+        nav('/Home');
+        break;
+      case 'worker':
+        nav('/WorkersHome');
+        break;
+      case 'staff':
+        nav('/StaffHome');
+        break;
+      default:
+        console.error('Invalid user role');
+    }
+
+    setLoading(false); // Ensure loading stops at the very end
   };
 
   useFocusEffect(
@@ -212,7 +240,14 @@ const Index = () => {
           resizeMode="contain"
           style={styles.image}
         />
-
+        <PhoneModal
+          phoneNumber={phoneNumber}
+          setPhoneNumber={setPhoneNumber}
+          isModalVisible={isModalVisible}
+          setModalVisible={setModalVisible}
+          setIsPhoneVerified={setIsPhoneVerified}
+          isPhoneVerified={isPhoneVerified}
+        />
         {loading && (
           <ActivityIndicator
             size="large"

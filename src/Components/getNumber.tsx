@@ -82,7 +82,6 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
       console.log('user name: ', currentUser.name);
       console.log('user email: ', currentUser.email);
       console.log('user picture: ', currentUser.picture);
-      console.log('number type: ', typeof phoneNumber);
       console.log('phoneNumber : ', phoneNumber);
 
       const response = await GoogleLoginAndRegister(
@@ -94,11 +93,9 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
 
       console.log('Server Response:', response);
 
-      const encryptedNumber: any = await encryptData(phoneNumber);
+      await AsyncStorage.setItem('userPhoneNumber', phoneNumber as string);
 
-      await AsyncStorage.setItem('userPhoneNumber', encryptedNumber);
-
-      console.log('Encrypted phone number saved:', encryptedNumber);
+      console.log(' phone number saved:', phoneNumber);
 
       window.location.href = '/';
     } catch (e) {
@@ -142,9 +139,10 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
       onRequestClose={() => setModalVisible(false)}>
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
-          {/* <Button title="save number " onPress={() => encryptPhonenumber()} />
-          <Button title="get number" onPress={() => getphoneNumber()} />
-          <Button title="save user " onPress={() => signToDataBase()} /> */}
+          {/* <Button title="save number " onPress={() => encryptPhonenumber()} /> */}
+          {/* <Button title="get number" onPress={() => getphoneNumber()} /> */}
+          <Button title="save user " onPress={() => signToDataBase()} />
+          <Button title="close " onPress={() => setModalVisible(false)} />
           {!verificationCodeSent && !isPhoneVerified && (
             <View>
               <Text style={styles.title}>Please enter your phone number:</Text>

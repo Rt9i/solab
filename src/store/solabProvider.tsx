@@ -56,16 +56,7 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
 
   const redirectUri = 'http://localhost:8081';
 
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    androidClientId: WEB_CLIENT_ID,
-    iosClientId: IOS_CLIENT_ID,
-    webClientId: WEB_CLIENT_ID,
-    redirectUri,
-    scopes: ['openid', 'profile', 'email'],
-    useProxy: true,
-    webBrowser: true,
-    behavior: 'self',
-  } as any);
+
 
   const fetchGoogleUserInfo = async (accessToken: string) => {
     try {
@@ -87,7 +78,7 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
       );
     }
   };
-  
+
   useEffect(() => {
     console.log('User:', user);
   }, [user]);
@@ -507,9 +498,6 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
     setCurrentUser,
     setModalVisible,
     isModalVisible,
-    promptAsync,
-    response,
-    request,
     fetchGoogleUserInfo,
 
     ENCRYPTION_KEY,
