@@ -20,9 +20,8 @@ import {Platform} from 'react-native';
 import Toast from 'react-native-toast-message';
 import {toast} from 'react-hot-toast';
 import SolabContext from '../store/solabContext';
-import CryptoJS from 'crypto-js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Constants from 'expo-constants';
+
 
 type PhoneModalProps = {
   phoneNumber: string | null;
@@ -45,9 +44,13 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
   const [verificationCodeSent, setverificationCodeSent] = useState<
     boolean | null
   >(false);
-  const {currentUser, setCurrentUser} = React.useContext(SolabContext);
+  const {currentUser, setCurrentUser}: any = React.useContext(SolabContext);
 
-  const showToast = (wemMessage, appText1, appText2) => {
+  const showToast = (
+    wemMessage: string,
+    appText1: string,
+    appText2: string,
+  ) => {
     if (Platform.OS === 'web') {
       toast.success(wemMessage);
     } else {
@@ -71,44 +74,6 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
       console.log('otp rsponse: ', response);
     } catch (e) {
       console.log(e);
-    }
-  };
-
-  const ENCRYPTION_KEY = Constants.expoConfig?.extra?.ENCRYPTION_KEY;
-
-  const encryptPhonenumber = async () => {
-    try {
-      console.log('phone number before encryption: ', phoneNumber);
-
-      const encryptedNumber = CryptoJS.AES.encrypt(
-        phoneNumber,
-        ENCRYPTION_KEY,
-      ).toString();
-      console.log('phone number after encryption: ', encryptedNumber);
-      await AsyncStorage.setItem('userPhoneNumber', encryptedNumber);
-    } catch (e) {
-      e;
-    }
-  };
-
-  const getphoneNumber = async () => {
-    try {
-      const encryptedNumber = await AsyncStorage.getItem('userPhoneNumber');
-
-      if (!encryptedNumber) {
-        console.log('No phone number found in storage.');
-        return null;
-      }
-
-      const bytes = CryptoJS.AES.decrypt(encryptedNumber, ENCRYPTION_KEY);
-
-      const decryptedNumber = bytes.toString(CryptoJS.enc.Utf8);
-
-      console.log('Decrypted phone number:', decryptedNumber);
-      return decryptedNumber;
-    } catch (e) {
-      console.error('Decryption error:', e);
-      return null;
     }
   };
 

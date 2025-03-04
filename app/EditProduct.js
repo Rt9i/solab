@@ -645,6 +645,8 @@ const EditProduct = () => {
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={{flexGrow: 1, paddingBottom: 100}}>
+
+          
         <View style={styles.container}>
           <View style={styles.row}>
             <Text style={styles.header}>Edit Product</Text>

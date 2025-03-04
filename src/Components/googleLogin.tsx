@@ -3,8 +3,6 @@ import {
   StyleSheet,
   Text,
   View,
-  Button,
-  Alert,
   Image,
   TouchableOpacity,
   Linking,
@@ -17,11 +15,11 @@ import {getAuth, GoogleAuthProvider, signInWithCredential} from 'firebase/auth';
 import {app} from '../firebase';
 import Images from '../assets/images/images';
 import SolabContext from '../store/solabContext';
-import {useNavigation} from 'expo-router';
 import {getUserByGmail, GoogleLoginAndRegister} from '../res/api';
 import PhoneModal from './getNumber';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import CryptoJS from 'crypto-js';
+import {Redirect} from 'expo-router';
+import { ANDROID_CLIENT_ID,WEB_CLIENT_ID,IOS_CLIENT_ID ,ENCRYPTION_KEY} from '@env';
 WebBrowser.maybeCompleteAuthSession();
 
 const auth = getAuth(app);
@@ -32,127 +30,101 @@ type UserData = {
   picture: string | null;
 };
 const GoogleLogin: React.FC = () => {
-  const {currentUser, setCurrentUser, setUser, user}: any =
-    useContext(SolabContext);
-
-  const [phoneNumber, setPhoneNumber] = useState<string>('');
-  const [isPhoneVerified, setIsPhoneVerified] = useState<boolean>(false);
-  const [isModalVisible, setModalVisible] = useState(false);
-
-  const nav = useNavigation();
-
+  const {
+    currentUser,
+    setCurrentUser,
+    setUser,
+    user,
+    encryptData,
+    isModalVisible,
+    setModalVisible,
+    fetchGoogleUserInfo,
+    // promptAsync,
+    // response,
+    // request,
+  }: any = useContext(SolabContext);
+  const ENCRYPTION_KEY = Constants.expoConfig?.extra?.ENCRYPTION_KEY;
   const ANDROID_CLIENT_ID = Constants.expoConfig?.extra?.ANDROID_CLIENT_ID;
   const IOS_CLIENT_ID = Constants.expoConfig?.extra?.IOS_CLIENT_ID;
   const WEB_CLIENT_ID = Constants.expoConfig?.extra?.WEB_CLIENT_ID;
-  const ENCRYPTION_KEY = Constants.expoConfig?.extra?.ENCRYPTION_KEY;
-
-  const redirectUri = 'https://solabgrooming.netlify.app';
-
+  console.log('id: ', WEB_CLIENT_ID);
+  const generateRandomString = () => {
+    return Math.random().toString(36).substring(2, 15); // You can make this more secure if needed
+  };
+  
+  // const redirectUri = 'https://solabgrooming.netlify.app';
+  const redirectUri = 'http://localhost:8081';
+  const state = generateRandomString(); // Generate a random state string
+  const googleLoginUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${WEB_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code&scope=openid%20profile%20email&access_type=offline&state=${state}`;
+  
   const [request, response, promptAsync] = Google.useAuthRequest({
-    androidClientId: WEB_CLIENT_ID,
+    androidClientId: ANDROID_CLIENT_ID,
     iosClientId: IOS_CLIENT_ID,
     webClientId: WEB_CLIENT_ID,
-    redirectUri, // Set redirect URI here
+    redirectUri: makeRedirectUri({useProxy: true} as any),
     scopes: ['openid', 'profile', 'email'],
-    useProxy: false, // Must be false to prevent popup
-    prompt: Prompt.SelectAccount, // Forces account selection
+    useProxy: true,
   } as any);
 
-  const encryptData = (data: any) => {
-    try {
-      const encryptedData = CryptoJS.AES.encrypt(
-        data,
-        ENCRYPTION_KEY,
-      ).toString();
-      return encryptedData;
-    } catch (error) {
-      console.error('Error encrypting data:', error);
-      return null;
-    }
-  };
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const [isPhoneVerified, setIsPhoneVerified] = useState<boolean>(false);
 
-  const handleFirebaseLogin = async (idToken: string) => {
-    const credential = GoogleAuthProvider.credential(idToken);
-    try {
-      const result = await signInWithCredential(auth, credential);
-      const user = result.user;
+  // const handleGoogleSignIn = async () => {
+  //   try {
+  //     const result: any = await promptAsync();
 
-      console.log('Firebase Login Successful:', {
-        id: user.uid,
-        email: user.email,
-        name: user.displayName,
-        picture: user.photoURL,
-      });
+  //     if (!result || result.type === 'error') {
+  //       throw new Error('Google login failed');
+  //     }
 
-      setCurrentUser({
-        name: user.displayName,
-        email: user.email,
-        picture: user.photoURL,
-      });
-    } catch (error) {
-      console.error('Firebase Login Failed:', error);
-      window.alert('Login Failed', 'Could not log in with Firebase.');
-    }
-  };
+  //     const authentication = result.authentication;
 
-  const fetchGoogleUserInfo = async (accessToken: string) => {
-    try {
-      const response = await fetch(
-        'https://www.googleapis.com/oauth2/v3/userinfo',
-        {
-          headers: {Authorization: `Bearer ${accessToken}`},
+  //     if (authentication?.accessToken) {
+  //       const userInfo = await fetchGoogleUserInfo(authentication.accessToken);
+  //       const existingUser = await getUserByGmail(userInfo.email);
+
+  //       if (existingUser) {
+  //         const encryptedEmail = encryptData(userInfo.email);
+  //         await AsyncStorage.setItem('userEmail', encryptedEmail);
+  //       } else {
+  //         setModalVisible(true);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error('Google Sign-In Error:', error);
+  //   }
+  // };
+
+  useEffect(() => {
+    if (response?.type === 'success') {
+      const {access_token} = response.params;
+
+      // Fetch the user's Google profile using the access token
+      fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
         },
-      );
-      const userInfo = await response.json();
-      console.log('fetched user from function: ', userInfo);
-
-      return userInfo;
-    } catch (error) {
-      console.error('Error Fetching User Info:', error);
-      window.alert(
-        'Failed to Fetch User Info',
-        'Could not fetch user information.',
-      );
+      })
+        .then(res => res.json())
+        .then(userInfo => {
+          console.log('User Info:', userInfo);
+          // Handle the user info, store it, etc.
+        })
+        .catch(error => console.error('Error fetching user info:', error));
     }
-  };
+  }, [response]);
 
-  const GoogleSignInButton: React.FC<{onPress: () => void}> = ({onPress}) => (
-    <TouchableOpacity style={styles.googleButton} onPress={onPress}>
+  const signIn = async () => {
+    window.location.href = googleLoginUrl;
+  };
+  const GoogleSignInButton = () => (
+    <TouchableOpacity
+      style={styles.googleButton}
+      onPress={() => signIn()}>
       <Image source={Images.Gicon()} style={styles.googleIcon} />
       <Text style={styles.googleButtonText}>Sign in with Google</Text>
     </TouchableOpacity>
   );
-
-  const handleGoogleSignIn = async () => {
-    try {
-      const result = await promptAsync({
-        useProxy: false,
-        redirectUri,
-        prompt: Prompt.SelectAccount,
-      } as any);
-
-      if (!result || result.type === 'error') {
-        throw new Error('Google login failed');
-      }
-
-      const authentication = result.authentication;
-
-      if (authentication?.accessToken) {
-        const userInfo = await fetchGoogleUserInfo(authentication.accessToken);
-        const existingUser = await getUserByGmail(userInfo.email);
-
-        if (existingUser) {
-          const encryptedEmail = encryptData(userInfo.email);
-          await AsyncStorage.setItem('userEmail', encryptedEmail);
-          window.location.href = '/';
-        } else {
-          setModalVisible(true);
-        }
-      }
-    } catch (error) {
-      console.error('Google Sign-In Error:', error);
-    }
-  };
 
   return (
     <View style={styles.container}>
@@ -165,7 +137,7 @@ const GoogleLogin: React.FC = () => {
         isPhoneVerified={isPhoneVerified}
       />
 
-      <GoogleSignInButton onPress={() => handleGoogleSignIn()} />
+      <GoogleSignInButton />
     </View>
   );
 };
@@ -177,8 +149,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    // backgroundColor: '#4285F4',
-    backgroundColor: 'green',
+    backgroundColor: '#4285F4',
     padding: 5,
     borderRadius: 5,
   },

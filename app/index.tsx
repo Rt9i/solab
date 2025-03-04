@@ -24,9 +24,59 @@ import CryptoJS from 'crypto-js';
 
 const Index = () => {
   const navigation = useRouter();
-  const {setUser, saveUserProducts, setData, logout} = useContext(SolabContext);
+  const {setUser, saveUserProducts, setData, logout, fetchGoogleUserInfo}: any =
+    useContext(SolabContext);
   const [loading, setLoading] = useState(false);
   const ENCRYPTION_KEY = Constants.expoConfig?.extra?.ENCRYPTION_KEY;
+  const ANDROID_CLIENT_ID = Constants.expoConfig?.extra?.ANDROID_CLIENT_ID;
+  const IOS_CLIENT_ID = Constants.expoConfig?.extra?.IOS_CLIENT_ID;
+  const WEB_CLIENT_ID = Constants.expoConfig?.extra?.WEB_CLIENT_ID;
+  const WEB_CLIENT_SECRET = Constants.expoConfig?.extra?.WEB_CLIENT_SECRET;
+
+  // const redirectUri = 'https://solabgrooming.netlify.app';
+  const fetchAccessToken = async (code: any) => {
+    try {
+      const response = await fetch('https://oauth2.googleapis.com/token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          code: code, // The authorization code received from Google
+          client_id: WEB_CLIENT_ID, // Replace with your actual client ID
+          client_secret: WEB_CLIENT_SECRET, // Replace with your actual client secret
+          redirect_uri: 'http://localhost:8081', // Must be the same as in your Google Developer Console
+          grant_type: 'authorization_code', // Always 'authorization_code' for this flow
+        }),
+      } as any);
+
+      const data = await response.json();
+      console.log('Access Token Response:', data);
+
+      // If you get the access token, use it to fetch user info or handle the response accordingly
+      const accessToken = data.access_token;
+      console.log('access token: ', accessToken);
+
+      if (accessToken) {
+        fetchGoogleUserInfo(accessToken);
+      } else {
+        console.error('Failed to retrieve access token:', data);
+      }
+    } catch (error) {
+      console.error('Error fetching access token:', error);
+    }
+  };
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+    const code = queryParams.get('code'); // Google sends back the auth code in the URL
+
+    if (code) {
+      console.log('Code we got:', code); // Log the code
+
+      fetchAccessToken(code);
+    }
+  }, []);
 
   const nav = (name: string) => {
     navigation.navigate(name as any);
@@ -35,6 +85,7 @@ const Index = () => {
   const navReplace = (name: string) => {
     navigation.navigate(name as any);
   };
+
   const decryptData = (encryptedData: any) => {
     try {
       const bytes = CryptoJS.AES.decrypt(encryptedData, ENCRYPTION_KEY);
@@ -76,6 +127,7 @@ const Index = () => {
       return null;
     }
   };
+
   const getPolicyAcceptValue = async () => {
     try {
       const value = await AsyncStorage.getItem('isAccepted');
@@ -90,6 +142,7 @@ const Index = () => {
       return false;
     }
   };
+
   const getUser = async () => {
     try {
       // Try getting the phone number first

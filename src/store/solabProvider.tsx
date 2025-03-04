@@ -12,6 +12,10 @@ import {enStrings, heStrings, arStrings} from '../res/strings';
 import {Alert} from 'react-native';
 import {updateUserProducts, saveProductsToDatabase} from '../res/api';
 import {useNavigation} from 'expo-router';
+import CryptoJS from 'crypto-js';
+import Constants from 'expo-constants';
+import * as Google from 'expo-auth-session/providers/google';
+import {makeRedirectUri} from 'expo-auth-session';
 
 interface SolabProviderProps {
   children: ReactNode;
@@ -41,7 +45,48 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
   const [delModal, setDelModal] = useState<boolean>(false);
   const nav = useNavigation();
   const [currentUser, setCurrentUser] = useState(null);
+  const [isModalVisible, setModalVisible] = useState(false);
 
+  const ENCRYPTION_KEY = Constants.expoConfig?.extra?.ENCRYPTION_KEY;
+  const ANDROID_CLIENT_ID = Constants.expoConfig?.extra?.ANDROID_CLIENT_ID;
+  const IOS_CLIENT_ID = Constants.expoConfig?.extra?.IOS_CLIENT_ID;
+  const WEB_CLIENT_ID = Constants.expoConfig?.extra?.WEB_CLIENT_ID;
+
+  // const redirectUri = 'https://solabgrooming.netlify.app';
+
+  const redirectUri = 'http://localhost:8081'
+
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    androidClientId: WEB_CLIENT_ID,
+    iosClientId: IOS_CLIENT_ID,
+    webClientId: WEB_CLIENT_ID,
+    redirectUri,
+    scopes: ['openid', 'profile', 'email'],
+    useProxy: true,
+    webBrowser: true,
+    behavior: 'self',
+  } as any);
+
+  const fetchGoogleUserInfo = async (accessToken: string) => {
+    try {
+      const response = await fetch(
+        'https://www.googleapis.com/oauth2/v3/userinfo',
+        {
+          headers: {Authorization: `Bearer ${accessToken}`},
+        },
+      );
+      const userInfo = await response.json();
+      console.log('fetched user from function: ', userInfo);
+
+      return userInfo;
+    } catch (error) {
+      console.error('Error Fetching User Info:', error);
+      window.alert(
+        'Failed to Fetch User Info',
+        'Could not fetch user information.',
+      );
+    }
+  };
   useEffect(() => {
     console.log('User:', user);
   }, [user]);
@@ -81,7 +126,29 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
     {Treats: 'treats'},
     {bowl: 'bowl'},
   ];
+  const encryptData = (data: any) => {
+    try {
+      const encryptedData = CryptoJS.AES.encrypt(
+        data,
+        ENCRYPTION_KEY,
+      ).toString();
+      return encryptedData;
+    } catch (error) {
+      console.error('Error encrypting data:', error);
+      return null;
+    }
+  };
 
+  const decryptData = (encryptedData: any) => {
+    try {
+      const bytes = CryptoJS.AES.decrypt(encryptedData, ENCRYPTION_KEY);
+      const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
+      return decryptedData;
+    } catch (error) {
+      console.error('Error decrypting data:', error);
+      return null;
+    }
+  };
   const triggerScrollToTop = () => {
     setScrollToTop(prev => !prev);
   };
@@ -472,10 +539,23 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
     setSelectedItems,
     currentUser,
     setCurrentUser,
+    encryptData,
+    decryptData,
+    setModalVisible,
+    isModalVisible,
+    promptAsync,
+    response,
+    request,
+    fetchGoogleUserInfo,
+
+    ENCRYPTION_KEY,
+    ANDROID_CLIENT_ID,
+    IOS_CLIENT_ID,
+    WEB_CLIENT_ID,
   };
 
   return (
-    <SolabContext.Provider value={contextValue}>
+    <SolabContext.Provider value={contextValue as any}>
       {children}
     </SolabContext.Provider>
   );
