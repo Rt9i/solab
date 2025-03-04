@@ -27,8 +27,8 @@ const GoogleLogin: React.FC = () => {
   const IOS_CLIENT_ID = Constants.expoConfig?.extra?.IOS_CLIENT_ID;
   const WEB_CLIENT_ID = Constants.expoConfig?.extra?.WEB_CLIENT_ID;
 
-  // const redirectUri = 'https://solabgrooming.netlify.app';
-  const redirectUri = 'http://localhost:8081';
+  const redirectUri = 'https://solabgrooming.netlify.app';
+  // const redirectUri = 'http://localhost:8081';
 
   const googleLoginUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${WEB_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code&scope=openid%20profile%20email&access_type=offline`;
 

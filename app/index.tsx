@@ -174,6 +174,8 @@ const Index = () => {
     } catch (error) {
       console.error('Initialization error:', error);
     }
+    
+    setCurrentUser();
 
     // ✅ Now this part executes whether we get the user or not
     console.log('Continuing app initialization...');
