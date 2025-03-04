@@ -19,7 +19,7 @@ import {getUserByGmail, GoogleLoginAndRegister} from '../res/api';
 import PhoneModal from './getNumber';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Redirect} from 'expo-router';
-import { ANDROID_CLIENT_ID,WEB_CLIENT_ID,IOS_CLIENT_ID ,ENCRYPTION_KEY} from '@env';
+
 WebBrowser.maybeCompleteAuthSession();
 
 const auth = getAuth(app);
@@ -47,16 +47,12 @@ const GoogleLogin: React.FC = () => {
   const ANDROID_CLIENT_ID = Constants.expoConfig?.extra?.ANDROID_CLIENT_ID;
   const IOS_CLIENT_ID = Constants.expoConfig?.extra?.IOS_CLIENT_ID;
   const WEB_CLIENT_ID = Constants.expoConfig?.extra?.WEB_CLIENT_ID;
-  console.log('id: ', WEB_CLIENT_ID);
-  const generateRandomString = () => {
-    return Math.random().toString(36).substring(2, 15); // You can make this more secure if needed
-  };
-  
+
   // const redirectUri = 'https://solabgrooming.netlify.app';
   const redirectUri = 'http://localhost:8081';
-  const state = generateRandomString(); // Generate a random state string
-  const googleLoginUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${WEB_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code&scope=openid%20profile%20email&access_type=offline&state=${state}`;
-  
+
+  const googleLoginUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${WEB_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code&scope=openid%20profile%20email&access_type=offline`;
+
   const [request, response, promptAsync] = Google.useAuthRequest({
     androidClientId: ANDROID_CLIENT_ID,
     iosClientId: IOS_CLIENT_ID,
@@ -118,9 +114,7 @@ const GoogleLogin: React.FC = () => {
     window.location.href = googleLoginUrl;
   };
   const GoogleSignInButton = () => (
-    <TouchableOpacity
-      style={styles.googleButton}
-      onPress={() => signIn()}>
+    <TouchableOpacity style={styles.googleButton} onPress={() => signIn()}>
       <Image source={Images.Gicon()} style={styles.googleIcon} />
       <Text style={styles.googleButtonText}>Sign in with Google</Text>
     </TouchableOpacity>

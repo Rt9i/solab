@@ -12,7 +12,7 @@ import {enStrings, heStrings, arStrings} from '../res/strings';
 import {Alert} from 'react-native';
 import {updateUserProducts, saveProductsToDatabase} from '../res/api';
 import {useNavigation} from 'expo-router';
-import CryptoJS from 'crypto-js';
+
 import Constants from 'expo-constants';
 import * as Google from 'expo-auth-session/providers/google';
 import {makeRedirectUri} from 'expo-auth-session';
@@ -54,7 +54,7 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
 
   // const redirectUri = 'https://solabgrooming.netlify.app';
 
-  const redirectUri = 'http://localhost:8081'
+  const redirectUri = 'http://localhost:8081';
 
   const [request, response, promptAsync] = Google.useAuthRequest({
     androidClientId: WEB_CLIENT_ID,
@@ -91,7 +91,7 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
     console.log('User:', user);
   }, [user]);
 
-  const translations: Record<Language, typeof enStrings> = {
+  const translations: any = {
     en: enStrings,
     he: heStrings,
     ar: arStrings,
@@ -126,29 +126,7 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
     {Treats: 'treats'},
     {bowl: 'bowl'},
   ];
-  const encryptData = (data: any) => {
-    try {
-      const encryptedData = CryptoJS.AES.encrypt(
-        data,
-        ENCRYPTION_KEY,
-      ).toString();
-      return encryptedData;
-    } catch (error) {
-      console.error('Error encrypting data:', error);
-      return null;
-    }
-  };
 
-  const decryptData = (encryptedData: any) => {
-    try {
-      const bytes = CryptoJS.AES.decrypt(encryptedData, ENCRYPTION_KEY);
-      const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
-      return decryptedData;
-    } catch (error) {
-      console.error('Error decrypting data:', error);
-      return null;
-    }
-  };
   const triggerScrollToTop = () => {
     setScrollToTop(prev => !prev);
   };
@@ -306,19 +284,6 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
     loadUserData();
   }, []);
 
-  const saveUser = useCallback(async (userData: UserData) => {
-    console.log('user data:', userData);
-
-    try {
-      setUser(userData);
-      await AsyncStorage.setItem('user', JSON.stringify(userData));
-      setIsAuthenticated(true); // Set authenticated state
-      console.log('User data saved successfully');
-    } catch (error) {
-      console.error('Failed to save user data:', error);
-    }
-  }, []);
-
   const clearAsyncStorage = useCallback(async () => {
     try {
       const userBefore = await AsyncStorage.getItem('user');
@@ -372,7 +337,7 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
   }, []);
 
   const addItem = useCallback(
-    (item, itemId) => {
+    (item: any, itemId: any) => {
       const existingItemIndex = cart.findIndex(item => item._id === itemId);
       const updatedCart = [...cart];
 
@@ -389,7 +354,7 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
     [cart],
   );
 
-  const addItemToCart = useCallback(item => {
+  const addItemToCart = useCallback((item: any) => {
     if (!item._id) {
       console.error('Item is missing an _id');
       return;
@@ -411,7 +376,7 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
     });
   }, []);
 
-  const checkRemoveItem = useCallback(itemId => {
+  const checkRemoveItem = useCallback((itemId: any) => {
     Alert.alert('Remove Item', 'Are you sure you want to remove this item?', [
       {
         text: 'Cancel',
@@ -425,7 +390,7 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
   }, []);
 
   const removeItem = useCallback(
-    itemId => {
+    (itemId: any) => {
       const updatedCart = cart.filter(item => item._id !== itemId);
       setIsItemAdded(false);
       setDelModal(false);
@@ -437,7 +402,7 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
   );
 
   const removeItemFromCart = useCallback(
-    (item, itemId) => {
+    (item: any, itemId: any) => {
       const existingItemIndex = cart.findIndex(
         cartItem => cartItem._id === itemId, // Change to use _id
       );
@@ -464,15 +429,15 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
   );
 
   const saveUserProducts = useCallback(
-    fetchedItems => {
+    (fetchedItems: any) => {
       setCart(prevCart => {
-        const newItems = fetchedItems.map(item => ({
+        const newItems = fetchedItems.map((item: any) => ({
           ...item,
         }));
 
         // Ensure no duplicates
         const updatedCart = [...prevCart];
-        newItems.forEach(newItem => {
+        newItems.forEach((newItem: any) => {
           // Check for duplicates using _id
           if (!updatedCart.some(cartItem => cartItem._id === newItem._id)) {
             updatedCart.push(newItem);
@@ -508,7 +473,7 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
     setSearch,
     user,
     isAuthenticated,
-    saveUser,
+
     logout,
     clearAsyncStorage,
     saveUserProducts,
@@ -539,8 +504,6 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
     setSelectedItems,
     currentUser,
     setCurrentUser,
-    encryptData,
-    decryptData,
     setModalVisible,
     isModalVisible,
     promptAsync,

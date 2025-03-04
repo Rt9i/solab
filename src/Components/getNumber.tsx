@@ -10,6 +10,7 @@ import {
   Image,
 } from 'react-native';
 import {
+  encryptData,
   getUserByGmail,
   GoogleLoginAndRegister,
   sendOTP,
@@ -21,7 +22,6 @@ import Toast from 'react-native-toast-message';
 import {toast} from 'react-hot-toast';
 import SolabContext from '../store/solabContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 
 type PhoneModalProps = {
   phoneNumber: string | null;
@@ -94,10 +94,7 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
 
       console.log('Server Response:', response);
 
-      const encryptedNumber = CryptoJS.AES.encrypt(
-        phoneNumber,
-        ENCRYPTION_KEY,
-      ).toString();
+      const encryptedNumber: any = await encryptData(phoneNumber);
 
       await AsyncStorage.setItem('userPhoneNumber', encryptedNumber);
 

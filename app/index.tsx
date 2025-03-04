@@ -16,11 +16,11 @@ import {
   getDataFromDataBase,
   getUserByPhoneNumber,
   getUserByGmail,
+  decryptData,
 } from '../src/res/api';
 import {useFocusEffect, useRouter} from 'expo-router';
 import Images from '@/src/assets/images/images';
 import Constants from 'expo-constants';
-import CryptoJS from 'crypto-js';
 
 const Index = () => {
   const navigation = useRouter();
@@ -34,7 +34,7 @@ const Index = () => {
   const WEB_CLIENT_SECRET = Constants.expoConfig?.extra?.WEB_CLIENT_SECRET;
 
   // const redirectUri = 'https://solabgrooming.netlify.app';
-  const fetchAccessToken = async (code: any) => {
+  const fetchAccessToken = async (code: string) => {
     try {
       const response = await fetch('https://oauth2.googleapis.com/token', {
         method: 'POST',
@@ -42,20 +42,24 @@ const Index = () => {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: new URLSearchParams({
-          code: code, // The authorization code received from Google
-          client_id: WEB_CLIENT_ID, // Replace with your actual client ID
-          client_secret: WEB_CLIENT_SECRET, // Replace with your actual client secret
-          redirect_uri: 'http://localhost:8081', // Must be the same as in your Google Developer Console
-          grant_type: 'authorization_code', // Always 'authorization_code' for this flow
-        }),
-      } as any);
+          code: code,
+          client_id: WEB_CLIENT_ID.trim(), // Remove accidental spaces
+          client_secret: WEB_CLIENT_SECRET.trim(),
+          redirect_uri: 'http://localhost:8081', // Ensure this matches your Google Console settings
+          grant_type: 'authorization_code',
+        }).toString(),
+      });
 
       const data = await response.json();
       console.log('Access Token Response:', data);
 
-      // If you get the access token, use it to fetch user info or handle the response accordingly
+      if (data.error) {
+        console.error('Error:', data.error, data.error_description);
+        return;
+      }
+
       const accessToken = data.access_token;
-      console.log('access token: ', accessToken);
+      console.log('Access Token:', accessToken);
 
       if (accessToken) {
         fetchGoogleUserInfo(accessToken);
@@ -82,21 +86,6 @@ const Index = () => {
     navigation.navigate(name as any);
   };
 
-  const navReplace = (name: string) => {
-    navigation.navigate(name as any);
-  };
-
-  const decryptData = (encryptedData: any) => {
-    try {
-      const bytes = CryptoJS.AES.decrypt(encryptedData, ENCRYPTION_KEY);
-      const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
-      return decryptedData;
-    } catch (error) {
-      console.error('Error decrypting data:', error);
-      return null;
-    }
-  };
-
   const fetchData = async () => {
     try {
       console.log('Fetching data from database...');
@@ -116,9 +105,7 @@ const Index = () => {
         return null;
       }
 
-      const bytes = CryptoJS.AES.decrypt(encryptedNumber, ENCRYPTION_KEY);
-
-      const decryptedNumber = bytes.toString(CryptoJS.enc.Utf8);
+      const decryptedNumber = await decryptData(encryptedNumber);
 
       console.log('Decrypted phone number:', decryptedNumber);
       return decryptedNumber;

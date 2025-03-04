@@ -53,7 +53,7 @@ function AppContent() {
         <Stack.Screen name="+not-found" />
       </Stack>
 
-      {Platform.OS !== 'web' && <Toast />}
+      {Platform.OS !== 'web' && <Toast  />}
       {Platform.OS === 'web' && <Toaster position="top-center" />}
     </ThemeProvider>
   );

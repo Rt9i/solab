@@ -369,6 +369,27 @@ export const GoogleLoginAndRegister = async (
     throw e;
   }
 };
+export const encryptData = async data => {
+  try {
+    const response = await axios.post('https://your-server.com/encrypt', {
+      data,
+    });
+    console.log('Encrypted Data:', response.data);
+  } catch (error) {
+    console.error('Encryption Error:', error);
+  }
+};
+
+export const decryptData = async encryptedData => {
+  try {
+    const response = await axios.post('https://your-server.com/decrypt', {
+      encryptedData,
+    });
+    console.log('Decrypted Data:', response.data);
+  } catch (error) {
+    console.error('Decryption Error:', error);
+  }
+};
 
 const appFetch = async (route, method = 'GET', body = null) => {
   const url = `${mainURL}${route}`;
