@@ -17,6 +17,7 @@ import {
   getUserByPhoneNumber,
   getUserByGmail,
   decryptData,
+  fetchAccessToken,
 } from '../src/res/api';
 import {useFocusEffect, useRouter} from 'expo-router';
 import Images from '@/src/assets/images/images';
@@ -31,41 +32,19 @@ const Index = () => {
   const ANDROID_CLIENT_ID = Constants.expoConfig?.extra?.ANDROID_CLIENT_ID;
   const IOS_CLIENT_ID = Constants.expoConfig?.extra?.IOS_CLIENT_ID;
   const WEB_CLIENT_ID = Constants.expoConfig?.extra?.WEB_CLIENT_ID;
-  const WEB_CLIENT_SECRET = Constants.expoConfig?.extra?.WEB_CLIENT_SECRET;
 
-  // const redirectUri = 'https://solabgrooming.netlify.app';
-  const fetchAccessToken = async (code: string) => {
+  const REDIRECT_URI = Constants.releaseChannel
+    ? 'https://solabgrooming.netlify.app/' // Production URL
+    : 'http://localhost:8081'; // Local development URL
+  console.log('redirect url: ', REDIRECT_URI);
+
+  const handelingtoken = async (code: string) => {
     try {
-      const response = await fetch('https://oauth2.googleapis.com/token', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-          code: code,
-          client_id: WEB_CLIENT_ID.trim(), // Remove accidental spaces
-          client_secret: WEB_CLIENT_SECRET.trim(),
-          redirect_uri: 'http://localhost:8081', // Ensure this matches your Google Console settings
-          grant_type: 'authorization_code',
-        }).toString(),
-      });
-
-      const data = await response.json();
-      console.log('Access Token Response:', data);
-
-      if (data.error) {
-        console.error('Error:', data.error, data.error_description);
-        return;
-      }
-
-      const accessToken = data.access_token;
-      console.log('Access Token:', accessToken);
-
-      if (accessToken) {
-        fetchGoogleUserInfo(accessToken);
-      } else {
-        console.error('Failed to retrieve access token:', data);
-      }
+      const result = await fetchAccessToken(code, WEB_CLIENT_ID, REDIRECT_URI);
+      console.log('---------------------------');
+      console.log('token stuffff:', result);
+      console.log('---------------------------');
+      fetchGoogleUserInfo(result.access_token);
     } catch (error) {
       console.error('Error fetching access token:', error);
     }
@@ -76,9 +55,7 @@ const Index = () => {
     const code = queryParams.get('code'); // Google sends back the auth code in the URL
 
     if (code) {
-      console.log('Code we got:', code); // Log the code
-
-      fetchAccessToken(code);
+      handelingtoken(code);
     }
   }, []);
 
@@ -88,10 +65,8 @@ const Index = () => {
 
   const fetchData = async () => {
     try {
-      console.log('Fetching data from database...');
       const result = await getDataFromDataBase();
       setData(result);
-      console.log('Data fetched successfully:');
     } catch (error) {
       console.error('Error fetching data:', error);
     }

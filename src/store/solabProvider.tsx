@@ -87,6 +87,7 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
       );
     }
   };
+  
   useEffect(() => {
     console.log('User:', user);
   }, [user]);

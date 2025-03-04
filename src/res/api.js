@@ -1,4 +1,5 @@
 const mainURL = 'https://solab-server.onrender.com';
+import Constants from 'expo-constants';
 
 // fetch('url' , params)
 
@@ -371,7 +372,7 @@ export const GoogleLoginAndRegister = async (
 };
 export const encryptData = async data => {
   try {
-    const response = await axios.post('https://your-server.com/encrypt', {
+    const response = await fetch(`${mainURL}/encryptData`, {
       data,
     });
     console.log('Encrypted Data:', response.data);
@@ -382,12 +383,35 @@ export const encryptData = async data => {
 
 export const decryptData = async encryptedData => {
   try {
-    const response = await axios.post('https://your-server.com/decrypt', {
+    const response = await axios.post(`${mainURL}/decryptData`, {
       encryptedData,
     });
     console.log('Decrypted Data:', response.data);
   } catch (error) {
     console.error('Decryption Error:', error);
+  }
+};
+
+export const fetchAccessToken = async (code, webClient, redirect) => {
+  try {
+    const response = await fetch(`${mainURL}/fetchAccessToken`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ code, webClient, redirect }), // This is fine
+    });
+
+    if (!response.ok) {
+      const errorDetails = await response.json();
+      throw new Error(`Failed to fetch access token. Status: ${response.status}, Details: ${JSON.stringify(errorDetails)}`);
+    }
+
+    const data = await response.json();
+    console.log('Access Token Response:', data);
+    return data;
+  } catch (error) {
+    console.error('Error fetching access token:', error);
   }
 };
 
