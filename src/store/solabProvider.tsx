@@ -6,7 +6,7 @@ import React, {
   useMemo,
   ReactNode,
 } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import SolabContext from './solabContext';
 import {enStrings, heStrings, arStrings} from '../res/strings';
 import {Alert} from 'react-native';
@@ -52,7 +52,8 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
   const IOS_CLIENT_ID = Constants.expoConfig?.extra?.IOS_CLIENT_ID;
   const WEB_CLIENT_ID = Constants.expoConfig?.extra?.WEB_CLIENT_ID;
 
-
+  const redirectUri = 'https://solabgrooming.netlify.app';
+  // const redirectUri = 'http://localhost:8081';
 
   const fetchGoogleUserInfo = async (accessToken: string) => {
     try {
@@ -63,7 +64,7 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
         },
       );
       const userInfo = await response.json();
-      console.log('fetched user from function: ', userInfo);
+      // console.log('fetched user from function: ', userInfo);
 
       return userInfo;
     } catch (error) {
@@ -75,9 +76,9 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
     }
   };
 
-  useEffect(() => {
-    console.log('User:', user);
-  }, [user]);
+  // useEffect(() => {
+  //   console.log('User:', user);
+  // }, [user]);
 
   const translations: any = {
     en: enStrings,
@@ -179,7 +180,7 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
               await updateUserProducts(user._id, cart);
               console.log('Cart sent to server:', cart);
             } else {
-              await AsyncStorage.setItem('cart', JSON.stringify(cart));
+              localStorage.setItem('cart', JSON.stringify(cart));
               console.log('Cart saved to AsyncStorage:', cart);
             }
           } catch (error) {
@@ -203,16 +204,22 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
 
   const loadCartFromAsyncStorage = useCallback(async () => {
     try {
-      const cartData = await AsyncStorage.getItem('cart');
+      if(user){
+        const cart = user.products
+        console.log("user products: ", user.products);
+        
+       return setCart(cart)
+      }
+      const cartData = localStorage.getItem('cart');
       if (cartData) {
         const cart = JSON.parse(cartData);
-        console.log('Loaded cart from AsyncStorage:', cart);
+        console.log('Loaded cart from localStorage:', cart);
         setCart(cart);
       }
     } catch (error) {
-      console.error('Error loading cart from AsyncStorage:', error);
+      console.error('Error loading cart from localStorage:', error);
     }
-  }, []);
+  }, [user]);
 
   // useEffect(() => {
   //   if (!user) {
@@ -228,7 +235,7 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
 
   const changeLanguage = useCallback(async (lang: Language) => {
     try {
-      await AsyncStorage.setItem('language', lang);
+      localStorage.setItem('language', lang);
       setLanguage(lang);
     } catch (error) {
       console.log('Failed to save language to storage:', error);
@@ -242,7 +249,7 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
   useEffect(() => {
     const loadLanguage = async () => {
       try {
-        const savedLanguage = await AsyncStorage.getItem('language');
+        const savedLanguage = localStorage.getItem('language');
         if (savedLanguage) {
           setLanguage(savedLanguage);
         }
@@ -254,58 +261,15 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
     loadLanguage();
   }, []);
 
-  useEffect(() => {
-    const loadUserData = async () => {
-      try {
-        const storedUser = await AsyncStorage.getItem('user');
-        if (storedUser) {
-          console.log('getting user from async storage');
-
-          setUser(JSON.parse(storedUser));
-          setIsAuthenticated(true);
-        }
-      } catch (error) {
-        console.error('Failed to load user data:', error);
-      }
-    };
-
-    loadUserData();
-  }, []);
-
   const clearAsyncStorage = useCallback(async () => {
     try {
-      const userBefore = await AsyncStorage.getItem('user');
-      const cartBefore = await AsyncStorage.getItem('cart');
-      const userPhoneNumberbefore =
-        await AsyncStorage.getItem('userPhoneNumber');
-      const emailBefore = await AsyncStorage.getItem('userEmail');
-
-      console.log('Before clearing:', {
-        userBefore,
-        cartBefore,
-        userPhoneNumberbefore,
-        emailBefore,
-      });
-
-      await AsyncStorage.removeItem('user');
-      await AsyncStorage.removeItem('cart');
-      await AsyncStorage.removeItem('userPhoneNumber');
-      await AsyncStorage.removeItem('userEmail');
-      // Log after clearing
-      const userPhoneNumberAfter =
-        await AsyncStorage.getItem('userPhoneNumber');
-      const emailAfter = await AsyncStorage.getItem('userEmail');
-      const userAfter = await AsyncStorage.getItem('user');
-      const cartAfter = await AsyncStorage.getItem('cart');
-
-      console.log('After clearing:', {
-        userAfter,
-        cartAfter,
-        userPhoneNumberAfter,
-        emailAfter,
-      });
+      localStorage.removeItem('user');
+      localStorage.removeItem('cart');
+      localStorage.removeItem('rememberMe');
+      localStorage.removeItem('userPhoneNumber');
+      localStorage.removeItem('userEmail');
     } catch (error) {
-      console.log('Failed to clear AsyncStorage:', error);
+      console.log('Failed to clear localStorage:', error);
     }
   }, []);
 
@@ -500,6 +464,8 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
     ANDROID_CLIENT_ID,
     IOS_CLIENT_ID,
     WEB_CLIENT_ID,
+
+    redirectUri,
   };
 
   return (

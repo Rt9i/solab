@@ -1,48 +1,26 @@
-import { StyleSheet, TouchableOpacity, Animated, Easing, View, Image } from 'react-native';
-import React, { useRef, useEffect } from 'react';
+import { StyleSheet, TouchableOpacity, View, Image } from 'react-native';
+import React from 'react';
 import Images from '../assets/images/images';
 
 const ScrollUp = ({ scrollViewRef }) => {
-    const translateY = useRef(new Animated.Value(0)).current;
 
     const handlePress = () => {
+        // If scrollViewRef is passed, scroll it to the top
         if (scrollViewRef && scrollViewRef.current) {
-            // Scroll the screen to the top
             scrollViewRef.current.scrollTo({ y: 0, animated: true });
         }
-
-        // Add animation for the arrow
-        Animated.timing(translateY, {
-            toValue: -900, // Adjust the value to move the arrow all the way up
-            duration: 300, // Adjust the duration of the animation
-            easing: Easing.ease, // Add easing for a smoother animation
-            useNativeDriver: true,
-        }).start();
+        // If you want to scroll the window (for general web use):
+        // window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    useEffect(() => {
-        const animationListener = translateY.addListener(({ value }) => {
-            // Check if the animation has completed (reached the target value)
-            if (value === -900) {
-                // Reset translateY value to bring the arrow back to its original position
-                translateY.setValue(0);
-            }
-        });
-
-        return () => {
-            // Clean up the listener when the component unmounts
-            translateY.removeListener(animationListener);
-        };
-    }, [translateY]);
-
     return (
-        <Animated.View style={[styles.arrowContainer, { transform: [{ translateY }] }]}>
+        <View style={styles.arrowContainer}>
             <TouchableOpacity style={styles.touch} onPress={handlePress} activeOpacity={0.9}>
                 <View style={styles.img}>
                     <Image style={styles.img} source={Images.twoArrows()} />
                 </View>
             </TouchableOpacity>
-        </Animated.View>
+        </View>
     );
 };
 

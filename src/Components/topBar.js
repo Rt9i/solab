@@ -32,9 +32,9 @@ const TopBar = () => {
   const navigateToCart = () => {
     navigation.navigate('Cart');
   };
-  const navProfile = () =>{
-    navigation.navigate("Profile")
-  }
+  const navProfile = () => {
+    navigation.navigate('Profile');
+  };
   const navLogin = () => {
     navigation.navigate('Login');
   };
@@ -64,7 +64,6 @@ const TopBar = () => {
     </TouchableOpacity>
   );
 
-
   const profilePic = () => (
     <TouchableOpacity
       onPress={navProfile}
@@ -72,7 +71,7 @@ const TopBar = () => {
       activeOpacity={0.8}>
       <View style={styles.profileCont}>
         <Image
-          source={{uri: user?.picture ?? Images.profileIcon()}}
+          source={{uri: user?.picture || Images.profileIcon()}}
           style={styles.profileImage}
           resizeMode="contain"
         />
@@ -85,7 +84,8 @@ const TopBar = () => {
       style={styles.touch}
       activeOpacity={0.8}>
       <View style={styles.cartContainer}>
-        <Image source={Images.cart()} style={styles.img} />
+        <Image source={Images.cart()} style={styles.img} resizeMode="contain" />
+
         {cart.length > 0 && (
           <View style={styles.cartBadge}>
             <Text style={styles.cartBadgeText}>{cart.length}</Text>
@@ -163,7 +163,7 @@ const TopBar = () => {
           </TouchableOpacity>
         )}
       </View>
-      {!user ? LoginBox() : profilePic()}
+      {!user || user == null || user.error == true  ? LoginBox() : profilePic()}
 
       {cartBox()}
     </View>
@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
   img: {
     width: 30,
     height: 30,
-    resizeMode: 'contain',
+
     margin: 5,
   },
   cartContainer: {

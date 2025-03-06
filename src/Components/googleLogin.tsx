@@ -1,19 +1,12 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
-import * as Google from 'expo-auth-session/providers/google';
-import {makeRedirectUri, Prompt} from 'expo-auth-session';
 import Constants from 'expo-constants';
-import {getAuth} from 'firebase/auth';
-import {app} from '../firebase';
 import Images from '../assets/images/images';
 import SolabContext from '../store/solabContext';
-
 import PhoneModal from './getNumber';
 
 WebBrowser.maybeCompleteAuthSession();
-
-const auth = getAuth(app);
 
 type UserData = {
   email: string | null;
@@ -21,16 +14,13 @@ type UserData = {
   picture: string | null;
 };
 const GoogleLogin: React.FC = () => {
-  const {isModalVisible, setModalVisible}: any = useContext(SolabContext);
+  const {isModalVisible, setModalVisible,redirectUri}: any = useContext(SolabContext);
   const ENCRYPTION_KEY = Constants.expoConfig?.extra?.ENCRYPTION_KEY;
   const ANDROID_CLIENT_ID = Constants.expoConfig?.extra?.ANDROID_CLIENT_ID;
   const IOS_CLIENT_ID = Constants.expoConfig?.extra?.IOS_CLIENT_ID;
   const WEB_CLIENT_ID = Constants.expoConfig?.extra?.WEB_CLIENT_ID;
 
-  const redirectUri = 'https://solabgrooming.netlify.app';
-  // const redirectUri = 'http://localhost:8081';
-
-  const googleLoginUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${WEB_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code&scope=openid%20profile%20email&access_type=offline`;
+  const googleLoginUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${WEB_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code&scope=openid%20profile%20email&access_type=offline&prompt=select_account`;
 
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [isPhoneVerified, setIsPhoneVerified] = useState<boolean>(false);

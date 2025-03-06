@@ -113,13 +113,15 @@ const CatsStore = props => {
           <View style={styles.sale}>
             <Swipe />
           </View>
-          <View style={styles.catsBarItemsContainer}>
-            <CatsBarItems
-              style={styles.CatsBarItems}
-              selectedCategory={selectedCategory}
-              setSelectedCategory={onCategoryPress}
-              Array={cat}
-            />
+          <View style={{width:"100%", justifyContent:'center', alignItems:'center'}}>
+            <View style={styles.catsBarItemsContainer}>
+              <CatsBarItems
+                style={styles.CatsBarItems}
+                selectedCategory={selectedCategory}
+                setSelectedCategory={onCategoryPress}
+                Array={cat}
+              />
+            </View>
           </View>
 
           {rows.map((row, index) => {
@@ -181,8 +183,9 @@ const styles = StyleSheet.create({
   },
   catsBarItemsContainer: {
     height: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: '100%',
+    maxWidth: 600,
+
   },
   itemContainer: {
     height: '100%',

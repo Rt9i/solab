@@ -21,7 +21,7 @@ import {Platform} from 'react-native';
 import Toast from 'react-native-toast-message';
 import {toast} from 'react-hot-toast';
 import SolabContext from '../store/solabContext';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 type PhoneModalProps = {
   phoneNumber: string | null;
@@ -93,7 +93,7 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
 
       console.log('Server Response:', response);
 
-      await AsyncStorage.setItem('userPhoneNumber', phoneNumber as string);
+       localStorage.setItem('userPhoneNumber', phoneNumber as string);
 
       console.log(' phone number saved:', phoneNumber);
 
@@ -141,8 +141,8 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
         <View style={styles.modalContainer}>
           {/* <Button title="save number " onPress={() => encryptPhonenumber()} /> */}
           {/* <Button title="get number" onPress={() => getphoneNumber()} /> */}
-          <Button title="save user " onPress={() => signToDataBase()} />
-          <Button title="close " onPress={() => setModalVisible(false)} />
+          {/* <Button title="save user " onPress={() => signToDataBase()} /> */}
+          {/* <Button title="close " onPress={() => setModalVisible(false)} /> */}
           {!verificationCodeSent && !isPhoneVerified && (
             <View>
               <Text style={styles.title}>Please enter your phone number:</Text>

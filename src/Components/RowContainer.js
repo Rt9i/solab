@@ -82,7 +82,12 @@ const RowContainer = ({
           style={[
             styles.flashListContainer,
             Platform.OS === 'web' && {overflowX: 'auto'},
-          ]}>
+          ]}
+          onLayout={(event) => {
+            const { width, height } = event.nativeEvent.layout;
+            console.log("Parent View Size:", width, height);
+          }}
+          >
           <FlashList
             ref={flatListRef}
             data={items}

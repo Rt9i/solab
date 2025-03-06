@@ -8,7 +8,6 @@ import {
   Linking,
 } from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import SolabContext from '../src/store/solabContext';
 import {
   getUserByID,
@@ -37,25 +36,27 @@ const Index = () => {
     isModalVisible,
     setCurrentUser,
     currentUser,
+    setCart,
+    cart,
+
+    redirectUri,
   }: any = useContext(SolabContext);
   const [loading, setLoading] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
+
   const [modalCallback, setModalCallback] = useState<
     ((phone: string) => void) | null
   >(null);
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [isPhoneVerified, setIsPhoneVerified] = useState<boolean>(false);
-
+  const rememberme = localStorage.getItem('rememberMe');
+  // console.log('remember me: ', rememberme);
   const WEB_CLIENT_ID = Constants.expoConfig?.extra?.WEB_CLIENT_ID;
 
-  const REDIRECT_URI = Constants.releaseChannel
-    ? 'https://solabgrooming.netlify.app/' // Production URL
-    : 'http://localhost:8081'; // Local development URL
-  console.log('redirect url: ', REDIRECT_URI);
+  console.log('redirect url: ', redirectUri);
 
-  const handelGoogleLogin = async (code: string) => {
+  const getUserToken = async (code: string) => {
     try {
-      const result = await fetchAccessToken(code, WEB_CLIENT_ID, REDIRECT_URI);
+      const result = await fetchAccessToken(code, WEB_CLIENT_ID, redirectUri);
 
       return result;
     } catch (error) {
@@ -76,41 +77,43 @@ const Index = () => {
     }
   };
 
-  const getUser = async () => {
+  const getUserFromLocalStorage = async () => {
     try {
-      // Try getting the phone number first
-      let number = await AsyncStorage.getItem('userPhoneNumber');
+      let number = localStorage.getItem('userPhoneNumber')?.trim();
       if (number) {
-        console.log('Phone number found:', number);
+        // console.log(`[LocalStorage] Found phone number: ${number}`);
         const userInfo = await getUserByPhoneNumber(number);
 
-        console.log('User fetched by phone number:', userInfo);
-        return userInfo;
+        if (userInfo) {
+          // console.log(`[User] Found user by phone number:`, userInfo);
+          return userInfo;
+        }
       }
-
-      // If phone number doesn't exist, try getting email
-      const email = await AsyncStorage.getItem('userEmail');
+      // If no valid phone number, try email
+      const email = localStorage.getItem('userEmail')?.trim();
       if (!email) {
-        console.log('No email found in AsyncStorage.');
+        console.log(`[LocalStorage] No email found.`);
         return null;
       }
-
-      console.log('Decrypted email:', email);
+      // console.log(`[LocalStorage] Found email: ${email}`);
       const userInfo = await getUserByGmail(email);
-      console.log('User fetched by email:', userInfo);
-      return userInfo;
+      if (userInfo) {
+        // console.log(`[User] Found user by email:`, userInfo);
+        return userInfo;
+      }
+      return null;
     } catch (error) {
-      console.error('Error getting user:', error);
+      console.error(`[Error] Failed to get user from LocalStorage:`, error);
       return null;
     }
   };
 
   const getPolicyAcceptValue = async () => {
     try {
-      const value = await AsyncStorage.getItem('isAccepted');
+      const value = localStorage.getItem('isAccepted');
       if (value !== null) {
         const parsedValue = JSON.parse(value);
-        console.log('Retrieved isAccepted value:', parsedValue);
+        // console.log('Retrieved isAccepted value:', parsedValue);
         return parsedValue;
       }
       return false;
@@ -119,83 +122,114 @@ const Index = () => {
       return false;
     }
   };
+
   const waitForPhoneInput = () => {
     return new Promise<string>(resolve => {
       setModalCallback(() => resolve); // Save the callback to resolve later
       setModalVisible(true); // Show the modal
     });
   };
+  useEffect(() => {
+    if (user?.products) {
+      const userProducts = user.products;
 
+      setCart(userProducts);
+      // console.log('user products:', user.products);
+    }
+  }, [user]);
+
+  const executeUser = async () => {
+    try {
+      console.log('2');
+      const queryParams = new URLSearchParams(window.location.search);
+      const code = queryParams.get('code');
+
+      console.log('3');
+      if (code) {
+        const userToken = await getUserToken(code);
+        if (!userToken) {
+          console.log('4');
+          console.warn('Google login failed or expired code.');
+          // window.location.href = '/';
+          return null;
+        }
+        const userInfo = await fetchGoogleUserInfo(userToken.access_token);
+        setCurrentUser(userInfo);
+
+        console.log('5');
+        const getUser = await getUserByGmail(userInfo.email);
+        console.log('5.5');
+        const user = getUser?.user || null;
+
+        if (user) {
+          console.log('6');
+
+          setUser(user);
+
+          if (rememberme) {
+            console.log('9');
+            console.log('actually rememberd');
+            if (user) {
+              console.log('10');
+              localStorage.setItem('user', JSON.stringify(user));
+
+              // console.log('saved user: ', user);
+            }
+            // console.log('user didnt exist to save : ', user);
+          }
+          return;
+        }
+        console.log('7');
+        const number = await waitForPhoneInput();
+
+        return number || undefined;
+      }
+
+      return null;
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  // console.log('what is user 1: ', user);
   const initializeApp = async () => {
     console.log('Initializing app...');
     setLoading(true);
 
-    let userByEmail = null; // Store user outside try-catch
-
     try {
-      const queryParams = new URLSearchParams(window.location.search);
-      const code = queryParams.get('code');
+      console.log('1');
 
-      if (code) {
-        console.log('Google Auth Code detected:', code);
+      const localUser = localStorage.getItem('user');
+      const user = localUser ? JSON.parse(localUser) : null;
 
-        try {
-          const fetchResult = await handelGoogleLogin(code);
-          console.log('fetched result: ', fetchResult);
+      // console.log('user from storage ->', user);
 
-          if (!fetchResult || fetchResult == undefined) {
-            console.warn('Google login failed or expired code. Continuing...');
-            return (window.location.href = '/');
-          }
+      if (user && user !== null) {
+        console.log(`[LocalStorage] Found user: ${user}`);
+        const getUser = await getUserByGmail(user.email);
+        const newUser = getUser.user;
+        // console.log('new user: ', newUser);
 
-          const user = await fetchGoogleUserInfo(fetchResult.access_token);
-          setCurrentUser(user);
-          console.log('user: ', user);
-
-          userByEmail = await getUserByGmail(user.email); // Assign user to outer variable
-
-          if (userByEmail) {
-            if (rememberMe) {
-              await AsyncStorage.setItem('user', JSON.stringify(userByEmail));
-              console.log('Stored user in AsyncStorage:', userByEmail);
-            }
-            setUser(userByEmail);
-          } else {
-            const phoneRes = await waitForPhoneInput();
-            console.log('phone modal response: ', phoneRes);
-          }
-        } catch (error) {
-          console.warn(
-            'Google login failed (possibly expired code). Skipping authentication:',
-            error,
-          );
-        }
+        setUser(newUser);
+      } else {
+        console.log('executing');
+        console.log('8');
+        await executeUser();
       }
+
+      // console.log('what is user 2: ', user);
+      // const phoneRes = await waitForPhoneInput();
+      // console.log('phone modal response: ', phoneRes);
     } catch (error) {
       console.error('Initialization error:', error);
     }
-    
-    setCurrentUser();
 
-    // ✅ Now this part executes whether we get the user or not
-    console.log('Continuing app initialization...');
-
-    const number = await AsyncStorage.getItem('userPhoneNumber');
-    console.log('phone number from async: ', number);
-
-    const usebyNumber = await getUserByPhoneNumber(number);
-    setUser(usebyNumber);
-
-    console.log('User entered phone number:', number);
-    // Step 2: Continue initialization
+    // Check if user is logged in, otherwise redirect
     const policyAccept = await getPolicyAcceptValue();
-
     await fetchData();
 
-    console.log('Policy accept result: ', policyAccept);
-    if (policyAccept == false) {
+    if (policyAccept === false) {
       nav('/Policy');
-      return console.log('Policy not accepted:', policyAccept);
+      // return console.log('Policy not accepted:', policyAccept);
     }
 
     if (!user || user?.error === true) {

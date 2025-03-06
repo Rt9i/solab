@@ -146,7 +146,7 @@ const SettingsScreen = () => {
         {isLanguageOpen && (
           <View style={styles.languageContainer}>{renderLanguages()}</View>
         )}
-        {user && (
+        {user && user.error != true && (
           <View>
             <TouchableOpacity
               onPress={handleLogOut}

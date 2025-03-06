@@ -22,7 +22,7 @@ import CartRowItems from '../src/Components/CartRowItems';
 import Images from '../src/assets/images/images';
 import {updateUserProducts} from '../src/res/api';
 import CustomModal from '@/src/Components/customModal';
-import Toast from 'react-native-toast-message';
+import toast from 'react-hot-toast';
 
 const Cart = props => {
   const {
@@ -133,8 +133,14 @@ const Cart = props => {
   }, [isSelectAll, cart]);
   useEffect(() => {
     console.log('selected items: ', selectedItems);
-  }, [selectedItems]);
-
+    
+    if (selectedItems.length === cart.length && cart.length > 0) {
+      setIsSelectAll(true);
+    } else {
+      setIsSelectAll(false);
+    }
+  }, [selectedItems, cart]); // Added cart as a dependency in case it updates
+  
   const renderCart = ({item}) => (
     <CartRowItems
       {...item}
@@ -174,90 +180,81 @@ const Cart = props => {
     setModalVisible(false);
   };
   const selectAproduct = () =>
-    Toast.show({
-      type: 'info',
-      text1: 'Please select a product',
-      position: 'top',
-      visibilityTime: 3000,
+    toast.error('please select a product!', {
+      duration: 2000,
+      position: 'top-center',
     });
-
-  const checkOut = async () => {
-    const orderData = {
-      userId: user._id,
-      items: selectedItems,
-      totalPrice: totalPrice,
-    };
-
-    try {
-      // await saveOrderToDatabase(orderData);
-      console.log('Order placed successfully:', orderData);
-
-      setCart([]);
-      setSelectedItems([]);
-    } catch (error) {
-      console.error('Error during checkout:', error);
-    }
-  };
 
   const handleCardPress = () => {
     if (!user) {
-      console.log('LOG IN RN');
+      toast.error('please sign in!', {
+        duration: 2000,
+        position: 'top-center',
+      });
+
       return;
     }
+
     if (selectedItems.length <= 0) {
       selectAproduct();
       return;
     }
     console.log('checking out ');
-
+    toast.error('coming soon!', {
+      duration: 2000,
+      position: 'top-center',
+    });
     // checkOut();
   };
+
   return (
     <LinearGradient
       colors={['#6CCAFF', '#6CCAFF', '#004C99']}
       locations={[0, 0.1, 1]}
-      style={styles.container}>
+      style={[styles.container]}>
       <View style={styles.header}>
-        <View style={styles.headerContent}>
-          <Text style={styles.totalPrice}>
-            {`${strings.price}`} = {totalPrice} {`${strings.priceTag}`}
-          </Text>
-        </View>
-
-        {cart.length > 0 && (
-          <View style={styles.selectedDisplay}>
-            <TouchableOpacity onPress={handleSelectAll} activeOpacity={1}>
-              <View style={styles.insideCheck}>
-                {(language === 'ar' || language === 'he') && (
-                  <Text style={styles.selectAll}>{strings.selectAll}</Text>
-                )}
-                <BouncyCheckbox
-                  isChecked={isSelectAll}
-                  onPress={handleSelectAll}
-                  fillColor="black"
-                  checkIconColor="white"
-                  style={{marginRight: -15}}
-                />
-
-                {language == 'en' && (
-                  <Text style={styles.selectAll}>{strings.selectAll}</Text>
-                )}
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.cleartouch}
-              onPress={() => handleCardPress()}>
-              <Image source={Images.card()} style={styles.card} />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.cleartouch}
-              onPress={() => showRemoveModal()}>
-              <Image source={Images.trashCan()} style={styles.trashCan} />
-            </TouchableOpacity>
+        <View style={styles.headerson}>
+          <View style={styles.headerContent}>
+            <Text style={styles.totalPrice}>
+              {`${strings.price}`} = {totalPrice} {`${strings.priceTag}`}
+            </Text>
           </View>
-        )}
+
+          {cart.length > 0 && (
+            <View style={styles.selectedDisplay}>
+              <TouchableOpacity onPress={handleSelectAll} activeOpacity={1}>
+                <View style={styles.insideCheck}>
+                  {(language === 'ar' || language === 'he') && (
+                    <Text style={styles.selectAll}>{strings.selectAll}</Text>
+                  )}
+                  <BouncyCheckbox
+                    isChecked={isSelectAll}
+                    onPress={handleSelectAll}
+                    fillColor="black"
+                    checkIconColor="white"
+                    style={{marginRight: -15}}
+                  />
+                  {language == 'en' && (
+                    <Text style={styles.selectAll}>{strings.selectAll}</Text>
+                  )}
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.cleartouch}
+                onPress={() => handleCardPress()}>
+                <Image source={Images.card()} style={styles.card} />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.cleartouch}
+                onPress={() => showRemoveModal()}>
+                <Image source={Images.trashCan()} style={styles.trashCan} />
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
       </View>
+
       <CustomModal
         message={strings.delMessage}
         visible={modalVisible}
@@ -268,23 +265,29 @@ const Cart = props => {
       <CustomModal
         message={strings.delMessage}
         visible={delModal}
-        onConfirm={item => removeItem(selectedItemId)}
+        onConfirm={() => removeItem(selectedItemId)}
         onCancel={() => setDelModal(false)}
       />
-      <FlatList
-        data={cart}
-        renderItem={renderCart}
-        keyExtractor={item => item._id}
-        ListEmptyComponent={emptyCartMessage}
-        contentContainerStyle={
-          cart.length === 0 ? styles.emptyCartContainer : undefined
-        }
-      />
+      <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
+        <View style={{width: '100%', height: '100%', maxWidth: 600}}>
+          <FlatList
+            data={cart}
+            renderItem={renderCart}
+            keyExtractor={item => item._id}
+            ListEmptyComponent={emptyCartMessage}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={
+              cart.length === 0 ? styles.emptyCartContainer : styles.cart
+            }
+          />
+        </View>
+      </View>
     </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
+  cart: {},
   card: {
     width: 40,
     height: 40,
@@ -310,13 +313,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  headerson: {
+    width: '100%',
+    maxWidth: 600,
+  },
   header: {
-    padding: 10,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     backgroundColor: 'rgba(255, 255, 255, 0.8)',
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
   },
   headerContent: {
+    marginTop:20,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -345,17 +355,16 @@ const styles = StyleSheet.create({
   },
 
   selectedDisplay: {
-    marginTop: 10,
     flexDirection: 'row',
-
     justifyContent: 'space-between',
 
     marginHorizontal: 30,
+    padding: 10,
   },
   emptyText: {
     textAlign: 'center',
     color: 'white',
-    // fontFamily: 'PassionOne-Bold',
+
     fontSize: 40,
     opacity: 0.2,
     width: 250,

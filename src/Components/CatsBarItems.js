@@ -94,17 +94,23 @@ const CatsBarItems = ({selectedCategory, setSelectedCategory, Array}) => {
           ]}
           onPress={() => {
             setSelectedCategory(category.id);
-
             scrollToCategory(index);
           }}>
-          <Image source={category.image} style={styles.categoryImage} />
-          <Text
-            style={[
-              styles.categoryText,
-              category.id === 'accessories' ? accessoriesStyle : null,
-            ]}>
-            {category.name}
-          </Text>
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <Image
+              source={category.image}
+              style={styles.img}
+              resizeMode="contain"
+            />
+
+            <Text
+              style={[
+                styles.categoryText,
+                category.id === 'accessories' ? accessoriesStyle : null,
+              ]}>
+              {category.name}
+            </Text>
+          </View>
         </TouchableOpacity>
       </Animated.View>
     );
@@ -134,11 +140,10 @@ const CatsBarItems = ({selectedCategory, setSelectedCategory, Array}) => {
       flatListRef.current.scrollToIndex({
         index,
         animated: true,
-        viewPosition: 0.5, 
+        viewPosition: 0.5,
       });
     }
   };
-  
 
   return renderBar();
 };
@@ -146,35 +151,36 @@ const CatsBarItems = ({selectedCategory, setSelectedCategory, Array}) => {
 export default CatsBarItems;
 
 const styles = StyleSheet.create({
-  txt: {
-    fontSize: 50,
-    textAlign: 'center',
+  img: {
+    height: 60,
+    width: 60,
+
+    borderRadius: 15,
   },
+
   test: {
     backgroundColor: 'red',
   },
   categoryStyle: {
-    width: 70,
-    height: 70,
-    marginTop: 5,
+    width: '100%',
+    height: '100%',
+    marginTop: 15,
     marginRight: 8,
+
     flex: 1,
   },
   category: {
-    flex: 1,
     borderWidth: 2,
+    width: 75,
+    height: 70,
+    justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 50,
   },
-  categoryImage: {
-    height: 70,
-    width: 50,
-    resizeMode: 'contain',
-    borderRadius: 100,
-  },
   categoryText: {
     color: 'black',
-    // fontFamily: 'smallFont',
+    position: 'absolute',
+    marginTop: 75,
     backgroundColor: '#84a1d2',
     fontSize: 12,
     width: '100%',

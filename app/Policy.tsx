@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 import policyText from '@/src/Components/policyText';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import {useNavigation} from 'expo-router';
 
 export default function Policy() {
@@ -22,7 +22,7 @@ export default function Policy() {
 
   const handleAccept = async () => {
     console.log('User accepted the policies');
-    await AsyncStorage.setItem('isAccepted', JSON.stringify(isAccepted));
+    localStorage.setItem('isAccepted', isAccepted as any);
     nav.navigate('index');
   };
 

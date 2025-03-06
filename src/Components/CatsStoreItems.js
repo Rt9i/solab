@@ -40,11 +40,7 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
     salePrice,
     petType,
   } = props;
-  const {cart, setCart, addItemToCart, rows} = useContext(SolabContext);
-  const [isAddedToCart, setIsAddedToCart] = useState(false);
-  const {isItemAdded, setIsItemAdded} = useContext(SolabContext);
-
-  const [showRows, setShowRows] = useState(false);
+  const { addItemToCart} = useContext(SolabContext);
 
   const onCardPress = () => {
     const Item = {...props};
@@ -68,12 +64,14 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
   return (
     <View
       style={user?.role === 'staff' ? styles.itemWidthStaff : styles.itemWidth}>
+
       <View style={styles.items}>
         {user?.role == 'staff' && (
           <View style={styles.stock}>
             <Text style={styles.stocktext}>{availableStock}</Text>
           </View>
         )}
+
         {(availableStock === 0 || availableStock === null) && (
           <View style={styles.notavailableStock}>
             <Text style={styles.stockTxt}>Out of Stock</Text>
@@ -128,7 +126,9 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
               <Text style={styles.carttxt}>{strings.addToCart}</Text>
             </View>
           </TouchableOpacity>
-        </View>
+        </View> 
+
+
       </View>
 
       {saleAmount > 0 && (
@@ -221,8 +221,7 @@ const styles = StyleSheet.create({
   center: {
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 4, // Higher than the notavailableStock
-    position: 'relative', // Ensure it has positioning context
+  
   },
 
   sale: {
@@ -273,7 +272,7 @@ const styles = StyleSheet.create({
   items: {
     flex: 1,
     borderRadius: 5,
-    backgroundColor: 'rgba(20, 70, 200, 0.1)',
+    backgroundColor: 'rgba(20, 70, 200, 0.02)',
 
     overflow: 'hidden', // Ensure content doesn't overflow
   },
@@ -338,7 +337,7 @@ const styles = StyleSheet.create({
     width: 120,
     alignItems: 'center',
     bottom: 10,
-    zIndex: 20,
+   
   },
   carttxt: {
     fontSize: 12,

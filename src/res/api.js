@@ -408,7 +408,7 @@ export const fetchAccessToken = async (code, webClient, redirect) => {
     }
 
     const data = await response.json();
-    console.log('Access Token Response:', data);
+    
     return data;
   } catch (error) {
     console.error('Error fetching access token:', error);
