@@ -17,7 +17,7 @@ const ScrollUp = ({ scrollViewRef }) => {
         <View style={styles.arrowContainer}>
             <TouchableOpacity style={styles.touch} onPress={handlePress} activeOpacity={0.9}>
                 <View style={styles.img}>
-                    <Image style={styles.img} source={Images.twoArrows()} />
+                    <Image style={[styles.img,{resizeMode:'contain'}]} source={Images.twoArrows()} />
                 </View>
             </TouchableOpacity>
         </View>
@@ -29,7 +29,7 @@ export default ScrollUp;
 const styles = StyleSheet.create({
     img: {
         height: 20,
-        resizeMode: 'contain',
+    
     },
     touch: {
         backgroundColor: 'rgba(0, 0, 0, 0.5)',

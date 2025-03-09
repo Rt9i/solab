@@ -32,7 +32,7 @@ const CartRowItems = props => {
         <View style={styles.imgCont}>
           <Image
             source={typeof img === 'string' ? {uri: img} : img}
-            style={styles.img}
+            style={[styles.img,{resizeMode:'contain'}]}
           />
 
           <Text>
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: 250,
     height: 250,
-    resizeMode: 'contain',
+   
   },
   details: {
     flexDirection: 'row-reverse',

@@ -1,4 +1,4 @@
-import React, {useContext, useRef} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -6,6 +6,7 @@ import {
   Image,
   Text,
   TextInput,
+  ScrollView,
 } from 'react-native';
 import Images from '../assets/images/images';
 import SolabContext from '../store/solabContext';
@@ -21,7 +22,7 @@ const TopBar = () => {
     setFilteredItemsState,
     getFilteredItemsForRow,
   } = useContext(SolabContext);
-
+  const [searchText, setSearchText] = useState('');
   // Create a reference for the TextInput
   const searchInputRef = useRef(null);
 
@@ -107,23 +108,24 @@ const TopBar = () => {
   );
 
   const handleSearchChange = text => {
-    const keywords = text.trim().toLowerCase().split(/\s+/);
-
-    // Only update search and filtered items if there's text
-    if (text.length > 0) {
+    // Do not trim the text, keep all spaces
+    const keywords = text.split(/\s+/).filter(Boolean); // Split by spaces and remove empty strings
+    setSearchText(text);
+    if (keywords.length > 0) {
       triggerScrollToTop();
-      setSearch(keywords);
+      setSearch(keywords); // Store keywords (as an array)
       setFilteredItemsState(rowValue => getFilteredItemsForRow(rowValue));
     } else {
-      setSearch('');
+      setSearch([]); // If no keywords, set as empty array
       setFilteredItemsState([]);
     }
   };
 
   const clearSearch = () => {
     triggerScrollToTop();
-    setSearch(''); // Clear the search text
-    setFilteredItemsState([]); // Clear the filtered items
+    setSearch('');
+    setSearchText('');
+    setFilteredItemsState([]);
   };
 
   const openSearch = () => {
@@ -132,40 +134,44 @@ const TopBar = () => {
     }
   };
 
-
   return (
     <View style={styles.container}>
-      <View style={styles.leftContainer}>
-        {arrow()}
-        {settingsBox()}
-      </View>
-      <View style={styles.searchContainer}>
-        <TouchableOpacity
-          style={styles.searchIconContainer}
-          onPress={openSearch}>
-          <Image source={Images.search()} style={styles.searchIcon} />
-        </TouchableOpacity>
-
-        <TextInput
-          ref={searchInputRef}
-          style={styles.searchInput}
-          placeholder="Search..."
-          placeholderTextColor="gray"
-          value={search}
-          onChangeText={handleSearchChange}
-        />
-
-        {search.length > 0 && (
+      <View style={{width:'100%',maxWidth:900,flexDirection:'row'}}>
+        <View style={styles.leftContainer}>
+          {arrow()}
+          {settingsBox()}
+        </View>
+        <View style={styles.searchContainer}>
           <TouchableOpacity
-            onPress={clearSearch}
-            style={styles.clearIconContainer}>
-            <Image source={Images.clear()} style={styles.clearIcon} />
+            style={styles.searchIconContainer}
+            onPress={openSearch}>
+            <Image source={Images.search()} style={styles.searchIcon} />
           </TouchableOpacity>
-        )}
-      </View>
-      {!user || user == null || user.error == true  ? LoginBox() : profilePic()}
+          <ScrollView keyboardShouldPersistTaps="handled">
+            <TextInput
+              ref={searchInputRef}
+              style={styles.searchInput}
+              placeholder="Search..."
+              placeholderTextColor="gray"
+              value={searchText}
+              onChangeText={handleSearchChange}
+            />
+          </ScrollView>
 
-      {cartBox()}
+          {search.length > 0 && (
+            <TouchableOpacity
+              onPress={clearSearch}
+              style={styles.clearIconContainer}>
+              <Image source={Images.clear()} style={styles.clearIcon} />
+            </TouchableOpacity>
+          )}
+        </View>
+        {!user || user == null || user.error == true
+          ? LoginBox()
+          : profilePic()}
+
+        {cartBox()}
+      </View>
     </View>
   );
 };
@@ -180,6 +186,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 50,
+    backgroundColor: 'grey',
   },
   login: {
     borderWidth: 1,

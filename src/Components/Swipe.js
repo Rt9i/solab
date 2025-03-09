@@ -4,6 +4,25 @@ import Swiper from 'react-native-swiper';
 import Images from '../assets/images/images';
 
 const Swipe = ({onScroll}) => {
+  const data = [
+    {id: 1, img: Images.saleTest()},
+    {id: 2, img: Images.saleTest()},
+    {id: 3, img: Images.saleTest()},
+    {id: 4, img: Images.saleTest()},
+    {id: 5, img: Images.saleTest()},
+  ];
+
+  const renderImg = () => {
+    return data.map(item => (
+      <View key={item.id} style={styles.slide1}>
+        <Image
+          source={item.img}
+          style={[styles.img, {resizeMode: 'contain'}]}
+        />
+      </View>
+    ));
+  };
+
   return (
     <View style={styles.container}>
       <Swiper
@@ -15,13 +34,7 @@ const Swipe = ({onScroll}) => {
         onScroll={onScroll}
         nextButton={<Text style={styles.arrow}>›</Text>}
         prevButton={<Text style={styles.arrow}>‹</Text>}>
-        <View style={styles.slide1}>
-          <Image source={Images.saleTest()} style={styles.img} />
-        </View>
-
-        <View style={styles.slide1}>
-          <Image source={Images.saleTest()} style={styles.img} />
-        </View>
+        {renderImg()}
       </Swiper>
     </View>
   );
@@ -29,23 +42,24 @@ const Swipe = ({onScroll}) => {
 export default Swipe;
 const styles = StyleSheet.create({
   arrow: {
-    color: 'white', // Change arrow color
-    fontSize: 50,   // Adjust size if needed
+    height: '100%',
+    color: 'white',
+    fontSize: 50,
     fontWeight: 'bold',
     paddingHorizontal: 15,
+    textAlign: 'center',
+    textAlignVertical: 'center',
   },
-  
+
   img: {
-    resizeMode: 'contain',
     width: '100%',
   },
   container: {
-    height: 230,
-    maxHeight: 400,
-    maxWidth: 780,
+    height:200,
+    width: '100%',
+    maxWidth:600,
     overflow: 'hidden',
-
-    zIndex: 1, // Ensure it's above other components
+    zIndex: 1,
   },
   wrapper: {
     height: '100%',
@@ -54,7 +68,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#9DD6EB',
   },
   text: {
     color: '#fff',

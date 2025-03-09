@@ -487,7 +487,6 @@ const EditProduct = () => {
       </View>
     );
   };
-
   const inputs = () => (
     <View style={styles.inputContainer}>
       <View style={styles.row}>
@@ -578,6 +577,7 @@ const EditProduct = () => {
       </View>
     </View>
   );
+  
   const handleImagePress = async () => {
     console.log('Image pressed');
 
@@ -602,7 +602,7 @@ const EditProduct = () => {
       <TouchableOpacity onPress={() => handleImagePress()}>
         <View>
           {selectedImage ? (
-            <Image source={{uri: selectedImage}} style={styles.img} />
+            <Image source={{uri: selectedImage}} style={[styles.img,{resizeMode:'contain'}]} />
           ) : (
             <Image source={img} style={styles.img} />
           )}
@@ -869,7 +869,7 @@ sale: {
     alignItems: 'center',
   },
   img: {
-    resizeMode: 'contain',
+   
     height: 300,
     width: 200,
   },

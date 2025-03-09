@@ -106,7 +106,7 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
           <TouchableOpacity
             onPress={() => handleEditProducts()}
             style={styles.editButtonContainer}>
-            <View style={{width: 50, height: 50}}>
+            <View style={{width: 30, height: 30,justifyContent:'center',alignItems:'center'}}>
               <Image
                 source={Images.edit()}
                 resizeMode="contain"
@@ -213,6 +213,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   edit: {
+  
     height: 30,
     width: 30,
     zIndex: 1,

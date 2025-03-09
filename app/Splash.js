@@ -90,6 +90,6 @@
 //   image: {
 //     flex: 1,
 //     width: 500,
-//     resizeMode: 'contain',
+//  
 //   },
 // });

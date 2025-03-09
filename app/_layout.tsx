@@ -53,7 +53,7 @@ function AppContent() {
         <Stack.Screen name="+not-found" />
       </Stack>
 
-      {Platform.OS !== 'web' && <Toast  />}
+      {/* {Platform.OS !== 'web' && <Toast  />} */}
       {Platform.OS === 'web' && <Toaster position="top-center" />}
     </ThemeProvider>
   );
@@ -91,6 +91,6 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     tintColor: '#000',
-    resizeMode: 'contain',
+    
   },
 });

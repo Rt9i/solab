@@ -95,7 +95,7 @@ const BottomBar = () => {
                   zIndex: 1, // Make sure the icon is above the background
                 },
               ]}>
-              <Image source={icon.image} style={styles.img} />
+              <Image source={icon.image} style={[styles.img,{resizeMode:'contain'}]} />
             </View>
           </View>
           <Text
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
  
   },
   img: {
-    resizeMode: 'contain',
+    
     width: 30,
     height: 30,
   },

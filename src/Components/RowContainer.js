@@ -19,14 +19,7 @@ const RenderItem = memo(({item, renderItem}) => {
   return <View style={styles.itemContainer}>{renderItem({item})}</View>;
 });
 
-const RowContainer = ({
-  items,
-  renderItem,
-  text,
-  selectedCategory,
-  index,
-  row,
-}) => {
+const RowContainer = ({items, renderItem, selectedCategory, index, row}) => {
   const navigation = useNavigation();
   const flatListRef = useRef();
   const {selectedIcons, scrollToTop, user, strings} = useContext(SolabContext);
@@ -55,51 +48,50 @@ const RowContainer = ({
 
   if (!items || items.length === 0) return null;
 
+  const arrowPress = () => {
+    return console.log('presseed');
+  };
   return (
     <View style={styles.container}>
-      {user?.role === 'staff' && (
-        <TouchableOpacity
-          onPress={() => navEdit(row)}
-          style={styles.additem}
-          activeOpacity={0.9}>
-          <View style={styles.additem}>
-            <Text style={styles.plus}>+</Text>
-            <Text style={styles.plus}>{index}</Text>
-          </View>
-        </TouchableOpacity>
-      )}
-
       <View style={styles.content}>
         <View style={styles.header}>
           <TouchableOpacity onPress={onSeeAllPress} style={styles.seeAllButton}>
             <Text style={styles.seeAllText}>{strings.seeAllButton}</Text>
-            <Image source={Images.arrow()} style={styles.img} />
+            <Image source={Images.arrow()} style={styles.img2} />
           </TouchableOpacity>
-          {text && <Text style={styles.headerText}>{text}</Text>}
+
+          {user?.role === 'staff' && (
+            <TouchableOpacity
+              onPress={() => navEdit(row)}
+              style={styles.additem}
+              activeOpacity={0.9}>
+              <View style={styles.additem}>
+                <Text style={styles.plus}>+</Text>
+                <Text style={styles.plus}>{index}</Text>
+              </View>
+            </TouchableOpacity>
+          )}
         </View>
 
-        <View
-          style={[
-            styles.flashListContainer,
-            Platform.OS === 'web' && {overflowX: 'auto'},
-          ]}
-          onLayout={(event) => {
-            const { width, height } = event.nativeEvent.layout;
-            console.log("Parent View Size:", width, height);
-          }}
-          >
-          <FlashList
-            ref={flatListRef}
-            data={items}
-            horizontal={true}
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator
-            estimatedItemSize={160}
-            renderItem={({item}) => (
-              <RenderItem item={item} renderItem={renderItem} />
-            )}
-            keyExtractor={item => item._id}
-          />
+        <View style={styles.row}>
+          <View
+            style={[
+              styles.flashListContainer,
+              Platform.OS === 'web' && {overflowX: 'auto'},
+            ]}>
+            <FlashList
+              ref={flatListRef}
+              data={items}
+              horizontal={true}
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+              estimatedItemSize={160}
+              renderItem={({item}) => (
+                <RenderItem item={item} renderItem={renderItem} />
+              )}
+              keyExtractor={item => item._id}
+            />
+          </View>
         </View>
       </View>
     </View>
@@ -109,15 +101,30 @@ const RowContainer = ({
 export default RowContainer;
 
 const styles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+  },
+
+  txt: {
+    fontSize: 30,
+    fontWeight: 'bold',
+  },
   container: {
-    // Enough height to show the header + list,
-    // but no vertical scroll needed
-    marginBottom: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 10,
+
+    width: '100%',
+    height: 420,
+
   },
   content: {
     padding: 10,
+    width: '100%',
   },
   header: {
+    width: '100%',
     flexDirection: 'row-reverse',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -134,7 +141,7 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   seeAllText: {
-    // Customize if needed
+    fontWeight: '500',
   },
   headerText: {
     textAlign: 'center',
@@ -151,7 +158,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 14,
     elevation: 24,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.3)',
+    marginBottom: 10,
   },
+
   plus: {
     textAlign: 'center',
     fontSize: 24,
@@ -159,10 +173,16 @@ const styles = StyleSheet.create({
   img: {
     height: 20,
     width: 20,
+  },
+
+  img2: {
+    height: 20,
+    width: 20,
     transform: [{rotate: '180deg'}],
   },
 
   flashListContainer: {
+    flexDirection: 'row',
     height: 320,
     maxHeight: 320,
     width: '100%',

@@ -7,6 +7,7 @@ import {
   Image,
   SafeAreaView,
   StatusBar,
+  Text,
   Platform,
 } from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
@@ -21,6 +22,7 @@ import CatsStoreItems from '../src/Components/CatsStoreItems';
 import Sizes from '../src/res/sizes';
 import Images from '@/src/assets/images/images';
 import {useFocusEffect, useNavigation} from 'expo-router';
+import {TouchableOpacity} from 'react-native';
 
 const CatsStore = props => {
   const [displayMode, setDisplayMode] = useState('row');
@@ -40,13 +42,8 @@ const CatsStore = props => {
   const scrollViewRef = useRef(null);
   const nav = useNavigation();
 
-  const video = useRef(null);
-  const [status, setStatus] = useState({});
-
   useFocusEffect(
     React.useCallback(() => {
-      // console.log('Current data:', data);
-
       if (!data || data.length === 0) {
         console.warn('No data found, navigating back to index...');
         nav.navigate('index');
@@ -96,9 +93,18 @@ const CatsStore = props => {
     scrollViewRef.current.scrollTo({x: 0, y: 0, animated: true});
   };
 
+  // Memoize the rows to check if any row is empty
+  const emptyRows = useMemo(() => {
+    return rows.every(row => {
+      const filteredItems = getFilteredItemsForRow(row.rows);
+      return filteredItems.length === 0;
+    });
+  }, [rows, getFilteredItemsForRow]);
+  const arrowPress = () => {
+    return console.log('presseed');
+  };
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
       <LinearGradient
         colors={['#6CCAFF', '#6CCAFF', '#004C99']}
         locations={[0, 0.1, 1]}
@@ -106,14 +112,19 @@ const CatsStore = props => {
         <TopBar />
         <ScrollView
           style={styles.scroll}
-          contentContainerStyle={{minHeight: Sizes.screenHeight}}
           onScroll={handleScroll}
           scrollEventThrottle={16}
           ref={scrollViewRef}>
           <View style={styles.sale}>
             <Swipe />
           </View>
-          <View style={{width:"100%", justifyContent:'center', alignItems:'center'}}>
+
+          <View
+            style={{
+              width: '100%',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
             <View style={styles.catsBarItemsContainer}>
               <CatsBarItems
                 style={styles.CatsBarItems}
@@ -123,21 +134,26 @@ const CatsStore = props => {
               />
             </View>
           </View>
-
-          {rows.map((row, index) => {
-            const filteredItems = getFilteredItemsForRow(row.rows);
-
-            return (
-              <RowContainer
-                index={index + 1}
-                key={row.id} // Make sure row.id is unique for each key
-                row={row.rows}
-                items={filteredItems} // Ensure this is defined and valid
-                renderItem={renderItem} // Make sure renderItem is a valid function
-                selectedCategory={selectedCategory} // Ensure this prop is defined
-              />
-            );
-          })}
+          <View style={{width: '100%', alignItems: 'center'}}>
+            {rows.map((row, index) => {
+              const filteredItems = getFilteredItemsForRow(row.rows);
+              return (
+                <View
+                  key={row.id}
+                  style={{width: '100%', flexDirection: 'row ', maxWidth: 800}}>
+                  <RowContainer
+                    index={index + 1}
+                    key={row.id}
+                    row={row.rows}
+                    items={filteredItems}
+                    renderItem={renderItem}
+                    selectedCategory={selectedCategory}
+                  />
+                </View>
+              );
+            })}
+          </View>
+          {emptyRows && <Text style={styles.txt}>No items available</Text>}
         </ScrollView>
 
         <BottomBar />
@@ -155,37 +171,48 @@ const CatsStore = props => {
 export default CatsStore;
 
 const styles = StyleSheet.create({
-  sale: {
-    width: '100%',
+  img2: {
+    height: 40,
+    width: 40,
+    transform: [{rotate: '-180deg'}], // Rotate the image by -180 degrees
+  },
+  img: {
+    height: 40,
+    width: 40,
+  },
+  imgCont: {
+    height: '100%',
+    width: '5%',
     alignItems: 'center',
     justifyContent: 'center',
-    alignContent: 'center',
   },
-  cont: {
-    backgroundColor: 'black',
+  txt: {
+    fontSize: 18,
+    color: 'black',
+    textAlign: 'center',
+    marginTop: 20,
+  },
+  sale: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
   },
   safeArea: {
     flex: 1,
     backgroundColor: '#fff',
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
-  gradient: {
-    flex: 1,
-    padding: 16,
-  },
   container: {
     width: '100%',
     height: '100%',
   },
   scroll: {
-    width: '100%',
-    height: '100%',
+    flex: 1,
   },
   catsBarItemsContainer: {
     height: 100,
     width: '100%',
     maxWidth: 600,
-
   },
   itemContainer: {
     height: '100%',

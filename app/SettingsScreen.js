@@ -32,7 +32,6 @@ const SettingsScreen = () => {
   const [message, setMessage] = useState(null);
   const currentUserId = user ? user._id : null;
 
-
   const handleProfilePress = () => {
     if (currentUserId) {
       navigation.navigate('Profile', {userId: currentUserId});
@@ -73,7 +72,7 @@ const SettingsScreen = () => {
   const settings = [
     {
       name: 'Profile',
-      image: user? user.picture : Images.profileIcon(),
+      image: user ? user.picture : Images.profileIcon(),
       onPress: () => handleProfilePress(),
     },
     {
@@ -161,6 +160,7 @@ const SettingsScreen = () => {
           </View>
         )}
       </View>
+
       <CustomModal
         message={message}
         visible={showModal}
@@ -174,12 +174,16 @@ const SettingsScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
+    width: '100%',
+alignItems:'center',
     flex: 1,
     backgroundColor: '#E8EAF6',
     paddingHorizontal: 20,
     paddingTop: 20,
   },
   settingsList: {
+    width:'100%',
+    maxWidth:650,
     backgroundColor: '#FFFFFF',
     borderRadius: 10,
     elevation: 5,
@@ -202,7 +206,7 @@ const styles = StyleSheet.create({
   image: {
     width: 30,
     height: 30,
-    borderRadius:20,
+    borderRadius: 20,
   },
   arrow: {
     fontSize: 20,

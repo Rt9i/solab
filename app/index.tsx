@@ -81,24 +81,20 @@ const Index = () => {
     try {
       let number = localStorage.getItem('userPhoneNumber')?.trim();
       if (number) {
-        // console.log(`[LocalStorage] Found phone number: ${number}`);
         const userInfo = await getUserByPhoneNumber(number);
-
         if (userInfo) {
-          // console.log(`[User] Found user by phone number:`, userInfo);
           return userInfo;
         }
       }
-      // If no valid phone number, try email
+
       const email = localStorage.getItem('userEmail')?.trim();
       if (!email) {
         console.log(`[LocalStorage] No email found.`);
         return null;
       }
-      // console.log(`[LocalStorage] Found email: ${email}`);
+
       const userInfo = await getUserByGmail(email);
       if (userInfo) {
-        // console.log(`[User] Found user by email:`, userInfo);
         return userInfo;
       }
       return null;
@@ -113,7 +109,6 @@ const Index = () => {
       const value = localStorage.getItem('isAccepted');
       if (value !== null) {
         const parsedValue = JSON.parse(value);
-        // console.log('Retrieved isAccepted value:', parsedValue);
         return parsedValue;
       }
       return false;
@@ -129,6 +124,7 @@ const Index = () => {
       setModalVisible(true); // Show the modal
     });
   };
+
   useEffect(() => {
     if (user?.products) {
       const userProducts = user.products;
@@ -150,7 +146,6 @@ const Index = () => {
         if (!userToken) {
           console.log('4');
           console.warn('Google login failed or expired code.');
-          // window.location.href = '/';
           return null;
         }
         const userInfo = await fetchGoogleUserInfo(userToken.access_token);
@@ -172,10 +167,7 @@ const Index = () => {
             if (user) {
               console.log('10');
               localStorage.setItem('user', JSON.stringify(user));
-
-              // console.log('saved user: ', user);
             }
-            // console.log('user didnt exist to save : ', user);
           }
           return;
         }
@@ -190,24 +182,18 @@ const Index = () => {
       console.log(e);
     }
   };
-  // console.log('what is user 1: ', user);
   const initializeApp = async () => {
     console.log('Initializing app...');
     setLoading(true);
-
     try {
       console.log('1');
 
       const localUser = localStorage.getItem('user');
       const user = localUser ? JSON.parse(localUser) : null;
-
-      // console.log('user from storage ->', user);
-
       if (user && user !== null) {
         console.log(`[LocalStorage] Found user: ${user}`);
         const getUser = await getUserByGmail(user.email);
         const newUser = getUser.user;
-        // console.log('new user: ', newUser);
 
         setUser(newUser);
       } else {
@@ -215,21 +201,13 @@ const Index = () => {
         console.log('8');
         await executeUser();
       }
-
-      // console.log('what is user 2: ', user);
-      // const phoneRes = await waitForPhoneInput();
-      // console.log('phone modal response: ', phoneRes);
     } catch (error) {
       console.error('Initialization error:', error);
     }
-
-    // Check if user is logged in, otherwise redirect
     const policyAccept = await getPolicyAcceptValue();
     await fetchData();
-
     if (policyAccept === false) {
       nav('/Policy');
-      // return console.log('Policy not accepted:', policyAccept);
     }
 
     if (!user || user?.error === true) {
@@ -260,12 +238,12 @@ const Index = () => {
         console.error('Invalid user role');
     }
 
-    setLoading(false); // Ensure loading stops at the very end
+    setLoading(false);
   };
 
   useFocusEffect(
     React.useCallback(() => {
-      initializeApp(); // Run when screen comes into focus
+      initializeApp();
     }, []),
   );
   return (

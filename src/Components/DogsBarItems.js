@@ -30,7 +30,7 @@ const DogsBarItems = ({ selectedCategory, setSelectedCategory }) => {
                     ]}
                     onPress={() => setSelectedCategory(category.id)}
                 >
-                    <Image source={category.image} style={styles.categoryImage} />
+                    <Image source={category.image} style={[styles.categoryImage,{resizeMode:'contain'}]} />
                     <Text style={[styles.categoryText, category.id === 'catAccessories' ? accessoriesStyle : null]}>
                         {category.name}
                     </Text>
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     categoryImage: {
         width: '100%',
         height: '100%',
-        resizeMode: 'contain',
+   
         borderRadius: 100,
 
     },

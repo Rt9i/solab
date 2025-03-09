@@ -51,7 +51,7 @@ const ProductScreen = () => {
         colors={['#ffffff', '#f0f0f0', '#e0e0e0']}
         style={styles.gradient}>
         <Image
-          style={styles.image}
+          style={[styles.image,{resizeMode:'contain'}]}
           source={{
             uri: imageSource,
           }}
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: 300,
-    resizeMode: 'contain',
+  
     borderRadius: 12,
     marginBottom: 16,
     borderColor: '#ddd',

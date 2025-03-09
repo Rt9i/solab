@@ -52,8 +52,8 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
   const IOS_CLIENT_ID = Constants.expoConfig?.extra?.IOS_CLIENT_ID;
   const WEB_CLIENT_ID = Constants.expoConfig?.extra?.WEB_CLIENT_ID;
 
-  const redirectUri = 'https://solabgrooming.netlify.app';
-  // const redirectUri = 'http://localhost:8081';
+  // const redirectUri = 'https://solabgrooming.netlify.app';
+  const redirectUri = 'http://localhost:8081';
 
   const fetchGoogleUserInfo = async (accessToken: string) => {
     try {
@@ -131,7 +131,7 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
     () =>
       (rowValue: string): Item[] => {
         const isSearchActive = search.length > 0;
-
+  
         const filteredItems = data.filter((item: Item) => {
           const matchesSearch = isSearchActive
             ? search.some((keyword: string) =>
@@ -140,20 +140,20 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
                 ),
               )
             : true;
-
+  
           const matchesCategory =
             !isSearchActive && selectedCategory
               ? item.category?.includes(selectedCategory)
               : true;
-
+  
           const matchesRowValue = rowValue
             ? item.category.includes(rowValue)
             : true;
-
+  
           const matchesPetType = selectedIcons.length
             ? item.petType?.some(pet => selectedIcons.includes(pet))
             : true;
-
+  
           return (
             matchesSearch &&
             matchesCategory &&
@@ -161,12 +161,12 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
             matchesPetType
           );
         });
-
+  
         return filteredItems;
       },
     [search, selectedCategory, selectedIcons, data],
   );
-
+  
   useEffect(() => {
     const saveCartWithDebounce = async () => {
       if (debounceTimeout.current) {

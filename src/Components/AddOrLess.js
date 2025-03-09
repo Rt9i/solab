@@ -162,18 +162,5 @@ const styles = StyleSheet.create({
         height: 270,
         marginLeft: 10,
     },
-    photo: {
-        paddingBottom: 1,
-        backgroundColor: 'black',
-        borderTopRightRadius: 10,
-        borderTopLeftRadius: 10,
-        width: 110,
-        height: 45,
-        resizeMode: 'contain',
-    },
-    img: {
-        resizeMode: 'contain',
-        width: 130,
-        height: 160,
-    },
+
 });
