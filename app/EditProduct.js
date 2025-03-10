@@ -10,13 +10,9 @@ import {
   FlatList,
   Modal,
   Linking,
+  Platform,
 } from 'react-native';
-import React, {
-  useContext,
-  useEffect,
-  useState,
-  useCallback,
-} from 'react';
+import React, {useContext, useEffect, useState, useCallback} from 'react';
 import Sizes from '../src/res/sizes';
 import CatsBarItems from '../src/Components/CatsBarItems';
 import SolabContext from '../src/store/solabContext';
@@ -33,6 +29,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import * as MediaLibrary from 'expo-media-library';
 import * as ImagePicker from 'expo-image-picker';
 import CustomModal from '@/src/Components/customModal';
+import {Button} from 'react-native-web';
 
 const EditProduct = () => {
   const route = useRoute();
@@ -57,7 +54,7 @@ const EditProduct = () => {
 
   const {strings, setData, cat, rows, pets, language} =
     useContext(SolabContext);
-  console.log(_id);
+  console.log('id is: ', _id);
   const [availableStockState, setAvailableStockState] =
     useState(availableStock);
   const [disState, setDisState] = useState(dis);
@@ -119,7 +116,11 @@ const EditProduct = () => {
       },
     };
   };
-
+  const time = Date.now();
+  const formattedTime = new Date(time).toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
   const getFileTypeFromUri = uri => {
     const extension = uri.split('.').pop();
     switch (extension) {
@@ -137,25 +138,30 @@ const EditProduct = () => {
         return 'application/octet-stream';
     }
   };
-
-  const time = Date.now();
-  const formattedTime = new Date(time).toLocaleTimeString([], {
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-
-  console.log('Current time is:', formattedTime);
-
   const uploadImage = async imageUri => {
     const data = new FormData();
 
-    const mimeType = getFileTypeFromUri(selectedImage);
+    // Convert blob URL to a file if necessary
+    let fileToUpload;
+    if (imageUri.startsWith('blob:')) {
+      const response = await fetch(imageUri);
+      const blob = await response.blob();
 
-    data.append('file', {
-      uri: imageUri,
-      type: mimeType,
-      name: 'my_image' + formattedTime + '.' + mimeType.split('/')[1],
-    });
+      // Get file type from Blob
+      const mimeType = blob.type || 'image/jpeg'; // Default to JPEG if unknown
+      const fileExt = mimeType.split('/')[1] || 'jpg'; // Extract extension
+
+      fileToUpload = new File([blob], `my_image.${fileExt}`, {type: mimeType});
+    } else {
+      // Regular file URL (non-blob), construct a File object
+      fileToUpload = {
+        uri: imageUri,
+        type: getMimeType(imageUri), // Function to determine type
+        name: 'my_image.' + getMimeType(imageUri).split('/')[1],
+      };
+    }
+
+    data.append('file', fileToUpload);
     data.append('upload_preset', 'ml_default'); // Your Cloudinary upload preset
 
     try {
@@ -171,7 +177,7 @@ const EditProduct = () => {
 
       if (response.ok) {
         console.log('Uploaded image URL:', jsonResponse.secure_url);
-        return jsonResponse.secure_url; // Return the uploaded image URL
+        return jsonResponse.secure_url; // Return Cloudinary URL
       } else {
         console.error('Upload failed:', jsonResponse.error.message);
       }
@@ -252,8 +258,6 @@ const EditProduct = () => {
   };
 
   const CustomAlert = ({message}) => {
-    console.log('message is: ', message);
-
     return (
       <Modal
         animationType="slide"
@@ -329,31 +333,40 @@ const EditProduct = () => {
     // Handle missing fields
     if (missingFields.length > 0) {
       const newErrorMessage = `${strings.fillthefield}: ${missingFields.join(', ')}`;
-      // Update the error message only if it has changed
       if (errorMessage !== newErrorMessage) {
         setErrorMessage(newErrorMessage);
         setShowModal(true);
       }
-      return; // Exit early if there are missing fields
+      return;
     }
 
     try {
       setLoading(true);
-      const item = await getItemInDataBase(_id);
-      const updatedItem = await setItemInDataBase(_id, newItemData);
 
+      let imageUrl = newItemData.img; // Default to existing image URL
+
+      // If a new image is selected (and not already uploaded), upload it to Cloudinary
+      if (selectedImage && !selectedImage.startsWith('http')) {
+        imageUrl = await uploadImage(selectedImage);
+      }
+
+      // Update newItemData with the new image URL
+      const updatedItemData = {...newItemData, img: imageUrl};
+
+      // Send the updated item to the database
+      await setItemInDataBase(_id, updatedItemData);
+
+      // Fetch updated data and update state
       const result = await getDataFromDataBase();
       setData(result);
 
       console.log('Data set successfully, navigating back');
       nav.goBack();
     } catch (e) {
-      // Log the error and display an error message
       console.error('Error updating item:', e);
       setErrorMessage('Failed to update item.');
       setShowModal(true);
     } finally {
-      // End loading
       setLoading(false);
     }
   };
@@ -391,7 +404,6 @@ const EditProduct = () => {
   const handleInput = useCallback(
     (label, state, setState, keyboardType = 'default', styling) => (
       <View style={styles.inputWrapper}>
-        {console.log('style is: ', styling)}
         <Text style={styles.label}>{label}</Text>
 
         <TextInput
@@ -487,6 +499,7 @@ const EditProduct = () => {
       </View>
     );
   };
+  
   const inputs = () => (
     <View style={styles.inputContainer}>
       <View style={styles.row}>
@@ -514,15 +527,17 @@ const EditProduct = () => {
       <View style={styles.inputContainer}>
         <View style={styles.elevation}>
           <Text style={styles.label}>{strings.category}</Text>
-          <CatsBarItems
-            Array={cat.map((item, index) => ({
-              ...item,
-              key: item.id,
-            }))}
-            style={styles.CatsBarItems}
-            selectedCategory={selectedCategory}
-            setSelectedCategory={setSelectedCategory}
-          />
+          <ScrollView horizontal={true} style={{width: 400}}>
+            <CatsBarItems
+              Array={cat.map((item, index) => ({
+                ...item,
+                key: item.id,
+              }))}
+              selectedCategory={selectedCategory}
+              setSelectedCategory={setSelectedCategory}
+              styling={styles.CatsBarItems}
+            />
+          </ScrollView>
         </View>
 
         <View style={styles.price}>
@@ -549,16 +564,28 @@ const EditProduct = () => {
           )}
         </View>
 
-        <View>
-          <Text style={language == 'en' ? styles.meow : {textAlign: 'right'}}>
-            {strings.searchKeys}
-          </Text>
-          <View style={styles.search}>
-            <Image source={Images.search()} style={styles.image} />
-            <SearchKeys
-              searchKeysArray={searchKeysState}
-              setSearchKeysArray={setSearchKeysState}
-            />
+        <View
+          style={{
+            width: '100%',
+            justifyContent: 'center',
+            alignContent: 'center',
+          }}>
+          <View
+            style={{
+              width: '100%',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text style={language == 'en' ? styles.meow : {textAlign: 'right'}}>
+              {strings.searchKeys}
+            </Text>
+            <View style={styles.search}>
+              <Image source={Images.search()} style={styles.image} />
+              <SearchKeys
+                searchKeysArray={searchKeysState}
+                setSearchKeysArray={setSearchKeysState}
+              />
+            </View>
           </View>
         </View>
 
@@ -571,40 +598,57 @@ const EditProduct = () => {
             styles.disInput,
           )}
         </View>
-
-        {petTypes()}
-        {renderRows()}
+        <View style={{width: '100%', maxWidth: 400}}>
+          {petTypes()}
+          {renderRows()}
+        </View>
       </View>
     </View>
   );
-  
+
   const handleImagePress = async () => {
-    console.log('Image pressed');
+    // Check if the platform is web
+    if (Platform.OS === 'web') {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.onchange = async event => {
+        const file = event.target.files[0];
+        if (file) {
+          const imageUrl = URL.createObjectURL(file);
+          setSelectedImage(imageUrl);
+          console.log('Selected image URL:', imageUrl); // Log the image URL
+          setLoading(false); // Set loading to false once the image is ready
+        }
+      };
 
-    try {
+      input.click();
+    } else {
+      // Mobile logic for image picker
       const permissionGranted = await requestMediaPermissions();
-      console.log('Permission status: ', permissionGranted);
-
       if (permissionGranted === 'granted') {
-        // If permission is granted, open the gallery
         openGallery();
       } else {
-        // If permission is denied
-        setShowreqModal(true); // Show your request modal
-        console.log('Permission denied!');
+        setShowreqModal(true);
       }
-    } catch (error) {
-      console.error('Error requesting permission:', error);
     }
   };
+  useEffect(() => {
+    console.log('Selected image URL:', selectedImage);
+    // You could upload the image here and log the returned URI
+  }, [selectedImage]);
+
   const image = () => {
     return (
       <TouchableOpacity onPress={() => handleImagePress()}>
         <View>
           {selectedImage ? (
-            <Image source={{uri: selectedImage}} style={[styles.img,{resizeMode:'contain'}]} />
+            <Image
+              source={{uri: selectedImage}}
+              style={[styles.img, {resizeMode: 'contain'}]}
+            />
           ) : (
-            <Image source={img} style={styles.img} />
+            <Image source={img} style={[styles.img,{resizeMode:'contain'}]} />
           )}
         </View>
       </TouchableOpacity>
@@ -642,11 +686,10 @@ const EditProduct = () => {
         alignItems: 'center',
         backgroundColor: 'white',
       }}>
+
       <ScrollView
         style={styles.scrollView}
-        contentContainerStyle={{flexGrow: 1, paddingBottom: 100}}>
-
-          
+        contentContainerStyle={{flexGrow: 1}}>
         <View style={styles.container}>
           <View style={styles.row}>
             <Text style={styles.header}>Edit Product</Text>
@@ -658,7 +701,8 @@ const EditProduct = () => {
           </View>
 
           {image()}
-          {inputs()}
+
+          <View>{inputs()}</View>
 
           <CustomModal
             message={strings.delMessage}
@@ -671,6 +715,7 @@ const EditProduct = () => {
           <CustomAlert message={errorMessage} />
         </View>
       </ScrollView>
+
       <View style={styles.cont}>
         {loading ? (
           <View style={styles.loadingContainer}>
@@ -693,6 +738,10 @@ const EditProduct = () => {
 export default EditProduct;
 
 const styles = StyleSheet.create({
+  CatsBarItems: {
+    height: 100,
+    width: '100%',
+  },
   cont: {
     position: 'absolute',
     bottom: 0,
@@ -721,8 +770,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   elevation: {
-    elevation: 10,
-    backgroundColor: 'white',
+    width: '100%',
+    height: 150,
+    alignItems: 'center',
+
     borderRadius: 10,
   },
   dis: {
@@ -737,9 +788,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   search: {
-    flex: 1,
-    backgroundColor: 'white',
-    elevation: 10,
+    maxWidth: 400,
+    width: '100%',
+
     borderRadius: 10,
     flexDirection: 'row',
   },
@@ -777,18 +828,17 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
   },
-sale: {
-  alignItems: 'center',
-  flexDirection: 'row',
-  justifyContent: 'space-evenly',
-  borderWidth: 1,
-  borderColor: 'red',
-  borderRadius: 30,
-  backgroundColor: 'white',
+  sale: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    borderWidth: 1,
+    borderColor: 'red',
+    borderRadius: 30,
+    backgroundColor: 'white',
 
-  elevation: 5,                  
-},
-
+    elevation: 5,
+  },
 
   modalBackground: {
     flex: 1,
@@ -801,8 +851,8 @@ sale: {
     backgroundColor: 'white',
     borderRadius: 10,
     padding: 20,
-   
-    elevation: 5, 
+
+    elevation: 5,
   },
   modalTitle: {
     color: 'black',
@@ -821,7 +871,7 @@ sale: {
     backgroundColor: '#2196F3',
     borderRadius: 5,
     padding: 10,
-    elevation: 2, 
+    elevation: 2,
   },
   modalButtonText: {
     color: 'white',
@@ -869,18 +919,17 @@ sale: {
     alignItems: 'center',
   },
   img: {
-   
-    height: 300,
+    height:200,
     width: 200,
   },
   scrollView: {
-    width: Sizes.screenWidth,
-    height: Sizes.screenHeight,
+    width: '100%',
+    height: '100%',
     paddingBottom: 100,
   },
   inputContainer: {
     width: '100%',
-    padding: 16,
+    height: '100%',
   },
   row: {
     flexDirection: 'row',
@@ -899,13 +948,13 @@ sale: {
     backgroundColor: 'lightblue',
     padding: 10,
     borderRadius: 30,
-    
     bottom: 5,
     elevation: 5,
   },
   container: {
     alignItems: 'center',
-    flex: 1,
+    width: '100%',
+    height: '100%',
     backgroundColor: '#ffffff',
   },
   txt: {

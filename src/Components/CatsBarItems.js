@@ -14,7 +14,12 @@ import Images from '../assets/images/images';
 import SolabContext from '../store/solabContext';
 import Sizes from '../res/sizes';
 
-const CatsBarItems = ({selectedCategory, setSelectedCategory, Array}) => {
+const CatsBarItems = ({
+  selectedCategory,
+  setSelectedCategory,
+  Array,
+  styling,
+}) => {
   const {strings, changeLanguage} = useContext(SolabContext);
   const categoriesMap = Object.assign({}, ...Array);
 
@@ -118,11 +123,13 @@ const CatsBarItems = ({selectedCategory, setSelectedCategory, Array}) => {
 
   const renderBar = () => (
     <View
-      style={{
-        flex: 1,
-        maxWidth: 600,
-        overflow: 'hidden',
-      }}>
+      style={
+        styling || {
+          flex: 1,
+          maxWidth: 600,
+          overflow: 'hidden',
+        }
+      }>
       <FlatList
         ref={flatListRef}
         data={categories}

@@ -52,8 +52,8 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
   const IOS_CLIENT_ID = Constants.expoConfig?.extra?.IOS_CLIENT_ID;
   const WEB_CLIENT_ID = Constants.expoConfig?.extra?.WEB_CLIENT_ID;
 
-  // const redirectUri = 'https://solabgrooming.netlify.app';
-  const redirectUri = 'http://localhost:8081';
+  const redirectUri = 'https://solabgrooming.netlify.app';
+  // const redirectUri = 'http://localhost:8081';
 
   const fetchGoogleUserInfo = async (accessToken: string) => {
     try {
