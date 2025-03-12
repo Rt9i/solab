@@ -42,6 +42,9 @@ const Index = () => {
     redirectUri,
   }: any = useContext(SolabContext);
   const [loading, setLoading] = useState(false);
+  const [verificationCode, setVerificationCode] = useState<string>('');
+  const [verificationCodeSent, setVerificationCodeSent] =
+    useState<boolean>(false);
 
   const [modalCallback, setModalCallback] = useState<
     ((phone: string) => void) | null
@@ -141,6 +144,8 @@ const Index = () => {
       const code = queryParams.get('code');
 
       console.log('3');
+      console.log('code: ', code);
+
       if (code) {
         const userToken = await getUserToken(code);
         if (!userToken) {
@@ -162,10 +167,10 @@ const Index = () => {
           setUser(user);
 
           if (rememberme) {
-            console.log('9');
+            console.log('6.3');
             console.log('actually rememberd');
             if (user) {
-              console.log('10');
+              console.log('6.5');
               localStorage.setItem('user', JSON.stringify(user));
             }
           }
@@ -173,8 +178,22 @@ const Index = () => {
         }
         console.log('7');
         const number = await waitForPhoneInput();
+        console.log('number: ', number);
+        console.log('user information: ', userInfo.email);
 
-        return number || undefined;
+        const userAfterPhoneVerify = await getUserByGmail(userInfo.email);
+        console.log('user After PhoneVerify: ', userAfterPhoneVerify);
+
+        const userUser = userAfterPhoneVerify.user;
+        console.log('user user ??? : ', userUser);
+
+        if (userAfterPhoneVerify && userAfterPhoneVerify.user) {
+          setUser(userAfterPhoneVerify.user);
+        } else {
+          console.log('No user data found after phone verification');
+        }
+
+        return userUser;
       }
 
       return null;
@@ -187,18 +206,39 @@ const Index = () => {
     setLoading(true);
     try {
       console.log('1');
+      let user;
 
+      // Retrieve user from localStorage
       const localUser = localStorage.getItem('user');
-      const user = localUser ? JSON.parse(localUser) : null;
-      if (user && user !== null) {
-        console.log(`[LocalStorage] Found user: ${user}`);
-        const getUser = await getUserByGmail(user.email);
-        const newUser = getUser.user;
+      console.log('local user:', localUser);
 
-        setUser(newUser);
+      const currentuser = localUser ? JSON.parse(localUser) : null;
+
+
+      if (currentuser) {
+        console.log(`[LocalStorage] Found user:`, currentuser);
+
+        const userEmail = currentuser.email;
+        const userPhoneNumber = currentuser.phoneNumber;
+
+        console.log('User Phone Number:', userPhoneNumber);
+        console.log('User Email:', userEmail);
+
+        if (userPhoneNumber) {
+          const getUser = await getUserByPhoneNumber(userPhoneNumber);
+          user = getUser;
+          console.log('User found by phone number:', user);
+        } else {
+          const getUser = await getUserByGmail(userEmail);
+          user = getUser;
+          console.log('User found by Gmail:', user);
+        }
+
+        setUser(user);
       } else {
-        console.log('executing');
-        console.log('8');
+        console.log(
+          'No user found in localStorage. Executing new user flow...',
+        );
         await executeUser();
       }
     } catch (error) {
@@ -209,9 +249,9 @@ const Index = () => {
     if (policyAccept === false) {
       nav('/Policy');
     }
-
+    console.log('9');
     if (!user || user?.error === true) {
-      console.log('No user found. Redirecting to Home...');
+      console.log('No user found in local storage. Redirecting to Home...');
       nav('Home');
       return;
     }
@@ -261,6 +301,12 @@ const Index = () => {
           setModalVisible={setModalVisible}
           setIsPhoneVerified={setIsPhoneVerified}
           isPhoneVerified={isPhoneVerified}
+          verificationCode={verificationCode}
+          setVerificationCode={setVerificationCode}
+          setVerificationCodeSent={setVerificationCodeSent}
+          verificationCodeSent={verificationCodeSent}
+          modalCallback={modalCallback}
+          setModalCallback={setModalCallback}
         />
         {loading && (
           <ActivityIndicator

@@ -3,17 +3,18 @@ import {
   View,
   Text,
   TextInput,
-  Button,
   StyleSheet,
   ActivityIndicator,
   TouchableOpacity,
-  Alert,
+  Button,
 } from 'react-native';
-import {logIn, createUser} from '../res/api';
+import {logIn, createUser, sendOTP, verifyOTP} from '../res/api';
 
 import SolabContext from '../store/solabContext';
 import {useNavigation} from 'expo-router';
-import Toast from 'react-native-toast-message';
+import {toast} from 'react-hot-toast';
+
+import PhoneModal from './getNumber';
 
 const LoginForm = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -24,6 +25,12 @@ const LoginForm = () => {
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
 
+  const [isModalVisible, setisModalVisible] = useState(false);
+
+  const [isPhoneVerified, setIsPhoneVerified] = useState(false);
+  const [verificationCode, setVerificationCode] = useState('');
+  const [verificationCodeSent, setVerificationCodeSent] = useState(false);
+
   const clearTxt = () => {
     setPhoneNumber('');
     setPassword('');
@@ -31,12 +38,14 @@ const LoginForm = () => {
   };
 
   const navigation = useNavigation();
-  const {saveUser, clearAsyncStorage, strings} = useContext(SolabContext);
+  const {saveUser, clearAsyncStorage, strings, setUser} =
+    useContext(SolabContext);
 
   const handleLogin = async () => {
     if (loading) {
       return;
     }
+
     setErrors({});
     if (!phoneNumber || !password) {
       setErrors({
@@ -52,12 +61,20 @@ const LoginForm = () => {
     setLoading(true);
 
     try {
+      const remember = localStorage.getItem('rememberMe');
       const response = await logIn(phoneNumber, password);
+      console.log('number and pass: ', phoneNumber, '+', password);
+
       console.log('Login response:', response);
 
       if (response.auth && response.user) {
-        await clearAsyncStorage();
-        await saveUser(response.user);
+        if (remember) {
+          console.log('remember me: ', remember);
+          localStorage.setItem('user', JSON.stringify(response.user));
+        } else {
+          setUser(response.user);
+        }
+
         navigation.navigate('index');
       } else {
         handleError(response.errorMessage, 'login');
@@ -70,36 +87,113 @@ const LoginForm = () => {
     }
   };
 
-  const handleRegister = async () => {
+  const sendOtpCode = async () => {
+    try {
+      console.log('sending requeest');
+      const response = await sendOTP('+972' + phoneNumber);
+      if (response.ok === true) setVerificationCodeSent(true);
+      console.log('otp response: ', response);
+
+      return response;
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const verifyOTPCode = async () => {
+    try {
+      console.log('sending requeest');
+      const response = await verifyOTP('+972' + phoneNumber, verificationCode);
+      if (response.ok == true || response.success == true) {
+        setIsPhoneVerified(true);
+
+        const res = await createUser(userName, phoneNumber, password);
+        console.log('create user res: ', res);
+
+        setVerificationCode();
+        handleSwitch();
+        toast.success(
+          `${strings.registerMessage} ${strings.nowYouCanLogin}! 🎉`,
+          {
+            position: 'top-center',
+            duration: 2000,
+          },
+        );
+
+        console.log('verifcation rsponse: ', response);
+        return response;
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleVerify = async () => {
     setErrors({});
     setLoading(true);
 
     try {
-      const response = await createUser(userName, phoneNumber, password);
-      console.log('CreateUser response:', response);
+      if (!password) {
+        setErrors(prevErrors => ({
+          ...prevErrors,
+          password: 'Password is required',
+        }));
+      }
+      if (!phoneNumber) {
+        setErrors(prevErrors => ({
+          ...prevErrors,
+          phoneNumber: 'Phone number is required',
+        }));
+      }
+      if (!userName) {
+        setErrors(prevErrors => ({
+          ...prevErrors,
+          userName: 'user name is required',
+        }));
+      }
+
+      const res = await handleSendOtp();
 
       if (response.user) {
-        Toast.show({
-          type: 'success',
-
-          text1: strings.registerMessage,
-          text2: strings.nowYouCanLogin + '!🎉',
-          position: 'top',
-          visibilityTime: 2000,
-        });
-
+        toast.success(
+          `${strings.registerMessage} ${strings.nowYouCanLogin}! 🎉`,
+          {
+            position: 'top-center',
+            duration: 2000,
+          },
+        );
         setRegisterMode(false);
         clearTxt();
       } else if (response.errorMessage) {
-        handleError(response.errorMessage, 'register');
+        // handleError(response.errorMessage, 'register');
       }
     } catch (error) {
       error;
-      setErrors({
-        password: 'An error occurred during registration. Please try again.',
-      });
     } finally {
       setLoading(false);
+    }
+  };
+  const handleSendOtp = async () => {
+    try {
+      setLoading(true);
+
+      if (Object.keys(errors).length == 0) {
+        console.log('sending otp req');
+        const res = await sendOtpCode();
+        console.log('res in handleSendOtp: ', res);
+
+        if (res.success === true) {
+          console.log('indeed right');
+          setVerificationCodeSent(true);
+        } else {
+          console.log('OTP request failed');
+        }
+      }
+
+      setLoading(false); // This should be placed after the API call, once it's complete
+    } catch (e) {
+      console.log(e);
+      setLoading(false); // Ensure loading is set to false even if there's an error
     }
   };
 
@@ -112,72 +206,121 @@ const LoginForm = () => {
       setErrors({password: 'An error occurred. Please try again'});
     }
   };
-
+  const handleSwitch = () => {
+    setRegisterMode(!registerMode);
+    setVerificationCode(false);
+    setVerificationCodeSent(false);
+    setErrors({});
+    clearTxt();
+  };
   return (
     <View style={styles.formContainer}>
       <Text style={styles.label}>{registerMode ? 'Register' : 'Log In'}</Text>
-      {registerMode && (
-        <TextInput
-          style={styles.input}
-          value={userName}
-          onChangeText={setUserName}
-          placeholder="Name"
-          placeholderTextColor="rgba(0, 0, 0, 0.3)"
-          accessibilityLabel="Name input"
-          testID="userNameInput" // For testing
-        />
+
+      {verificationCodeSent ? (
+        <View style={{marginBottom: 10}}>
+          <TextInput
+            style={[styles.input, errors.code && styles.inputError]}
+            value={verificationCode}
+            onChangeText={setVerificationCode}
+            placeholder="Code"
+            placeholderTextColor="rgba(0, 0, 0, 0.3)"
+            accessibilityLabel="code input"
+            testID="codeInput"
+          />
+
+          <Button
+            title="Confirm"
+            onPress={() => {
+              verifyOTPCode();
+            }}
+            disabled={!verificationCode} // Disable the button if there's no verification code
+          />
+        </View>
+      ) : (
+        <View>
+          {errors.userName && (
+            <Text style={styles.errorText}>{errors.userName}</Text>
+          )}
+          {registerMode && (
+            <TextInput
+              style={[styles.input, errors.userName && styles.inputError]}
+              value={userName}
+              onChangeText={setUserName}
+              placeholder="Name"
+              placeholderTextColor="rgba(0, 0, 0, 0.3)"
+              accessibilityLabel="Name input"
+              testID="userNameInput"
+            />
+          )}
+
+          {errors.phoneNumber && (
+            <Text style={styles.errorText}>{errors.phoneNumber}</Text>
+          )}
+          <TextInput
+            style={[styles.input, errors.phoneNumber && styles.inputError]}
+            value={phoneNumber}
+            onChangeText={setPhoneNumber}
+            keyboardType="phone-pad"
+            placeholder="Phone Number"
+            placeholderTextColor="rgba(0, 0, 0, 0.3)"
+            accessibilityLabel="Phone number input"
+            testID="phoneNumberInput" // For testing
+          />
+
+          {errors.password && (
+            <Text style={styles.errorText}>{errors.password}</Text>
+          )}
+
+          <View style={styles.passwordContainer}>
+            <TextInput
+              style={[
+                styles.input,
+                styles.passwordInput,
+                errors.password && styles.inputError,
+              ]}
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={!showPassword}
+              placeholder="Password"
+              placeholderTextColor="rgba(0, 0, 0, 0.3)"
+              accessibilityLabel="Password input"
+              testID="passwordInput" // For testing
+            />
+            <TouchableOpacity
+              onPress={() => setShowPassword(!showPassword)}
+              style={styles.eyeIcon}
+              accessibilityLabel={
+                showPassword ? 'Hide password' : 'Show password'
+              }>
+              <Text style={styles.show}>{showPassword ? 'Hide' : 'Show'}</Text>
+            </TouchableOpacity>
+          </View>
+
+          <TouchableOpacity
+            style={styles.button}
+            onPress={registerMode ? handleVerify : handleLogin}
+            disabled={loading}
+            accessibilityLabel={
+              registerMode ? 'Register button' : 'Log In button'
+            }>
+            <Text style={styles.buttonText}>
+              {registerMode ? 'Verify' : 'Log In'}
+            </Text>
+          </TouchableOpacity>
+        </View>
       )}
-      <Text style={styles.errorText}>{errors.phoneNumber}</Text>
-      <TextInput
-        style={[styles.input, errors.phoneNumber && styles.inputError]}
-        value={phoneNumber}
-        onChangeText={setPhoneNumber}
-        keyboardType="phone-pad"
-        placeholder="Phone Number"
-        placeholderTextColor="rgba(0, 0, 0, 0.3)"
-        accessibilityLabel="Phone number input"
-        testID="phoneNumberInput" // For testing
-      />
-      <View style={styles.passwordContainer}>
-        <TextInput
-          style={[
-            styles.input,
-            styles.passwordInput,
-            errors.password && styles.inputError,
-          ]}
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry={!showPassword}
-          placeholder="Password"
-          placeholderTextColor="rgba(0, 0, 0, 0.3)"
-          accessibilityLabel="Password input"
-          testID="passwordInput" // For testing
-        />
-        <TouchableOpacity
-          onPress={() => setShowPassword(!showPassword)}
-          style={styles.eyeIcon}
-          accessibilityLabel={showPassword ? 'Hide password' : 'Show password'}>
-          <Text style={styles.show}>{showPassword ? 'Hide' : 'Show'}</Text>
-        </TouchableOpacity>
-      </View>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={registerMode ? handleRegister : handleLogin}
-        disabled={loading}
-        accessibilityLabel={registerMode ? 'Register button' : 'Log In button'}>
-        <Text style={styles.buttonText}>
-          {registerMode ? 'Register' : 'Log In'}
-        </Text>
-      </TouchableOpacity>
+
       <TouchableOpacity
         style={[styles.button, styles.switchButton]}
-        onPress={() => setRegisterMode(!registerMode)}
+        onPress={() => handleSwitch()}
         disabled={loading}
         accessibilityLabel={registerMode ? 'Log In' : 'Register'}>
         <Text style={styles.buttonText}>
           {registerMode ? 'Switch to Log In' : 'Switch to Register'}
         </Text>
       </TouchableOpacity>
+
       {loading && (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size={50} color="#007bff" />
@@ -193,15 +336,6 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 12,
     width: 50,
-  },
-  container: {
-    height: '100%',
-    width: '100%',
-    maxWidth: 500,
-    maxHeight: 650,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f8f9fa',
   },
   formContainer: {
     width: '90%',

@@ -22,7 +22,6 @@ import Toast from 'react-native-toast-message';
 import {toast} from 'react-hot-toast';
 import SolabContext from '../store/solabContext';
 
-
 type PhoneModalProps = {
   phoneNumber: string | null;
   setPhoneNumber: (phone: string) => void;
@@ -30,6 +29,14 @@ type PhoneModalProps = {
   setModalVisible: (visible: boolean) => void;
   setIsPhoneVerified: (verified: boolean) => void;
   isPhoneVerified: boolean;
+  verificationCode: string;
+  setVerificationCode: (verificationCode: string) => void;
+  verificationCodeSent: boolean;
+  setVerificationCodeSent: (sent: boolean) => void;
+  modalCallback: ((phone: string) => void) | null;
+  setModalCallback: React.Dispatch<
+    React.SetStateAction<((phone: string) => void) | null>
+  >;
 };
 
 const PhoneModal: React.FC<PhoneModalProps> = ({
@@ -39,11 +46,13 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
   setModalVisible,
   setIsPhoneVerified,
   isPhoneVerified,
+  verificationCode,
+  setVerificationCode,
+  verificationCodeSent,
+  setVerificationCodeSent,
+  modalCallback,
+  setModalCallback,
 }) => {
-  const [verificationCode, setVerificationCode] = useState<string>('');
-  const [verificationCodeSent, setverificationCodeSent] = useState<
-    boolean | null
-  >(false);
   const {currentUser, setCurrentUser}: any = React.useContext(SolabContext);
 
   const showToast = (
@@ -70,8 +79,9 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
       console.log('sending requeest');
 
       const response = await sendOTP('+972' + phoneNumber);
-      setverificationCodeSent(true);
-      console.log('otp rsponse: ', response);
+      if (response?.success === true) setVerificationCodeSent(true);
+
+      console.log('otp response: ', response);
     } catch (e) {
       console.log(e);
     }
@@ -93,11 +103,11 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
 
       console.log('Server Response:', response);
 
-       localStorage.setItem('userPhoneNumber', phoneNumber as string);
+      localStorage.setItem('userPhoneNumber', phoneNumber as string);
 
       console.log(' phone number saved:', phoneNumber);
-
-      window.location.href = '/';
+  
+      return response;
     } catch (e) {
       console.error('Error signing in user:', e);
     }
@@ -116,10 +126,15 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
           'Phone Verified!',
           'Your phone number has been successfully verified.',
         );
-        signToDataBase();
+        await signToDataBase();
         console.log('verifcation rsponse: ', response);
-        // window.location.href = '/';
-        return;
+        if (modalCallback) {
+          modalCallback(phoneNumber as any);
+          setModalCallback(null); // Clear callback after use
+          setModalVisible(false)
+        }
+
+        return response;
       }
     } catch (e) {
       console.log(e);
@@ -136,13 +151,17 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
       visible={isModalVisible}
       transparent
       animationType="fade"
-      onRequestClose={() => setModalVisible(false)}>
+      onRequestClose={() => {}} >
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
           {/* <Button title="save number " onPress={() => encryptPhonenumber()} /> */}
           {/* <Button title="get number" onPress={() => getphoneNumber()} /> */}
-          {/* <Button title="save user " onPress={() => signToDataBase()} /> */}
+          {/* <Button
+            title="save user "
+            onPress={async () => await signToDataBase()}
+          /> */}
           {/* <Button title="close " onPress={() => setModalVisible(false)} /> */}
+
           {!verificationCodeSent && !isPhoneVerified && (
             <View>
               <Text style={styles.title}>Please enter your phone number:</Text>

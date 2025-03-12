@@ -414,7 +414,6 @@ export const fetchAccessToken = async (code, webClient, redirect) => {
     console.error('Error fetching access token:', error);
   }
 };
-
 const appFetch = async (route, method = 'GET', body = null) => {
   const url = `${mainURL}${route}`;
 
