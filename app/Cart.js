@@ -23,6 +23,7 @@ import Images from '../src/assets/images/images';
 import {updateUserProducts} from '../src/res/api';
 import CustomModal from '@/src/Components/customModal';
 import toast from 'react-hot-toast';
+import {useNavigation} from 'expo-router';
 
 const Cart = props => {
   const {
@@ -46,6 +47,7 @@ const Cart = props => {
   const [previousCartState, setPreviousCartState] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
 
+  const nav = useNavigation();
   const getArray = () => {
     if (selectedItems <= 0) {
       return cart;
@@ -133,14 +135,14 @@ const Cart = props => {
   }, [isSelectAll, cart]);
   useEffect(() => {
     console.log('selected items: ', selectedItems);
-    
+
     if (selectedItems.length === cart.length && cart.length > 0) {
       setIsSelectAll(true);
     } else {
       setIsSelectAll(false);
     }
-  }, [selectedItems, cart]); // Added cart as a dependency in case it updates
-  
+  }, [selectedItems, cart]);
+
   const renderCart = ({item}) => (
     <CartRowItems
       {...item}
@@ -155,7 +157,6 @@ const Cart = props => {
     />
   );
 
-  // Display a message if the cart is empty
   const emptyCartMessage = () => {
     if (cart.length === 0) {
       return <Text style={styles.emptyText}>{strings.empty}</Text>;
@@ -179,19 +180,27 @@ const Cart = props => {
   const cancelRemove = () => {
     setModalVisible(false);
   };
-  const selectAproduct = () =>
+  const selectAproduct = () => {
     toast.error('please select a product!', {
       duration: 2000,
       position: 'top-center',
     });
+  };
+  const showToast = message => {
+    toast.error(`${message}`, {
+      duration: 2000,
+      position: 'top-center',
+    });
+  };
+
+  const gamaPay = () => {
+    const res = 'success';
+    return res;
+  };
 
   const handleCardPress = () => {
     if (!user) {
-      toast.error('please sign in!', {
-        duration: 2000,
-        position: 'top-center',
-      });
-
+      showToast('please sign in!');
       return;
     }
 
@@ -199,12 +208,16 @@ const Cart = props => {
       selectAproduct();
       return;
     }
-    console.log('checking out ');
-    toast.error('coming soon!', {
-      duration: 2000,
-      position: 'top-center',
-    });
-    // checkOut();
+    // showToast('coming soon!');
+
+    const res = gamaPay();
+
+    if (res == 'success') {
+      nav.navigate('OrdersPage', { products: JSON.stringify(selectedItems) });
+
+    } else {
+      showToast('something went wrong!');
+    }
   };
 
   return (
@@ -326,7 +339,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#ddd',
   },
   headerContent: {
-    marginTop:20,
+    marginTop: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

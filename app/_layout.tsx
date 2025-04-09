@@ -32,6 +32,7 @@ function AppContent() {
         }}>
         <Stack.Screen name="Home" options={{headerShown: false}} />
         <Stack.Screen name="Policy" />
+        <Stack.Screen name="OrdersPage" />
         <Stack.Screen name="StaffHome" />
         <Stack.Screen name="WorkersHome" />
         <Stack.Screen name="EditProduct" />

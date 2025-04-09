@@ -245,6 +245,8 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
     const currentStrings = translations[language];
     setStrings(currentStrings);
   }, [language]);
+
+  
   useEffect(() => {
     const loadLanguage = async () => {
       try {
