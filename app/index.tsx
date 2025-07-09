@@ -74,6 +74,7 @@ const Index = () => {
   const fetchData = async () => {
     try {
       const result = await getDataFromDataBase();
+      console.log("data we gotnow from db: ", result)
       setData(result);
     } catch (error) {
       console.error('Error fetching data:', error);
