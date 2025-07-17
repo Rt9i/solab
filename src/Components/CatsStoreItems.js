@@ -11,7 +11,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import SolabContext from '../store/solabContext';
 import Images from '../assets/images/images';
-import toast from 'react-hot-toast';
+
 
 const CatsStoreItems = ({selectedCategory, ...props}) => {
   const {strings, changeLanguage, user, row} = useContext(SolabContext);
@@ -40,7 +40,7 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
     salePrice,
     petType,
   } = props;
-  const { addItemToCart} = useContext(SolabContext);
+  const {addItemToCart} = useContext(SolabContext);
 
   const onCardPress = () => {
     const Item = {...props};
@@ -50,11 +50,12 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
   const addToShop = () => {
     const Item = {...props};
     addItemToCart(Item, Item.productId);
-
-    toast.success(`${strings.productAdded}! 🎉`, {
-      position: 'top-center', // Show toast from the top
-      duration: 1000, // Duration for 1 second
-    });
+    // if (Platform.OS == 'web') {
+    //   toast.success(`${strings.productAdded}! 🎉`, {
+    //     position: 'top-center', // Show toast from the top
+    //     duration: 1000, // Duration for 1 second
+    //   });
+    // }
   };
 
   const handleEditProducts = () => {
@@ -64,7 +65,6 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
   return (
     <View
       style={user?.role === 'staff' ? styles.itemWidthStaff : styles.itemWidth}>
-
       <View style={styles.items}>
         {user?.role == 'staff' && (
           <View style={styles.stock}>
@@ -82,8 +82,8 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
           <Image
             source={img}
             style={[
-              {resizeMode: 'contain'}, 
-              styles.img, 
+              {resizeMode: 'contain'},
+              styles.img,
               selectedCategory === 'catMeat' ? meatImg : null,
             ]}
           />
@@ -106,7 +106,13 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
           <TouchableOpacity
             onPress={() => handleEditProducts()}
             style={styles.editButtonContainer}>
-            <View style={{width: 30, height: 30,justifyContent:'center',alignItems:'center'}}>
+            <View
+              style={{
+                width: 30,
+                height: 30,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
               <Image
                 source={Images.edit()}
                 resizeMode="contain"
@@ -126,9 +132,7 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
               <Text style={styles.carttxt}>{strings.addToCart}</Text>
             </View>
           </TouchableOpacity>
-        </View> 
-
-
+        </View>
       </View>
 
       {saleAmount > 0 && (
@@ -213,7 +217,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   edit: {
-  
     height: 30,
     width: 30,
     zIndex: 1,
@@ -222,7 +225,6 @@ const styles = StyleSheet.create({
   center: {
     justifyContent: 'center',
     alignItems: 'center',
-  
   },
 
   sale: {
@@ -279,7 +281,7 @@ const styles = StyleSheet.create({
   },
   img: {
     marginTop: 15,
-   
+
     width: '100%',
     height: 120,
     borderTopLeftRadius: 5,
@@ -338,7 +340,6 @@ const styles = StyleSheet.create({
     width: 120,
     alignItems: 'center',
     bottom: 10,
-   
   },
   carttxt: {
     fontSize: 12,

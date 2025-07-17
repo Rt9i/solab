@@ -18,9 +18,9 @@ import {
 } from '../res/api';
 import Images from '../assets/images/images';
 import {Platform} from 'react-native';
-import Toast from 'react-native-toast-message';
-import {toast} from 'react-hot-toast';
+
 import SolabContext from '../store/solabContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type PhoneModalProps = {
   phoneNumber: string | null;
@@ -60,18 +60,18 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
     appText1: string,
     appText2: string,
   ) => {
-    if (Platform.OS === 'web') {
-      toast.success(wemMessage);
-    } else {
-      Toast.show({
-        type: 'success',
-        text1: appText1,
-        text2: appText2,
-        position: 'top',
-        visibilityTime: 4000,
-        autoHide: true,
-      } as any);
-    }
+    // if (Platform.OS === 'web') {
+    //   toast.success(wemMessage);
+    // } else {
+    //   Toast.show({
+    //     type: 'success',
+    //     text1: appText1,
+    //     text2: appText2,
+    //     position: 'top',
+    //     visibilityTime: 4000,
+    //     autoHide: true,
+    //   } as any);
+    // }
   };
 
   const sendOtpCode = async () => {
@@ -86,7 +86,13 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
       console.log(e);
     }
   };
-
+  const setItem = async (key: string, value: string): Promise<void> => {
+    if (Platform.OS === 'web') {
+      localStorage.setItem(key, value);
+    } else {
+      await AsyncStorage.setItem(key, value);
+    }
+  };
   const signToDataBase = async () => {
     try {
       console.log('user name: ', currentUser.name);
@@ -103,10 +109,10 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
 
       console.log('Server Response:', response);
 
-      localStorage.setItem('userPhoneNumber', phoneNumber as string);
+      setItem('userPhoneNumber', phoneNumber as string);
 
       console.log(' phone number saved:', phoneNumber);
-  
+
       return response;
     } catch (e) {
       console.error('Error signing in user:', e);
@@ -131,7 +137,7 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
         if (modalCallback) {
           modalCallback(phoneNumber as any);
           setModalCallback(null); // Clear callback after use
-          setModalVisible(false)
+          setModalVisible(false);
         }
 
         return response;
@@ -151,7 +157,7 @@ const PhoneModal: React.FC<PhoneModalProps> = ({
       visible={isModalVisible}
       transparent
       animationType="fade"
-      onRequestClose={() => {}} >
+      onRequestClose={() => {}}>
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
           {/* <Button title="save number " onPress={() => encryptPhonenumber()} /> */}

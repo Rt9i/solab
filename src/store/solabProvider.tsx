@@ -9,13 +9,14 @@ import React, {
 
 import SolabContext from './solabContext';
 import {enStrings, heStrings, arStrings} from '../res/strings';
-import {Alert} from 'react-native';
+import {Alert, Platform} from 'react-native';
 import {updateUserProducts, saveProductsToDatabase} from '../res/api';
 import {useNavigation} from 'expo-router';
 
 import Constants from 'expo-constants';
 import * as Google from 'expo-auth-session/providers/google';
 import {makeRedirectUri} from 'expo-auth-session';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface SolabProviderProps {
   children: ReactNode;
@@ -115,6 +116,29 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
     {bowl: 'bowl'},
   ];
 
+  const getItem = async (key: string): Promise<string | null> => {
+    if (Platform.OS === 'web') {
+      return localStorage.getItem(key);
+    } else {
+      return await AsyncStorage.getItem(key);
+    }
+  };
+
+  const setItem = async (key: string, value: string): Promise<void> => {
+    if (Platform.OS === 'web') {
+      localStorage.setItem(key, value);
+    } else {
+      await AsyncStorage.setItem(key, value);
+    }
+  };
+
+  const removeStoredItem = async (key: string): Promise<void> => {
+    if (Platform.OS === 'web') {
+      localStorage.removeItem(key);
+    } else {
+      await AsyncStorage.removeItem(key);
+    }
+  };
   const triggerScrollToTop = () => {
     setScrollToTop(prev => !prev);
   };
@@ -130,7 +154,7 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
     () =>
       (rowValue: string): Item[] => {
         const isSearchActive = search.length > 0;
-  
+
         const filteredItems = data.filter((item: Item) => {
           const matchesSearch = isSearchActive
             ? search.some((keyword: string) =>
@@ -139,20 +163,20 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
                 ),
               )
             : true;
-  
+
           const matchesCategory =
             !isSearchActive && selectedCategory
               ? item.category?.includes(selectedCategory)
               : true;
-  
+
           const matchesRowValue = rowValue
             ? item.category.includes(rowValue)
             : true;
-  
+
           const matchesPetType = selectedIcons.length
             ? item.petType?.some(pet => selectedIcons.includes(pet))
             : true;
-  
+
           return (
             matchesSearch &&
             matchesCategory &&
@@ -160,12 +184,12 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
             matchesPetType
           );
         });
-  
+
         return filteredItems;
       },
     [search, selectedCategory, selectedIcons, data],
   );
-  
+
   useEffect(() => {
     const saveCartWithDebounce = async () => {
       if (debounceTimeout.current) {
@@ -179,12 +203,12 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
               await updateUserProducts(user._id, cart);
               console.log('Cart sent to server:', cart);
             } else {
-              localStorage.setItem('cart', JSON.stringify(cart));
-              console.log('Cart saved to AsyncStorage:', cart);
+              await setItem('cart', JSON.stringify(cart)); // <-- use setItem & await
+              console.log('Cart saved to storage:', cart);
             }
           } catch (error) {
             console.error(
-              'Error updating cart on server or saving to AsyncStorage:',
+              'Error updating cart on server or saving to storage:',
               error,
             );
           }
@@ -203,28 +227,22 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
 
   const loadCartFromAsyncStorage = useCallback(async () => {
     try {
-      if(user){
-        const cart = user.products
-        console.log("user products: ", user.products);
-        
-       return setCart(cart)
+      if (user) {
+        const cart = user.products;
+        console.log('user products: ', cart);
+        setCart(cart);
+        return;
       }
-      const cartData = localStorage.getItem('cart');
+      const cartData = await getItem('cart'); // await here
       if (cartData) {
         const cart = JSON.parse(cartData);
-        console.log('Loaded cart from localStorage:', cart);
+        console.log('Loaded cart from storage:', cart);
         setCart(cart);
       }
     } catch (error) {
-      console.error('Error loading cart from localStorage:', error);
+      console.error('Error loading cart from storage:', error);
     }
   }, [user]);
-
-  // useEffect(() => {
-  //   if (!user) {
-  //     saveCartToAsyncStorage(cart);
-  //   }
-  // }, [cart]);
 
   useEffect(() => {
     if (user == null) {
@@ -234,7 +252,7 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
 
   const changeLanguage = useCallback(async (lang: Language) => {
     try {
-      localStorage.setItem('language', lang);
+      await setItem('language', lang); // await here
       setLanguage(lang);
     } catch (error) {
       console.log('Failed to save language to storage:', error);
@@ -242,15 +260,9 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
   }, []);
 
   useEffect(() => {
-    const currentStrings = translations[language];
-    setStrings(currentStrings);
-  }, [language]);
-
-  
-  useEffect(() => {
     const loadLanguage = async () => {
       try {
-        const savedLanguage = localStorage.getItem('language');
+        const savedLanguage = await getItem('language'); // await here
         if (savedLanguage) {
           setLanguage(savedLanguage);
         }
@@ -262,15 +274,20 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
     loadLanguage();
   }, []);
 
-  const clearAsyncStorage = useCallback(async () => {
+  useEffect(() => {
+    const currentStrings = translations[language];
+    setStrings(currentStrings);
+  }, [language]);
+
+  const clearStorage = useCallback(async () => {
     try {
-      localStorage.removeItem('user');
-      localStorage.removeItem('cart');
-      localStorage.removeItem('rememberMe');
-      localStorage.removeItem('userPhoneNumber');
-      localStorage.removeItem('userEmail');
+      await removeItem('user');
+      await removeItem('cart');
+      await removeItem('rememberMe');
+      await removeItem('userPhoneNumber');
+      await removeItem('userEmail');
     } catch (error) {
-      console.log('Failed to clear localStorage:', error);
+      console.log('Failed to clear storage:', error);
     }
   }, []);
 
@@ -280,9 +297,13 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
       setUser(null);
       setCart([]);
       setIsAuthenticated(false);
-      await clearAsyncStorage();
+      await clearStorage();
 
-      window.location.href = '/';
+      if (Platform.OS === 'web') {
+        window.location.href = '/';
+      } else {
+        nav.navigate('index');
+      }
       console.log('Logged out successfully');
     } catch (error) {
       console.log('Failed to log out:', error);
@@ -428,7 +449,7 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
     isAuthenticated,
 
     logout,
-    clearAsyncStorage,
+    clearStorage,
     saveUserProducts,
     setUser,
     filteredItemsState,

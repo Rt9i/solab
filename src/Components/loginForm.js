@@ -12,9 +12,10 @@ import {logIn, createUser, sendOTP, verifyOTP} from '../res/api';
 
 import SolabContext from '../store/solabContext';
 import {useNavigation} from 'expo-router';
-import {toast} from 'react-hot-toast';
+
 
 import PhoneModal from './getNumber';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginForm = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -41,6 +42,21 @@ const LoginForm = () => {
   const {saveUser, clearAsyncStorage, strings, setUser} =
     useContext(SolabContext);
 
+  const getItem = async key => {
+    if (Platform.OS === 'web') {
+      return localStorage.getItem(key);
+    } else {
+      return await AsyncStorage.getItem(key);
+    }
+  };
+
+  const setItem = async (key, value) => {
+    if (Platform.OS === 'web') {
+      localStorage.setItem(key, value);
+    } else {
+      await AsyncStorage.setItem(key, value);
+    }
+  };
   const handleLogin = async () => {
     if (loading) {
       return;
@@ -61,7 +77,7 @@ const LoginForm = () => {
     setLoading(true);
 
     try {
-      const remember = localStorage.getItem('rememberMe');
+      const remember = await getItem('rememberMe');
       const response = await logIn(phoneNumber, password);
       console.log('number and pass: ', phoneNumber, '+', password);
 
@@ -70,7 +86,7 @@ const LoginForm = () => {
       if (response.auth && response.user) {
         if (remember) {
           console.log('remember me: ', remember);
-          localStorage.setItem('user', JSON.stringify(response.user));
+          await setItem('user', JSON.stringify(response.user));
         } else {
           setUser(response.user);
         }
@@ -112,14 +128,15 @@ const LoginForm = () => {
 
         setVerificationCode();
         handleSwitch();
-        toast.success(
-          `${strings.registerMessage} ${strings.nowYouCanLogin}! 🎉`,
-          {
-            position: 'top-center',
-            duration: 2000,
-          },
-        );
-
+        // if (Platform.OS == 'web') {
+        //   toast.success(
+        //     `${strings.registerMessage} ${strings.nowYouCanLogin}! 🎉`,
+        //     {
+        //       position: 'top-center',
+        //       duration: 2000,
+        //     },
+        //   );
+        // }
         console.log('verifcation rsponse: ', response);
         return response;
       }
@@ -155,13 +172,15 @@ const LoginForm = () => {
       const res = await handleSendOtp();
 
       if (response.user) {
-        toast.success(
-          `${strings.registerMessage} ${strings.nowYouCanLogin}! 🎉`,
-          {
-            position: 'top-center',
-            duration: 2000,
-          },
-        );
+        // if (Platform.OS == 'web') {
+        //   toast.success(
+        //     `${strings.registerMessage} ${strings.nowYouCanLogin}! 🎉`,
+        //     {
+        //       position: 'top-center',
+        //       duration: 2000,
+        //     },
+        //   );
+        // }
         setRegisterMode(false);
         clearTxt();
       } else if (response.errorMessage) {

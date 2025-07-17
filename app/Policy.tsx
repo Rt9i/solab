@@ -7,11 +7,13 @@ import {
   Button,
   SafeAreaView,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 import policyText from '@/src/Components/policyText';
 
 import {useNavigation} from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Policy() {
   const [isAccepted, setIsAccepted] = useState(false);
@@ -20,9 +22,16 @@ export default function Policy() {
     setIsAccepted(!isAccepted);
   };
 
+  const setItem = async (key: string, value: string): Promise<void> => {
+    if (Platform.OS === 'web') {
+      localStorage.setItem(key, value);
+    } else {
+      await AsyncStorage.setItem(key, value);
+    }
+  };
   const handleAccept = async () => {
     console.log('User accepted the policies');
-    localStorage.setItem('isAccepted', isAccepted as any);
+    setItem('isAccepted', isAccepted as any);
     nav.navigate('index');
   };
 

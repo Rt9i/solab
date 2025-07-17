@@ -1,10 +1,17 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Platform,
+} from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import Constants from 'expo-constants';
 import Images from '../assets/images/images';
 import SolabContext from '../store/solabContext';
-import PhoneModal from './getNumber';
+
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -14,7 +21,8 @@ type UserData = {
   picture: string | null;
 };
 const GoogleLogin: React.FC = () => {
-  const {isModalVisible, setModalVisible,redirectUri}: any = useContext(SolabContext);
+  const {isModalVisible, setModalVisible, redirectUri}: any =
+    useContext(SolabContext);
   const ENCRYPTION_KEY = Constants.expoConfig?.extra?.ENCRYPTION_KEY;
   const ANDROID_CLIENT_ID = Constants.expoConfig?.extra?.ANDROID_CLIENT_ID;
   const IOS_CLIENT_ID = Constants.expoConfig?.extra?.IOS_CLIENT_ID;
@@ -26,7 +34,11 @@ const GoogleLogin: React.FC = () => {
   const [isPhoneVerified, setIsPhoneVerified] = useState<boolean>(false);
 
   const signIn = async () => {
-    window.location.href = googleLoginUrl;
+    if (Platform.OS === 'web') {
+      window.location.href = googleLoginUrl;
+    } else {
+      await WebBrowser.openBrowserAsync(googleLoginUrl);
+    }
   };
   const GoogleSignInButton = () => (
     <TouchableOpacity style={styles.googleButton} onPress={() => signIn()}>
@@ -37,14 +49,14 @@ const GoogleLogin: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <PhoneModal
+      {/* <PhoneModal
         phoneNumber={phoneNumber}
         setPhoneNumber={setPhoneNumber}
         isModalVisible={isModalVisible}
         setModalVisible={setModalVisible}
         setIsPhoneVerified={setIsPhoneVerified}
         isPhoneVerified={isPhoneVerified}
-      />
+      /> */}
 
       <GoogleSignInButton />
     </View>

@@ -22,7 +22,7 @@ import CartRowItems from '../src/Components/CartRowItems';
 import Images from '../src/assets/images/images';
 import {updateUserProducts} from '../src/res/api';
 import CustomModal from '@/src/Components/customModal';
-import toast from 'react-hot-toast';
+
 import {useNavigation} from 'expo-router';
 
 const Cart = props => {
@@ -181,16 +181,20 @@ const Cart = props => {
     setModalVisible(false);
   };
   const selectAproduct = () => {
-    toast.error('please select a product!', {
-      duration: 2000,
-      position: 'top-center',
-    });
+    // if (Platform.OS == 'web') {
+    //   toast.error('please select a product!', {
+    //     duration: 2000,
+    //     position: 'top-center',
+    //   });
+    // }
   };
   const showToast = message => {
-    toast.error(`${message}`, {
-      duration: 2000,
-      position: 'top-center',
-    });
+    // if (Platform.OS == 'web') {
+    //   toast.error(`${message}`, {
+    //     duration: 2000,
+    //     position: 'top-center',
+    //   });
+    // }
   };
 
   const gamaPay = () => {
@@ -213,8 +217,7 @@ const Cart = props => {
     const res = gamaPay();
 
     if (res == 'success') {
-      nav.navigate('OrdersPage', { products: JSON.stringify(selectedItems) });
-
+      nav.navigate('OrdersPage', {products: JSON.stringify(selectedItems)});
     } else {
       showToast('something went wrong!');
     }

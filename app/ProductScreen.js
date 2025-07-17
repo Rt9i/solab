@@ -12,7 +12,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import SolabContext from '../src/store/solabContext';
 import {LinearGradient} from 'expo-linear-gradient';
 import MessageModal from '@/src/Components/messageModal';
-import toast from 'react-hot-toast';
+
 
 const ProductScreen = () => {
   const navigation = useNavigation();
@@ -28,18 +28,23 @@ const ProductScreen = () => {
   const handleAddToCart = () => {
     const quantityInt = parseInt(quantity);
     if (isNaN(quantityInt) || quantityInt <= 0) {
-      toast.error(strings.enterNumber, {
-        position: 'top-center',
-        duration: 2000,
-      });
+      if (Platform.OS == 'web') {
+        // toast.error(strings.enterNumber, {
+        //   position: 'top-center',
+        //   duration: 2000,
+        // });
+      }
+
       return;
     }
 
     addItemToCart({...product, quantity: quantityInt});
-    toast.success(`${strings.productAdded} ! 🎉`, {
-      position: 'top-center',
-      duration: 2000,
-    });
+    if (Platform.OS == 'web') {
+      // toast.success(`${strings.productAdded} ! `, {
+      //   position: 'top-center',
+      //   duration: 2000,
+      // });
+    }
 
     navigation.goBack();
   };
@@ -117,7 +122,7 @@ const styles = StyleSheet.create({
       },
       default: {
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
+        shadowOffset: {width: 0, height: 4},
         shadowOpacity: 0.1,
         shadowRadius: 10,
         elevation: 4, // Android-specific shadow
@@ -154,7 +159,7 @@ const styles = StyleSheet.create({
       },
       default: {
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
+        shadowOffset: {width: 0, height: 2},
         shadowOpacity: 0.2,
         shadowRadius: 6,
         elevation: 2,
@@ -178,7 +183,7 @@ const styles = StyleSheet.create({
       },
       default: {
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
+        shadowOffset: {width: 0, height: 4},
         shadowOpacity: 0.15,
         shadowRadius: 12,
         elevation: 4,
@@ -198,6 +203,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-
 
 export default ProductScreen;

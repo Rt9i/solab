@@ -1,12 +1,10 @@
 {
   "extends": "@react-native/typescript-config/tsconfig.json",
   "compilerOptions": {
-    // Base config from the React Native TS preset, plus your overrides
     "baseUrl": "./",
     "paths": {
       "@/*": ["*"]
     },
-    // If you have any overrides for strict mode or JSX:
     "strict": true,
     "jsx": "react-native" 
   },
@@ -19,9 +17,9 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
-    "app/index.tsx",
+    "app/Index.tsx",
     "app/home.js",
-    // Here's the critical line
+
     "src/@types/**/*.d.ts"
 , "src/store/solabProvider.tsxxx"  ]
 }

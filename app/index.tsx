@@ -22,6 +22,7 @@ import {useFocusEffect, useRouter} from 'expo-router';
 import Images from '@/src/assets/images/images';
 import Constants from 'expo-constants';
 import PhoneModal from '@/src/Components/getNumber';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Index = () => {
   const navigation = useRouter();
@@ -51,7 +52,32 @@ const Index = () => {
   >(null);
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [isPhoneVerified, setIsPhoneVerified] = useState<boolean>(false);
-  const rememberme = localStorage.getItem('rememberMe');
+  const [rememberme, setRememberMe] = useState<string | null>(null);
+
+  const getItem = async (key: string): Promise<string | null> => {
+    if (Platform.OS === 'web') {
+      return localStorage.getItem(key);
+    } else {
+      return await AsyncStorage.getItem(key);
+    }
+  };
+
+  const setItem = async (key: string, value: string): Promise<void> => {
+    if (Platform.OS === 'web') {
+      localStorage.setItem(key, value);
+    } else {
+      await AsyncStorage.setItem(key, value);
+    }
+  };
+
+  useEffect(() => {
+    const fetchRememberMe = async () => {
+      const rememberMe = await getItem('rememberMe');
+      setRememberMe(rememberMe);
+    };
+    fetchRememberMe();
+  }, []);
+
   // console.log('remember me: ', rememberme);
   const WEB_CLIENT_ID = Constants.expoConfig?.extra?.WEB_CLIENT_ID;
 
@@ -74,7 +100,7 @@ const Index = () => {
   const fetchData = async () => {
     try {
       const result = await getDataFromDataBase();
-      console.log("data we gotnow from db: ", result)
+    
       setData(result);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -83,7 +109,7 @@ const Index = () => {
 
   const getUserFromLocalStorage = async () => {
     try {
-      let number = localStorage.getItem('userPhoneNumber')?.trim();
+      let number = await getItem('userPhoneNumber');
       if (number) {
         const userInfo = await getUserByPhoneNumber(number);
         if (userInfo) {
@@ -91,7 +117,7 @@ const Index = () => {
         }
       }
 
-      const email = localStorage.getItem('userEmail')?.trim();
+      const email = await getItem('userEmail');
       if (!email) {
         console.log(`[LocalStorage] No email found.`);
         return null;
@@ -110,7 +136,7 @@ const Index = () => {
 
   const getPolicyAcceptValue = async () => {
     try {
-      const value = localStorage.getItem('isAccepted');
+      const value = await getItem('isAccepted');
       if (value !== null) {
         const parsedValue = JSON.parse(value);
         return parsedValue;
@@ -141,8 +167,11 @@ const Index = () => {
   const executeUser = async () => {
     try {
       console.log('2');
-      const queryParams = new URLSearchParams(window.location.search);
-      const code = queryParams.get('code');
+
+      const code =
+        Platform.OS === 'web'
+          ? new URLSearchParams(window.location.search).get('code')
+          : null;
 
       console.log('3');
       console.log('code: ', code);
@@ -172,7 +201,7 @@ const Index = () => {
             console.log('actually rememberd');
             if (user) {
               console.log('6.5');
-              localStorage.setItem('user', JSON.stringify(user));
+              setItem('user', JSON.stringify(user));
             }
           }
           return;
@@ -210,11 +239,10 @@ const Index = () => {
       let user;
 
       // Retrieve user from localStorage
-      const localUser = localStorage.getItem('user');
+      const localUser = await getItem('user');
       console.log('local user:', localUser);
 
       const currentuser = localUser ? JSON.parse(localUser) : null;
-
 
       if (currentuser) {
         console.log(`[LocalStorage] Found user:`, currentuser);

@@ -9,7 +9,7 @@ import {useColorScheme} from '@/hooks/useColorScheme';
 import Images from '@/src/assets/images/images';
 
 import Toast from 'react-native-toast-message';
-import {Toaster} from 'react-hot-toast';
+
 SplashScreen.preventAutoHideAsync();
 
 function AppContent() {
@@ -30,6 +30,7 @@ function AppContent() {
           headerBackTitleVisible: false,
           headerBackImageSource: Images.arrow(),
         }}>
+        <Stack.Screen name="Index" options={{headerShown: false}} />
         <Stack.Screen name="Home" options={{headerShown: false}} />
         <Stack.Screen name="Policy" />
         <Stack.Screen name="OrdersPage" />
@@ -50,12 +51,9 @@ function AppContent() {
           }}
         />
         <Stack.Screen name="SeeAllProducts" />
-        <Stack.Screen name="index" options={{headerShown: false}} />
+
         <Stack.Screen name="+not-found" />
       </Stack>
-
-      {/* {Platform.OS !== 'web' && <Toast  />} */}
-      {Platform.OS === 'web' && <Toaster position="top-center" />}
     </ThemeProvider>
   );
 }
@@ -92,6 +90,5 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     tintColor: '#000',
-    
   },
 });

@@ -1,20 +1,43 @@
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
-import React, {useContext, useState, useEffect} from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, Platform } from 'react-native';
+import React, { useContext, useState, useEffect } from 'react';
 import GoogleLogin from '@/src/Components/googleLogin';
 import SolabContext from '../src/store/solabContext';
 import LoginForm from '../src/Components/loginForm';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Ionicons} from '@expo/vector-icons';
-import {Button} from 'react-native-web';
+import { Ionicons } from '@expo/vector-icons';
 
 const Login = () => {
-  const {user, setUser, clearAsyncStorage} = useContext(SolabContext);
+  const { user, setUser, clearAsyncStorage } = useContext(SolabContext);
   const [rememberMe, setRememberMe] = useState(false);
+
+  const getItem = async (key) => {
+    if (Platform.OS === 'web') {
+      return localStorage.getItem(key);
+    } else {
+      return await AsyncStorage.getItem(key);
+    }
+  };
+
+  const setItem = async (key, value) => {
+    if (Platform.OS === 'web') {
+      localStorage.setItem(key, value);
+    } else {
+      await AsyncStorage.setItem(key, value);
+    }
+  };
+
+  const removeItem = async (key) => {
+    if (Platform.OS === 'web') {
+      localStorage.removeItem(key);
+    } else {
+      await AsyncStorage.removeItem(key);
+    }
+  };
 
   useEffect(() => {
     const loadRememberMe = async () => {
-      const storedValue = localStorage.getItem('rememberMe');
-      console.log('getting value to save it here');
+      const storedValue = await getItem('rememberMe');
+      console.log('getting value to save it here', storedValue);
 
       if (storedValue === 'true') {
         setRememberMe(true);
@@ -23,18 +46,17 @@ const Login = () => {
     loadRememberMe();
   }, []);
 
-  const handleRememberMe = () => {
-    setRememberMe(prev => {
+  const handleRememberMe = async () => {
+    setRememberMe((prev) => {
       const newValue = !prev;
-      // console.log('remember value is:', newValue);
 
       if (newValue) {
-        localStorage.setItem('rememberMe', 'true');
+        setItem('rememberMe', 'true');
       } else {
-        localStorage.removeItem('rememberMe');
+        removeItem('rememberMe');
       }
 
-      return newValue; // Ensure state updates correctly
+      return newValue;
     });
   };
 

@@ -13,7 +13,7 @@ import {
   Platform,
 } from 'react-native';
 import React, {useContext, useEffect, useState, useCallback} from 'react';
-import Sizes from '../src/res/sizes';
+
 import CatsBarItems from '../src/Components/CatsBarItems';
 import SolabContext from '../src/store/solabContext';
 import SearchKeys from '../src/Components/SearchKeys';
@@ -29,7 +29,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import * as MediaLibrary from 'expo-media-library';
 import * as ImagePicker from 'expo-image-picker';
 import CustomModal from '@/src/Components/customModal';
-import {Button} from 'react-native-web';
+
 
 const EditProduct = () => {
   const route = useRoute();
