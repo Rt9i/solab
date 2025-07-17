@@ -100,7 +100,7 @@ const Index = () => {
   const fetchData = async () => {
     try {
       const result = await getDataFromDataBase();
-      console.log('items from data base: ', result);
+   
       setData(result);
     } catch (error) {
       console.error('Error fetching data:', error);

@@ -18,7 +18,6 @@ const Swipe = () => {
     setDelay(6000);
   };
 
-
   const prevSlide = () => {
     setCurrentIndex(prevIndex =>
       prevIndex === 0 ? data.length - 1 : prevIndex - 1,
@@ -66,7 +65,7 @@ const Swipe = () => {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height:200,
+    height: 200,
     maxHeight: 250,
     maxWidth: 500,
     justifyContent: 'center',
