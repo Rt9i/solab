@@ -30,7 +30,6 @@ function AppContent() {
           headerBackTitleVisible: false,
           headerBackImageSource: Images.arrow(),
         }}>
-        <Stack.Screen name="Index" options={{headerShown: false}} />
         <Stack.Screen name="Home" options={{headerShown: false}} />
         <Stack.Screen name="Policy" />
         <Stack.Screen name="OrdersPage" />
@@ -51,7 +50,7 @@ function AppContent() {
           }}
         />
         <Stack.Screen name="SeeAllProducts" />
-
+        <Stack.Screen name="index" options={{headerShown: false}} />
         <Stack.Screen name="+not-found" />
       </Stack>
     </ThemeProvider>

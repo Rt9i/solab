@@ -17,7 +17,7 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
-    "app/Index.tsx",
+    "app/index.tsx",
     "app/home.js",
 
     "src/@types/**/*.d.ts"
