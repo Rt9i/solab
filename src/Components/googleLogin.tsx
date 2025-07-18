@@ -11,7 +11,7 @@ import * as WebBrowser from 'expo-web-browser';
 import Constants from 'expo-constants';
 import Images from '../assets/images/images';
 import SolabContext from '../store/solabContext';
-
+import PhoneModal from './getNumber';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -49,14 +49,14 @@ const GoogleLogin: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      {/* <PhoneModal
+      <PhoneModal
         phoneNumber={phoneNumber}
         setPhoneNumber={setPhoneNumber}
         isModalVisible={isModalVisible}
         setModalVisible={setModalVisible}
         setIsPhoneVerified={setIsPhoneVerified}
         isPhoneVerified={isPhoneVerified}
-      /> */}
+      />
 
       <GoogleSignInButton />
     </View>
