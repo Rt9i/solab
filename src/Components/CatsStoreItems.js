@@ -11,7 +11,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import SolabContext from '../store/solabContext';
 import Images from '../assets/images/images';
-
+import FastImage from 'react-native-fast-image';
 
 const CatsStoreItems = ({selectedCategory, ...props}) => {
   const {strings, changeLanguage, user, row} = useContext(SolabContext);
@@ -79,13 +79,10 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
         )}
 
         <TouchableOpacity onPress={onCardPress} activeOpacity={0.6}>
-          <Image
-            source={img}
-            style={[
-              {resizeMode: 'contain'},
-              styles.img,
-              selectedCategory === 'catMeat' ? meatImg : null,
-            ]}
+          <FastImage
+            source={img} // same source shape as RN <Image>
+            style={[styles.img, meatImg]} // your styling objects
+            resizeMode={FastImage.resizeMode.contain}
           />
         </TouchableOpacity>
 
@@ -151,24 +148,32 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
 export default CatsStoreItems;
 
 const styles = StyleSheet.create({
-  rowsContainer: {
-    position: 'relative',
-    flexDirection: 'row',
-    padding: 10,
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+  itemWidth: {
+    height: 300,
+    width: 140,
+    marginBottom: 2,
     borderRadius: 5,
+    overflow: 'hidden',
+  },
+  itemWidthStaff: {
+    width: 140,
+    height: 290,
+    marginBottom: 2,
+    borderRadius: 5,
+    overflow: 'hidden',
+  },
+  items: {
+    flex: 1,
+    borderRadius: 5,
+    backgroundColor: 'rgba(20, 70, 200, 0.02)',
+    overflow: 'hidden',
+  },
 
-    zIndex: 5,
-  },
-  rowItem: {
-    backgroundColor: 'white',
-    padding: 10,
-    marginBottom: 5,
-    borderRadius: 5,
-  },
-  icon: {
-    width: 30,
-    height: 30,
+  stock: {
+    zIndex: 4,
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'center',
   },
   stocktext: {
     borderWidth: 1,
@@ -177,26 +182,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     elevation: 16,
   },
-  stock: {
-    zIndex: 4,
-    flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'center',
-  },
-  editButtonContainer: {
-    zIndex: 5,
-    width: 30,
-    height: 30,
-    marginBottom: 15,
-  },
-  stockTxt: {
-    borderWidth: 1,
-    width: '100%',
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    padding: 5,
-    borderRadius: 10,
-    textAlign: 'center',
-  },
+
   notavailableStock: {
     position: 'absolute',
     top: 0,
@@ -208,13 +194,60 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  stockTxt: {
+    borderWidth: 1,
+    width: '100%',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    padding: 5,
+    borderRadius: 10,
+    textAlign: 'center',
+  },
 
-  itemWidthStaff: {
-    width: 140,
-    height: 290,
-    marginBottom: 2,
-    borderRadius: 5,
-    overflow: 'hidden',
+  img: {
+    marginTop: 15,
+    width: '100%',
+    height: 120,
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
+  },
+
+  infoContainer: {
+    padding: 8,
+    flex: 1,
+  },
+  bottomcontainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    height: '70%',
+  },
+  bottomtxt1: {
+    fontSize: 10,
+    textAlignVertical: 'center',
+    color: 'black',
+  },
+
+  priceContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  bottomtxt2: {
+    fontSize: 12,
+    textAlignVertical: 'center',
+    color: 'black',
+  },
+  bottomtxt4: {
+    fontSize: 12,
+    textAlignVertical: 'center',
+    color: 'black',
+    marginLeft: 5,
+  },
+
+  editButtonContainer: {
+    zIndex: 5,
+    width: 30,
+    height: 30,
+    marginBottom: 15,
   },
   edit: {
     height: 30,
@@ -222,17 +255,44 @@ const styles = StyleSheet.create({
     zIndex: 1,
     position: 'absolute',
   },
+
   center: {
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  cart: {
+    borderRadius: 10,
+    paddingHorizontal: 8,
+    justifyContent: 'center',
+    backgroundColor: 'grey',
+    borderWidth: 0.3,
+    borderColor: 'black',
+    flexDirection: 'row',
+    marginBottom: 5,
+    height: 22,
+    width: 120,
+    alignItems: 'center',
+    bottom: 10,
+  },
+  addCart: {
+    width: 20,
+    height: 20,
+    zIndex: 20,
+  },
+  carttxt: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: 'black',
+    textAlign: 'center',
+    lineHeight: 22,
   },
 
   sale: {
     position: 'absolute',
     top: 10,
-    right: 70, // Adjust to position it within the frame
-    width: 89, // Adjust to fit within the item frame
-    height: 20, // Adjust to fit within the item frame
+    right: 70,
+    width: 89,
+    height: 20,
     backgroundColor: '#D9534F',
     justifyContent: 'center',
     alignItems: 'center',
@@ -251,104 +311,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 12,
     textAlign: 'center',
-    // fontFamily: 'bigFont',
     transform: [{rotate: '-45deg'}],
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-
-  addCart: {
-    width: 20,
-    height: 20,
-
-    zIndex: 20,
-  },
-  itemWidth: {
-    height: 300,
-    width: 140,
-    marginBottom: 2,
-    borderRadius: 5,
-    overflow: 'hidden',
-  },
-  items: {
-    flex: 1,
-    borderRadius: 5,
-    backgroundColor: 'rgba(20, 70, 200, 0.02)',
-
-    overflow: 'hidden', // Ensure content doesn't overflow
-  },
-  img: {
-    marginTop: 15,
-
-    width: '100%',
-    height: 120,
-    borderTopLeftRadius: 5,
-    borderTopRightRadius: 5,
-  },
-  infoContainer: {
-    padding: 8,
-    flex: 1,
-  },
-  bottomcontainer: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    height: '70%',
-  },
-  bottomtxt1: {
-    fontSize: 10,
-    textAlignVertical: 'center',
-    // fontFamily: 'bigFont',
-    color: 'black',
-  },
-  priceContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  bottomtxt2: {
-    fontSize: 12,
-    textAlignVertical: 'center',
-    // fontFamily: 'bigFont',
-    color: 'black',
-  },
-  bottomtxt4: {
-    fontSize: 12,
-    textAlignVertical: 'center',
-    // fontFamily: 'bigFont',
-    color: 'black',
-    marginLeft: 5,
-  },
-  props: {
-    flex: 1,
-    height: 55,
-    width: 110,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-  },
-  cart: {
-    borderRadius: 10,
-    paddingHorizontal: 8,
-    justifyContent: 'center',
-    backgroundColor: 'grey',
-    borderWidth: 0.3,
-    borderColor: 'black',
-    flexDirection: 'row',
-    marginBottom: 5,
-    height: 22,
-    width: 120,
-    alignItems: 'center',
-    bottom: 10,
-  },
-  carttxt: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    color: 'black',
-    backgroundColor: 'transparent',
-    textAlign: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
-    lineHeight: 22,
   },
 });

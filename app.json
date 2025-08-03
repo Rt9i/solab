@@ -51,7 +51,8 @@
       }
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+       "react-native-fast-image"
     ],
     "experiments": {
       "typedRoutes": true
