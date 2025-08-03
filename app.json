@@ -3,19 +3,20 @@
     "name": "Solab",
     "slug": "solab",
     "version": "1.0.0",
-    "sdkVersion": "51.0.0",
-    "platforms": ["ios", "android", "web"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "orientation": "portrait",
     "main": "expo-router/entry",
     "extra": {
       "EXPO_ROUTER_APP_ROOT": "./app/_layout.tsx",
-
       "GOOGLE_API_KEY": "AIzaSyA6z3FL4IhcCRZNyf7HwaEOvqXe6T9HrUo",
       "ANDROID_CLIENT_ID": "321459553069-gf0n32cai9cnev3j6pl86a9h0ovk530s.apps.googleusercontent.com",
       "IOS_CLIENT_ID": "321459553069-p2u0vusu59s210l347jv0s15lobnkfn5.apps.googleusercontent.com",
       "WEB_CLIENT_ID": "321459553069-r7ost04h4agb9mduvvhgpaivp8vtiocc.apps.googleusercontent.com",
       "REDIRECT_URI": "https://auth.expo.io/@rt9i/solab",
-
       "eas": {
         "projectId": "065d6149-8866-4f82-8c78-3676cfa7f7b4"
       }
@@ -49,7 +50,9 @@
         "basePath": "solab"
       }
     },
-    "plugins": ["expo-router"],
+    "plugins": [
+      "expo-router"
+    ],
     "experiments": {
       "typedRoutes": true
     },
@@ -58,7 +61,6 @@
       "url": "https://u.expo.dev/858c5b51-e679-45bd-ab3b-02e059a45b7a"
     },
     "homepage": "https://rt9i.github.io/solab/",
-
     "owner": "rt9i"
   }
 }
