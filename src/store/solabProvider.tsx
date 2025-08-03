@@ -53,8 +53,8 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
   const IOS_CLIENT_ID = Constants.expoConfig?.extra?.IOS_CLIENT_ID;
   const WEB_CLIENT_ID = Constants.expoConfig?.extra?.WEB_CLIENT_ID;
 
-  const redirectUri = 'https://solabgrooming.netlify.app';
-  // const redirectUri = 'http://localhost:8081';
+  // const redirectUri = 'https://solabgrooming.netlify.app';
+  const redirectUri = 'http://localhost:8081';
 
   const fetchGoogleUserInfo = async (accessToken: string) => {
     try {
@@ -132,13 +132,6 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
     }
   };
 
-  const removeStoredItem = async (key: string): Promise<void> => {
-    if (Platform.OS === 'web') {
-      localStorage.removeItem(key);
-    } else {
-      await AsyncStorage.removeItem(key);
-    }
-  };
   const triggerScrollToTop = () => {
     setScrollToTop(prev => !prev);
   };
@@ -279,13 +272,34 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
     setStrings(currentStrings);
   }, [language]);
 
+  const removeItem = useCallback(
+    (itemId: any) => {
+      const updatedCart = cart.filter(item => item._id !== itemId);
+      setIsItemAdded(false);
+      setDelModal(false);
+      setSelectedItems([]);
+      setSelectedItemId('');
+      setCart(updatedCart);
+    },
+    [cart],
+  );
+  
+  const removeStoredItem = async (key: string): Promise<void> => {
+    if (Platform.OS === 'web') {
+      localStorage.removeItem(key);
+      console.log('removed: ', key);
+    } else {
+      await AsyncStorage.removeItem(key);
+    }
+  };
   const clearStorage = useCallback(async () => {
     try {
-      await removeItem('user');
-      await removeItem('cart');
-      await removeItem('rememberMe');
-      await removeItem('userPhoneNumber');
-      await removeItem('userEmail');
+      console.log('removing storage tings');
+      await removeStoredItem('user');
+      await removeStoredItem('cart');
+      await removeStoredItem('rememberMe');
+      await removeStoredItem('userPhoneNumber');
+      await removeStoredItem('userEmail');
     } catch (error) {
       console.log('Failed to clear storage:', error);
     }
@@ -299,11 +313,11 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
       setIsAuthenticated(false);
       await clearStorage();
 
-      if (Platform.OS === 'web') {
-        window.location.href = '/';
-      } else {
-        nav.navigate('index');
-      }
+      // if (Platform.OS === 'web') {
+      //   window.location.href = '/';
+      // } else {
+      //   nav.navigate('index');
+      // }
       console.log('Logged out successfully');
     } catch (error) {
       console.log('Failed to log out:', error);
@@ -362,18 +376,6 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
       },
     ]);
   }, []);
-
-  const removeItem = useCallback(
-    (itemId: any) => {
-      const updatedCart = cart.filter(item => item._id !== itemId);
-      setIsItemAdded(false);
-      setDelModal(false);
-      setSelectedItems([]);
-      setSelectedItemId('');
-      setCart(updatedCart);
-    },
-    [cart],
-  );
 
   const removeItemFromCart = useCallback(
     (item: any, itemId: any) => {

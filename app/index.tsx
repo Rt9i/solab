@@ -100,7 +100,7 @@ const Index = () => {
   const fetchData = async () => {
     try {
       const result = await getDataFromDataBase();
-   
+
       setData(result);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -176,61 +176,60 @@ const Index = () => {
       console.log('3');
       console.log('code: ', code);
 
-      if (code) {
-        const userToken = await getUserToken(code);
-        if (!userToken) {
-          console.log('4');
-          console.warn('Google login failed or expired code.');
-          return null;
-        }
-        const userInfo = await fetchGoogleUserInfo(userToken.access_token);
-        setCurrentUser(userInfo);
+      if (!code) return null;
 
-        console.log('5');
-        const getUser = await getUserByGmail(userInfo.email);
-        console.log('5.5');
-        const user = getUser?.user || null;
+      const userToken = await getUserToken(code);
+      if (!userToken) {
+        console.log('4');
+        console.warn('Google login failed or expired code.');
+        return null;
+      }
+      const userInfo = await fetchGoogleUserInfo(userToken.access_token);
+      setCurrentUser(userInfo);
 
-        if (user) {
-          console.log('6');
+      console.log('5');
+      const getUser = await getUserByGmail(userInfo.email);
+      console.log('5.5');
+      const user = getUser?.user || null;
 
-          setUser(user);
+      if (user) {
+        console.log('6');
 
-          if (rememberme) {
-            console.log('6.3');
-            console.log('actually rememberd');
-            if (user) {
-              console.log('6.5');
-              setItem('user', JSON.stringify(user));
-            }
+        setUser(user);
+
+        if (rememberme) {
+          console.log('6.3');
+          console.log('actually rememberd');
+          if (user) {
+            console.log('6.5');
+            setItem('user', JSON.stringify(user));
           }
-          return;
         }
-        console.log('7');
-        const number = await waitForPhoneInput();
-        console.log('number: ', number);
-        console.log('user information: ', userInfo.email);
+        return;
+      }
+      console.log('7');
+      const number = await waitForPhoneInput();
+      console.log('number: ', number);
+      console.log('user information: ', userInfo.email);
 
-        const userAfterPhoneVerify = await getUserByGmail(userInfo.email);
-        console.log('user After PhoneVerify: ', userAfterPhoneVerify);
+      const userAfterPhoneVerify = await getUserByGmail(userInfo.email);
+      console.log('user After PhoneVerify: ', userAfterPhoneVerify);
 
-        const userUser = userAfterPhoneVerify.user;
-        console.log('user user ??? : ', userUser);
+      const userUser = userAfterPhoneVerify.user;
+      console.log('user user ??? : ', userUser);
 
-        if (userAfterPhoneVerify && userAfterPhoneVerify.user) {
-          setUser(userAfterPhoneVerify.user);
-        } else {
-          console.log('No user data found after phone verification');
-        }
-
-        return userUser;
+      if (userAfterPhoneVerify && userAfterPhoneVerify.user) {
+        setUser(userAfterPhoneVerify.user);
+      } else {
+        console.log('No user data found after phone verification');
       }
 
-      return null;
+      return userUser;
     } catch (e) {
       console.log(e);
     }
   };
+  
   const initializeApp = async () => {
     console.log('Initializing app...');
     setLoading(true);

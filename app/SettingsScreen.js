@@ -102,6 +102,7 @@ const SettingsScreen = () => {
         setIsLanguageOpen(false);
       },
     },
+
     {
       name: 'عربي',
       image: Images.languageIcon(),
@@ -153,6 +154,16 @@ const SettingsScreen = () => {
               <Text style={styles.logoutText}>Logout</Text>
             </TouchableOpacity>
             <TouchableOpacity
+              onPress={logStorageContents}
+              style={[styles.logoutButton, {backgroundColor: '#007AFF'}]}>
+              <Text style={styles.logoutText}>Debug Storage</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleDelete}
+              style={styles.logoutButton}>
+              <Text style={styles.logoutText}>Delete User</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
               onPress={handleDelete}
               style={styles.logoutButton}>
               <Text style={styles.logoutText}>Delete User</Text>
@@ -175,15 +186,15 @@ const SettingsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-alignItems:'center',
+    alignItems: 'center',
     flex: 1,
     backgroundColor: '#E8EAF6',
     paddingHorizontal: 20,
     paddingTop: 20,
   },
   settingsList: {
-    width:'100%',
-    maxWidth:650,
+    width: '100%',
+    maxWidth: 650,
     backgroundColor: '#FFFFFF',
     borderRadius: 10,
     elevation: 5,
