@@ -3,11 +3,7 @@
     "name": "Solab",
     "slug": "solab",
     "version": "1.0.0",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "platforms": ["ios", "android", "web"],
     "orientation": "portrait",
     "main": "expo-router/entry",
     "extra": {
@@ -50,10 +46,7 @@
         "basePath": "solab"
       }
     },
-    "plugins": [
-      "expo-router",
-       "react-native-fast-image"
-    ],
+    "plugins": ["expo-router"],
     "experiments": {
       "typedRoutes": true
     },

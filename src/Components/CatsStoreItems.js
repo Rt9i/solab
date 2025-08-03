@@ -11,7 +11,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import SolabContext from '../store/solabContext';
 import Images from '../assets/images/images';
-import FastImage from 'react-native-fast-image';
+
 
 const CatsStoreItems = ({selectedCategory, ...props}) => {
   const {strings, changeLanguage, user, row} = useContext(SolabContext);
@@ -79,10 +79,13 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
         )}
 
         <TouchableOpacity onPress={onCardPress} activeOpacity={0.6}>
-          <FastImage
-            source={img} // same source shape as RN <Image>
-            style={[styles.img, meatImg]} // your styling objects
-            resizeMode={FastImage.resizeMode.contain}
+          <Image
+            source={img}
+            style={[
+              {resizeMode: 'contain'},
+              styles.img,
+              selectedCategory === 'catMeat' ? meatImg : null,
+            ]}
           />
         </TouchableOpacity>
 
@@ -296,7 +299,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#D9534F',
     justifyContent: 'center',
     alignItems: 'center',
-    transform: [{rotate: '-45deg'}],
+    transform: [{ rotate: '-45deg' }],
     overflow: 'hidden',
     zIndex: 1,
   },
@@ -305,12 +308,12 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    transform: [{rotate: '45deg'}],
+    transform: [{ rotate: '45deg' }],
   },
   saleText: {
     color: 'white',
     fontSize: 12,
     textAlign: 'center',
-    transform: [{rotate: '-45deg'}],
+    transform: [{ rotate: '-45deg' }],
   },
 });
