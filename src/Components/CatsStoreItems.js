@@ -11,6 +11,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import SolabContext from '../store/solabContext';
 import Images from '../assets/images/images';
+import FastImage from 'react-native-fast-image';
 
 
 const CatsStoreItems = ({selectedCategory, ...props}) => {
@@ -79,14 +80,15 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
         )}
 
         <TouchableOpacity onPress={onCardPress} activeOpacity={0.6}>
-          <Image
-            source={img}
-            style={[
-              {resizeMode: 'contain'},
-              styles.img,
-              selectedCategory === 'catMeat' ? meatImg : null,
-            ]}
-          />
+         <FastImage
+    style={styles.img}
+    source={{
+      uri: img,
+      priority: FastImage.priority.normal,
+      cache: FastImage.cacheControl.immutable,
+    }}
+    resizeMode={FastImage.resizeMode.contain}
+  />
         </TouchableOpacity>
 
         <View style={styles.infoContainer}>
