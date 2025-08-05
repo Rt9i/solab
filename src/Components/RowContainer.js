@@ -82,10 +82,13 @@ const RowContainer = ({items, renderItem, selectedCategory, index, row}) => {
             <FlashList
               ref={flatListRef}
               data={items}
-              horizontal={true}
-              showsVerticalScrollIndicator={false}
+              horizontal
               showsHorizontalScrollIndicator={false}
               estimatedItemSize={160}
+              initialNumToRender={5}
+              maxToRenderPerBatch={5}
+              windowSize={3}
+              removeClippedSubviews={true}
               renderItem={({item}) => (
                 <RenderItem item={item} renderItem={renderItem} />
               )}
@@ -117,7 +120,6 @@ const styles = StyleSheet.create({
 
     width: '100%',
     height: 420,
-
   },
   content: {
     padding: 10,

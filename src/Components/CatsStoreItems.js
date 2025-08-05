@@ -12,7 +12,7 @@ import {useNavigation} from '@react-navigation/native';
 import SolabContext from '../store/solabContext';
 import Images from '../assets/images/images';
 import FastImage from 'react-native-fast-image';
-
+import ExpoImage from 'expo-image/build/ExpoImage';
 
 const CatsStoreItems = ({selectedCategory, ...props}) => {
   const {strings, changeLanguage, user, row} = useContext(SolabContext);
@@ -48,6 +48,8 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
     navigation.navigate('ProductScreen', {data: Item});
   };
 
+
+
   const addToShop = () => {
     const Item = {...props};
     addItemToCart(Item, Item.productId);
@@ -80,15 +82,15 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
         )}
 
         <TouchableOpacity onPress={onCardPress} activeOpacity={0.6}>
-         <FastImage
-    style={styles.img}
-    source={{
-      uri: img,
-      priority: FastImage.priority.normal,
-      cache: FastImage.cacheControl.immutable,
-    }}
-    resizeMode={FastImage.resizeMode.contain}
-  />
+        
+          <Image
+            source={img}
+            style={[
+              {resizeMode: 'contain'},
+              styles.img,
+              selectedCategory === 'catMeat' ? meatImg : null,
+            ]}
+          />
         </TouchableOpacity>
 
         <View style={styles.infoContainer}>
@@ -301,7 +303,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#D9534F',
     justifyContent: 'center',
     alignItems: 'center',
-    transform: [{ rotate: '-45deg' }],
+    transform: [{rotate: '-45deg'}],
     overflow: 'hidden',
     zIndex: 1,
   },
@@ -310,12 +312,12 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    transform: [{ rotate: '45deg' }],
+    transform: [{rotate: '45deg'}],
   },
   saleText: {
     color: 'white',
     fontSize: 12,
     textAlign: 'center',
-    transform: [{ rotate: '-45deg' }],
+    transform: [{rotate: '-45deg'}],
   },
 });

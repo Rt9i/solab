@@ -19,10 +19,8 @@ import ScrollUp from '../src/Components/scrollUp';
 import CatsBarItems from '../src/Components/CatsBarItems';
 import Swipe from '../src/Components/Swipe';
 import CatsStoreItems from '../src/Components/CatsStoreItems';
-import Sizes from '../src/res/sizes';
-import Images from '@/src/assets/images/images';
 import {useFocusEffect, useNavigation} from 'expo-router';
-import {TouchableOpacity} from 'react-native';
+
 
 const CatsStore = props => {
   const [displayMode, setDisplayMode] = useState('row');
