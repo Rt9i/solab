@@ -1,114 +1,118 @@
 import React, {useContext, useState} from 'react';
 import {
-  Image,
+  Image as RnImage,
   Platform,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
+  ActivityIndicator,
 } from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import SolabContext from '../src/store/solabContext';
 import {LinearGradient} from 'expo-linear-gradient';
 import MessageModal from '@/src/Components/messageModal';
+import Images from '../src/assets/images/images';
 
+// بدل الاستيراد الثابت:
+// import ExpoImage from 'expo-image/build/ExpoImage';
+// import { Image, ImageBackground } from 'expo-image';
 
-const ProductScreen = () => {
+// نعمل dynamic require
+let ExpoImage = null;
+if (Platform.OS !== 'web') {
+  ExpoImage = require('expo-image').Image;
+}
+
+export default function ProductScreen() {
   const navigation = useNavigation();
   const route = useRoute();
-
   const {data: product} = route.params;
   const {addItemToCart, strings} = useContext(SolabContext);
   const [quantity, setQuantity] = useState('1');
   const [modalVisible, setModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
-  console.log('img: ', product.img);
+  const [useFallback, setUseFallback] = useState(false);
+
+  const imageSource =
+    typeof product.img === 'string'
+      ? {uri: product.img}
+      : product.img || Images.blackLoggo();
+
+  const showNativeImage = Platform.OS !== 'web' && !useFallback;
+
+  const onError = () => setUseFallback(true);
 
   const handleAddToCart = () => {
-    const quantityInt = parseInt(quantity);
-    if (isNaN(quantityInt) || quantityInt <= 0) {
-      if (Platform.OS == 'web') {
-        // toast.error(strings.enterNumber, {
-        //   position: 'top-center',
-        //   duration: 2000,
-        // });
+    const qty = parseInt(quantity);
+    if (isNaN(qty) || qty <= 0) {
+      if (Platform.OS === 'web') {
+        // toast.error(strings.enterNumber)
       }
-
       return;
     }
-
-    addItemToCart({...product, quantity: quantityInt});
-    if (Platform.OS == 'web') {
-      // toast.success(`${strings.productAdded} ! `, {
-      //   position: 'top-center',
-      //   duration: 2000,
-      // });
-    }
-
+    addItemToCart({...product, quantity: qty});
     navigation.goBack();
   };
-
-  const imageSource = product?.img?.uri || product?.img;
 
   return (
     <View style={styles.container}>
       <LinearGradient
         colors={['#ffffff', '#f0f0f0', '#e0e0e0']}
         style={styles.gradient}>
-        <View>
-          <Image
-            style={[styles.image, {resizeMode: 'contain'}]}
-            source={{
-              uri: imageSource,
-            }}
+        {showNativeImage ? (
+          <ExpoImage
+            source={imageSource}
+            style={styles.image}
             contentFit="contain"
-            transition={1000}
+            cachePolicy="memory-disk"
+            transition={250}
+            placeholder={Images.blackLoggo()}
+            onError={onError}
           />
-
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              keyboardType="number-pad"
-              value={quantity}
-              onChangeText={setQuantity}
-              placeholder={strings.enterNumber}
-              placeholderTextColor="#888"
-            />
-            <TouchableOpacity
-              style={styles.addToCartButton}
-              onPress={handleAddToCart}>
-              <Text style={styles.addToCartText}>{strings.addToCart}</Text>
-            </TouchableOpacity>
-          </View>
-          <View>
-            <Text style={styles.descriptionTitle}>{strings.dis} :</Text>
-            <View style={styles.descriptionContainer}>
-              <Text style={styles.descriptionText}>{product.dis}</Text>
-            </View>
-          </View>
-
-          <MessageModal
-            message={modalMessage}
-            visible={modalVisible}
-            onClose={() => setModalVisible(false)}
+        ) : (
+          <RnImage
+            source={imageSource}
+            style={styles.image}
+            resizeMode="contain"
           />
+        )}
+
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            keyboardType="number-pad"
+            value={quantity}
+            onChangeText={setQuantity}
+            placeholder={strings.enterNumber}
+            placeholderTextColor="#888"
+          />
+          <TouchableOpacity
+            style={styles.addToCartButton}
+            onPress={handleAddToCart}>
+            <Text style={styles.addToCartText}>{strings.addToCart}</Text>
+          </TouchableOpacity>
         </View>
+
+        <Text style={styles.descriptionTitle}>{strings.dis} :</Text>
+        <View style={styles.descriptionContainer}>
+          <Text style={styles.descriptionText}>{product.dis}</Text>
+        </View>
+
+        <MessageModal
+          message={modalMessage}
+          visible={modalVisible}
+          onClose={() => setModalVisible(false)}
+        />
       </LinearGradient>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  gradient: {
-    flex: 1,
-    alignItems: 'center',
-    padding: 16,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: '#f8f8f8',
-  },
+  container: {flex: 1, backgroundColor: '#f8f8f8'},
+  gradient: {flex: 1, alignItems: 'center', padding: 16},
   image: {
     width: '100%',
     height: 300,
@@ -117,33 +121,33 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     borderWidth: 1,
     ...Platform.select({
-      web: {
-        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', // Web-specific shadow
-      },
+      web: {boxShadow: '0px 4px 10px rgba(0,0,0,0.1)'},
       default: {
         shadowColor: '#000',
         shadowOffset: {width: 0, height: 4},
         shadowOpacity: 0.1,
         shadowRadius: 10,
-        elevation: 4, // Android-specific shadow
+        elevation: 4,
       },
     }),
   },
+  placeholder: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   inputContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
     marginVertical: 16,
+    alignItems: 'center',
   },
   input: {
     flex: 1,
     textAlign: 'center',
-    fontWeight: 'bold',
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
     paddingHorizontal: 12,
-    fontSize: 16,
     backgroundColor: '#fff',
     marginRight: 10,
     color: 'black',
@@ -154,9 +158,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 8,
     ...Platform.select({
-      web: {
-        boxShadow: '0px 2px 6px rgba(0, 0, 0, 0.2)', // Web shadow
-      },
+      web: {boxShadow: '0px 2px 6px rgba(0,0,0,0.2)'},
       default: {
         shadowColor: '#000',
         shadowOffset: {width: 0, height: 2},
@@ -166,11 +168,8 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  addToCartText: {
-    fontSize: 16,
-    color: '#fff',
-    fontWeight: 'bold',
-  },
+  addToCartText: {fontSize: 16, color: '#fff', fontWeight: 'bold'},
+  descriptionTitle: {fontSize: 18, fontWeight: '600', marginBottom: 8},
   descriptionContainer: {
     padding: 16,
     backgroundColor: '#fff',
@@ -178,9 +177,7 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     borderWidth: 1,
     ...Platform.select({
-      web: {
-        boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.15)', // Web shadow
-      },
+      web: {boxShadow: '0px 4px 12px rgba(0,0,0,0.15)'},
       default: {
         shadowColor: '#000',
         shadowOffset: {width: 0, height: 4},
@@ -190,18 +187,5 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  descriptionTitle: {
-    alignSelf: 'flex-end',
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#333',
-    textAlign: 'center',
-  },
-  descriptionText: {
-    fontSize: 16,
-    color: '#555',
-    textAlign: 'center',
-  },
+  descriptionText: {fontSize: 16, color: '#555'},
 });
-
-export default ProductScreen;

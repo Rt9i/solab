@@ -1,4 +1,4 @@
-import React, {useContext, useState, useRef} from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,12 +7,10 @@ import {
   Image,
   FlatList,
   Animated,
-  Easing,
-  Dimensions,
+  Platform,
 } from 'react-native';
-import Images from '../assets/images/images';
 import SolabContext from '../store/solabContext';
-import Sizes from '../res/sizes';
+import Images from '../assets/images/images';
 
 const CatsBarItems = ({
   selectedCategory,
@@ -20,184 +18,130 @@ const CatsBarItems = ({
   Array,
   styling,
 }) => {
-  const {strings, changeLanguage} = useContext(SolabContext);
+  const { strings } = useContext(SolabContext);
   const categoriesMap = Object.assign({}, ...Array);
 
   const categories = [
-    {
-      id: categoriesMap.Food,
-      name: `${strings.DryFood}`,
-      image: Images.catFood(),
-    },
-    {id: categoriesMap.Meat, name: `${strings.meat}`, image: Images.Meat()},
-    {
-      id: categoriesMap.Accessories,
-      name: `${strings.accessories}`,
-      image: Images.leash(),
-    },
-    {
-      id: categoriesMap.Clothes,
-      name: `${strings.Clothes}`,
-      image: Images.catClothes(),
-    },
-    {
-      id: categoriesMap.Sprays,
-      name: `${strings.Sprays}`,
-      image: Images.spray(),
-    },
-    {
-      id: categoriesMap.Toilet,
-      name: `${strings.toilet}`,
-      image: Images.toilet(),
-    },
-    {
-      id: categoriesMap.Treats,
-      name: `${strings.treats}`,
-      image: Images.treats(),
-    },
-    {
-      id: categoriesMap.Perfume,
-      name: `${strings.perfume}`,
-      image: Images.perfume(),
-    },
-    {id: categoriesMap.bowl, name: `${strings.bowl}`, image: Images.bowl()},
+    { id: categoriesMap.Food, name: strings.DryFood, image: Images.catFood() },
+    { id: categoriesMap.Meat, name: strings.meat, image: Images.Meat() },
+    { id: categoriesMap.Accessories, name: strings.accessories, image: Images.leash() },
+    { id: categoriesMap.Clothes, name: strings.Clothes, image: Images.catClothes() },
+    { id: categoriesMap.Sprays, name: strings.Sprays, image: Images.spray() },
+    { id: categoriesMap.Toilet, name: strings.toilet, image: Images.toilet() },
+    { id: categoriesMap.Treats, name: strings.treats, image: Images.treats() },
+    { id: categoriesMap.Perfume, name: strings.perfume, image: Images.perfume() },
+    { id: categoriesMap.bowl, name: strings.bowl, image: Images.bowl() },
   ];
 
-  const [animatedValues, setAnimatedValues] = useState(
-    categories.map(() => new Animated.Value(1)),
+  const [animatedValues] = useState(
+    categories.map(() => new Animated.Value(1))
   );
   const flatListRef = useRef(null);
 
-  const renderBarItems = (category, index) => {
-    const accessoriesStyle = {
-      color: 'black',
-      // fontFamily: 'smallFont',
-      backgroundColor: '#84a1d2',
-      fontSize: 10,
+  const scrollToCategory = index => {
+    flatListRef.current?.scrollToIndex({ index, animated: true, viewPosition: 0.5 });
+  };
 
-      padding: 3,
-      borderRadius: 10,
-      borderWidth: 1,
-      textAlign: 'center',
+  const renderBarItem = ({ item, index }) => {
+    const isSelected = selectedCategory === item.id;
+
+    const onPress = () => {
+      Animated.sequence([
+        Animated.timing(animatedValues[index], {
+          toValue: 0.8,
+          duration: 100,
+          useNativeDriver: true,
+        }),
+        Animated.timing(animatedValues[index], {
+          toValue: 1,
+          duration: 100,
+          useNativeDriver: true,
+        }),
+      ]).start();
+
+      setSelectedCategory(item.id);
+      scrollToCategory(index);
     };
 
     return (
-      <Animated.View
-        style={[
-          styles.categoryStyle,
-          {transform: [{scale: animatedValues[index]}]},
-        ]}>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          key={category.id}
-          style={[
-            styles.category,
-            {
-              backgroundColor:
-                selectedCategory === category.id ? '#7391c8' : '#4e5e7f',
-            },
-          ]}
-          onPress={() => {
-            setSelectedCategory(category.id);
-            scrollToCategory(index);
-          }}>
-          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+      <View style={styles.itemWrapper}>
+        <Animated.View style={{ transform: [{ scale: animatedValues[index] }] }}>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              isSelected && styles.buttonSelected  // only circle background changes
+            ]}
+            activeOpacity={0.8}
+            onPress={onPress}
+          >
             <Image
-              source={category.image}
-              style={styles.img}
+              source={item.image}
+              style={styles.icon}               // icon always same
               resizeMode="contain"
             />
-
-            <Text
-              style={[
-                styles.categoryText,
-                category.id === 'accessories' ? accessoriesStyle : null,
-              ]}>
-              {category.name}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </Animated.View>
+          </TouchableOpacity>
+        </Animated.View>
+        <Text style={styles.label}>
+          {item.name}
+        </Text>
+      </View>
     );
   };
 
-  const renderBar = () => (
-    <View
-      style={
-        styling || {
-          flex: 1,
-          maxWidth: 600,
-          overflow: 'hidden',
-        }
-      }>
+  return (
+    <View style={styling || styles.barContainer}>
       <FlatList
         ref={flatListRef}
         data={categories}
-        renderItem={({item, index}) => renderBarItems(item, index)}
-        keyExtractor={item => item.id}
-        style={styles.FlatList}
+        horizontal
         showsHorizontalScrollIndicator={false}
-        horizontal={true}
+        keyExtractor={item => item.id}
+        renderItem={renderBarItem}
+        contentContainerStyle={styles.listContent}
       />
     </View>
   );
-
-  const scrollToCategory = index => {
-    if (flatListRef.current && flatListRef.current.scrollToIndex) {
-      flatListRef.current.scrollToIndex({
-        index,
-        animated: true,
-        viewPosition: 0.5,
-      });
-    }
-  };
-
-  return renderBar();
 };
 
 export default CatsBarItems;
 
 const styles = StyleSheet.create({
-  img: {
-    height: 60,
-    width: 60,
-
-    borderRadius: 15,
-  },
-
-  test: {
-    backgroundColor: 'red',
-  },
-  categoryStyle: {
+  barContainer: {
     width: '100%',
-    height: '100%',
-    marginTop: 15,
-    marginRight: 8,
-
-    flex: 1,
+    maxWidth: 600,
   },
-  category: {
-    borderWidth: 2,
-    width: 75,
+  listContent: {
+    paddingHorizontal: 10,
+  },
+  itemWrapper: {
+    width: 80,
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  button: {
+    width: 70,
     height: 70,
+    borderRadius: 35,
+    backgroundColor: '#4e5e7f',  // normal circle color
+    borderWidth:2,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 50,
   },
-  categoryText: {
+  buttonSelected: {
+    backgroundColor: '#7391c8',  // lighter circle when selected
+  },
+  icon: {
+    width: 40,
+    height: 40,
+  },
+  label: {
+    marginTop: 8,
+    fontSize: 13,        // a bit bigger
+    fontWeight: 'bold',  // bold text
     color: 'black',
-    position: 'absolute',
-    marginTop: 75,
-    backgroundColor: '#84a1d2',
-    fontSize: 12,
-    width: '100%',
-    padding: 2,
-    borderRadius: 10,
-    borderWidth: 1,
     textAlign: 'center',
-  },
-  FlatList: {
-    flex: 1,
-    paddingHorizontal: 10,
+    backgroundColor: '#84a1d2',  // label background
+    paddingHorizontal: 6,
+    borderRadius: 4,
   },
 });

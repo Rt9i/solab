@@ -6,6 +6,7 @@ import {
   View,
   Image as RnImage,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import SolabContext from '../store/solabContext';
@@ -13,7 +14,6 @@ import Images from '../assets/images/images';
 
 let ExpoImage = null;
 if (Platform.OS !== 'web') {
-  // require at runtime so bundler on web/server never sees it
   ExpoImage = require('expo-image').Image;
 }
 
@@ -41,9 +41,12 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
   const addToShop = () => {
     addItemToCart({...props}, productId);
   };
-  const sourceObj = typeof img === 'string' ? {uri: img} : img; // assume img is already {uri: ...} or require(...)
+  const sourceObj = typeof img === 'string' ? {uri: img} : img; 
 
   const showNativeImage = Platform.OS !== 'web' && !useFallback;
+  const LoadingIndicator = () => {
+    return <ActivityIndicator size="small" style={styles.placeholder} />;
+  };
   return (
     <View
       style={user?.role === 'staff' ? styles.itemWidthStaff : styles.itemWidth}>
@@ -71,7 +74,7 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
               contentFit="contain"
               cachePolicy="memory-disk"
               transition={250}
-              placeholder={Images.Meat()}
+              placeholder={Images.blackLoggo()}
               onError={() => setUseFallback(true)}
             />
           ) : (
