@@ -1,137 +1,123 @@
+import React, {useContext, useState} from 'react';
 import {
   TouchableOpacity,
-  Image,
   StyleSheet,
   Text,
   View,
-  Alert,
-  ScrollView,
+  Image as RnImage,
+  Platform,
 } from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import SolabContext from '../store/solabContext';
 import Images from '../assets/images/images';
-import FastImage from 'react-native-fast-image';
-import ExpoImage from 'expo-image/build/ExpoImage';
+
+let ExpoImage = null;
+if (Platform.OS !== 'web') {
+  // require at runtime so bundler on web/server never sees it
+  ExpoImage = require('expo-image').Image;
+}
 
 const CatsStoreItems = ({selectedCategory, ...props}) => {
-  const {strings, changeLanguage, user, row} = useContext(SolabContext);
-  const meatImg = {
-    resizeMode: 'contain',
-    height: 110,
-  };
-
+  const {strings, user} = useContext(SolabContext);
+  const [useFallback, setUseFallback] = useState(false);
   const navigation = useNavigation();
   const {
     availableStock,
-    _id,
-    brand,
     name,
     taste,
     price,
     img,
-    hideImage,
-    dis,
-    productId,
-    quantity,
-    category,
     kg,
-    searchKeys,
     saleAmount,
     salePrice,
-    petType,
+    productId,
   } = props;
   const {addItemToCart} = useContext(SolabContext);
 
   const onCardPress = () => {
-    const Item = {...props};
-    navigation.navigate('ProductScreen', {data: Item});
+    navigation.navigate('ProductScreen', {data: {...props}});
   };
-
-
 
   const addToShop = () => {
-    const Item = {...props};
-    addItemToCart(Item, Item.productId);
-    // if (Platform.OS == 'web') {
-    //   toast.success(`${strings.productAdded}! 🎉`, {
-    //     position: 'top-center', // Show toast from the top
-    //     duration: 1000, // Duration for 1 second
-    //   });
-    // }
+    addItemToCart({...props}, productId);
   };
+  const sourceObj = typeof img === 'string' ? {uri: img} : img; // assume img is already {uri: ...} or require(...)
 
-  const handleEditProducts = () => {
-    navigation.navigate('EditProduct', props);
-  };
-
+  const showNativeImage = Platform.OS !== 'web' && !useFallback;
   return (
     <View
       style={user?.role === 'staff' ? styles.itemWidthStaff : styles.itemWidth}>
       <View style={styles.items}>
-        {user?.role == 'staff' && (
+        {user?.role === 'staff' && (
           <View style={styles.stock}>
             <Text style={styles.stocktext}>{availableStock}</Text>
           </View>
         )}
 
-        {(availableStock === 0 || availableStock === null) && (
+        {(availableStock === 0 || availableStock == null) && (
           <View style={styles.notavailableStock}>
             <Text style={styles.stockTxt}>Out of Stock</Text>
           </View>
         )}
 
         <TouchableOpacity onPress={onCardPress} activeOpacity={0.6}>
-        
-          <Image
-            source={img}
-            style={[
-              {resizeMode: 'contain'},
-              styles.img,
-              selectedCategory === 'catMeat' ? meatImg : null,
-            ]}
-          />
+          {showNativeImage ? (
+            <ExpoImage
+              source={sourceObj}
+              style={[
+                styles.img,
+                selectedCategory === 'catMeat' && styles.meatImg,
+              ]}
+              contentFit="contain"
+              cachePolicy="memory-disk"
+              transition={250}
+              placeholder={Images.Meat()}
+              onError={() => setUseFallback(true)}
+            />
+          ) : (
+            <RnImage
+              source={sourceObj}
+              style={[
+                styles.img,
+                selectedCategory === 'catMeat' && styles.meatImg,
+              ]}
+              resizeMode="contain"
+            />
+          )}
         </TouchableOpacity>
 
         <View style={styles.infoContainer}>
           <View style={styles.bottomcontainer}>
-            <Text style={styles.bottomtxt1}>{` ${taste}`}</Text>
+            <Text style={styles.bottomtxt1}>{taste}</Text>
           </View>
 
           <View style={styles.priceContainer}>
             <Text style={styles.bottomtxt2}>
-              {`${price} ${strings.priceTag}`}
+              {price} {strings.priceTag}
             </Text>
-            {kg !== 0 && <Text style={styles.bottomtxt4}>{`${kg} kg`}</Text>}
+            {kg !== 0 && <Text style={styles.bottomtxt4}>{kg} kg</Text>}
           </View>
         </View>
 
         {user?.role === 'staff' && (
           <TouchableOpacity
-            onPress={() => handleEditProducts()}
+            onPress={() => navigation.navigate('EditProduct', props)}
             style={styles.editButtonContainer}>
-            <View
-              style={{
-                width: 30,
-                height: 30,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Image
-                source={Images.edit()}
-                resizeMode="contain"
-                style={styles.edit}
-              />
-            </View>
+            <RnImage
+              source={Images.edit()}
+              resizeMode="contain"
+              style={styles.edit}
+            />
           </TouchableOpacity>
         )}
 
         <View style={styles.center}>
           <TouchableOpacity activeOpacity={0.7} onPress={addToShop}>
             <View style={styles.cart}>
-              <Image
+              <RnImage
                 source={Images.addCart()}
-                style={({resizeMode: 'contain'}, styles.addCart)}
+                resizeMode="contain"
+                style={styles.addCart}
               />
               <Text style={styles.carttxt}>{strings.addToCart}</Text>
             </View>
@@ -175,7 +161,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(20, 70, 200, 0.02)',
     overflow: 'hidden',
   },
-
   stock: {
     zIndex: 4,
     flexDirection: 'row',
@@ -189,7 +174,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     elevation: 16,
   },
-
   notavailableStock: {
     position: 'absolute',
     top: 0,
@@ -209,7 +193,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     textAlign: 'center',
   },
-
   img: {
     marginTop: 15,
     width: '100%',
@@ -217,7 +200,10 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 5,
     borderTopRightRadius: 5,
   },
-
+  meatImg: {
+    resizeMode: 'contain',
+    height: 110,
+  },
   infoContainer: {
     padding: 8,
     flex: 1,
@@ -229,10 +215,8 @@ const styles = StyleSheet.create({
   },
   bottomtxt1: {
     fontSize: 10,
-    textAlignVertical: 'center',
     color: 'black',
   },
-
   priceContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -240,29 +224,22 @@ const styles = StyleSheet.create({
   },
   bottomtxt2: {
     fontSize: 12,
-    textAlignVertical: 'center',
     color: 'black',
   },
   bottomtxt4: {
     fontSize: 12,
-    textAlignVertical: 'center',
     color: 'black',
     marginLeft: 5,
   },
-
   editButtonContainer: {
-    zIndex: 5,
-    width: 30,
-    height: 30,
-    marginBottom: 15,
+    position: 'absolute',
+    top: 10,
+    right: 10,
   },
   edit: {
-    height: 30,
     width: 30,
-    zIndex: 1,
-    position: 'absolute',
+    height: 30,
   },
-
   center: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -284,7 +261,7 @@ const styles = StyleSheet.create({
   addCart: {
     width: 20,
     height: 20,
-    zIndex: 20,
+    marginRight: 6,
   },
   carttxt: {
     fontSize: 12,
@@ -293,7 +270,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 22,
   },
-
   sale: {
     position: 'absolute',
     top: 10,
