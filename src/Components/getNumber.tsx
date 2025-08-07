@@ -23,35 +23,35 @@ import SolabContext from '../store/solabContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type PhoneModalProps = {
-  phoneNumber: string | null;
-  setPhoneNumber: (phone: string) => void;
-  isModalVisible: boolean;
-  setModalVisible: (visible: boolean) => void;
-  setIsPhoneVerified: (verified: boolean) => void;
-  isPhoneVerified: boolean;
-  verificationCode: string;
-  setVerificationCode: (verificationCode: string) => void;
-  verificationCodeSent: boolean;
-  setVerificationCodeSent: (sent: boolean) => void;
-  modalCallback: ((phone: string) => void) | null;
-  setModalCallback: React.Dispatch<
+  phoneNumber?: string | null;
+  setPhoneNumber?: (phone: string) => void;
+  isModalVisible?: boolean;
+  setModalVisible?: (visible: boolean) => void;
+  setIsPhoneVerified?: (verified: boolean) => void;
+  isPhoneVerified?: boolean;
+  verificationCode?: string;
+  setVerificationCode?: (verificationCode: string) => void;
+  verificationCodeSent?: boolean;
+  setVerificationCodeSent?: (sent: boolean) => void;
+  modalCallback?: ((phone: string) => void) | null;
+  setModalCallback?: React.Dispatch<
     React.SetStateAction<((phone: string) => void) | null>
   >;
 };
 
 const PhoneModal: React.FC<PhoneModalProps> = ({
-  phoneNumber,
-  setPhoneNumber,
-  isModalVisible,
-  setModalVisible,
-  setIsPhoneVerified,
-  isPhoneVerified,
-  verificationCode,
-  setVerificationCode,
-  verificationCodeSent,
-  setVerificationCodeSent,
-  modalCallback,
-  setModalCallback,
+  phoneNumber = '',
+  setPhoneNumber = () => {},
+  isModalVisible = false,
+  setModalVisible = () => {},
+  isPhoneVerified = false,
+  setIsPhoneVerified = () => {},
+  verificationCode = '',
+  setVerificationCode = () => {},
+  verificationCodeSent = false,
+  setVerificationCodeSent = () => {},
+  modalCallback = null,
+  setModalCallback = () => {},
 }) => {
   const {currentUser, setCurrentUser}: any = React.useContext(SolabContext);
 

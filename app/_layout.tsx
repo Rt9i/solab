@@ -74,7 +74,7 @@ export default function RootLayout() {
 
   return (
     <SolabProvider>
-      {/* No second ThemeProvider here— just render AppContent */}
+    
       <AppContent />
     </SolabProvider>
   );

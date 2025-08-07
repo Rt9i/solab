@@ -6,7 +6,6 @@ import React, {
   useMemo,
   ReactNode,
 } from 'react';
-
 import SolabContext from './solabContext';
 import {enStrings, heStrings, arStrings} from '../res/strings';
 import {Alert, Platform} from 'react-native';
@@ -17,7 +16,7 @@ import Constants from 'expo-constants';
 import * as Google from 'expo-auth-session/providers/google';
 import {makeRedirectUri} from 'expo-auth-session';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import * as AuthSession from 'expo-auth-session';
 interface SolabProviderProps {
   children: ReactNode;
 }
@@ -54,27 +53,11 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
   const WEB_CLIENT_ID = Constants.expoConfig?.extra?.WEB_CLIENT_ID;
 
   // const redirectUri = 'https://solabgrooming.netlify.app';
-  const redirectUri = 'http://localhost:8081';
+  const redirectUri = useMemo(
+    () => AuthSession.makeRedirectUri({useProxy: true} as any),
+    [],
+  );
 
-  const fetchGoogleUserInfo = async (accessToken: string) => {
-    try {
-      const response = await fetch(
-        'https://www.googleapis.com/oauth2/v3/userinfo',
-        {
-          headers: {Authorization: `Bearer ${accessToken}`},
-        },
-      );
-      const userInfo = await response.json();
-      // console.log('fetched user from function: ', userInfo);
-      return userInfo;
-    } catch (error) {
-      console.error('Error Fetching User Info:', error);
-      window.alert(
-        'Failed to Fetch User Info',
-        'Could not fetch user information.',
-      );
-    }
-  };
 
   // useEffect(() => {
   //   console.log('User:', user);
@@ -283,7 +266,7 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
     },
     [cart],
   );
-  
+
   const removeStoredItem = async (key: string): Promise<void> => {
     if (Platform.OS === 'web') {
       localStorage.removeItem(key);
@@ -482,7 +465,7 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
     setCurrentUser,
     setModalVisible,
     isModalVisible,
-    fetchGoogleUserInfo,
+
 
     ENCRYPTION_KEY,
     ANDROID_CLIENT_ID,

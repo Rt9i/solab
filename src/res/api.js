@@ -275,7 +275,25 @@ export const setItemInDataBase = async (id, newItemData) => {
     throw e; // Rethrow the error
   }
 };
-
+export const fetchGoogleUserInfo = async accessToken => {
+  try {
+    const response = await fetch(
+      'https://www.googleapis.com/oauth2/v3/userinfo',
+      {
+        headers: {Authorization: `Bearer ${accessToken}`},
+      },
+    );
+    const userInfo = await response.json();
+    // console.log('fetched user from function: ', userInfo);
+    return userInfo;
+  } catch (error) {
+    console.error('Error Fetching User Info:', error);
+    window.alert(
+      'Failed to Fetch User Info',
+      'Could not fetch user information.',
+    );
+  }
+};
 export const removeItemFromDatabase = async id => {
   try {
     const response = await fetch(`${mainURL}/removeItemFromDatabase`, {
@@ -399,16 +417,18 @@ export const fetchAccessToken = async (code, webClient, redirect) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ code, webClient, redirect }), // This is fine
+      body: JSON.stringify({code, webClient, redirect}), // This is fine
     });
 
     if (!response.ok) {
       const errorDetails = await response.json();
-      throw new Error(`Failed to fetch access token. Status: ${response.status}, Details: ${JSON.stringify(errorDetails)}`);
+      throw new Error(
+        `Failed to fetch access token. Status: ${response.status}, Details: ${JSON.stringify(errorDetails)}`,
+      );
     }
 
     const data = await response.json();
-    
+
     return data;
   } catch (error) {
     console.error('Error fetching access token:', error);

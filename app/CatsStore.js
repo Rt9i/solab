@@ -21,7 +21,6 @@ import Swipe from '../src/Components/Swipe';
 import CatsStoreItems from '../src/Components/CatsStoreItems';
 import {useFocusEffect, useNavigation} from 'expo-router';
 
-
 const CatsStore = props => {
   const [displayMode, setDisplayMode] = useState('row');
   const [optionsVisible, setOptionsVisible] = useState(false);
@@ -116,13 +115,7 @@ const CatsStore = props => {
           <View style={styles.sale}>
             <Swipe />
           </View>
-
-          <View
-            style={{
-              width: '100%',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+          <View style={styles.barContainer}>
             <View style={styles.catsBarItemsContainer}>
               <CatsBarItems
                 style={styles.CatsBarItems}
@@ -132,6 +125,7 @@ const CatsStore = props => {
               />
             </View>
           </View>
+
           <View style={{width: '100%', alignItems: 'center'}}>
             {rows.map((row, index) => {
               const filteredItems = getFilteredItemsForRow(row.rows);
@@ -169,10 +163,15 @@ const CatsStore = props => {
 export default CatsStore;
 
 const styles = StyleSheet.create({
+  barContainer: {
+    justifyContent: 'center',
+    width: '100%',
+    alignItems: 'center',
+  },
   img2: {
     height: 40,
     width: 40,
-    transform: [{rotate: '-180deg'}], // Rotate the image by -180 degrees
+    transform: [{rotate: '-180deg'}],
   },
   img: {
     height: 40,
@@ -208,8 +207,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   catsBarItemsContainer: {
+    justifyContent: 'center',
+    alignContent: 'center',
+
     height: 100,
     width: '100%',
+
     maxWidth: 600,
   },
   itemContainer: {

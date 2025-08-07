@@ -14,6 +14,7 @@ import {
   TouchableOpacity,
   Image,
   Alert,
+  Platform,
 } from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
