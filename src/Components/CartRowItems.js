@@ -1,16 +1,29 @@
-import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image as RnImage,
+  TouchableOpacity,
+  Platform,
+} from 'react-native';
 import React, {useContext} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox'; // Ensure this package is installed
 import ScreenNames from '../../routes/ScreenNames';
 import SolabContext from '../store/solabContext';
+import Images from '../assets/images/images';
+
+let ImageBoth = RnImage;
+if (Platform.OS !== 'web') {
+  ImageBoth = require('expo-image').Image;
+}
 
 const CartRowItems = props => {
   const {strings} = useContext(SolabContext);
   const Item = {...props};
   const {brand, price, img, _id} = props;
-  const {addItem, removeItemFromCart} =
-    useContext(SolabContext);
+  const {addItem, removeItemFromCart} = useContext(SolabContext);
+
   const navigation = useNavigation();
 
   const onCardPress = () => {
@@ -30,9 +43,17 @@ const CartRowItems = props => {
       />
       <TouchableOpacity onPress={onCardPress} style={styles.photo}>
         <View style={styles.imgCont}>
-          <Image
+          <ImageBoth
             source={typeof img === 'string' ? {uri: img} : img}
-            style={[styles.img,{resizeMode:'contain'}]}
+            style={styles.img}
+            {...(Platform.OS === 'web'
+              ? {resizeMode: 'contain'}
+              : {
+                  contentFit: 'contain',
+                  cachePolicy: 'memory-disk',
+                  transition: 250,
+                  placeholder: Images.blackLoggo(),
+                })}
           />
 
           <Text>
@@ -122,7 +143,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: 250,
     height: 250,
-   
+
   },
   details: {
     flexDirection: 'row-reverse',

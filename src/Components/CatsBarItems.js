@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, {useContext, useRef, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -18,31 +18,43 @@ const CatsBarItems = ({
   Array,
   styling,
 }) => {
-  const { strings } = useContext(SolabContext);
+  const {strings} = useContext(SolabContext);
   const categoriesMap = Object.assign({}, ...Array);
 
   const categories = [
-    { id: categoriesMap.Food, name: strings.DryFood, image: Images.catFood() },
-    { id: categoriesMap.Meat, name: strings.meat, image: Images.Meat() },
-    { id: categoriesMap.Accessories, name: strings.accessories, image: Images.leash() },
-    { id: categoriesMap.Clothes, name: strings.Clothes, image: Images.catClothes() },
-    { id: categoriesMap.Sprays, name: strings.Sprays, image: Images.spray() },
-    { id: categoriesMap.Toilet, name: strings.toilet, image: Images.toilet() },
-    { id: categoriesMap.Treats, name: strings.treats, image: Images.treats() },
-    { id: categoriesMap.Perfume, name: strings.perfume, image: Images.perfume() },
-    { id: categoriesMap.bowl, name: strings.bowl, image: Images.bowl() },
+    {id: categoriesMap.Food, name: strings.DryFood, image: Images.catFood()},
+    {id: categoriesMap.Meat, name: strings.meat, image: Images.Meat()},
+    {
+      id: categoriesMap.Accessories,
+      name: strings.accessories,
+      image: Images.leash(),
+    },
+    {
+      id: categoriesMap.Clothes,
+      name: strings.Clothes,
+      image: Images.catClothes(),
+    },
+    {id: categoriesMap.Sprays, name: strings.Sprays, image: Images.spray()},
+    {id: categoriesMap.Toilet, name: strings.toilet, image: Images.toilet()},
+    {id: categoriesMap.Treats, name: strings.treats, image: Images.treats()},
+    {id: categoriesMap.Perfume, name: strings.perfume, image: Images.perfume()},
+    {id: categoriesMap.bowl, name: strings.bowl, image: Images.bowl()},
   ];
 
   const [animatedValues] = useState(
-    categories.map(() => new Animated.Value(1))
+    categories.map(() => new Animated.Value(1)),
   );
   const flatListRef = useRef(null);
 
   const scrollToCategory = index => {
-    flatListRef.current?.scrollToIndex({ index, animated: true, viewPosition: 0.5 });
+    flatListRef.current?.scrollToIndex({
+      index,
+      animated: true,
+      viewPosition: 0.5,
+    });
   };
 
-  const renderBarItem = ({ item, index }) => {
+  const renderBarItem = ({item, index}) => {
     const isSelected = selectedCategory === item.id;
 
     const onPress = () => {
@@ -65,23 +77,27 @@ const CatsBarItems = ({
 
     return (
       <View style={styles.itemWrapper}>
-        <Animated.View style={{ transform: [{ scale: animatedValues[index] }] }}>
+        <Animated.View style={{transform: [{scale: animatedValues[index]}]}}>
           <TouchableOpacity
-            style={[
-              styles.button,
-              isSelected && styles.buttonSelected  // only circle background changes
-            ]}
+            style={[styles.button, isSelected && styles.buttonSelected]}
+
+
+
             activeOpacity={0.8}
-            onPress={onPress}
-          >
+            onPress={onPress}>
+
             <Image
               source={item.image}
-              style={styles.icon}               // icon always same
+              style={styles.icon}
               resizeMode="contain"
             />
           </TouchableOpacity>
         </Animated.View>
-        <Text style={styles.label}>
+        <Text
+          style={styles.label}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          minimumFontScale={0.7}>
           {item.name}
         </Text>
       </View>
@@ -94,7 +110,7 @@ const CatsBarItems = ({
         ref={flatListRef}
         data={categories}
         horizontal
-        showsHorizontalScrollIndicator={false}
+        showsHorizontalScrollIndicator={Platform.OS === 'web'}
         keyExtractor={item => item.id}
         renderItem={renderBarItem}
         contentContainerStyle={styles.listContent}
@@ -116,32 +132,36 @@ const styles = StyleSheet.create({
   itemWrapper: {
     width: 80,
     alignItems: 'center',
-    marginRight: 12,
+    marginRight: 5,
   },
   button: {
     width: 70,
     height: 70,
-    borderRadius: 35,
-    backgroundColor: '#4e5e7f',  // normal circle color
-    borderWidth:2,
+    borderRadius: 40,
+    backgroundColor: '#4e5e7f', // normal circle color
+    borderWidth: 2,
     justifyContent: 'center',
     alignItems: 'center',
   },
   buttonSelected: {
-    backgroundColor: '#7391c8',  // lighter circle when selected
+    backgroundColor: '#7391c8', // lighter circle when selected
   },
   icon: {
-    width: 40,
-    height: 40,
+    width: 55,
+    height: 55,
+    borderRadius: 14,
+    padding: 5,
   },
   label: {
-    marginTop: 8,
-    fontSize: 13,        // a bit bigger
-    fontWeight: 'bold',  // bold text
+
+    fontSize: 13, // a bit bigger
+    fontWeight: 'bold', // bold text
     color: 'black',
     textAlign: 'center',
-    backgroundColor: '#84a1d2',  // label background
+    backgroundColor: '#84a1d2', // label background
     paddingHorizontal: 6,
-    borderRadius: 4,
+    borderRadius: 10,
+    marginTop: -8,
+    borderWidth: 1,
   },
 });

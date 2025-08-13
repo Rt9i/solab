@@ -14,6 +14,7 @@ import SolabContext from '../src/store/solabContext';
 import {LinearGradient} from 'expo-linear-gradient';
 import MessageModal from '@/src/Components/messageModal';
 import Images from '../src/assets/images/images';
+import ImageBoth from '../src/Components/ImageBoth';
 
 // بدل الاستيراد الثابت:
 // import ExpoImage from 'expo-image/build/ExpoImage';
@@ -61,23 +62,16 @@ export default function ProductScreen() {
       <LinearGradient
         colors={['#ffffff', '#f0f0f0', '#e0e0e0']}
         style={styles.gradient}>
-        {showNativeImage ? (
-          <ExpoImage
-            source={imageSource}
-            style={styles.image}
-            contentFit="contain"
-            cachePolicy="memory-disk"
-            transition={250}
-            placeholder={Images.blackLoggo()}
-            onError={onError}
-          />
-        ) : (
-          <RnImage
-            source={imageSource}
-            style={styles.image}
-            resizeMode="contain"
-          />
-        )}
+        <ImageBoth
+          source={imageSource}
+          style={styles.image}
+          resizeMode="contain"
+          contentFit="contain"
+          cachePolicy="memory-disk"
+          transition={250}
+          placeholder={Images.blackLoggo()}
+          onError={onError}
+        />
 
         <View style={styles.inputContainer}>
           <TextInput

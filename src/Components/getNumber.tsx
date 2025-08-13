@@ -39,18 +39,18 @@ type PhoneModalProps = {
 };
 
 const PhoneModal: React.FC<PhoneModalProps> = ({
-  phoneNumber,
-  setPhoneNumber,
-  isModalVisible,
-  setModalVisible,
-  setIsPhoneVerified,
-  isPhoneVerified,
-  verificationCode,
-  setVerificationCode,
-  verificationCodeSent,
-  setVerificationCodeSent,
-  modalCallback,
-  setModalCallback,
+  phoneNumber = '',
+  setPhoneNumber = () => {},
+  isModalVisible = false,
+  setModalVisible = () => {},
+  isPhoneVerified = false,
+  setIsPhoneVerified = () => {},
+  verificationCode = '',
+  setVerificationCode = () => {},
+  verificationCodeSent = false,
+  setVerificationCodeSent = () => {},
+  modalCallback = null,
+  setModalCallback = () => {},
 }) => {
   const {currentUser, setCurrentUser}: any = React.useContext(SolabContext);
 
