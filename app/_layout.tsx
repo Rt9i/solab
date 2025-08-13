@@ -7,11 +7,10 @@ import {Stack} from 'expo-router';
 import SolabProvider from '../src/store/solabProvider';
 import {useColorScheme} from '@/hooks/useColorScheme';
 import Images from '@/src/assets/images/images';
+import { AuthRequest } from 'expo-auth-session';
 
-import Toast from 'react-native-toast-message';
 
 SplashScreen.preventAutoHideAsync();
-
 function AppContent() {
   const scheme = useColorScheme();
   const finalScheme = scheme || 'light';
@@ -73,8 +72,8 @@ export default function RootLayout() {
   }
 
   return (
-    <SolabProvider>
     
+    <SolabProvider>
       <AppContent />
     </SolabProvider>
   );

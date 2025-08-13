@@ -53,11 +53,14 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
   const WEB_CLIENT_ID = Constants.expoConfig?.extra?.WEB_CLIENT_ID;
 
   // const redirectUri = 'https://solabgrooming.netlify.app';
-  const redirectUri = useMemo(
-    () => AuthSession.makeRedirectUri({useProxy: true} as any),
-    [],
-  );
-
+  // const redirectUri = Platform.select({
+  //   web: 'https://solabgrooming.netlify.app', // Web callback
+  //   default: AuthSession.makeRedirectUri({
+  //     scheme: 'solab',
+  //     path: 'redirect', // لازم تضيف هذا
+  //     useProxy: true,
+  //   } as any),
+  // });
 
   // useEffect(() => {
   //   console.log('User:', user);
@@ -466,13 +469,12 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
     setModalVisible,
     isModalVisible,
 
-
     ENCRYPTION_KEY,
     ANDROID_CLIENT_ID,
     IOS_CLIENT_ID,
     WEB_CLIENT_ID,
 
-    redirectUri,
+    // redirectUri,
   };
 
   return (

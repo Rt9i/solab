@@ -9,7 +9,7 @@
     "extra": {
       "EXPO_ROUTER_APP_ROOT": "./app/_layout.tsx",
       "GOOGLE_API_KEY": "AIzaSyA6z3FL4IhcCRZNyf7HwaEOvqXe6T9HrUo",
-      "ANDROID_CLIENT_ID": "321459553069-gf0n32cai9cnev3j6pl86a9h0ovk530s.apps.googleusercontent.com",
+      "ANDROID_CLIENT_ID": "321459553069-auf180h0b7ol5lvmujjjo16gutefami8.apps.googleusercontent.com",
       "IOS_CLIENT_ID": "321459553069-p2u0vusu59s210l347jv0s15lobnkfn5.apps.googleusercontent.com",
       "WEB_CLIENT_ID": "321459553069-r7ost04h4agb9mduvvhgpaivp8vtiocc.apps.googleusercontent.com",
       "REDIRECT_URI": "https://auth.expo.io/@rt9i/solab",
