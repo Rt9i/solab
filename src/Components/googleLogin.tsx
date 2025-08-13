@@ -12,8 +12,7 @@ import Constants from 'expo-constants';
 import Images from '../assets/images/images';
 import SolabContext from '../store/solabContext';
 import PhoneModal from './getNumber';
-import * as Google from 'expo-auth-session/providers/google';
-import * as AuthSession from 'expo-auth-session';
+
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -22,78 +21,45 @@ type UserData = {
   name: string | null;
   picture: string | null;
 };
-
 const GoogleLogin: React.FC = () => {
-  const {isModalVisible, setModalVisible}: any = useContext(SolabContext);
-
+  const {isModalVisible, setModalVisible, redirectUri}: any =
+    useContext(SolabContext);
+  const ENCRYPTION_KEY = Constants.expoConfig?.extra?.ENCRYPTION_KEY;
   const ANDROID_CLIENT_ID = Constants.expoConfig?.extra?.ANDROID_CLIENT_ID;
   const IOS_CLIENT_ID = Constants.expoConfig?.extra?.IOS_CLIENT_ID;
+  const WEB_CLIENT_ID = Constants.expoConfig?.extra?.WEB_CLIENT_ID;
 
-  const redirectUri = AuthSession.makeRedirectUri({scheme: 'solab'});
-  console.log('redirect uri here: ', redirectUri);
+  const googleLoginUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${WEB_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code&scope=openid%20profile%20email&access_type=offline&prompt=select_account`;
 
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    androidClientId: ANDROID_CLIENT_ID,
-    iosClientId: IOS_CLIENT_ID,
-    scopes: ['profile', 'email'],
-    redirectUri: redirectUri,
-  });
-
-  const [userInfo, setUserInfo] = useState<UserData | null>(null);
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [isPhoneVerified, setIsPhoneVerified] = useState<boolean>(false);
 
-  // نراقب response بعد تسجيل الدخول
-  useEffect(() => {
-    if (response?.type === 'success') {
-      const {authentication} = response;
-      if (authentication?.accessToken) {
-        fetch('https://www.googleapis.com/userinfo/v2/me', {
-          headers: {Authorization: `Bearer ${authentication.accessToken}`},
-        })
-          .then(res => res.json())
-          .then(data => {
-            setUserInfo({
-              email: data.email,
-              name: data.name,
-              picture: data.picture,
-            });
-            console.log('User info:', data);
-          })
-          .catch(err => console.log('Error fetching user info:', err));
-      }
+  const signIn = async () => {
+    if (Platform.OS === 'web') {
+      window.location.href = googleLoginUrl;
+    } else {
+      await WebBrowser.openBrowserAsync(googleLoginUrl);
     }
-  }, [response]);
-
-  const signInWithGoogle = async () => {
-    await promptAsync();
   };
+  const GoogleSignInButton = () => (
+    <TouchableOpacity style={styles.googleButton} onPress={() => signIn()}>
+      <Image source={Images.Gicon()} style={styles.googleIcon} />
+      <Text style={styles.googleButtonText}>Sign in with Google</Text>
+    </TouchableOpacity>
+  );
 
   return (
     <View style={styles.container}>
-      {/* <PhoneModal
+      <PhoneModal
         phoneNumber={phoneNumber}
         setPhoneNumber={setPhoneNumber}
         isModalVisible={isModalVisible}
         setModalVisible={setModalVisible}
         setIsPhoneVerified={setIsPhoneVerified}
         isPhoneVerified={isPhoneVerified}
-      /> */}
+      />
 
-      {!userInfo ? (
-        <TouchableOpacity
-          style={styles.googleButton}
-          onPress={signInWithGoogle}
-          disabled={!request}>
-          <Image source={Images.Gicon()} style={styles.googleIcon} />
-          <Text style={styles.googleButtonText}>Sign in with Google</Text>
-        </TouchableOpacity>
-      ) : (
-        <View style={styles.userInfoContainer}>
-          <Text style={styles.userInfo}>Welcome {userInfo.name}</Text>
-          <Text style={styles.userInfo}>{userInfo.email}</Text>
-        </View>
-      )}
+      <GoogleSignInButton />
     </View>
   );
 };
@@ -101,12 +67,6 @@ const GoogleLogin: React.FC = () => {
 export default GoogleLogin;
 
 const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignContent: 'center',
-  },
   googleButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -125,6 +85,22 @@ const styles = StyleSheet.create({
   googleButtonText: {
     color: '#fff',
     fontSize: 16,
+    fontWeight: 'bold',
+  },
+  profileImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+  },
+  container: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'center',
+  },
+  title: {
+    fontSize: 24,
+    marginBottom: 20,
     fontWeight: 'bold',
   },
   userInfoContainer: {
