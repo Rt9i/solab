@@ -72,13 +72,8 @@ export default function RootLayout() {
   }
 
   return (
-<<<<<<< HEAD
     
     <SolabProvider>
-=======
-    <SolabProvider>
-      {/* No second ThemeProvider here— just render AppContent */}
->>>>>>> parent of 4b1826e6 (.)
       <AppContent />
     </SolabProvider>
   );

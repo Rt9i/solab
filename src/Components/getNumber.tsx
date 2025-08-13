@@ -21,7 +21,6 @@ import {Platform} from 'react-native';
 
 import SolabContext from '../store/solabContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 type PhoneModalProps = {
   phoneNumber: string | null;
   setPhoneNumber: (phone: string) => void;
@@ -29,12 +28,12 @@ type PhoneModalProps = {
   setModalVisible: (visible: boolean) => void;
   setIsPhoneVerified: (verified: boolean) => void;
   isPhoneVerified: boolean;
-  verificationCode: string;
-  setVerificationCode: (verificationCode: string) => void;
-  verificationCodeSent: boolean;
-  setVerificationCodeSent: (sent: boolean) => void;
-  modalCallback: ((phone: string) => void) | null;
-  setModalCallback: React.Dispatch<
+  verificationCode?: string;
+  setVerificationCode?: (verificationCode: string) => void;
+  verificationCodeSent?: boolean;
+  setVerificationCodeSent?: (sent: boolean) => void;
+  modalCallback?: ((phone: string) => void) | null;
+  setModalCallback?: React.Dispatch<
     React.SetStateAction<((phone: string) => void) | null>
   >;
 };
