@@ -1,16 +1,16 @@
-import {StyleSheet, Text, View, TouchableOpacity, Platform} from 'react-native';
-import React, {useContext, useState, useEffect} from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, Platform } from 'react-native';
+import React, { useContext, useState, useEffect } from 'react';
 import GoogleLogin from '@/src/Components/googleLogin';
 import SolabContext from '../src/store/solabContext';
 import LoginForm from '../src/Components/loginForm';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Ionicons} from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 
 const Login = () => {
-  const {user, setUser, clearAsyncStorage} = useContext(SolabContext);
+  const { user, setUser, clearAsyncStorage } = useContext(SolabContext);
   const [rememberMe, setRememberMe] = useState(false);
 
-  const getItem = async key => {
+  const getItem = async (key) => {
     if (Platform.OS === 'web') {
       return localStorage.getItem(key);
     } else {
@@ -26,7 +26,7 @@ const Login = () => {
     }
   };
 
-  const removeItem = async key => {
+  const removeItem = async (key) => {
     if (Platform.OS === 'web') {
       localStorage.removeItem(key);
     } else {
@@ -47,7 +47,7 @@ const Login = () => {
   }, []);
 
   const handleRememberMe = async () => {
-    setRememberMe(prev => {
+    setRememberMe((prev) => {
       const newValue = !prev;
 
       if (newValue) {
@@ -62,17 +62,16 @@ const Login = () => {
 
   return (
     <View style={styles.container}>
-      {/* {!user && <LoginForm />} */}
+      {!user && <LoginForm />}
       {/* <Button title="clear user" onPress={() => clearAsyncStorage()} /> */}
-
-      <GoogleLogin />
-
       <TouchableOpacity onPress={handleRememberMe} style={styles.row}>
         <View style={[styles.checkbox, rememberMe && styles.checkboxChecked]}>
           {rememberMe && <Ionicons name="checkmark" size={16} color="#fff" />}
         </View>
         <Text style={styles.checkboxLabel}>Remember Me</Text>
       </TouchableOpacity>
+
+      <GoogleLogin />
     </View>
   );
 };

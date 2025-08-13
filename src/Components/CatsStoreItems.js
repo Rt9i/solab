@@ -11,7 +11,11 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import SolabContext from '../store/solabContext';
 import Images from '../assets/images/images';
-import ImageBoth from './ImageBoth';
+
+let ExpoImage = null;
+if (Platform.OS !== 'web') {
+  ExpoImage = require('expo-image').Image;
+}
 
 const CatsStoreItems = ({selectedCategory, ...props}) => {
   const {strings, user} = useContext(SolabContext);
@@ -37,7 +41,7 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
   const addToShop = () => {
     addItemToCart({...props}, productId);
   };
-  const sourceObj = typeof img === 'string' ? {uri: img} : img;
+  const sourceObj = typeof img === 'string' ? {uri: img} : img; 
 
   const showNativeImage = Platform.OS !== 'web' && !useFallback;
   const LoadingIndicator = () => {
@@ -60,16 +64,29 @@ const CatsStoreItems = ({selectedCategory, ...props}) => {
         )}
 
         <TouchableOpacity onPress={onCardPress} activeOpacity={0.6}>
-          <ImageBoth
-            source={sourceObj}
-            style={[
-              styles.img,
-              selectedCategory === 'catMeat' && styles.meatImg,
-            ]}
-            resizeMode="contain"
-            placeholder={Images.blackLoggo()}
-            onError={() => setUseFallback(true)}
-          />
+          {showNativeImage ? (
+            <ExpoImage
+              source={sourceObj}
+              style={[
+                styles.img,
+                selectedCategory === 'catMeat' && styles.meatImg,
+              ]}
+              contentFit="contain"
+              cachePolicy="memory-disk"
+              transition={250}
+              placeholder={Images.blackLoggo()}
+              onError={() => setUseFallback(true)}
+            />
+          ) : (
+            <RnImage
+              source={sourceObj}
+              style={[
+                styles.img,
+                selectedCategory === 'catMeat' && styles.meatImg,
+              ]}
+              resizeMode="contain"
+            />
+          )}
         </TouchableOpacity>
 
         <View style={styles.infoContainer}>

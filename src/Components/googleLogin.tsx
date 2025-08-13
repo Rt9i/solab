@@ -71,14 +71,14 @@ const GoogleLogin: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <PhoneModal
+      {/* <PhoneModal
         phoneNumber={phoneNumber}
         setPhoneNumber={setPhoneNumber}
         isModalVisible={isModalVisible}
         setModalVisible={setModalVisible}
         setIsPhoneVerified={setIsPhoneVerified}
         isPhoneVerified={isPhoneVerified}
-      />
+      /> */}
 
       {!userInfo ? (
         <TouchableOpacity
