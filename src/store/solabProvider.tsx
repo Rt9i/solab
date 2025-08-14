@@ -54,14 +54,14 @@ const SolabProvider: React.FC<SolabProviderProps> = ({children}) => {
   const IOS_CLIENT_ID = Constants.expoConfig?.extra?.IOS_CLIENT_ID;
   const WEB_CLIENT_ID = Constants.expoConfig?.extra?.WEB_CLIENT_ID;
 
-  const redirectUri = 'http://localhost:8081';
-  // const redirectUri = Platform.select({
-  //   web: 'https://solabgrooming.netlify.app', // Web callback
-  //   default: AuthSession.makeRedirectUri({
-  //     path: 'redirect', // لازم تضيف هذا
-  //     useProxy: true,
-  //   } as any),
-  // });
+  // const redirectUri = 'http://localhost:8081';
+  const redirectUri = Platform.select({
+    web: 'https://solabgrooming.netlify.app',
+    default: AuthSession.makeRedirectUri({
+      path: 'redirect',
+      useProxy: true,
+    } as any),
+  });
 
   useEffect(() => {
     console.log('User:', user);
