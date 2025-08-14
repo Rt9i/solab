@@ -13,7 +13,6 @@ import Images from '../assets/images/images';
 import SolabContext from '../store/solabContext';
 import PhoneModal from './getNumber';
 
-
 WebBrowser.maybeCompleteAuthSession();
 
 type UserData = {
@@ -28,8 +27,16 @@ const GoogleLogin: React.FC = () => {
   const ANDROID_CLIENT_ID = Constants.expoConfig?.extra?.ANDROID_CLIENT_ID;
   const IOS_CLIENT_ID = Constants.expoConfig?.extra?.IOS_CLIENT_ID;
   const WEB_CLIENT_ID = Constants.expoConfig?.extra?.WEB_CLIENT_ID;
-
-  const googleLoginUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${WEB_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code&scope=openid%20profile%20email&access_type=offline&prompt=select_account`;
+  const getClient = () => {
+    if (Platform.OS == 'web') {
+      return WEB_CLIENT_ID;
+    }
+    if (Platform.OS == 'android') {
+      return ANDROID_CLIENT_ID;
+    }
+  };
+  const client = getClient();
+  const googleLoginUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${client}&redirect_uri=${redirectUri}&response_type=code&scope=openid%20profile%20email&access_type=offline&prompt=select_account`;
 
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [isPhoneVerified, setIsPhoneVerified] = useState<boolean>(false);
